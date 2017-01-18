@@ -12,7 +12,7 @@ public class MapMaker : MonoBehaviour
     int[,] map;
     bool[,] canWalk;
     public string seed;
-    [Range (1, 10)]
+    [Range (0, 5)]
     public int smoothing;
 
     // Unity map objects

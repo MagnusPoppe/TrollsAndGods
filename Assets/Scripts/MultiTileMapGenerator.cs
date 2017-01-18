@@ -43,13 +43,16 @@ public class MultiTileMapGenerator : MonoBehaviour
         RandomFillMap();
 
         // Smoothing the map to get islands:
-        int[,] defaultFilter =
-        {
-            { 1, 1, 1 }, 
-            { 1, 1, 1 },
-            { 1, 1, 1 }
+        int[,] guassianFilter = {
+            {0,1,2,1,0},
+            {1,3,5,3,1},
+            {2,5,9,5,2},
+            {1,3,5,3,1},
+            {0,1,2,1,0}
         };
-        MedianFilter filter = new MedianFilter(defaultFilter);
+
+        //MedianFilter filter = new MedianFilter();
+        AverageFilter filter = new AverageFilter(guassianFilter);
 
         for (int i = 0; i < smooth; i++)
             for (int x = 0; x < width; x++)

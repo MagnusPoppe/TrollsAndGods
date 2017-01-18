@@ -2,9 +2,19 @@
 
 public class MedianFilter
 {
+    static int[, ] DEFAULT_FILTER =
+    {
+        { 1, 1, 1 },
+        { 1, 1, 1 },
+        { 1, 1, 1 }
+    };
     
     int[,] medianFilter;
     int filterSum;
+
+    public MedianFilter() : this( DEFAULT_FILTER )
+    {
+    }
 
     public MedianFilter(int[,] filter)
     {
