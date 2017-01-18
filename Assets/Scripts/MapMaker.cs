@@ -29,6 +29,7 @@ public class MapMaker : MonoBehaviour
         MultiTileMapGenerator mapGenerator = new MultiTileMapGenerator(width, height, seed, smoothing);
         map = mapGenerator.GetMap();
         tiles = new GameObject[width, height];
+        canWalk = new bool[width, height];
         board = new GameObject();
         board.name = "Board";
         fillTiles();
@@ -55,7 +56,7 @@ public class MapMaker : MonoBehaviour
                
                 // Placing the tile on on the map within the board gameobject:
                 tiles[x, y].transform.parent = board.transform;
-
+            
                 if (map[x, y] == 2) // snø
                     canWalk[x, y] = false;
                 else
