@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 public class AverageFilter
 {
@@ -6,7 +7,7 @@ public class AverageFilter
     static int[, ] DEFAULT_FILTER =
     {
         { 1, 1, 1 },
-        { 1, 1, 1 },
+        { 1, -1, 1 },
         { 1, 1, 1 }
     };
 
@@ -37,8 +38,12 @@ public class AverageFilter
         int sum = 0;
         for (int y = 0; y < filter.GetLength(0); y++)
             for (int x = 0; x < filter.GetLength(1); x++)
+            {
                 sum += filter[x, y];
+                //Debug.Log("sum = "+filter[x, y]);
+            }
 
+                    //Debug.Log("final sum = " + sum);
         return sum;
     }
 
@@ -65,8 +70,25 @@ public class AverageFilter
 
                 if ( (ix > 0 && ix < width) && ( iy > 0 && iy < height ))
                     sum += matrix[ix,iy] * avgFilter[x+range, y+range];
+
+                // EDGECASE X-AXIS
+                else if ( (ix == 0 && ix < width) && ( iy > 0 && iy < height ) ) // X=0
+                    sum += matrix[width-1,iy] * avgFilter[x+range, y+range];
+                else if ( (ix > 0 && ix == width) && ( iy > 0 && iy < height ) ) // X=WIDTH
+                    sum += matrix[0,iy] * avgFilter[x+range, y+range];
+
+                // EDGECASE Y-AXIS
+                else if ( (ix > 0 && ix < width) && ( iy == 0 && iy < height ) ) // Y=0
+                    sum += matrix[ix,height-1] * avgFilter[x+range, y+range];
+                else if ( (ix > 0 && ix == width) && ( iy > 0 && iy == height ) ) // Y=HEIGHT
+                    sum += matrix[ix,0] * avgFilter[x+range, y+range];
+                
             }
         }
-        return (int)Math.Round(sum / filterSum);
+        //Debug.Log("Sum = " + sum + "/" + filterSum + "="+(sum / filterSum) + "=" + ((int)(sum / filterSum)));
+
+        int result = (int)(sum / filterSum);
+
+        return result;
     }
 }

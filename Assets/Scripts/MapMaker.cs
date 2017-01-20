@@ -15,6 +15,11 @@ public class MapMaker : MonoBehaviour
     [Range (0, 5)]
     public int smoothing;
 
+    // Even Regions: 
+    public int delta;
+
+    public int[,] randomSeeds;
+
     // Unity map objects
     GameObject[,] tiles;
     GameObject board;
@@ -26,8 +31,22 @@ public class MapMaker : MonoBehaviour
     /// </summary>
 	void Start () 
     {
-        MultiTileMapGenerator mapGenerator = new MultiTileMapGenerator(width, height, seed, smoothing);
+        //Generating basic map
+        MultiTileMapGenerator mapGenerator = new MultiTileMapGenerator(width, height, seed, smoothing, groundTiles.Length);
         map = mapGenerator.GetMap();
+
+        // Applying region growing for evening out areas:
+//        EvenRegions shower = new EvenRegions(
+//            delta, 
+//            width,
+//            height,
+//            groundTiles.Length,
+//            10000,
+//            map
+//        );
+
+       // shower.Grow(50, 50, 0);    
+
         tiles = new GameObject[width, height];
         canWalk = new bool[width, height];
         board = new GameObject();
@@ -56,11 +75,6 @@ public class MapMaker : MonoBehaviour
                
                 // Placing the tile on on the map within the board gameobject:
                 tiles[x, y].transform.parent = board.transform;
-            
-                if (map[x, y] == 2) // snø
-                    canWalk[x, y] = false;
-                else
-                    canWalk[x, y] = true;
             }
         }
     }
