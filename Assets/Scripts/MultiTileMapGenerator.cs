@@ -52,9 +52,24 @@ public class MultiTileMapGenerator : MonoBehaviour
         MedianFilter filter = new MedianFilter(defaultFilter);
 
         for (int i = 0; i < smooth; i++)
+        {
+            int[,] mapCopy = copyMap(map);
             for (int x = 0; x < width; x++)
                 for (int y = 0; y < height; y++)
-                    map[x, y] = filter.Apply(x, y, map);
+                    mapCopy[x, y] = filter.Apply(x, y, map);
+            
+            map = mapCopy;
+        }
+            
+    }
+
+    int[,] copyMap( int[,] map )
+    {
+        int[,] copy = new int[width,height];
+        for (int x = 0; x < width; x++)
+            for (int y = 0; y < height; y++)
+                copy[x, y] = map[x, y];
+        return copy;
     }
 
     void RandomFillMap()
