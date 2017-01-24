@@ -15,9 +15,13 @@ public class HeroScript : MonoBehaviour
     public GameObject pathDestNo;
     public GameObject pathYes;
     public GameObject pathNo;
+    List<GameObject> pathList = new List<GameObject>();
     Vector2 curPos;
-    //public GameObject clone;
-    int i = 0;
+    int heroSpeed = 8;
+    bool heroWalking;
+    List<Vector2> positions;
+    int curSpeed;
+    int i;
 
     void Start ()
     {
@@ -30,6 +34,7 @@ public class HeroScript : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
+            heroWalking = false;
             curPos = this.transform.position;
             Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             pos.x = (int)(pos.x + 0.5);
@@ -39,57 +44,61 @@ public class HeroScript : MonoBehaviour
             {
                 if (pointerActive && pos.x == toX && pos.y == toY)
                 {
-                    //clone.SetActive(false);
+                    foreach (GameObject go in pathList)
+                        Destroy(go);
+                    curSpeed = Math.Min(positions.Count, heroSpeed);
                     //transform.position = new Vector2(pos.x, pos.y);
+                    i = 0;
+                    heroWalking = true;
                     pointerActive = false;
-                    toX = 0;
-                    toY = 0;
+                    toX = -1;
+                    toY = -1;
                 }
                 else
                 {
-                    // stjernealgoritme (startpos, tilpos), returnere tabell som vi legger gameobject i posisjonene
-                    List<Vector2> positions = aStar(curPos, pos);
+                    positions = aStar(curPos, pos);
+                    foreach(GameObject go in pathList)
+                        Destroy(go);
 
-                    //Debug.Log(curPos.x + " " + curPos.y);
+                    pathList.Clear();
+                    curSpeed = Math.Min(positions.Count, heroSpeed);
+                    Debug.Log(positions.Count);
                     foreach (Vector2 no in positions)
                     {
                         GameObject clone;
-                        if (pos == no)
+                        if (pos == no && curSpeed > 0)
+                        {
                             clone = pathDestYes;
-                        else
+                        }
+                        else if(pos == no)
+                            clone = pathDestNo;
+                        else if (curSpeed > 0)
                             clone = pathYes;
+                        else
+                            clone = pathNo;
+                        curSpeed--;
                         clone.transform.position = no;
                         clone = Instantiate(clone);
+                        pathList.Add(clone);
                     }
-
-                    /*for (int i = 0; i < gm.GetWidth(); i++)
-                        for (int j = 0; j < gm.GetWidth(); j++)
-                        {
-                            if ((Vector2)positions)
-                            {
-                                GameObject clone;
-                                if (i == pos.x && j == pos.y)
-                                    clone = pathDestYes;
-                                else
-                                    clone = pathYes;
-                                clone.transform.position = new Vector2(i, j);
-                                clone = Instantiate(clone);
-                            }
-                        }*/
-
-
-                    //clone.transform.position = new Vector2(pos.x, pos.y);
-                    if (i == 0)
-                    {
-                        i++;
-                        //clone = Instantiate(clone);
-                    }
-                    //clone.SetActive(true);
                     pointerActive = true;
                     toX = (int)pos.x;
                     toY = (int)pos.y;
                 }
             }
+        }
+        else if (heroWalking)
+        {
+            if (i % 24 == 0)
+            {
+                Debug.Log(curSpeed);
+                transform.position = positions[i / 24];
+                curSpeed--;
+            }
+            i++;
+
+            if (curSpeed == 0)
+                heroWalking = false;
         }
     }
 
