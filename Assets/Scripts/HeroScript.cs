@@ -167,7 +167,9 @@ public class HeroScript : MonoBehaviour
                 {
                     if (x == 1 && y == 1)
                         continue;
-                    if (!gm.GetBlocked((int)cur.Getpos().x, (int)cur.Getpos().y) && (int)cur.Getpos().x + x - 1 >= 0 && (int)cur.Getpos().x + x - 1 < gm.GetWidth() && (int)cur.Getpos().y + y - 1 >= 0 && (int)cur.Getpos().y + y - 1 < gm.GetHeight())
+                    if (!gm.GetBlocked((int)cur.Getpos().x, (int)cur.Getpos().y) 
+                        && (int)cur.Getpos().x + x - 1 >= 0 && (int)cur.Getpos().x + x - 1 < gm.GetWidth() 
+                        && (int)cur.Getpos().y + y - 1 >= 0 && (int)cur.Getpos().y + y - 1 < gm.GetHeight())
                     {
                         neighbours[logPos] = n[(int)cur.Getpos().x + x - 1, (int)cur.Getpos().y + y - 1];
                         logPos++;
