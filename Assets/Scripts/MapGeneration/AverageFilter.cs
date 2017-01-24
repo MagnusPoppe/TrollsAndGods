@@ -7,7 +7,7 @@ public class AverageFilter
     static int[, ] DEFAULT_FILTER =
     {
         { 1, 1, 1 },
-        { 1, -1, 1 },
+        { 1, 1, 1 },
         { 1, 1, 1 }
     };
 
@@ -87,7 +87,7 @@ public class AverageFilter
         }
         //Debug.Log("Sum = " + sum + "/" + filterSum + "="+(sum / filterSum) + "=" + ((int)(sum / filterSum)));
 
-        int result = (int)(sum / filterSum);
+        int result = (int)Math.Round(sum / filterSum);
 
         return result;
     }
