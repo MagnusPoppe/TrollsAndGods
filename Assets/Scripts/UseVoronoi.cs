@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class UseVoronoi : MonoBehaviour 
 {
+
     // Mathematical game objects
     public int width, height;
     int[,] map;
@@ -34,6 +35,7 @@ public class UseVoronoi : MonoBehaviour
         board.name = "Board";
         fillTiles();
 	}
+
 
     /// <summary>
     /// Fills the map with the values for the voronoi zones. 
@@ -67,7 +69,6 @@ public class UseVoronoi : MonoBehaviour
                 }
             }
         }
-
         return map;
     }
 

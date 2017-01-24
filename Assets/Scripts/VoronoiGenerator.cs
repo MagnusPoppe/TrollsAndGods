@@ -10,7 +10,6 @@ public class VoronoiGenerator
     // The number of polygons/sites we want
     int numberOfSites;
     static Color EDGECOLOR = Color.blue;
-    static Color POINTCOLOR = Color.red;
 
     Texture2D tx;
 
@@ -48,7 +47,7 @@ public class VoronoiGenerator
         sites = voronoi.SitesIndexedByLocation;
         edges = voronoi.Edges;
 
-        tx = DrawVoronoiDiagram(width, height);
+        DrawVoronoiDiagram(width, height);
     }
 
     /// <summary>
@@ -63,7 +62,7 @@ public class VoronoiGenerator
 
     /// <summary>
     /// Takes an array of vector2 points and converts it into 
-    /// readable points for the voronoi algorithm.
+    /// voronoi areas.
     /// </summary>
     /// <returns>The points as voronoi points.</returns>
     /// <param name="points">Points.</param>
@@ -82,26 +81,19 @@ public class VoronoiGenerator
     /// Draws the voronoi diagram. Here is a very simple way 
     /// to display the result using a simple bresenham line algorithm.
     /// This algorithm fills out a Texture2D object and returns it.
-    /// 
-    /// -  Sets POINTCOLOR for points of interest.
-    /// -  Sets EDGECOLOR for edges.
-    /// -  Sets 0 for empty squares. This is default. No changes.
     /// </summary>
     /// <param name="width">Width.</param>
     /// <param name="height">Height.</param>
     /// <returns>Texture2D object containing the map.</returns>
-    private Texture2D DrawVoronoiDiagram(int width, int height) 
-    {
+    private Texture2D DrawVoronoiDiagram(int width, int height) {
         tx = new Texture2D(width,height);
-        foreach (KeyValuePair<Vector2f,Site> kv in sites) 
-        {
-            tx.SetPixel((int)kv.Key.x, (int)kv.Key.y, POINTCOLOR);
+        foreach (KeyValuePair<Vector2f,Site> kv in sites) {
+            tx.SetPixel((int)kv.Key.x, (int)kv.Key.y, Color.red);
         }
-        foreach (Edge edge in edges) 
-        {
+        foreach (Edge edge in edges) {
             // if the edge doesn't have clippedEnds, if was not within the bounds, dont draw it
-            if (edge.ClippedEnds == null) 
-                continue;
+            if (edge.ClippedEnds == null) continue;
+
             DrawLine(edge.ClippedEnds[LR.LEFT], edge.ClippedEnds[LR.RIGHT], tx, EDGECOLOR);
         }
         tx.Apply();
