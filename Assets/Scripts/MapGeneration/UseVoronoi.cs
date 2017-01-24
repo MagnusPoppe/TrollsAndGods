@@ -10,11 +10,10 @@ public class UseVoronoi : MonoBehaviour
     int[,] map;
     bool[,] canWalk;
     public string seed;
-    [Range (0, 50)]
-    public int numberOfPoints;
 
-    [Range (0, 20)]
-    public int relax;
+    // VORONOI varables:
+    [Range (0, 50)] public int numberOfPoints;
+    [Range (0, 20)] public int relax;
 
     // Unity map objects
     GameObject[,] tiles;
@@ -24,11 +23,15 @@ public class UseVoronoi : MonoBehaviour
 	// Use this for initialization
 	void Start () 
     {
+        // APPLYING VORONOI TO THE MAP ARRAY
         Vector2[] castles = CreateRandomPoint(width, height, numberOfPoints);
         VoronoiGenerator voronoi = new VoronoiGenerator(width, height, castles, relax);	
-        map = fillMap(voronoi.getTexture());
+        int[,] voronoiMap = fillMap(voronoi.getTexture());
+
+        // APPLYING PROCEDURAL MAP GENERATOR TO MAP ARRAY:
 
 
+        // DRAWING THE MAP:
         tiles = new GameObject[width, height];
         canWalk = new bool[width, height];
         board = new GameObject();
