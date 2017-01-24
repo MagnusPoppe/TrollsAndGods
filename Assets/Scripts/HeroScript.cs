@@ -102,14 +102,25 @@ public class HeroScript : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// this method calculates the shortest possible path from start to goal
+    /// using the a* pathfinding algorithm
+    /// </summary>
+    /// <param name="start">start position</param>
+    /// <param name="goal">goal position</param>
+    /// <returns>a vector2 List containing the shortest path</returns>
     List<Vector2> aStar(Vector2 start, Vector2 goal)
     {
+        // return variable
         List<Vector2> path = new List<Vector2>();
 
+        // contains evaluvated nodes
         List<Node> closedSet = new List<Node>();
 
+        // contains nodes that are to be evaluvated
         List<Node> openSet = new List<Node>();
 
+        // generates 2d array of nodes matching the map in size
         Node[,] n = new Node[gm.GetWidth(), gm.GetHeight()];
 
         for (int i = 0; i < gm.GetWidth(); i++)
@@ -120,19 +131,23 @@ public class HeroScript : MonoBehaviour
             }
         }
 
+        // creates start node at start position and adds to openSet
         Node s = n[(int)start.x, (int)start.y];
         s.calculateH(start, goal);
         s.calculateF();
-
         openSet.Add(s);
 
+        // starts loop that continues until openset is empty or a path has been found
         while (openSet.Count != 0)
         {
+            // fetches node from openSet
             Node cur = openSet[0];
 
+            // removes node from openSet and adds to closedSet
             openSet.Remove(cur);
             closedSet.Add(cur);
 
+            // fetches all walkable neighbor nodes
             Node[] neighbours = new Node[8];
             int logPos = 0;
             for (int x = 0; x < 3; x++)
@@ -149,11 +164,16 @@ public class HeroScript : MonoBehaviour
                 }
             }
 
+            // calculates pathcost to neighbor nodes
             for (int i = 0; i < logPos; i++)
             {
                 Node node = neighbours[i];
+
+                // if already evaluvated, skip node
                 if (closedSet.Contains(node))
                     continue;
+                
+                // if not in openSet, add to openSet, set where it came from and calculate pathCost
                 if (!openSet.Contains(node))
                 {
                     openSet.Insert(0,node);
@@ -162,6 +182,7 @@ public class HeroScript : MonoBehaviour
                     node.calculateF();
                     node.SetCameFrom(cur);
                 }
+                // openSet contains node, then check if current path is better.
                 else
                 {
                     int f = node.calcNewF(cur.GetGScore() + 1);
@@ -174,19 +195,19 @@ public class HeroScript : MonoBehaviour
                 }
             }
 
+            // if openSet contains goal node, generate path by backtracking and break loop.
             if (openSet.Contains(n[(int)goal.x, (int)goal.y]))
             {
                 n[(int)goal.x, (int)goal.y].backTrack(path);
                 break;
             }
 
+            // sorts openSet by cost
             openSet = openSet.OrderBy(Node=>Node.GetF()).ToList();
         }
 
+        // returns path array that contains the shortest path
         return path;
-
-        //for (int i = 0; i < 5; i++)
-        //    path[i, i] = true;
     }
 
     public class Node : IComparable<Node>
@@ -235,11 +256,6 @@ public class HeroScript : MonoBehaviour
         public int CompareTo(Node n)
         {
             return f-n.GetF();
-        }
-
-        public String toString()
-        {
-            return "" + f;
         }
 
         public Node GetCameFrom()
