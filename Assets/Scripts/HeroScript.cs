@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Linq;
 
 public class HeroScript : MonoBehaviour
 {
@@ -146,7 +147,7 @@ public class HeroScript : MonoBehaviour
                     continue;
                 if (!openSet.Contains(node))
                 {
-                    openSet.Add(node);
+                    openSet.Insert(0,node);
                     node.SetGScore(cur.GetGScore() + 1);
                     node.calculateH(node.Getpos(), goal);
                     node.calculateF();
@@ -169,6 +170,8 @@ public class HeroScript : MonoBehaviour
                 n[(int)goal.x, (int)goal.y].backTrack(path);
                 break;
             }
+
+            openSet.OrderBy(Node=>Node.GetF());
 
         }
 
@@ -223,7 +226,7 @@ public class HeroScript : MonoBehaviour
 
         public int CompareTo(Node n)
         {
-            return 0;
+            return f-n.GetF();
         }
 
         public Node GetCameFrom()
