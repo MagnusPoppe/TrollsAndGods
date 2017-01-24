@@ -41,7 +41,7 @@ public class GenerateMap : MonoBehaviour
         for (int x = 0; x < X; x++)
             for (int y = 0; y < Y; y++)
             {
-                if ((x + y) % 3 == 0 || y % 5 == 0)
+                if ((x + y) % 4 == 0 || y % 5 == 0)
                 {
                     GameObject clone = tree;
                     clone.transform.position = new Vector2(x, y);

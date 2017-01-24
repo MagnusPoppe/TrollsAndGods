@@ -22,33 +22,42 @@ public class HeroScript : MonoBehaviour
     List<Vector2> positions;
     int curSpeed;
     int i;
-
+    float move;
+    bool walking;
     void Start ()
     {
         g = GameObject.Find("MapGenerator");
         gm = g.GetComponent<GenerateMap>();
-        //clone = pathDestYes;
     }
 	
 	void Update ()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            heroWalking = false;
+
             curPos = this.transform.position;
             Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             pos.x = (int)(pos.x + 0.5);
             pos.y = (int)(pos.y + 0.5);
-            //Debug.Log(curPos.x + " " + curPos.y);
-            if (!gm.blockedSquare[(int)pos.x, (int)pos.y])
+            if (heroWalking)
+            {
+                walking = false;
+            }
+            // Hero's own position is clicked
+            else if (curPos.Equals(pos))
+            {
+                // Todo, open hero menu
+            }
+            else if (!gm.blockedSquare[(int)pos.x, (int)pos.y])
             {
                 if (pointerActive && pos.x == toX && pos.y == toY)
                 {
                     foreach (GameObject go in pathList)
                         Destroy(go);
                     curSpeed = Math.Min(positions.Count, heroSpeed);
-                    //transform.position = new Vector2(pos.x, pos.y);
                     i = 0;
+                    move = 0;
+                    walking = true;
                     heroWalking = true;
                     pointerActive = false;
                     toX = -1;
@@ -62,7 +71,6 @@ public class HeroScript : MonoBehaviour
 
                     pathList.Clear();
                     curSpeed = Math.Min(positions.Count, heroSpeed);
-                    Debug.Log(positions.Count);
                     foreach (Vector2 no in positions)
                     {
                         GameObject clone;
@@ -70,7 +78,7 @@ public class HeroScript : MonoBehaviour
                         {
                             clone = pathDestYes;
                         }
-                        else if(pos == no)
+                        else if (pos == no)
                             clone = pathDestNo;
                         else if (curSpeed > 0)
                             clone = pathYes;
@@ -87,18 +95,21 @@ public class HeroScript : MonoBehaviour
                 }
             }
         }
-        else if (heroWalking)
+        if (heroWalking)
         {
-            if (i % 24 == 0)
+            move += Time.deltaTime;
+            transform.position = Vector2.Lerp(transform.position, positions[i], move);
+            Vector2 pos = transform.position;
+            
+            if (pos.Equals(positions[i]))
             {
-                Debug.Log(curSpeed);
-                transform.position = positions[i / 24];
-                curSpeed--;
+                i++;
+                move = 0f;
+                if (i == curSpeed || !walking)
+                {
+                    heroWalking = false;
+                }
             }
-            i++;
-
-            if (curSpeed == 0)
-                heroWalking = false;
         }
     }
 
