@@ -12,7 +12,7 @@ public class MapMaker : MonoBehaviour
     int[,] map;
     bool[,] canWalk;
     public string seed;
-    [Range (0, 5)]
+    [Range (0, 25)]
     public int smoothing;
 
     // Even Regions: 
