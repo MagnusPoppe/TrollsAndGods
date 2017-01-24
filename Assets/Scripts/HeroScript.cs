@@ -8,7 +8,6 @@ public class HeroScript : MonoBehaviour
 {
     bool pointerActive;
     bool legalPath;
-    int toX, toY;
     GenerateMap gm;
     GameObject g;
     public GameObject pathDestYes;
@@ -17,6 +16,7 @@ public class HeroScript : MonoBehaviour
     public GameObject pathNo;
     List<GameObject> pathList = new List<GameObject>();
     Vector2 curPos;
+    Vector2 toPos;
     int heroSpeed = 8;
     bool heroWalking;
     List<Vector2> positions;
@@ -26,6 +26,7 @@ public class HeroScript : MonoBehaviour
     bool walking;
     void Start ()
     {
+        curPos = transform.position;
         g = GameObject.Find("MapGenerator");
         gm = g.GetComponent<GenerateMap>();
     }
@@ -34,8 +35,6 @@ public class HeroScript : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-
-            curPos = this.transform.position;
             Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             pos.x = (int)(pos.x + 0.5);
             pos.y = (int)(pos.y + 0.5);
@@ -48,36 +47,38 @@ public class HeroScript : MonoBehaviour
             {
                 // Todo, open hero menu
             }
+            // If an open square is clicked
             else if (!gm.blockedSquare[(int)pos.x, (int)pos.y])
             {
-                if (pointerActive && pos.x == toX && pos.y == toY)
+                // Walk to pointer if marked square is clicked
+                if (pointerActive && pos.Equals(toPos))
                 {
-                    foreach (GameObject go in pathList)
-                        Destroy(go);
                     curSpeed = Math.Min(positions.Count, heroSpeed);
                     i = 0;
                     move = 0;
                     walking = true;
                     heroWalking = true;
-                    pointerActive = false;
-                    toX = -1;
-                    toY = -1;
                 }
+                // Activate clicked path
                 else
                 {
-                    positions = aStar(curPos, pos);
-                    foreach(GameObject go in pathList)
+                    pointerActive = true;
+                    toPos = pos;
+                    // Refresh already existing pointers
+                    foreach (GameObject go in pathList)
                         Destroy(go);
-
+                    
                     pathList.Clear();
+                    // Calculate the hero's movementspeed to the point
                     curSpeed = Math.Min(positions.Count, heroSpeed);
+                    // Call algorithm method that returns a list of Vector2 positions to the point, go through all objects
+                    positions = aStar(curPos, pos);
                     foreach (Vector2 no in positions)
                     {
+                        // Create a cloned gameobject of an prefab, with the sprite according to what kind of a pointer it is
                         GameObject clone;
                         if (pos == no && curSpeed > 0)
-                        {
                             clone = pathDestYes;
-                        }
                         else if (pos == no)
                             clone = pathDestNo;
                         else if (curSpeed > 0)
@@ -85,18 +86,19 @@ public class HeroScript : MonoBehaviour
                         else
                             clone = pathNo;
                         curSpeed--;
+                        // set the cloned position to the vector2 object, instantiate it and add it to the list of gameobjects, pathList
                         clone.transform.position = no;
                         clone = Instantiate(clone);
                         pathList.Add(clone);
                     }
-                    pointerActive = true;
-                    toX = (int)pos.x;
-                    toY = (int)pos.y;
                 }
             }
         }
+        // Upon every update, it is checked if hero should be moved towards a destination
         if (heroWalking)
         {
+            Destroy(pathList[i]);
+
             move += Time.deltaTime;
             transform.position = Vector2.Lerp(transform.position, positions[i], move);
             Vector2 pos = transform.position;
@@ -107,7 +109,12 @@ public class HeroScript : MonoBehaviour
                 move = 0f;
                 if (i == curSpeed || !walking)
                 {
+                    curPos = transform.position;
+                    toPos = new Vector2();
                     heroWalking = false;
+                    pointerActive = false;
+                    foreach (GameObject go in pathList)
+                        Destroy(go);
                 }
             }
         }
