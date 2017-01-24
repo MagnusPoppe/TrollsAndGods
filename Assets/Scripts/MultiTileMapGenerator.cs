@@ -47,8 +47,8 @@ public class MultiTileMapGenerator : MonoBehaviour
             {0,1,2,1,0}
         };
 
-        //MedianFilter filter = new MedianFilter();
-        AverageFilter filter = new AverageFilter();
+        //MedianFilter filter = new MedianFilter(guassianFilter);
+        AverageFilter filter = new AverageFilter(guassianFilter);
 
         for (int i = 0; i < smooth; i++)
         {
