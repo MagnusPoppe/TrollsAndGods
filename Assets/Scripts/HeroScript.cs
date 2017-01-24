@@ -171,8 +171,7 @@ public class HeroScript : MonoBehaviour
                 break;
             }
 
-            openSet.OrderBy(Node=>Node.GetF());
-
+            openSet = openSet.OrderBy(Node=>Node.GetF()).ToList();
         }
 
         return path;
@@ -227,6 +226,11 @@ public class HeroScript : MonoBehaviour
         public int CompareTo(Node n)
         {
             return f-n.GetF();
+        }
+
+        public String toString()
+        {
+            return "" + f;
         }
 
         public Node GetCameFrom()
