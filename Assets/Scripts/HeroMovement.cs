@@ -26,6 +26,7 @@ public class HeroMovement : MonoBehaviour
     public int curSpeed;
     private bool walking;
     private bool lastStep;
+    private AStarAlgo aStar;
 
     /// <summary>
     /// Upon creation, set current position and a reference to the generated map object
@@ -36,6 +37,7 @@ public class HeroMovement : MonoBehaviour
         curPos = transform.position;
         g = GameObject.Find("MapGenerator");
         gm = g.GetComponent<GenerateMap>();
+        aStar = new AStarAlgo(gm.blockedSquare, gm.GetWidth(), gm.GetHeight(), false);
     }
 	
     /// <summary>
@@ -127,7 +129,7 @@ public class HeroMovement : MonoBehaviour
 
         pathList.Clear();
         // Call algorithm method that returns a list of Vector2 positions to the point, go through all objects
-        //positions = aStar.aStar(curPos, pos);
+        positions = aStar.calculate(curPos, pos);
         // Calculate how many steps the hero can move
         curSpeed = Math.Min(positions.Count, heroSpeed);
         // For each position, create a gameobject with an image and instantiate it, and add it to a gameobject list for later to be removed
