@@ -46,5 +46,5 @@ namespace MapMakerTester
 			}
 			return copy;
 		}
-	}
+    }
 }
