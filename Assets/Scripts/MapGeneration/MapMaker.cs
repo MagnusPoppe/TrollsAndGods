@@ -34,12 +34,15 @@ namespace MapGenerator
             VoronoiGenerator voronoi = new VoronoiGenerator(width, height, castles, relaxItr); 
             int[,] voronoiMap = fillMap(voronoi.getTexture());
 
+
             // APPLYING PROCEDURAL MAP GENERATOR TO MAP ARRAY:
             BinaryMap binary = new BinaryMap(width, height, smoothItr, seed, fillPercent);
             int[,] binaryMap = binary.getMap();
 
             // CHOOSING MAP TO USE:
-            map = combineMaps(binaryMap, voronoiMap);
+            RegionFill r = new RegionFill(voronoiMap);
+
+            map = r.getMap();
 
             // DRAWING THE MAP:
             tiles = new GameObject[width, height];
