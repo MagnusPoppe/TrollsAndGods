@@ -7,7 +7,7 @@ using System.Linq;
 /// <summary>
 /// Script for overworld movement and interaction with objects
 /// </summary>
-public class HeroScript : MonoBehaviour
+public class HeroMovement : MonoBehaviour
 {
     GenerateMap gm;
     GameObject g;
@@ -19,12 +19,12 @@ public class HeroScript : MonoBehaviour
     Vector2 toPos;
     List<GameObject> pathList = new List<GameObject>();
     List<Vector2> positions;
-    bool pointerActive;
+    bool pathMarked;
     int heroSpeed;
-    bool heroWalking;
     int curSpeed;
     int i;
     float move;
+    bool heroWalking;
     bool walking;
 
     /// <summary>
@@ -63,7 +63,7 @@ public class HeroScript : MonoBehaviour
             else if (!gm.blockedSquare[(int)pos.x, (int)pos.y])
             {
                 // Walk to pointer if marked square is clicked by enabling variables that triggers moveHero method on update
-                if (pointerActive && pos.Equals(toPos))
+                if (pathMarked && pos.Equals(toPos))
                 {
                     prepareMovement();
                 }
@@ -74,6 +74,17 @@ public class HeroScript : MonoBehaviour
                 }
             }
         }
+        else if(Input.GetKeyDown("space"))
+        {
+            if (heroWalking)
+            {
+                walking = false;
+            }
+            else if (pathMarked)
+            {
+                prepareMovement();
+            }
+        }
         // Upon every update, it is checked if hero should be moved towards a destination
         if (heroWalking)
         {
@@ -81,13 +92,23 @@ public class HeroScript : MonoBehaviour
         }
     }
 
+    bool isWalking()
+    {
+        return walking;
+    }
+
+    void setWalking(bool w)
+    {
+        walking = w;
+    }
+
     /// <summary>
     /// 
     /// </summary>
     /// <param name="pos">Destination tile position</param>
-    void markPath(Vector2 pos)
+    private void markPath(Vector2 pos)
     {
-        pointerActive = true;
+        pathMarked = true;
         toPos = pos;
         // Refresh already existing pointers
         foreach (GameObject go in pathList)
@@ -102,27 +123,27 @@ public class HeroScript : MonoBehaviour
         foreach (Vector2 no in positions)
         {
             // Create a cloned gameobject of a prefab, with the sprite according to what kind of a marker it is
-            GameObject clone;
+            GameObject pathMarker;
             if (pos == no && curSpeed > 0)
-                clone = pathDestYes;
+                pathMarker = pathDestYes;
             else if (pos == no)
-                clone = pathDestNo;
+                pathMarker = pathDestNo;
             else if (curSpeed > 0)
-                clone = pathYes;
+                pathMarker = pathYes;
             else
-                clone = pathNo;
+                pathMarker = pathNo;
             curSpeed--;
             // set the cloned position to the vector2 object, instantiate it and add it to the list of gameobjects, pathList
-            clone.transform.position = no;
-            clone = Instantiate(clone);
-            pathList.Add(clone);
+            pathMarker.transform.position = no;
+            pathMarker = Instantiate(pathMarker);
+            pathList.Add(pathMarker);
         }
     }
 
     /// <summary>
     /// Sets variables so that movehero check in update is triggered
     /// </summary>
-    void prepareMovement()
+    private void prepareMovement()
     {
         curSpeed = Math.Min(positions.Count, heroSpeed);
         i = 0;
@@ -134,7 +155,7 @@ public class HeroScript : MonoBehaviour
     /// <summary>
     /// Moves the object on the map
     /// </summary>
-    void moveHero()
+    private void moveHero()
     {
         // Add animation, transform hero position
         move += Time.deltaTime;
@@ -159,13 +180,13 @@ public class HeroScript : MonoBehaviour
     /// <summary>
     /// Sets variables so that movehero check in update is disabled
     /// </summary>
-    void stopMovement()
+    private void stopMovement()
     {
         // Set hero position variable, and refresh toposition
         curPos = transform.position;
         toPos = new Vector2();
         heroWalking = false;
-        pointerActive = false;
+        pathMarked = false;
         // Destroy the tile gameobjects
         foreach (GameObject go in pathList)
             Destroy(go);
