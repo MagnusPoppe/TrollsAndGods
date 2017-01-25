@@ -9,12 +9,14 @@ public class AStarAlgo {
     bool[,] canWalk;
     Node[,] nodes;
     int width, height;
+    bool hex;
 
-    public AStarAlgo(bool[,] canWalk, int w, int h)
+    public AStarAlgo(bool[,] canWalk, int w, int h, bool hex)
     {
         this.canWalk = canWalk;
         width = w;
         height = h;
+        this.hex = hex;
     }
 
     /// <summary>
@@ -65,27 +67,16 @@ public class AStarAlgo {
             closedSet.Add(cur);
 
             // Fetches all walkable neighbor nodes
-            Node[] neighbours = new Node[8];
-            int logPos = 0;
-            for (int x = 0; x < 3; x++)
-            {
-                for (int y = 0; y < 3; y++)
-                {
-                    if (x == 1 && y == 1)
-                        continue;
-                    if (posX + x - 1 >= 0 && posX + x - 1 < width
-                        && posY + y - 1 >= 0 && posY + y - 1 < height
-                        && canWalk[posX + x - 1, posY + y - 1])
-                    {
-                        neighbours[logPos] = nodes[posX + x - 1, posY + y - 1];
-                        logPos++;
-                    }
-                }
-            }
+            Node[] neighbours;
+            if (hex)
+                neighbours = findNeighboursHex(posX, posY);
+            else 
+                neighbours = findNeighboursSquare(posX, posY);
 
             // Calculates pathcost to neighbor nodes
-            for (int i = 0; i < logPos; i++)
+            for (int i = 0; i < neighbours.Count(); i++)
             {
+
                 Node neighbour = neighbours[i];
 
                 // If already evaluvated, skip node
@@ -127,6 +118,64 @@ public class AStarAlgo {
 
         // Returns path array that contains the shortest path
         return path;
+    }
+
+    /// <summary>
+    /// This method finds neighbours in a square grid
+    /// </summary>
+    /// <param name="posX">Current position for x</param>
+    /// <param name="posY">Current position for y</param>
+    /// <returns>Array with neighbour nodes</returns>
+    private Node[] findNeighboursSquare(int posX, int posY)
+    {
+        Node[] neighbours = new Node[8];
+        int logPos = 0;
+        for (int x = 0; x < 3; x++)
+        {
+            for (int y = 0; y < 3; y++)
+            {
+                if (x == 1 && y == 1)
+                    continue;
+                if (posX + x - 1 >= 0 && posX + x - 1 < width
+                    && posY + y - 1 >= 0 && posY + y - 1 < height
+                    && canWalk[posX + x - 1, posY + y - 1])
+                {
+                    neighbours[logPos] = nodes[posX + x - 1, posY + y - 1];
+                    logPos++;
+                }
+            }
+        }
+        return neighbours;
+    }
+
+    /// <summary>
+    /// This method finds neighbours in a hex grid
+    /// </summary>
+    /// <param name="posX">Current position for x</param>
+    /// <param name="posY">Current position for y</param>
+    /// <returns>Array with neighbour nodes</returns>
+    private Node[] findNeighboursHex(int posX, int posY)
+    {
+        Node[] neighbours = new Node[6];
+        int logPos = 0;
+        for (int x = 0; x < 3; x++)
+        {
+            for (int y = 0; y < 3; y++)
+            {
+                if (x == 1 && y == 1)
+                    continue;
+                else if (x == 0 && (y == 0 || y == 2))
+                    continue;
+                if (posX + x - 1 >= 0 && posX + x - 1 < width
+                    && posY + y - 1 >= 0 && posY + y - 1 < height
+                    && canWalk[posX + x - 1, posY + y - 1])
+                {
+                    neighbours[logPos] = nodes[posX + x - 1, posY + y - 1];
+                    logPos++;
+                }
+            }
+        }
+        return neighbours;
     }
 
     /// <summary>
