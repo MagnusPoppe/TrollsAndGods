@@ -74,7 +74,7 @@ public class AStarAlgo {
                 neighbours = findNeighboursSquare(posX, posY);
 
             // Calculates pathcost to neighbor nodes
-            for (int i = 0; i < neighbours.Count(); i++)
+            for (int i = 0; i < neighbours.Length || neighbours[i] != null; i++)
             {
 
                 Node neighbour = neighbours[i];
