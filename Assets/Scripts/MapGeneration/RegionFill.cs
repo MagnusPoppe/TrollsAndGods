@@ -27,8 +27,6 @@ namespace MapGenerator
                     }
                 }
             }
-
-            Debug.Log("Number of labels = " + label);
         }
 
         void floodFill( int x, int y, int label )

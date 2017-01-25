@@ -24,6 +24,11 @@ namespace MapGenerator
         GameObject board;
         public Sprite[] groundTiles;
 
+		public MapMaker()
+		{	
+			
+		}
+
         // Use this for initialization
         void Start () 
         {
@@ -69,7 +74,7 @@ namespace MapGenerator
             }
         }
 
-        int[,] combineMaps(int[,] binary, int[,] voronoi)
+        protected int[,] combineMaps(int[,] binary, int[,] voronoi)
         {
             for (int y = 0; y < height; y++)
             {
