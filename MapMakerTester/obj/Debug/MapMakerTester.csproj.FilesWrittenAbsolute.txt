@@ -1,0 +1,9 @@
+/Users/MagnusPoppe/Desktop/Unity/TrollsAndGods/MapMakerTester/obj/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
+/Users/MagnusPoppe/Desktop/Unity/TrollsAndGods/MapMakerTester/bin/Debug/MapMakerTester.dll.mdb
+/Users/MagnusPoppe/Desktop/Unity/TrollsAndGods/MapMakerTester/bin/Debug/MapMakerTester.dll
+/Users/MagnusPoppe/Desktop/Unity/TrollsAndGods/MapMakerTester/obj/Debug/MapMakerTester.dll
+/Users/MagnusPoppe/Desktop/Unity/TrollsAndGods/MapMakerTester/obj/Debug/MapMakerTester.dll.mdb
+/Users/MagnusPoppe/Desktop/Unity/TrollsAndGods/MapMakerTester/bin/Debug/nunit.framework.dll
+/Users/MagnusPoppe/Desktop/Unity/TrollsAndGods/MapMakerTester/bin/Debug/Assembly-CSharp.dll
+/Users/MagnusPoppe/Desktop/Unity/TrollsAndGods/MapMakerTester/bin/Debug/Assembly-CSharp.dll.mdb
+/Users/MagnusPoppe/Desktop/Unity/TrollsAndGods/MapMakerTester/bin/Debug/UnityEngine.dll
