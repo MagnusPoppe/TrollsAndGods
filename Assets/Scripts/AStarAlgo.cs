@@ -26,7 +26,7 @@ public class AStarAlgo {
     /// <param name="start">Start position</param>
     /// <param name="goal">Goal position</param>
     /// <returns>A vector2 List containing the shortest path</returns>
-    List<Vector2> calculate(Vector2 start, Vector2 goal)
+    public List<Vector2> calculate(Vector2 start, Vector2 goal)
     {
         // Return variable
         List<Vector2> path = new List<Vector2>();
