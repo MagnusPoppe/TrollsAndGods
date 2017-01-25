@@ -4,40 +4,52 @@ using UnityEngine;
 using System;
 using System.Linq;
 
+/// <summary>
+/// Script for overworld movement and interaction with objects
+/// </summary>
 public class HeroScript : MonoBehaviour
 {
-    bool pointerActive;
-    bool legalPath;
     GenerateMap gm;
     GameObject g;
     public GameObject pathDestYes;
     public GameObject pathDestNo;
     public GameObject pathYes;
     public GameObject pathNo;
-    List<GameObject> pathList = new List<GameObject>();
     Vector2 curPos;
     Vector2 toPos;
-    int heroSpeed = 8;
-    bool heroWalking;
+    List<GameObject> pathList = new List<GameObject>();
     List<Vector2> positions;
+    bool pointerActive;
+    int heroSpeed;
+    bool heroWalking;
     int curSpeed;
     int i;
     float move;
     bool walking;
+
+    /// <summary>
+    /// Upon creation, set current position and a reference to the generated map object
+    /// </summary>
     void Start ()
     {
+        heroSpeed = 8; // todo
         curPos = transform.position;
         g = GameObject.Find("MapGenerator");
         gm = g.GetComponent<GenerateMap>();
     }
 	
+    /// <summary>
+    /// Every frame checks if you clicked on a location in the map or if the hero is walking.
+    /// </summary>
 	void Update ()
     {
         if (Input.GetMouseButtonDown(0))
         {
+            // Fetch the point just clicked and adjust the position in the square to the middle of it
             Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             pos.x = (int)(pos.x + 0.5);
             pos.y = (int)(pos.y + 0.5);
+            // When mousebutton is clicked an already ongoing movement shall be stopped
             if (heroWalking)
             {
                 walking = false;
@@ -50,74 +62,114 @@ public class HeroScript : MonoBehaviour
             // If an open square is clicked
             else if (!gm.blockedSquare[(int)pos.x, (int)pos.y])
             {
-                // Walk to pointer if marked square is clicked
+                // Walk to pointer if marked square is clicked by enabling variables that triggers moveHero method on update
                 if (pointerActive && pos.Equals(toPos))
                 {
-                    curSpeed = Math.Min(positions.Count, heroSpeed);
-                    i = 0;
-                    move = 0;
-                    walking = true;
-                    heroWalking = true;
+                    prepareMovement();
                 }
                 // Activate clicked path
                 else
                 {
-                    pointerActive = true;
-                    toPos = pos;
-                    // Refresh already existing pointers
-                    foreach (GameObject go in pathList)
-                        Destroy(go);
-                    
-                    pathList.Clear();
-                    // Calculate the hero's movementspeed to the point
-                    curSpeed = Math.Min(positions.Count, heroSpeed);
-                    // Call algorithm method that returns a list of Vector2 positions to the point, go through all objects
-                    positions = aStar(curPos, pos);
-                    foreach (Vector2 no in positions)
-                    {
-                        // Create a cloned gameobject of an prefab, with the sprite according to what kind of a pointer it is
-                        GameObject clone;
-                        if (pos == no && curSpeed > 0)
-                            clone = pathDestYes;
-                        else if (pos == no)
-                            clone = pathDestNo;
-                        else if (curSpeed > 0)
-                            clone = pathYes;
-                        else
-                            clone = pathNo;
-                        curSpeed--;
-                        // set the cloned position to the vector2 object, instantiate it and add it to the list of gameobjects, pathList
-                        clone.transform.position = no;
-                        clone = Instantiate(clone);
-                        pathList.Add(clone);
-                    }
+                    markPath(pos);
                 }
             }
         }
         // Upon every update, it is checked if hero should be moved towards a destination
         if (heroWalking)
         {
-            Destroy(pathList[i]);
+            moveHero();
+        }
+    }
 
-            move += Time.deltaTime;
-            transform.position = Vector2.Lerp(transform.position, positions[i], move);
-            Vector2 pos = transform.position;
-            
-            if (pos.Equals(positions[i]))
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="pos">Destination tile position</param>
+    void markPath(Vector2 pos)
+    {
+        pointerActive = true;
+        toPos = pos;
+        // Refresh already existing pointers
+        foreach (GameObject go in pathList)
+            Destroy(go);
+
+        pathList.Clear();
+        // Call algorithm method that returns a list of Vector2 positions to the point, go through all objects
+        positions = aStar(curPos, pos);
+        // Calculate how many steps the hero can move
+        curSpeed = Math.Min(positions.Count, heroSpeed);
+        // For each position, create a gameobject with an image and instantiate it, and add it to a gameobject list for later to be removed
+        foreach (Vector2 no in positions)
+        {
+            // Create a cloned gameobject of a prefab, with the sprite according to what kind of a marker it is
+            GameObject clone;
+            if (pos == no && curSpeed > 0)
+                clone = pathDestYes;
+            else if (pos == no)
+                clone = pathDestNo;
+            else if (curSpeed > 0)
+                clone = pathYes;
+            else
+                clone = pathNo;
+            curSpeed--;
+            // set the cloned position to the vector2 object, instantiate it and add it to the list of gameobjects, pathList
+            clone.transform.position = no;
+            clone = Instantiate(clone);
+            pathList.Add(clone);
+        }
+    }
+
+    /// <summary>
+    /// Sets variables so that movehero check in update is triggered
+    /// </summary>
+    void prepareMovement()
+    {
+        curSpeed = Math.Min(positions.Count, heroSpeed);
+        i = 0;
+        move = 0;
+        walking = true;
+        heroWalking = true;
+    }
+
+    /// <summary>
+    /// Moves the object on the map
+    /// </summary>
+    void moveHero()
+    {
+        // Add animation, transform hero position
+        move += Time.deltaTime;
+        transform.position = Vector2.Lerp(transform.position, positions[i], move);
+        Vector2 pos = transform.position;
+
+        // Every time the hero reaches a new tile, increment i so that he walks towards the next one, reset time animation, and destroy tile object
+        if (pos.Equals(positions[i]))
+        {
+            // Destroy the tile object he has reached
+            Destroy(pathList[i]);
+            i++;
+            move = 0f;
+            // Stop the movement when amount of tiles moved has reached speed, or walking is disabled
+            if (i == curSpeed || !walking)
             {
-                i++;
-                move = 0f;
-                if (i == curSpeed || !walking)
-                {
-                    curPos = transform.position;
-                    toPos = new Vector2();
-                    heroWalking = false;
-                    pointerActive = false;
-                    foreach (GameObject go in pathList)
-                        Destroy(go);
-                }
+                stopMovement();
             }
         }
+    }
+
+    /// <summary>
+    /// Sets variables so that movehero check in update is disabled
+    /// </summary>
+    void stopMovement()
+    {
+        // Set hero position variable, and refresh toposition
+        curPos = transform.position;
+        toPos = new Vector2();
+        heroWalking = false;
+        pointerActive = false;
+        // Destroy the tile gameobjects
+        foreach (GameObject go in pathList)
+            Destroy(go);
+        // todo - if(objectcollision)
     }
 
     /// <summary>
