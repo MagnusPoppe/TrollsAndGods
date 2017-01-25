@@ -9,7 +9,7 @@ public class AStarAlgo {
     bool[,] canWalk;
     Node[,] nodes;
     int width, height;
-    bool hex;
+    protected bool hex;
 
     public AStarAlgo(bool[,] canWalk, int w, int h, bool hex)
     {
@@ -50,7 +50,7 @@ public class AStarAlgo {
 
         // Creates start node at start position and adds to openSet
         Node s = nodes[(int)start.x, (int)start.y];
-        s.calculateH(start, goal);
+        s.calculateH(start, goal, hex);
         s.calculateF();
         openSet.Add(s);
 
@@ -88,7 +88,7 @@ public class AStarAlgo {
                 {
                     openSet.Insert(0, neighbour);
                     neighbour.SetGScore(cur.GetGScore() + 1);
-                    neighbour.calculateH(neighbour.Getpos(), goal);
+                    neighbour.calculateH(neighbour.Getpos(), goal, hex);
                     neighbour.calculateF();
                     neighbour.SetCameFrom(cur);
                 }
@@ -164,7 +164,9 @@ public class AStarAlgo {
             {
                 if (x == 1 && y == 1)
                     continue;
-                else if (x == 0 && (y == 0 || y == 2))
+                else if (y % 2 == 0 && x == 2 && (y == 0 || y == 2))
+                    continue;
+                else if (y % 2 == 1 && x == 0 && (y == 0 || y == 2))
                     continue;
                 if (posX + x - 1 >= 0 && posX + x - 1 < width
                     && posY + y - 1 >= 0 && posY + y - 1 < height
@@ -177,6 +179,8 @@ public class AStarAlgo {
         }
         return neighbours;
     }
+
+    
 
     /// <summary>
     /// The node class contains it's position, a reference to the node you came from,
@@ -197,9 +201,35 @@ public class AStarAlgo {
         }
 
         // Calculates the estimated cost of moving to goal from this node, ignoring obstacles, as hScore
-        public void calculateH(Vector2 start, Vector2 goal)
+        public void calculateH(Vector2 start, Vector2 goal, bool hex)
         {
-            hScore = (int)(Math.Abs(goal.x - start.x) + Math.Abs(goal.y - start.y));
+            if (hex)
+                hScore = DistanceHex(start, goal);
+            else
+                hScore = (int)(Math.Abs(goal.x - start.x) + Math.Abs(goal.y - start.y));
+        }
+
+        // Transelates offset cordinates to cube cordinates
+        private Vector3 oddROffsetToCube(Vector2 pos)
+        {
+            int x = (int)(pos.x - (pos.y - ((int)pos.y & 1)) / 2);
+            int z = (int)pos.y;
+            int y = -x - z;
+            return new Vector3(x, y, z);
+        }
+
+        // returns distance to target in a offset grid, ignoring obstacles
+        private int DistanceHex(Vector2 a, Vector2 b)
+        {
+            Vector3 s = oddROffsetToCube(a);
+            Vector3 g = oddROffsetToCube(b);
+            return cubeDistance(s, g);
+        }
+
+        // returns distance to target in a cube grid, ignoring obstacles
+        private int cubeDistance(Vector3 a, Vector3 b)
+        {
+            return (int)((Math.Abs(a.x - b.x) + Math.Abs(a.y - b.y) + Math.Abs(a.z - b.z)) / 2);
         }
 
         // Calculates the estimated cost of this path wich is gScore + hScore.
