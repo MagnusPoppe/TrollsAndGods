@@ -1,0 +1,2 @@
+C:\Users\killi\Documents\TrollsAndGods\MapMakerTester\obj\Debug\MapMakerTester.csprojResolveAssemblyReference.cache
+C:\Users\killi\Documents\TrollsAndGods\MapMakerTester\obj\Debug\MapMakerTester.dll
