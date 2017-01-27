@@ -94,27 +94,6 @@ public class HeroMovement : MonoBehaviour
         }
     }
 
-    public bool isLastStep()
-    {
-        return lastStep;
-    }
-
-    public void setLastStep(bool w)
-    {
-        lastStep = w;
-    }
-
-
-    public bool isWalking()
-    {
-        return walking;
-    }
-
-    public void setWalking(bool w)
-    {
-        walking = w;
-    }
-
     /// <summary>
     /// 
     /// </summary>
@@ -160,7 +139,7 @@ public class HeroMovement : MonoBehaviour
     {
         curSpeed = Math.Min(positions.Count, heroSpeed);
         i = 0;
-        move = 0;
+        move = 0f;
         setLastStep(false);
         setWalking(true);
     }
@@ -204,5 +183,26 @@ public class HeroMovement : MonoBehaviour
         foreach (GameObject go in pathList)
             Destroy(go);
         // todo - if(objectcollision)
+    }
+
+    public bool isLastStep()
+    {
+        return lastStep;
+    }
+
+    public void setLastStep(bool w)
+    {
+        lastStep = w;
+    }
+
+
+    public bool isWalking()
+    {
+        return walking;
+    }
+
+    public void setWalking(bool w)
+    {
+        walking = w;
     }
 }
