@@ -4,13 +4,24 @@ using UnityEngine;
 using System;
 using System.Linq;
 
+/// <summary>
+/// The AstarAlgo class exists to calculate the shortest possible path from start to end
+/// </summary>
 public class AStarAlgo {
+
 
     bool[,] canWalk;
     Node[,] nodes;
     int width, height;
     protected bool hex;
 
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="canWalk">2D bool array with true where you can walk</param>
+    /// <param name="w">The width of the map</param>
+    /// <param name="h">The height of the map</param>
+    /// <param name="hex">If the map is hex based or square based</param>
     public AStarAlgo(bool[,] canWalk, int w, int h, bool hex)
     {
         this.canWalk = canWalk;
@@ -72,13 +83,11 @@ public class AStarAlgo {
                 neighbours = findNeighboursHex(posX, posY);
             else 
                 neighbours = findNeighboursSquare(posX, posY);
-
             // Calculates pathcost to neighbor nodes
             for (int i = 0; i < neighbours.Length && neighbours[i] != null; i++)
             {
 
                 Node neighbour = neighbours[i];
-
                 // If already evaluvated, skip node
                 if (closedSet.Contains(neighbour))
                     continue;
@@ -115,7 +124,10 @@ public class AStarAlgo {
             // Sorts openSet by cost
             openSet = openSet.OrderBy(Node => Node.GetF()).ToList();
         }
-
+        foreach (Vector2 v in path)
+        {
+            Debug.Log(v.ToString());
+        }
         // Returns path array that contains the shortest path
         return path;
     }
