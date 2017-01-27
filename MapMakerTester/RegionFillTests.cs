@@ -52,5 +52,5 @@ namespace MapGeneratorTests
 			}
 			return copy;
 		}
-	}
+    }
 }
