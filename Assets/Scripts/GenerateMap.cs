@@ -52,6 +52,11 @@ public class GenerateMap : MonoBehaviour
             }
     }
 
+    public bool isNotBlocked(int x, int y)
+    {
+        return  x >= 0 && x <= X && y >= 0 && y <= Y && canWalk[x, y];
+    }
+
     public int GetWidth()
     {
         return X;

@@ -62,7 +62,7 @@ public class HeroMovement : MonoBehaviour
                 // Todo, open hero menu
             }
             // If an open square is clicked
-            else if (gm.canWalk[(int)pos.x, (int)pos.y])
+            else if (gm.isNotBlocked((int)pos.x, (int)pos.y))
             {
                 // Walk to pointer if marked square is clicked by enabling variables that triggers moveHero method on update
                 if (pathMarked && pos.Equals(toPos))
