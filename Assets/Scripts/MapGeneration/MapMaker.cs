@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using OverworldObjects;
 
 namespace MapGenerator
 {
@@ -24,6 +25,9 @@ namespace MapGenerator
         GameObject board;
         public Sprite[] groundTiles;
 
+		// Overworld objects
+		Castle[] castles;
+
 		public MapMaker()
 		{	
 			
@@ -32,12 +36,23 @@ namespace MapGenerator
         // Use this for initialization
         void Start () 
         {
+			// DEFINING CASTLE POSITIONS ON THE MAP:
+			Vector2[] castlesPositions = CreateRandomPoint(width, height, numberOfPoints);
+
+			castles = new Castle[numberOfPoints];
+
+			for (int i = 0; i < castles.Length; i++)
+			{
+				castles[i] = new Castle(castlesPositions[i]);
+			}
+
+
+			// DEFINING MAP
             map = new int[width, height];
 
             // APPLYING VORONOI TO THE MAP ARRAY
-            Vector2[] castles = CreateRandomPoint(width, height, numberOfPoints);
-            VoronoiGenerator voronoi = new VoronoiGenerator(width, height, castles, relaxItr); 
-            int[,] voronoiMap = fillMap(voronoi.getTexture());
+            VoronoiGenerator voronoi = new VoronoiGenerator(width, height, castlesPositions, relaxItr);
+			int[,] voronoiMap = voronoi.GetMap();
 
 
             // APPLYING PROCEDURAL MAP GENERATOR TO MAP ARRAY:
@@ -45,7 +60,7 @@ namespace MapGenerator
             int[,] binaryMap = binary.getMap();
 
             // CHOOSING MAP TO USE:
-            RegionFill r = new RegionFill(voronoiMap);
+			RegionFill r = new RegionFill(voronoiMap, castlesPositions);
 
             map = r.getMap();
 
@@ -90,40 +105,6 @@ namespace MapGenerator
         }
 
 
-        /// <summary>
-        /// Fills the map with the values for the voronoi zones. 
-        ///     Lines     == 1.
-        ///     EmptyArea == 0.
-        /// 
-        /// </summary>
-        /// <returns>The map.</returns>
-        /// <param name="tx">Tx.</param>
-        int[,] fillMap( Texture2D tx )
-        {
-            int[,] map = new int[width,height];
-
-            for (int y = 0; y < height; y++)
-            {
-                for (int x = 0; x < width; x++)
-                {
-                    Color here = tx.GetPixel(x, y);
-
-                    if (here == Color.blue) // IF WALL
-                    {
-                        map[x, y] = 1;
-                    }
-                    else if (here == Color.red) // IF THE CASTLE
-                    {
-                        map[x, y] = 0;
-                    }
-                    else // IF EMPTY TILE
-                    {
-                        map[x, y] = 0;
-                    }
-                }
-            }
-            return map;
-        }
 
         /// <summary>
         /// Creates the list of random points to create areas out of.

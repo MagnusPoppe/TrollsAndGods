@@ -1,8 +1,9 @@
 ﻿using NUnit.Framework;
 using System;
 using MapGenerator;
+using UnityEngine;
 
-namespace MapMakerTester
+namespace MapGeneratorTests
 {
 	[TestFixture()]
 	public class RegionFillTests
@@ -27,7 +28,12 @@ namespace MapMakerTester
 				}
 			}
 
-			RegionFill r = new RegionFill(splitMap);
+			Vector2[] seeds = {
+				new Vector2(2, 5),
+				new Vector2(7, 5)
+			};
+
+			RegionFill r = new RegionFill(splitMap, seeds);
 
 			int[,] actual = r.getMap();
 

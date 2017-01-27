@@ -13,7 +13,7 @@ namespace MapGenerator
         static Color EDGECOLOR = Color.blue;
 
         Texture2D tx;
-
+		int width, height;
         // This is where we will store the resulting data
         private Dictionary<Vector2f, Site> sites;
         private List<Edge> edges;
@@ -27,6 +27,10 @@ namespace MapGenerator
         public VoronoiGenerator(int width, int height, Vector2[] pkt, int relax) 
         {
             numberOfSites = pkt.Length;
+
+			this.width = width;
+			this.height = height;
+
 
             // Create your sites (lets call that the center of your polygons)
             List<Vector2f> points = UsePoints(pkt);
@@ -48,7 +52,7 @@ namespace MapGenerator
             sites = voronoi.SitesIndexedByLocation;
             edges = voronoi.Edges;
 
-            DrawVoronoiDiagram(width, height);
+            tx = DrawVoronoiDiagram();
         }
 
         /// <summary>
@@ -60,6 +64,39 @@ namespace MapGenerator
             return tx;
         }
 
+        /// <summary>
+        /// Fills the map with the values for the voronoi zones. 
+        ///     Lines     == 1.
+        ///     EmptyArea == 0.
+        /// 
+        /// </summary>
+        /// <returns>The map.</returns>
+        public int[,] GetMap()
+		{
+			int[,] map = new int[width, height];
+
+			for (int y = 0; y < height; y++)
+			{
+				for (int x = 0; x < width; x++)
+				{
+					Color here = tx.GetPixel(x, y);
+
+					if (here == Color.blue) // IF WALL
+					{
+						map[x, y] = 1;
+					}
+					else if (here == Color.red) // IF THE CASTLE
+					{
+						map[x, y] = 0;
+					}
+					else // IF EMPTY TILE
+					{
+						map[x, y] = 0;
+					}
+				}
+			}
+			return map;
+		}
 
         /// <summary>
         /// Takes an array of vector2 points and converts it into 
@@ -83,18 +120,17 @@ namespace MapGenerator
         /// to display the result using a simple bresenham line algorithm.
         /// This algorithm fills out a Texture2D object and returns it.
         /// </summary>
-        /// <param name="width">Width.</param>
-        /// <param name="height">Height.</param>
         /// <returns>Texture2D object containing the map.</returns>
-        private Texture2D DrawVoronoiDiagram(int width, int height) {
-            tx = new Texture2D(width,height);
-            foreach (KeyValuePair<Vector2f,Site> kv in sites) {
+        private Texture2D DrawVoronoiDiagram() {
+            tx = new Texture2D( width,  height );
+            foreach (KeyValuePair<Vector2f,Site> kv in sites ) 
+			{
                 tx.SetPixel((int)kv.Key.x, (int)kv.Key.y, Color.red);
             }
-            foreach (Edge edge in edges) {
+            foreach (Edge edge in edges) 
+			{
                 // if the edge doesn't have clippedEnds, if was not within the bounds, dont draw it
                 if (edge.ClippedEnds == null) continue;
-
                 DrawLine(edge.ClippedEnds[LR.LEFT], edge.ClippedEnds[LR.RIGHT], tx, EDGECOLOR);
             }
             tx.Apply();
