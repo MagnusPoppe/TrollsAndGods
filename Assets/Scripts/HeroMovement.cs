@@ -15,15 +15,14 @@ public class HeroMovement : MonoBehaviour
     public GameObject pathDestNo;
     public GameObject pathYes;
     public GameObject pathNo;
+    public int heroSpeed;
+    public int curSpeed;
     Vector2 curPos;
     Vector2 toPos;
     List<GameObject> pathObjects;
-    List<Vector2> positions;
     bool pathMarked;
     int stepNumber;
     float animationSpeed;
-    public int heroSpeed;
-    public int curSpeed;
     private bool walking;
     private bool lastStep;
     private AStarAlgo aStar;
@@ -52,10 +51,10 @@ public class HeroMovement : MonoBehaviour
             Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             pos.x = (int)(pos.x + 0.5);
             pos.y = (int)(pos.y + 0.5);
-            // When mousebutton is clicked an already ongoing movement shall be stopped
-            if (isWalking())
+            // When mousebutton is clicked, an already ongoing movement shall be stopped
+            if (IsWalking())
             {
-                setLastStep(true);
+                SetLastStep(true);
             }
             // Hero's own position is clicked
             else if (curPos.Equals(pos))
@@ -68,30 +67,50 @@ public class HeroMovement : MonoBehaviour
                 // Walk to pointer if marked square is clicked by enabling variables that triggers moveHero method on update
                 if (pathMarked && pos.Equals(toPos))
                 {
-                    setWalking(true);
+                    SetWalking(true);
                 }
                 // Activate clicked path
                 else
                 {
-                    pathObjects = markPath(pos);
+                    pathObjects = MarkPath(pos);
                 }
             }
         }
         else if(Input.GetKeyDown("space"))
         {
-            if (isWalking())
+            if (IsWalking())
             {
-                setLastStep(true);
+                SetLastStep(true);
             }
             else if (pathMarked)
             {
-                setWalking(true);
+                SetWalking(true);
             }
         }
         // Upon every update, hero will be moved in a direction if walking is enabled
-        if (isWalking())
+        if (IsWalking())
         {
-            transform.position = moveHero();
+            Vector2 newPos = PrepareMovement();
+            
+            // If hero has reached a new tile, increment so that he walks towards the next one, reset time animation, and destroy tile object
+            if (transform.position.Equals(pathObjects[stepNumber].transform.position))
+            {
+                Destroy(pathObjects[stepNumber]);
+                stepNumber++;
+                animationSpeed = 0f;
+                // Stop the movement when amount of tiles moved has reached the limit, or walking is disabled
+                if (IsLastStep())
+                {
+                    // Set hero position when he stops walking
+                    curPos = transform.position;
+                    SetWalking(false);
+                    SetPathMarked(false);
+                    RemoveMarkers(pathObjects);
+                    // todo - if(objectcollision)
+                }
+            }
+            // Execute the movement
+            transform.position = newPos;
         }
     }
 
@@ -100,16 +119,17 @@ public class HeroMovement : MonoBehaviour
     /// </summary>
     /// <param name="pos">Destination tile position</param>
     /// <returns>List of instantiated marker objects</returns>
-    private List<GameObject> markPath(Vector2 pos)
+    private List<GameObject> MarkPath(Vector2 pos)
     {
-        pathMarked = true;
         stepNumber = 0;
-        animationSpeed = 0f;
-        setLastStep(false);
+        SetPathMarked(true);
+        SetLastStep(false);
         toPos = pos;
+        // Needs to clear existing objects if an earlier path was already made
+        RemoveMarkers(pathObjects);
         // Call algorithm method that returns a list of Vector2 positions to the point, go through all objects
-        positions = aStar.calculate(curPos, pos);
-        // Calculate how many steps the hero can move
+        List<Vector2> positions = aStar.calculate(curPos, pos);
+        // Calculate how many steps the hero will move, if this path is chosen
         curSpeed = Math.Min(positions.Count, heroSpeed);
         int i = curSpeed;
         // For each position, create a gameobject with an image and instantiate it, and add it to a gameobject list for later to be removed
@@ -135,58 +155,55 @@ public class HeroMovement : MonoBehaviour
     }
 
     /// <summary>
-    /// Creates a position with animationspeed and returns it, also checks if hero has reached new tile and if the movement shall be stopped
+    /// Creates a position with animationspeed and returns it
     /// </summary>
     /// <returns>Position the hero shall be moved to</returns>
-    private Vector2 moveHero()
+    private Vector2 PrepareMovement()
     {
         // Add animation, transform hero position
         animationSpeed += Time.deltaTime; 
-        Vector2 pos = Vector2.Lerp(transform.position, positions[stepNumber], animationSpeed);
-
-        // If hero reaches a new tile, increment so that he walks towards the next one, reset time animation, and destroy tile object
-        if (((Vector2)transform.position).Equals((positions[stepNumber])))
-        {
-            // Destroy the tile object he has reached
-            Destroy(pathObjects[stepNumber]);
-            stepNumber++;
-            animationSpeed = 0f;
-            // Stop the movement when amount of tiles moved has reached speed, or walking is disabled
-            if (stepNumber == curSpeed || isLastStep())
-            {
-                // Set hero position variable, and refresh toposition
-                curPos = transform.position;
-                setWalking(false);
-                pathMarked = false;
-                // Destroy the tile gameobjects
-                foreach (GameObject go in pathObjects)
-                    Destroy(go);
-
-                pathObjects.Clear();
-                // todo - if(objectcollision)
-            }
-        }
-        return pos;
+        return Vector2.Lerp(transform.position, pathObjects[stepNumber].transform.position, animationSpeed);
     }
 
-    public bool isLastStep()
+    /// <summary>
+    /// Destroy the tile gameobjects and refresh list
+    /// </summary>
+    /// <param name="li">List that shall be cleared</param>
+    private void RemoveMarkers(List<GameObject> li)
     {
-        return lastStep;
+        foreach (GameObject go in li)
+            Destroy(go);
+        li.Clear();
     }
 
-    public void setLastStep(bool w)
+    public bool IsLastStep()
+    {
+        return stepNumber == curSpeed || lastStep;
+    }
+
+    public void SetLastStep(bool w)
     {
         lastStep = w;
     }
 
 
-    public bool isWalking()
+    public bool IsWalking()
     {
         return walking;
     }
 
-    public void setWalking(bool w)
+    public void SetWalking(bool w)
     {
         walking = w;
+    }
+
+    public bool IsPathMarked()
+    {
+        return pathMarked;
+    }
+
+    public void SetPathMarked(bool pm)
+    {
+        pathMarked = pm;
     }
 }
