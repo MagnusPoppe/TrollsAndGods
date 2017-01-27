@@ -221,7 +221,7 @@ public class AStarAlgo {
         // Transelates offset cordinates to cube cordinates
         private Vector3 oddROffsetToCube(Vector2 pos)
         {
-            int x = (int)(pos.x - (pos.y - ((int)pos.y & 1)) / 2);
+            int x = (int)(pos.x - ((pos.y - 1 * ((int)pos.y & 1)) / 2));
             int z = (int)pos.y;
             int y = -x - z;
             return new Vector3(x, y, z);
@@ -230,15 +230,32 @@ public class AStarAlgo {
         // returns distance to target in a offset grid, ignoring obstacles
         private int DistanceHex(Vector2 a, Vector2 b)
         {
-            Vector3 s = oddROffsetToCube(a);
-            Vector3 g = oddROffsetToCube(b);
-            return cubeDistance(s, g);
+            if (a.x == b.x)
+                return (int)Math.Abs(b.y - a.y);
+            else if (a.y == b.y)
+                return (int)Math.Abs(b.x - a.x);
+            else {
+                int dx = (int)Math.Abs(b.x - a.x);
+                int dy = (int)Math.Abs(b.y - a.y);
+                if (a.y < b.y)
+                    return dx + dy - (int)(Math.Ceiling(dx / 2.0));
+                else
+                    return dx + dy - (int)(Math.Floor(dx / 2.0));
+                 }
+            //return (int)Math.Max(
+            //Math.Abs(b.y - a.y), Math.Max(
+            //Math.Abs(Math.Ceiling(b.y / -2) + b.x - Math.Ceiling(a.y / -2) - a.x),
+            //Math.Abs(-b.y - Math.Ceiling(b.y / -2) - b.x + a.y + Math.Ceiling(a.y / -2) + a.x)
+            //));
+            //Vector3 s = oddROffsetToCube(a);
+            //Vector3 g = oddROffsetToCube(b);
+            //return cubeDistance(s, g);
         }
 
         // returns distance to target in a cube grid, ignoring obstacles
         private int cubeDistance(Vector3 a, Vector3 b)
         {
-            return (int)((Math.Abs(a.x - b.x) + Math.Abs(a.y - b.y) + Math.Abs(a.z - b.z)) / 2);
+            return (int)Math.Max(Math.Abs(a.x - b.x), Math.Max(Math.Abs(a.y - b.y), Math.Abs(a.z - b.z)));
         }
 
         // Calculates the estimated cost of this path wich is gScore + hScore.
