@@ -97,7 +97,7 @@ namespace MapGenerator
 					}
 					else if (here == Color.red) // IF THE CASTLE
 					{
-						map[x, y] = 2;
+						map[x, y] = 0;
 					}
 					else // IF EMPTY TILE
 					{

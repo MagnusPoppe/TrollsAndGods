@@ -12,7 +12,8 @@ namespace OverworldObjects
 		public Castle(Vector2 pos)
 		{
 			this.position = pos;
-			this.environmentTileType = 3;
+			// TODO: Endre random til faktisk fungere!
+			this.environmentTileType = Random.Range(3, 4);
 			this.name = "unnamed";
 		}
 
@@ -35,6 +36,11 @@ namespace OverworldObjects
 		public override string ToString()
 		{
 			return "Castle " + name+ " at " +position.ToString();
+		}
+
+		public void SetEnvironment(int environmentType)
+		{
+			this.environmentTileType = environmentType;
 		}
 	}
 }

@@ -8,16 +8,21 @@ namespace MapGenerator
     public class MapMaker : MonoBehaviour 
     {
 
+		public bool DisplayVoronoi = false;
+		public bool DisplayBinary = false;
+		public bool DisplayCombinedMap = true;
+
+
         // Mathematical game objects
         public int width, height;
         int[,] map;
         bool[,] canWalk;
         public string seed;
-        [Range(0,100)] public int fillPercent;
+		[Range(0,100)] public int fillPercentWalkable;
 
         // VORONOI varables:
 		[Range (0, 50)] public int sites;
-        [Range (0, 20)] public int relaxItr;
+        [Range (1, 20)] public int relaxItr;
         [Range (0, 20)] public int smoothItr;
 
         // Unity map objects
@@ -27,6 +32,10 @@ namespace MapGenerator
 
 		// Overworld objects
 		Castle[] castles;
+
+		public const int GROUND 	= 0;
+		public const int WALL 		= 1;
+		public const int CASTLE 	= 2;
 
 		public MapMaker()
 		{	
@@ -39,20 +48,42 @@ namespace MapGenerator
 			VoronoiGenerator voronoi = CastleSetup();
 			int[,] voronoiMap = voronoi.GetMap();
 
-            // APPLYING PROCEDURAL MAP GENERATOR TO MAP ARRAY:
-            BinaryMap binary = new BinaryMap(width, height, smoothItr, seed, fillPercent);
-            int[,] binaryMap = binary.getMap();
-
-
+           
 
 			RegionFill r = new RegionFill(voronoiMap, castles);
 			map = r.getMap();
-			//map = CombineMaps(binaryMap, voronoiMap);
+			Region[] regions = r.GetRegions();
+
+			foreach (Region region in regions)
+			{
+				region.ResetRegionGroundTileType(map);
+			}
+
+			// APPLYING PROCEDURAL MAP GENERATOR TO MAP ARRAY:
+			BinaryMap binary = new BinaryMap(
+				width,
+				height,
+				smoothItr,
+				seed,
+				fillPercentWalkable,
+				regions
+			);
+			int[,] binaryMap = binary.getMap();
+
+			map = CombineMaps(binaryMap, map);
+			
+			CreateWalkableArea();
+
+			foreach (Region region in regions)
+			{
+				region.SetRegionGroundTileType(region.GetCastle().GetEnvironment(), map);
+			}
 
 			DrawMap();
             // FLIPPING THE CANWALK TABLE ELEMENTS ACCORDING TO THE MAP
-            CreateWalkableArea();
+            
         }
+
 
 		VoronoiGenerator CastleSetup()
 		{
@@ -78,14 +109,15 @@ namespace MapGenerator
 
 		void CreateWalkableArea()
         {
+			canWalk = new bool[width, height];
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
                 {
-                    if (map[x, y] == 1)
-                        canWalk[x, y] = false;
-                    else
+					if (map[x, y] == GROUND)
                         canWalk[x, y] = true;
+                    else
+                        canWalk[x, y] = false;
                 }
             }
         }
@@ -96,16 +128,18 @@ namespace MapGenerator
             {
                 for (int x = 0; x < width; x++)
                 {
-                    if (voronoi[x, y] == 1)
-                        map[x, y] = 2;
-                    else
-                        map[x, y] = binary[x, y];
+					if (voronoi[x, y] == WALL)
+						map[x, y] = binary[x,y];
+					else if (voronoi[x, y] == CASTLE)
+						map[x, y] = WALL;
+					else
+						map[x, y] = binary[x, y];
                 }
             }
 
 			foreach (Castle site in castles)
 			{
-				map[(int)site.GetPosition().x, (int)site.GetPosition().x] = 2;
+				map[(int)site.GetPosition().x, (int)site.GetPosition().y] = CASTLE;
 			}
 
             return map;
@@ -120,8 +154,6 @@ namespace MapGenerator
 			board.name = "Board";
 			fillTiles();
 		}
-
-
 
         /// <summary>
         /// Creates the list of random points to create areas out of.
