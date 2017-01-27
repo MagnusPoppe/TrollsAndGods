@@ -107,29 +107,25 @@ public class HeroMovement : MonoBehaviour
         animationSpeed = 0f;
         setLastStep(false);
         toPos = pos;
-        // Refresh already existing pointers
-        foreach (GameObject go in pathObjects)
-            Destroy(go);
-
-        pathObjects.Clear();
         // Call algorithm method that returns a list of Vector2 positions to the point, go through all objects
         positions = aStar.calculate(curPos, pos);
         // Calculate how many steps the hero can move
         curSpeed = Math.Min(positions.Count, heroSpeed);
+        int i = curSpeed;
         // For each position, create a gameobject with an image and instantiate it, and add it to a gameobject list for later to be removed
         foreach (Vector2 no in positions)
         {
-            // Create a cloned gameobject of a prefab, with the sprite according to what kind of a marker it is
+            // Create a cloned gameobject of the prefab corresponding to what the marker shall look like
             GameObject pathMarker;
-            if (pos == no && curSpeed > 0)
+            if (pos == no && i > 0)
                 pathMarker = pathDestYes;
             else if (pos == no)
                 pathMarker = pathDestNo;
-            else if (curSpeed > 0)
+            else if (i > 0)
                 pathMarker = pathYes;
             else
                 pathMarker = pathNo;
-            curSpeed--;
+            i--;
             // set the cloned position to the vector2 object, instantiate it and add it to the list of gameobjects, pathList
             pathMarker.transform.position = no;
             pathMarker = Instantiate(pathMarker);
@@ -139,7 +135,7 @@ public class HeroMovement : MonoBehaviour
     }
 
     /// <summary>
-    /// Creates a position with animationspeed and returns it
+    /// Creates a position with animationspeed and returns it, also checks if hero has reached new tile and if the movement shall be stopped
     /// </summary>
     /// <returns>Position the hero shall be moved to</returns>
     private Vector2 moveHero()
@@ -148,8 +144,8 @@ public class HeroMovement : MonoBehaviour
         animationSpeed += Time.deltaTime; 
         Vector2 pos = Vector2.Lerp(transform.position, positions[stepNumber], animationSpeed);
 
-        // Every time the hero reaches a new tile, increment i so that he walks towards the next one, reset time animation, and destroy tile object
-        if (pos.Equals(positions[stepNumber]))
+        // If hero reaches a new tile, increment so that he walks towards the next one, reset time animation, and destroy tile object
+        if (((Vector2)transform.position).Equals((positions[stepNumber])))
         {
             // Destroy the tile object he has reached
             Destroy(pathObjects[stepNumber]);
@@ -158,26 +154,19 @@ public class HeroMovement : MonoBehaviour
             // Stop the movement when amount of tiles moved has reached speed, or walking is disabled
             if (stepNumber == curSpeed || isLastStep())
             {
-                stopMovement();
+                // Set hero position variable, and refresh toposition
+                curPos = transform.position;
+                setWalking(false);
+                pathMarked = false;
+                // Destroy the tile gameobjects
+                foreach (GameObject go in pathObjects)
+                    Destroy(go);
+
+                pathObjects.Clear();
+                // todo - if(objectcollision)
             }
         }
         return pos;
-    }
-
-    /// <summary>
-    /// Sets variables so that movehero check in update is disabled
-    /// </summary>
-    private void stopMovement()
-    {
-        // Set hero position variable, and refresh toposition
-        curPos = transform.position;
-        toPos = new Vector2();
-        setWalking(false);
-        pathMarked = false;
-        // Destroy the tile gameobjects
-        foreach (GameObject go in pathObjects)
-            Destroy(go);
-        // todo - if(objectcollision)
     }
 
     public bool isLastStep()
