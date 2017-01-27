@@ -124,10 +124,7 @@ public class AStarAlgo {
             // Sorts openSet by cost
             openSet = openSet.OrderBy(Node => Node.GetF()).ToList();
         }
-        foreach (Vector2 v in path)
-        {
-            Debug.Log(v.ToString());
-        }
+
         // Returns path array that contains the shortest path
         return path;
     }
