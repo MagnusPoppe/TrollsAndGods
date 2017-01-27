@@ -66,17 +66,32 @@ namespace MapGenerator
 			castle.SetEnvironment(id);
 		}
 
+		/// <summary>
+		/// Resets the type of groundtile to the standard ground
+		/// tile. This includes all tiles bigger than the reserved
+		/// numbers.
+		/// Definition of groundtile is found in MapMaker.GROUND
+		/// </summary>
+		/// <returns>Reset map</returns>
+		/// <param name="map">Map.</param>
 		public int[,] ResetRegionGroundTileType(int[,] map)
 		{
 			foreach (Vector2 v in coordinates)
 			{
-				if ( map[(int)v.x, (int)v.y] > MapMaker.CASTLE
+				if ( map[(int)v.x, (int)v.y] >= MapMaker.FIRST_AVAILABLE_SPRITE
 				   || map[(int)v.x, (int)v.y] == MapMaker.GROUND)
 					map[(int)v.x, (int)v.y] = MapMaker.GROUND;
 			}
 			return map;
 		}
 
+		/// <summary>
+		/// Sets all ground tiles to a given type of tile.
+		/// Definition of groundtile is found in MapMaker.GROUND
+		/// </summary>
+		/// <returns>The region ground tile type.</returns>
+		/// <param name="groundTile">Ground tile.</param>
+		/// <param name="map">Map.</param>
 		public int[,] SetRegionGroundTileType(int groundTile, int[,] map)
 		{
 			foreach (Vector2 v in coordinates)
@@ -85,6 +100,21 @@ namespace MapGenerator
 					map[(int)v.x, (int)v.y] = groundTile;
 			}
 			return map;
+		}
+
+		/// <summary>
+		/// Checks if the position is part of this region.
+		/// </summary>
+		/// <returns><c>true</c>, if position in region, <c>false</c> otherwise.</returns>
+		/// <param name="Position">Position.</param>
+		public bool IsPositionInRegion(Vector2 Position)
+		{
+			foreach (Vector2 coordinate in coordinates)
+			{
+				if (coordinate.Equals(Position))
+					return true;
+			}
+			return false;
 		}
 	}
 }

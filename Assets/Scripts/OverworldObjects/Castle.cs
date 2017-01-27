@@ -13,7 +13,7 @@ namespace OverworldObjects
 		{
 			this.position = pos;
 			// TODO: Endre random til faktisk fungere!
-			this.environmentTileType = Random.Range(3, 4);
+			//this.environmentTileType = Random.Range(3, 4);
 			this.name = "unnamed";
 		}
 

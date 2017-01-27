@@ -2,6 +2,8 @@
 using System;
 using MapGenerator;
 using UnityEngine;
+using System.Collections.Generic;
+using OverworldObjects;
 
 namespace MapGeneratorTests
 {
@@ -9,48 +11,50 @@ namespace MapGeneratorTests
 	public class RegionFillTests
 	{
 		[Test()]
-		public void FloodFillTester()
+		public void FloodFillFromSeedTester()
 		{
-			int width = 10;
-			int height = 10;
-			int[,] splitMap = new int[width, height];
+			int[,] map = new int[20, 20];
 
-			for (int y = 0; y < splitMap.GetLength(1); y++)
-				splitMap[5, y] = 1;
-
-			int[,] expected = copy2DArray(splitMap);
-			for (int y = 0; y < height; y++)
+			for (int y = 0; y < map.GetLength(0); y++)
 			{
-				for (int x = 0; x < width; x++)
-				{
-					if (x < 5) expected[x, y] = 2;
-					else if (x > 5) expected[x, y] = 3;
-				}
+				map[15, y] = MapMaker.WALL;
 			}
 
 			Vector2[] seeds = {
-				new Vector2(2, 5),
-				new Vector2(7, 5)
+				new Vector2( map.GetLength(0)/2, 5 ),
+				new Vector2( map.GetLength(0)/2, 16),
 			};
 
-			RegionFill r = new RegionFill(splitMap, seeds);
+			RegionFill regionfill = new RegionFill(map, seeds);
+			Region[] actual = regionfill.GetRegions();
+			Region expected = TestTools.GenerateSquareDummyRegion(0, 0, 15, 20);
 
-			int[,] actual = r.getMap();
+			Assert.AreEqual(expected.GetArea(), actual[0].GetArea());
 
-			Assert.AreEqual(expected, actual);
 		}
 
-		private int[,] copy2DArray(int[,] array)
+		[Test()]
+		public void FloodFillFromCastleTester()
 		{
-			int[,] copy = new int[array.GetLength(0), array.GetLength(1)];
-			for (int y = 0; y < array.GetLength(1); y++)
+			int[,] map = new int[20, 20];
+
+			for (int y = 0; y < map.GetLength(0); y++)
 			{
-				for (int x = 0; x < array.GetLength(0); x++)
-				{
-					copy[x, y] = array[x, y];
-				}
+				map[15, y] = MapMaker.WALL;
 			}
-			return copy;
+
+			Castle[] castles = {
+				new Castle(new Vector2( map.GetLength(0)/2, 5 ), MapMaker.FIRST_AVAILABLE_SPRITE),
+				new Castle(new Vector2( map.GetLength(0)/2, 16), MapMaker.FIRST_AVAILABLE_SPRITE)
+			};
+
+			RegionFill regionfill = new RegionFill(map, castles);
+			Region[] actual = regionfill.GetRegions();
+			Region expected = TestTools.GenerateSquareDummyRegion(0, 0, 15, 20);
+
+			Assert.AreEqual(expected.GetArea(), actual[0].GetArea());
 		}
+
+
     }
 }

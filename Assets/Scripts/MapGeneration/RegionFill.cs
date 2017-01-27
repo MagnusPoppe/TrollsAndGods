@@ -12,11 +12,6 @@ namespace MapGenerator
 		Region[] regions;
 		int regionindex;
 
-		const int GROUND = 0;
-		const int WALL = 1;
-		const int CASTLE = 2;
-
-
 		/// <summary>
 		/// Takes the voronoi generated map and fills in the regions based
 		/// on random colors.
@@ -36,10 +31,10 @@ namespace MapGenerator
 
             int label = 3;
 			for (int i = 0; i < seeds.Length; i++)
-            {
-                if (map[(int)seeds[i].x,(int)seeds[i].y] == 0) //UNMARKED
+			{
+				if (map[(int)seeds[i].x,(int)seeds[i].y] == 0) //UNMARKED
                 {
-                     floodFill(seeds[i], label++);
+                     FloodFill(seeds[i], label++);
                 }
             }
         }
@@ -62,7 +57,7 @@ namespace MapGenerator
 			regionindex = 0;
 
 			for (int i = 0; i < castles.Length; i++)
-				floodFill(castles[i].GetPosition(), castles[i].GetEnvironment());
+				FloodFill(castles[i].GetPosition(), castles[i].GetEnvironment());
 			
 		}
 
@@ -71,12 +66,12 @@ namespace MapGenerator
 		/// </summary>
 		/// <param name="seed">Seed.</param>
 		/// <param name="label">Label for the point.</param>
-		void floodFill(Vector2 seed, int label)
+		void FloodFill(Vector2 seed, int label)
 		{
 			Queue<Vector2> queue = new Queue<Vector2>();
 			queue.Enqueue(seed);
 
-			fill(queue, label);
+			Fill(queue, label);
 		}
 
 		/// <summary>
@@ -85,12 +80,12 @@ namespace MapGenerator
 		/// <param name="x">Seed coordnate x.</param>
 		/// <param name="y">Seed coordnate y.</param>
 		/// <param name="label">Label for the point.</param>
-		void floodFill( int x, int y, int label )
+		void FloodFill( int x, int y, int label )
         {
             Queue<Vector2> queue = new Queue<Vector2>();
             queue.Enqueue(new Vector2(x, y));
 
-			fill(queue, label);
+			Fill(queue, label);
         }
 
 		/// <summary>
@@ -99,7 +94,7 @@ namespace MapGenerator
 		/// </summary>
 		/// <param name="queue">Queue.</param>
 		/// <param name="label">Label.</param>
-		private void fill(Queue<Vector2> queue, int label)
+		private void Fill(Queue<Vector2> queue, int label)
 		{
 			List<Vector2> region = new List<Vector2>();
 			Vector2 center = queue.Peek();
@@ -115,7 +110,7 @@ namespace MapGenerator
 				if (x >= 0 && x < width && y >= 0 && y < height)
 				{
 					// Checking if  ground or castle
-					if (map[x, y] == GROUND || map[x, y] == CASTLE)
+					if (map[x, y] == MapMaker.GROUND || map[x, y] == MapMaker.CASTLE)
 					{
 						// Labeling:
 						map[x, y] = label;
@@ -138,7 +133,7 @@ namespace MapGenerator
 		/// Returns the map created by this algorithm.
 		/// </summary>
 		/// <returns>The map.</returns>
-        public int[,] getMap()
+        public int[,] GetMap()
         {
             return map;
         }

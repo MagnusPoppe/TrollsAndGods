@@ -9,7 +9,6 @@ namespace MapGenerator
     public class VoronoiGenerator 
     {
         // The number of polygons/sites we want
-        int numberOfSites;
         static Color EDGECOLOR = Color.blue;
 
 		List<Vector2f> relaxedPoints;
@@ -28,7 +27,6 @@ namespace MapGenerator
         /// <param name="pkt">Pkt.</param>
         public VoronoiGenerator(int width, int height, Vector2[] pkt, int relax) 
         {
-            numberOfSites = pkt.Length;
 
 			this.width = width;
 			this.height = height;

@@ -59,6 +59,8 @@
   <ItemGroup>
     <Compile Include="RegionFillTests.cs" />
     <Compile Include="VoronoiGeneratorTest.cs" />
+    <Compile Include="TestTools.cs" />
+    <Compile Include="RegionTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
