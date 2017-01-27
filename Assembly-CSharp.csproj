@@ -58,7 +58,6 @@
      <Compile Include="Assets\Scripts\MapGeneration\Region.cs" />
      <Compile Include="Assets\Scripts\MapGeneration\RegionFill.cs" />
      <Compile Include="Assets\Scripts\MapGeneration\VoronoiGenerator.cs" />
-     <Compile Include="Assets\Scripts\MiniMap.cs" />
      <Compile Include="Assets\Scripts\OverworldObjects\Castle.cs" />
      <Compile Include="Assets\Scripts\libs\delunay\Delaunay\Edge.cs" />
      <Compile Include="Assets\Scripts\libs\delunay\Delaunay\EdgeList.cs" />
@@ -78,9 +77,6 @@
      <Compile Include="Assets\Scripts\libs\delunay\Geom\Rectf.cs" />
      <Compile Include="Assets\Scripts\libs\delunay\Geom\Vector2f.cs" />
      <Compile Include="Assets\Scripts\libs\delunay\Geom\Winding.cs" />
- <Reference Include="UnityEngine.Advertisements">
- <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/Advertisements/UnityEngine.Advertisements.dll</HintPath>
- </Reference>
  <Reference Include="UnityEngine.UI">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
@@ -95,9 +91,6 @@
  </Reference>
  <Reference Include="UnityEngine.HoloLens">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/UnityHoloLens/RuntimeEditor/UnityEngine.HoloLens.dll</HintPath>
- </Reference>
- <Reference Include="UnityEngine.Purchasing">
- <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/UnityPurchasing/UnityEngine.Purchasing.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.VR">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/UnityVR/RuntimeEditor/UnityEngine.VR.dll</HintPath>
