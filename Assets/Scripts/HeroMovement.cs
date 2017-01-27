@@ -37,7 +37,7 @@ public class HeroMovement : MonoBehaviour
         curPos = transform.position;
         g = GameObject.Find("MapGenerator");
         gm = g.GetComponent<GenerateMap>();
-        aStar = new AStarAlgo(gm.blockedSquare, gm.GetWidth(), gm.GetHeight(), false);
+        aStar = new AStarAlgo(gm.canWalk, gm.GetWidth(), gm.GetHeight(), false);
     }
 	
     /// <summary>
@@ -62,7 +62,7 @@ public class HeroMovement : MonoBehaviour
                 // Todo, open hero menu
             }
             // If an open square is clicked
-            else if (!gm.blockedSquare[(int)pos.x, (int)pos.y])
+            else if (gm.canWalk[(int)pos.x, (int)pos.y])
             {
                 // Walk to pointer if marked square is clicked by enabling variables that triggers moveHero method on update
                 if (pathMarked && pos.Equals(toPos))
