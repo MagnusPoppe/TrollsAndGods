@@ -7,11 +7,13 @@ namespace OverworldObjects
 	{
 		Vector2 position;
 		int environmentTileType;
+		string name;
 
 		public Castle(Vector2 pos)
 		{
 			this.position = pos;
-			this.environmentTileType = 2;
+			this.environmentTileType = 3;
+			this.name = "unnamed";
 		}
 
 		public Castle( Vector2 pos, int tileType )
@@ -28,6 +30,11 @@ namespace OverworldObjects
 		public Vector2 GetPosition()
 		{
 			return position;
+		}
+
+		public override string ToString()
+		{
+			return "Castle " + name+ " at " +position.ToString();
 		}
 	}
 }

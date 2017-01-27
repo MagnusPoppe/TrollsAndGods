@@ -16,7 +16,7 @@ namespace MapGenerator
         [Range(0,100)] public int fillPercent;
 
         // VORONOI varables:
-        [Range (0, 50)] public int numberOfPoints;
+		[Range (0, 50)] public int sites;
         [Range (0, 20)] public int relaxItr;
         [Range (0, 20)] public int smoothItr;
 
@@ -36,46 +36,47 @@ namespace MapGenerator
         // Use this for initialization
         void Start () 
         {
-			// DEFINING CASTLE POSITIONS ON THE MAP:
-			Vector2[] castlesPositions = CreateRandomPoint(width, height, numberOfPoints);
-
-			castles = new Castle[numberOfPoints];
-
-			for (int i = 0; i < castles.Length; i++)
-			{
-				castles[i] = new Castle(castlesPositions[i]);
-			}
-
-
-			// DEFINING MAP
-            map = new int[width, height];
-
-            // APPLYING VORONOI TO THE MAP ARRAY
-            VoronoiGenerator voronoi = new VoronoiGenerator(width, height, castlesPositions, relaxItr);
+			VoronoiGenerator voronoi = CastleSetup();
 			int[,] voronoiMap = voronoi.GetMap();
-
 
             // APPLYING PROCEDURAL MAP GENERATOR TO MAP ARRAY:
             BinaryMap binary = new BinaryMap(width, height, smoothItr, seed, fillPercent);
             int[,] binaryMap = binary.getMap();
 
-            // CHOOSING MAP TO USE:
-			RegionFill r = new RegionFill(voronoiMap, castlesPositions);
 
-            map = r.getMap();
 
-            // DRAWING THE MAP:
-            tiles = new GameObject[width, height];
-            canWalk = new bool[width, height];
-            board = new GameObject();
-            board.name = "Board";
-            fillTiles();
+			RegionFill r = new RegionFill(voronoiMap, castles);
+			map = r.getMap();
+			//map = CombineMaps(binaryMap, voronoiMap);
 
+			DrawMap();
             // FLIPPING THE CANWALK TABLE ELEMENTS ACCORDING TO THE MAP
-            createWalkableArea();
+            CreateWalkableArea();
         }
 
-        void createWalkableArea()
+		VoronoiGenerator CastleSetup()
+		{
+			// DEFINING CASTLE POSITIONS ON THE MAP:
+			Vector2[] sitelist = CreateRandomPoints();
+
+			// APPLYING VORONOI TO THE MAP ARRAY
+			VoronoiGenerator voronoi = new VoronoiGenerator(width, height, sitelist, relaxItr);
+
+			// Getting new positions after relaxing:
+			sitelist = voronoi.GetNewSites();
+
+			castles = new Castle[sites];
+
+			for (int i = 0; i < castles.Length; i++)
+			{
+				int color = Random.Range(3, groundTiles.Length);
+				castles[i] = new Castle(sitelist[i], color);
+			}
+
+			return voronoi;
+		}
+
+		void CreateWalkableArea()
         {
             for (int y = 0; y < height; y++)
             {
@@ -89,7 +90,7 @@ namespace MapGenerator
             }
         }
 
-        protected int[,] combineMaps(int[,] binary, int[,] voronoi)
+		protected int[,] CombineMaps(int[,] binary, int[,] voronoi)
         {
             for (int y = 0; y < height; y++)
             {
@@ -101,8 +102,24 @@ namespace MapGenerator
                         map[x, y] = binary[x, y];
                 }
             }
+
+			foreach (Castle site in castles)
+			{
+				map[(int)site.GetPosition().x, (int)site.GetPosition().x] = 2;
+			}
+
             return map;
         }
+
+		protected void DrawMap()
+		{
+            // DRAWING THE MAP:
+            tiles = new GameObject[width, height];
+			canWalk = new bool[width, height];
+			board = new GameObject();
+			board.name = "Board";
+			fillTiles();
+		}
 
 
 
@@ -112,12 +129,15 @@ namespace MapGenerator
         /// <returns>The list of random points.</returns>
         /// <param name="width">Width.</param>
         /// <param name="height">Height.</param>
-        private Vector2[] CreateRandomPoint(int width, int height, int numberOfPoints) 
+		private Vector2[] CreateRandomPoints() 
         {
-            Vector2[] points = new Vector2[numberOfPoints];
-            for (int i = 0; i < numberOfPoints; i++) 
+            Vector2[] points = new Vector2[sites];
+
+            // Pesuedo random number generator:
+            System.Random prng = new System.Random(seed.GetHashCode());
+            for (int i = 0; i < sites; i++) 
             {
-                points[i] = new Vector2(Random.Range(0,width), Random.Range(0,height));
+				points[i] = new Vector2(prng.Next(0, width), prng.Next(0, height));
             }
 
             return points;

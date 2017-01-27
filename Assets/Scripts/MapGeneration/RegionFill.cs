@@ -17,13 +17,12 @@ namespace MapGenerator
             this.height = map.GetLength(1);
             this.width = map.GetLength(0);
 
-            int label = 2;
+            int label = 3;
 			for (int i = 0; i < seeds.Length; i++)
             {
                 if (map[(int)seeds[i].x,(int)seeds[i].y] == 0) //UNMARKED
                 {
-                    // floodFill(seeds[i], label++);
-                    floodFill(seeds[i], label);
+                     floodFill(seeds[i], label++);
                 }
             }
         }
@@ -36,14 +35,8 @@ namespace MapGenerator
             this.width = map.GetLength(0);
 
 			for (int i = 0; i < castles.Length; i++)
-			{
-				int x = (int)castles[i].GetPosition().x;
-				int y = (int)castles[i].GetPosition().y;
-				if (map[x, y] == 0) //UNMARKED
-				{
-					floodFill(castles[i].GetPosition(), castles[i].GetEnvironment());
-				}
-			}
+				floodFill(castles[i].GetPosition(), castles[i].GetEnvironment());
+			
 		}
 
 		void floodFill(Vector2 seed, int label)
@@ -64,8 +57,12 @@ namespace MapGenerator
 
 		private void fill(Queue<Vector2> queue, int label)
 		{
+			int debug_queue_size = 0;
+			Vector2 saved = queue.Peek();
+
 			while (queue.Count != 0)
 			{
+				
 				Vector2 current = queue.Dequeue();
 				int x = (int)current.x;
 				int y = (int)current.y;
@@ -74,15 +71,23 @@ namespace MapGenerator
 				{
 					if (map[x, y] == 0)
 					{
+						debug_queue_size++;
 						map[x, y] = label;
 						queue.Enqueue(new Vector2(x - 1, y));
 						queue.Enqueue(new Vector2(x + 1, y));
 						queue.Enqueue(new Vector2(x, y - 1));
 						queue.Enqueue(new Vector2(x, y + 1));
 					}
+					else if (map[x, y] == 2)
+					{
+						debug_queue_size++;
+						queue.Enqueue(new Vector2(x - 1, y));
+						queue.Enqueue(new Vector2(x + 1, y));
+						queue.Enqueue(new Vector2(x, y - 1));
+						queue.Enqueue(new Vector2(x, y + 1));
+					}
 				}
-			}
-			
+ 			}
 		}
 
         public int[,] getMap()

@@ -12,6 +12,8 @@ namespace MapGenerator
         int numberOfSites;
         static Color EDGECOLOR = Color.blue;
 
+		List<Vector2f> relaxedPoints;
+
         Texture2D tx;
 		int width, height;
         // This is where we will store the resulting data
@@ -44,16 +46,24 @@ namespace MapGenerator
             // Here I used it with 2 iterations of the lloyd relaxation
             Voronoi voronoi = new Voronoi(points,bounds, relax);
 
-            // But you could also create it without lloyd relaxtion and call that function later if you want
-            //Voronoi voronoi = new Voronoi(points,bounds);
-            //voronoi.LloydRelaxation(5);
-
             // Now retreive the edges from it, and the new sites position if you used lloyd relaxtion
             sites = voronoi.SitesIndexedByLocation;
             edges = voronoi.Edges;
 
             tx = DrawVoronoiDiagram();
+			relaxedPoints = voronoi.GetRelaxedPoints();
         }
+
+		public Vector2[] GetNewSites()
+		{
+			Vector2[] v = new Vector2[relaxedPoints.Count];
+			int i = 0;
+			foreach (Vector2f point in relaxedPoints)
+			{
+				v[i++] = new Vector2(point.x, point.y);
+			}
+			return v;
+		}
 
         /// <summary>
         /// Gets the texture of the diagram.
@@ -87,7 +97,7 @@ namespace MapGenerator
 					}
 					else if (here == Color.red) // IF THE CASTLE
 					{
-						map[x, y] = 0;
+						map[x, y] = 2;
 					}
 					else // IF EMPTY TILE
 					{
