@@ -58,6 +58,15 @@ namespace MapGenerator
 		}
 
 		/// <summary>
+		/// Gets the can walk map.
+		/// </summary>
+		/// <returns>The can walk map.</returns>
+		public bool[,] GetCanWalkMap()
+		{
+			return canWalk;
+		}
+
+		/// <summary>
 		/// Generates the map using a set of algorithms. This is the 
 		/// controller for the mapgenerator namespace.
 		/// </summary>

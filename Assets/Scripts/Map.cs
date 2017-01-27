@@ -7,7 +7,6 @@ public class Map : MonoBehaviour
 	public int widthOfMap = 128, heightOfMap = 128;
 
 	// Unity map objects
-	public GameObject miniMapCamera;
 	GameObject[,] tiles;
 	public string seed = "Angelica";
  	[Range(0, 100)] public int fillpercentWalkable = 57;
