@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using Filter;
 
 namespace MapGenerator
 {
@@ -89,8 +90,8 @@ namespace MapGenerator
         /// </summary>
         void SmoothMap()
         {
-            AverageFilter filter = new AverageFilter();
-//            MedianFilter filter = new MedianFilter();
+			AverageFilter filter = new AverageFilter();
+         // MedianFilter filter = new MedianFilter();
             int[,] copy = copyMap();
             for (int y = 0; y < height; y++)
             {

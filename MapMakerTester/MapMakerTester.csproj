@@ -61,6 +61,7 @@
     <Compile Include="VoronoiGeneratorTest.cs" />
     <Compile Include="TestTools.cs" />
     <Compile Include="RegionTests.cs" />
+    <Compile Include="MapMakerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

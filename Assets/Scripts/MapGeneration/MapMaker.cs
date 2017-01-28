@@ -18,10 +18,11 @@ namespace MapGenerator
 		Castle[] castles;
 
 		// Constants
-		public const int GROUND 				= 0;
-		public const int WALL 					= 1;
-		public const int CASTLE 				= 2;
-		public const int FIRST_AVAILABLE_SPRITE = 3;
+		public const int  GROUND 					= 0;
+		public const int  WALL 						= 1;
+		public const int  CASTLE 					= 2;
+		public const int  FIRST_AVAILABLE_SPRITE	= 3;
+		public const bool KEEP_VORONOI_REGION_LINES = false;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:MapGenerator.MapMaker"/> class.
@@ -34,7 +35,7 @@ namespace MapGenerator
 		/// <param name="sites">number of sites/towns.</param>
 		/// <param name="relax">Relax iterations used with Lloyds relaxation.</param>
 		/// <param name="spritecount">Number of total available sprites.</param>
-		public MapMaker(int width, int height, string seed, int fill, int smooth, int sites, int relax, int spritecount)
+		public MapMaker(int width, int height,int spritecount, string seed, int fill, int smooth, int sites, int relax)
 		{
 			this.width = width;
 			this.height = height;
@@ -177,9 +178,14 @@ namespace MapGenerator
                 for (int x = 0; x < width; x++)
                 {
 					if (voronoi[x, y] == WALL)
-						combinedMap[x, y] = binary[x,y];
+					if (KEEP_VORONOI_REGION_LINES)
+						combinedMap[x, y] = WALL;
+					else
+						combinedMap[x, y] = binary[x, y];
+					
 					else if (voronoi[x, y] == CASTLE)
 						combinedMap[x, y] = WALL;
+					
 					else
 						combinedMap[x, y] = binary[x, y];
                 }
