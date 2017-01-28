@@ -33,3 +33,5 @@ TrollsAndGods.CSharp.csproj
 TrollsAndGods.CSharp.csproj
 TrollsAndGods.CSharp.csproj
 TrollsAndGods.CSharp.csproj
+
+*.meta
