@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GenerateMap : MonoBehaviour	
 {
-    public bool[,] blockedSquare;
+    public bool[,] canWalk;
     public GameObject[] tiles;
     public GameObject tree;
     public GameObject hero;
@@ -26,18 +26,19 @@ public class GenerateMap : MonoBehaviour
 
     void fillTiles()
     {
+        canWalk = new bool[X, Y];
         for (int x = 0; x < X; x++)
             for (int y = 0; y < Y; y++)
             {
                 GameObject clone = tiles[0];
                 clone.transform.position = new Vector2(x, y);
                 clone = Instantiate(clone);
+                canWalk[x, y] = true;
             }
     }
 
     void fillObjects()
     {
-        blockedSquare = new bool[X, Y];
         for (int x = 0; x < X; x++)
             for (int y = 0; y < Y; y++)
             {
@@ -46,14 +47,14 @@ public class GenerateMap : MonoBehaviour
                     GameObject clone = tree;
                     clone.transform.position = new Vector2(x, y);
                     clone = Instantiate(clone);
-                    blockedSquare[x, y] = true;
+                    canWalk[x, y] = false;
                 }
             }
     }
 
-    public bool GetBlocked(int x, int y)
+    public bool isNotBlocked(int x, int y)
     {
-        return blockedSquare[x, y] && x >= 0 && x <= X && y >= 0 && y <= Y;
+        return  x >= 0 && x <= X && y >= 0 && y <= Y && canWalk[x, y];
     }
 
     public int GetWidth()

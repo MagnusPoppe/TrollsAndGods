@@ -6,11 +6,17 @@ namespace csDelaunay {
 
 	public class Voronoi {
 
+		public List<Vector2f> GetRelaxedPoints()
+		{
+			return newPoints;
+		}
+
 		private SiteList sites;
 		private List<Triangle> triangles;
 
 		private List<Edge> edges;
 		public List<Edge> Edges {get{return edges;}}
+		List<Vector2f> newPoints;
 
 		// TODO generalize this so it doesn't have to be a rectangle;
 		// then we can make the fractal voronois-within-voronois
@@ -296,10 +302,10 @@ namespace csDelaunay {
 			vertices.Clear();
 		}
 
-		public void LloydRelaxation(int nbIterations) {
+		public List<Vector2f> LloydRelaxation(int nbIterations) {
 			// Reapeat the whole process for the number of iterations asked
 			for (int i = 0; i < nbIterations; i++) {
-				List<Vector2f> newPoints = new List<Vector2f>();
+				newPoints = new List<Vector2f>();
 				// Go thourgh all sites
 				sites.ResetListIndex();
 				Site site = sites.Next();
@@ -354,6 +360,7 @@ namespace csDelaunay {
 				Dispose();
 				Init(newPoints,origPlotBounds);
 			}
+			return newPoints;
 		}
 
 		private Site LeftRegion(Halfedge he, Site bottomMostSite) {
