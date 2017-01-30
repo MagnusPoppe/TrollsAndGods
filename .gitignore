@@ -35,3 +35,7 @@ TrollsAndGods.CSharp.csproj
 TrollsAndGods.CSharp.csproj
 
 *.meta
+
+*.mdb
+
+*.dll

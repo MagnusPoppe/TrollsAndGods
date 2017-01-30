@@ -38,6 +38,20 @@ namespace Overworld
 			PlaceCamera();
 			DrawMap(mapmaker.GetMap());
 
+			SpawnHero(mapmaker.GetMap(), mapmaker.GetRegions());
+
+		}
+
+		void SpawnHero(int[,] map, Region[] regions)
+		{
+			Vector2 castlePos = regions[0].GetCastle().GetPosition();
+			Vector2 heroPos = new Vector2(castlePos.x + 1, castlePos.y - 2);
+
+			GameObject hero = new GameObject();
+			hero.AddComponent<HeroMovement>();
+			hero.transform.position = heroPos;
+
+
 		}
 
 		/// <summary>

@@ -68,6 +68,15 @@ namespace MapGenerator
 		}
 
 		/// <summary>
+		/// Gets the regions.
+		/// </summary>
+		/// <returns>The regions.</returns>
+		public Region[] GetRegions()
+		{
+			return regions;
+		}
+
+		/// <summary>
 		/// Generates the map using a set of algorithms. This is the 
 		/// controller for the mapgenerator namespace.
 		/// </summary>
