@@ -149,6 +149,33 @@ public class AStarAlgo {
     {
         Node[] neighbours = new Node[8];
         int logPos = 0;
+        if (posY % 2 == 0)
+        {
+            foreach (Vector2 v in evenIsometricDirections)
+            {
+                if (posX + v.x >= 0 && posX + v.x < width
+                    && posY + v.y >= 0 && posY + v.y < height
+                    && canWalk[posX + (int)v.x, posY + (int)v.y])
+                {
+                    neighbours[logPos] = nodes[posX + (int)v.x, posY + (int)v.y];
+                    logPos++;
+                }
+            }
+        }
+        else
+        {
+            foreach (Vector2 v in oddIsometricDirections)
+            {
+                if (posX + v.x >= 0 && posX + v.x < width
+                    && posY + v.y >= 0 && posY + v.y < height
+                    && canWalk[posX + (int)v.x, posY + (int)v.y])
+                {
+                    neighbours[logPos] = nodes[posX + (int)v.x, posY + (int)v.y];
+                    logPos++;
+                }
+            }
+        }
+        /*
         for (int x = 0; x < 3; x++)
         {
             for (int y = 0; y < 3; y++)
@@ -166,6 +193,7 @@ public class AStarAlgo {
                 }
             }
         }
+        */
         return neighbours;
     }
 
