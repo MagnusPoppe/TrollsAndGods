@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Player
 {
-    public const int X = 32;
-    public const int Y = 32;
+    private const int x = 32;
+    private const int y = 32;
     Hero[] heroes;
     List<Town> towns;
     int color;
@@ -13,10 +13,79 @@ public class Player
 
     public Player(int color)
     {
-        heroes = new Hero[8];
-        heroes[0] = new Hero();
-        towns = new List<Town>();
-        this.color = color;
-        fogOfWar = new bool[X, Y];
+        Heroes = new Hero[8];
+        Heroes[0] = new Hero();
+        Towns = new List<Town>();
+        this.Color = color;
+        FogOfWar = new bool[X, Y];
     }
+
+    public static int X
+    {
+        get
+        {
+            return x;
+        }
+    }
+
+    public static int Y
+    {
+        get
+        {
+            return y;
+        }
+    }
+
+    public Hero[] Heroes
+    {
+        get
+        {
+            return heroes;
+        }
+
+        set
+        {
+            heroes = value;
+        }
+    }
+
+    public List<Town> Towns
+    {
+        get
+        {
+            return towns;
+        }
+
+        set
+        {
+            towns = value;
+        }
+    }
+
+    public int Color
+    {
+        get
+        {
+            return color;
+        }
+
+        set
+        {
+            color = value;
+        }
+    }
+
+    public bool[,] FogOfWar
+    {
+        get
+        {
+            return fogOfWar;
+        }
+
+        set
+        {
+            fogOfWar = value;
+        }
+    }
+
 }
