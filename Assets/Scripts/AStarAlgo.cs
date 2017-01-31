@@ -14,6 +14,16 @@ public class AStarAlgo {
     Node[,] nodes;
     int width, height;
     protected bool hex;
+    readonly Vector2[] evenIsometricDirections = {
+        new Vector2(-1,-1),new Vector2(0,-2),new Vector2(0,-1),
+        new Vector2(-1,0),                   new Vector2(1,0),
+        new Vector2(-1,1),new Vector2(0,2),new Vector2(0,1)
+    };
+    readonly Vector2[] oddIsometricDirections = {
+        new Vector2(0,-1),new Vector2(0,-2),new Vector2(1,-1),
+        new Vector2(-1,0),                   new Vector2(1,0),
+        new Vector2(0,1),new Vector2(0,2),new Vector2(1,1)
+    };
 
     /// <summary>
     /// Constructor
