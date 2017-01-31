@@ -86,7 +86,7 @@ namespace Overworld
 					tiles[x, y].name = "Tile (" + x + ", " + y + ")";
                     if (y % 2 == 0)
                         tiles[x, y].transform.position = new Vector2(x, y/2);
-                    else tiles[x, y].transform.position = new Vector2(x+0.5f, y/2+0.5f); ;
+                    else tiles[x, y].transform.position = new Vector2(x+0.5f, y/2+0.5f);
 
 					// Adding a sprite to the gameobject:
 					SpriteRenderer sr = tiles[x, y].AddComponent<SpriteRenderer>();
