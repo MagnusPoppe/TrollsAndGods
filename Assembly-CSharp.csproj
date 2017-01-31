@@ -66,6 +66,9 @@
      <Compile Include="Assets\Scripts\OverworldObjects\Town.cs" />
      <Compile Include="Assets\Scripts\OverworldObjects\Unit.cs" />
      <Compile Include="Assets\Scripts\Player.cs" />
+     <Compile Include="Assets\Scripts\Stats\BaseStats.cs" />
+     <Compile Include="Assets\Scripts\Stats\HeroStats.cs" />
+     <Compile Include="Assets\Scripts\Stats\UnitStats.cs" />
      <Compile Include="Assets\Scripts\libs\delunay\Delaunay\Edge.cs" />
      <Compile Include="Assets\Scripts\libs\delunay\Delaunay\EdgeList.cs" />
      <Compile Include="Assets\Scripts\libs\delunay\Delaunay\EdgeReorderer.cs" />
