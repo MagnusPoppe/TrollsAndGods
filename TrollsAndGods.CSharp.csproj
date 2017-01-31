@@ -77,7 +77,6 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\AStarAlgo.cs" />
     <Compile Include="Assets\Scripts\GenerateMap.cs" />
-    <Compile Include="Assets\Scripts\HeroMovement.cs" />
     <Compile Include="Assets\Scripts\Map.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\BinaryMap.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\Filter\AverageFilter.cs" />
@@ -87,6 +86,7 @@
     <Compile Include="Assets\Scripts\MapGeneration\Region.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\RegionFill.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\VoronoiGenerator.cs" />
+    <Compile Include="Assets\Scripts\Movement\HeroMovement.cs" />
     <Compile Include="Assets\Scripts\OverworldObjects\Castle.cs" />
     <Compile Include="Assets\Scripts\OverworldObjects\Hero.cs" />
     <Compile Include="Assets\Scripts\OverworldObjects\IngameObjectLibrary.cs" />

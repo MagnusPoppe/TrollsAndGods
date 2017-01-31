@@ -1,13 +1,14 @@
 ﻿using System;
 using UnityEngine;
 using MapGenerator;
+using OverworldObjects;
 
 namespace Overworld
 {
-
-
+    
     public class Map : MonoBehaviour
 	{
+        public MapMaker mapmaker;
 		public int widthXHeight = 128;
 		int width, height;
 
@@ -27,7 +28,7 @@ namespace Overworld
 
 		public Sprite[] groundTiles;
 
-        GameObject[] heroPrefabs;
+        public GameObject[] heroPrefabs;
         void Awake()
         {
             heroPrefabs = UnityEngine.Resources.LoadAll<GameObject>("Heroes");
@@ -38,7 +39,7 @@ namespace Overworld
 			width = widthXHeight;
 			height = widthXHeight;
 
-			MapMaker mapmaker = new MapMaker(
+			mapmaker = new MapMaker(
 				width, height,	groundTiles.Length,				// Map Properites
 				seed, fillpercentWalkable, smoothIterations,	// BinaryMap Properities
 				sites, relaxIterations							// Voronoi Properties
@@ -46,17 +47,20 @@ namespace Overworld
 			PlaceCamera();
 			DrawMap(mapmaker.GetMap());
 
-			SpawnHero(mapmaker.GetMap(), mapmaker.GetRegions());
+            Region[] regions = mapmaker.GetRegions();
+            for(int i=0; i<regions.Length; i++)
+            {
+                SpawnHero(mapmaker.GetMap(), regions[i].GetCastle());
 
+            }
 		}
 
-		void SpawnHero(int[,] map, Region[] regions)
+		void SpawnHero(int[,] map, Castle castle)
 		{
-			Vector2 castlePos = regions[0].GetCastle().GetPosition();
-			Vector2 heroPos = new Vector2(castlePos.x + 1, castlePos.y - 2);
-
-			GameObject hero = new GameObject();
-            hero = heroPrefabs[UnityEngine.Random.Range(0, 1)];
+			Vector2 castlePos = castle.GetPosition();
+			Vector2 heroPos = new Vector2((int)castlePos.x + 1, (int)castlePos.y - 2);
+			GameObject hero = heroPrefabs[UnityEngine.Random.Range(0, 2)];
+            Debug.Log(castlePos.ToString());
             hero.transform.position = heroPos;
             Instantiate(hero);
         }
@@ -107,7 +111,6 @@ namespace Overworld
 			cam.orthographic = true;
 			cam.orthographicSize = width/2;
 			cam.farClipPlane = 2;
-
 		}
 
 		public int GetHeightOfMap()

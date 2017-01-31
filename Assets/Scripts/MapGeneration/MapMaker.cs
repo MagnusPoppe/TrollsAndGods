@@ -66,12 +66,12 @@ namespace MapGenerator
 		{
 			return canWalk;
 		}
-
-		/// <summary>
-		/// Gets the regions.
-		/// </summary>
-		/// <returns>The regions.</returns>
-		public Region[] GetRegions()
+        
+        /// <summary>
+        /// Gets the regions.
+        /// </summary>
+        /// <returns>The regions.</returns>
+        public Region[] GetRegions()
 		{
 			return regions;
 		}
