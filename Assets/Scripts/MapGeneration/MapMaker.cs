@@ -35,7 +35,13 @@ namespace MapGenerator
 		/// <param name="sites">number of sites/towns.</param>
 		/// <param name="relax">Relax iterations used with Lloyds relaxation.</param>
 		/// <param name="spritecount">Number of total available sprites.</param>
-		public MapMaker(int width, int height,int spritecount, string seed, int fill, int smooth, int sites, int relax)
+		public MapMaker(
+			int width, int height,
+			int spritecount, string seed, 
+			int fill, int smooth, 
+			int sites, int relax, 
+			int buildingCount
+		)
 		{
 			this.width = width;
 			this.height = height;
@@ -48,6 +54,7 @@ namespace MapGenerator
 			);
 			canWalk = CreateWalkableArea(map);
 		}
+
 
 		/// <summary>
 		/// Returns the generated map.
@@ -84,7 +91,7 @@ namespace MapGenerator
 		private int[,] GenerateMap(int sites, int relaxItr, int fill, int smooth,int totalSprites)
 		{ 
 			// Using Voronoi Algorithm to make zones.
-			VoronoiGenerator voronoi = CastleSetup(sites, relaxItr, totalSprites);
+			VoronoiGenerator voronoi = VoronoiSiteSetup(sites, relaxItr, totalSprites);
 			int[,] voronoiMap = voronoi.GetMap();
 
 			// Converting zones to regions:
@@ -113,6 +120,13 @@ namespace MapGenerator
 			return generatedMap;
 		}
 
+		private Vector2[] SetResourcesSpawnpoint(Region region)
+		{
+
+
+			return null;
+		}
+
 		/// <summary>
 		/// Sets up the voronoi map + the castles/towns
 		/// </summary>
@@ -120,10 +134,10 @@ namespace MapGenerator
 		/// <param name="sites">Number of Sites/town.</param>
 		/// <param name="relaxItr">Number of Relax itrations.</param>
 		/// <param name="totalSprites">Total sprites.</param>
-		private VoronoiGenerator CastleSetup(int sites, int relaxItr, int totalSprites)
+		private VoronoiGenerator VoronoiSiteSetup(int sites, int relaxItr, int totalSprites)
 		{
 			// DEFINING CASTLE POSITIONS ON THE MAP:
-			Vector2[] sitelist = CreateRandomPoints(sites);
+			Vector2[] sitelist = CreateRandomPoints(sites); // TODO: Place castles smart.
 
 			// APPLYING VORONOI TO THE MAP ARRAY
 			VoronoiGenerator voronoi = new VoronoiGenerator(width, height, sitelist, relaxItr);

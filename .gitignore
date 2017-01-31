@@ -39,3 +39,4 @@ TrollsAndGods.CSharp.csproj
 *.mdb
 
 *.dll
+Assets/Scripts/Map.cs
