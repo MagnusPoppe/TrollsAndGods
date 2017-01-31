@@ -8,6 +8,7 @@ namespace Overworld
 	{
 		public int widthXHeight = 128;
 		int width, height;
+		[Range(0, 50)]int buildingCount;
 
 		// Unity map objects
 		GameObject[,] tiles;
@@ -33,27 +34,13 @@ namespace Overworld
 			MapMaker mapmaker = new MapMaker(
 				width, height,	groundTiles.Length,				// Map Properites
 				seed, fillpercentWalkable, smoothIterations,	// BinaryMap Properities
-				sites, relaxIterations							// Voronoi Properties
+				sites, relaxIterations,							// Voronoi Properties
+				buildingCount									// Building placement
 			);
 			PlaceCamera();
 			DrawMap(mapmaker.GetMap());
 
-			SpawnHero(mapmaker.GetMap(), mapmaker.GetRegions());
-
 		}
-
-		void SpawnHero(int[,] map, Region[] regions)
-		{
-			Vector2 castlePos = regions[0].GetCastle().GetPosition();
-			Vector2 heroPos = new Vector2(castlePos.x + 1, castlePos.y - 2);
-
-			GameObject hero = new GameObject();
-			hero.AddComponent<HeroMovement>();
-			hero.transform.position = heroPos;
-
-
-		}
-
 		/// <summary>
 		/// Draws a given map.
 		/// </summary>
@@ -74,7 +61,7 @@ namespace Overworld
 
 					// Adding a sprite to the gameobject:
 					SpriteRenderer sr = tiles[x, y].AddComponent<SpriteRenderer>();
-					sr.sprite = groundTiles[map[x, y]];
+					sr.sprite = groundTiles[map[x,y]];
 
 					// Placing the tile on on the map within the board gameobject:
 					tiles[x, y].transform.parent = this.transform;
@@ -100,6 +87,7 @@ namespace Overworld
 			cam.orthographic = true;
 			cam.orthographicSize = width/2;
 			cam.farClipPlane = 2;
+			cam.clearFlags = CameraClearFlags.Depth;
 
 		}
 
