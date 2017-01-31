@@ -7,14 +7,34 @@ public class GenerateMap : MonoBehaviour
     public bool[,] canWalk;
     public GameObject[] tiles;
     public GameObject tree;
-    public GameObject hero;
     public const int X = 32;
     public const int Y = 32;
+    GameObject[] heroPrefabs;
+
+    void Awake()
+    {
+        heroPrefabs = UnityEngine.Resources.LoadAll<GameObject>("Heroes");
+    }
 
     void Start ()
     {
-        hero.transform.position = new Vector2(4, 3);
-        Instantiate(hero);
+        //SpriteRenderer sr = hero.AddComponent<SpriteRenderer>();
+        //sr.sprite = UnityEngine.Resources.Load("hero") as Sprite;
+        //hero.AddComponent<Sprite>();
+        //hero.GetComponent<SpriteRenderer>().sprite = sprites[0];
+        //hero.GetComponent<SpriteRenderer>().sprite = UnityEngine.Resources.Load("hero") as Sprite;
+
+        //hero = UnityEngine.Resources.Load("hero") as GameObject;
+        //SpriteRenderer spr = hero.AddComponent<SpriteRenderer>();
+        //hero.transform.position = new Vector2(4, 3);
+        GameObject[] hero = new GameObject[2];
+        for(int i=0; i<hero.Length; i++)
+        {
+            hero[i] = heroPrefabs[i];
+            hero[i].transform.position = new Vector2(i, -1);
+            Instantiate(hero[i]);
+
+        }
         fillTiles();
         fillObjects();
 	}

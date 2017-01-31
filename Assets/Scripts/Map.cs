@@ -4,7 +4,9 @@ using MapGenerator;
 
 namespace Overworld
 {
-	public class Map : MonoBehaviour
+
+
+    public class Map : MonoBehaviour
 	{
 		public int widthXHeight = 128;
 		int width, height;
@@ -25,7 +27,13 @@ namespace Overworld
 
 		public Sprite[] groundTiles;
 
-		void Start()
+        GameObject[] heroPrefabs;
+        void Awake()
+        {
+            heroPrefabs = UnityEngine.Resources.LoadAll<GameObject>("Heroes");
+        }
+
+        void Start()
 		{
 			width = widthXHeight;
 			height = widthXHeight;
@@ -48,11 +56,10 @@ namespace Overworld
 			Vector2 heroPos = new Vector2(castlePos.x + 1, castlePos.y - 2);
 
 			GameObject hero = new GameObject();
-			hero.AddComponent<HeroMovement>();
-			hero.transform.position = heroPos;
-
-
-		}
+            hero = heroPrefabs[UnityEngine.Random.Range(0, 1)];
+            hero.transform.position = heroPos;
+            Instantiate(hero);
+        }
 
 		/// <summary>
 		/// Draws a given map.
