@@ -26,7 +26,8 @@ namespace MapGeneratorTests
 			MapMaker mapmaker = new MapMaker(
 				width, height, NumberOFSprites,              	// Map Properites
 				seed, fillpercentWalkable, smoothIterations,    // BinaryMap Properities
-				sites, relaxIterations                          // Voronoi Properties
+				sites, relaxIterations,                         // Voronoi Properties
+				7
 			);
 
 			int[,] map = mapmaker.GetMap();

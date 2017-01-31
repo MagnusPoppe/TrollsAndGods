@@ -26,6 +26,8 @@ namespace Overworld
 		[Range(0, 20)]
 		public int smoothIterations = 5;
 
+		[Range(0,20)] int buildingCount;
+
 		public Sprite[] groundTiles;
 
         public GameObject[] heroPrefabs;
@@ -42,7 +44,8 @@ namespace Overworld
 			mapmaker = new MapMaker(
 				width, height,	groundTiles.Length,				// Map Properites
 				seed, fillpercentWalkable, smoothIterations,	// BinaryMap Properities
-				sites, relaxIterations							// Voronoi Properties
+				sites, relaxIterations,							// Voronoi Properties
+				buildingCount
 			);
 			PlaceCamera();
 			DrawMap(mapmaker.GetMap());

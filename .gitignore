@@ -40,3 +40,9 @@ TrollsAndGods.CSharp.csproj
 
 *.dll
 Assets/Scripts/Map.cs
+
+*.csproj
+
+*.dll
+
+*.dll
