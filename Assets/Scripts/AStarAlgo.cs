@@ -61,7 +61,7 @@ public class AStarAlgo {
 
         // Creates start node at start position and adds to openSet
         Node s = nodes[(int)start.x, (int)start.y];
-        s.calculateH(start, goal, hex);
+        s.calculateH(goal, hex);
         s.calculateF();
         openSet.Add(s);
 
@@ -97,7 +97,7 @@ public class AStarAlgo {
                 {
                     openSet.Insert(0, neighbour);
                     neighbour.SetGScore(cur.GetGScore() + 1);
-                    neighbour.calculateH(neighbour.Getpos(), goal, hex);
+                    neighbour.calculateH(goal, hex);
                     neighbour.calculateF();
                     neighbour.SetCameFrom(cur);
                 }
@@ -143,8 +143,10 @@ public class AStarAlgo {
         {
             for (int y = 0; y < 3; y++)
             {
+                //ignore self
                 if (x == 1 && y == 1)
                     continue;
+                //adds neighbour if you can walk there
                 if (posX + x - 1 >= 0 && posX + x - 1 < width
                     && posY + y - 1 >= 0 && posY + y - 1 < height
                     && canWalk[posX + x - 1, posY + y - 1])
@@ -171,12 +173,16 @@ public class AStarAlgo {
         {
             for (int y = 0; y < 3; y++)
             {
+                //ignore self
                 if (x == 1 && y == 1)
                     continue;
-                else if (y % 2 == 0 && x == 2 && (y == 0 || y == 2))
+                //ignores two positions based on if y is odd or even
+                //this is to simulate the hex grid
+                else if (posY % 2 == 0 && x == 2 && (y == 0 || y == 2))
                     continue;
-                else if (y % 2 == 1 && x == 0 && (y == 0 || y == 2))
+                else if (posY % 2 == 1 && x == 0 && (y == 0 || y == 2))
                     continue;
+                //adds neighbour if you can walk there
                 if (posX + x - 1 >= 0 && posX + x - 1 < width
                     && posY + y - 1 >= 0 && posY + y - 1 < height
                     && canWalk[posX + x - 1, posY + y - 1])
@@ -210,12 +216,12 @@ public class AStarAlgo {
         }
 
         // Calculates the estimated cost of moving to goal from this node, ignoring obstacles, as hScore
-        public void calculateH(Vector2 start, Vector2 goal, bool hex)
+        public void calculateH(Vector2 goal, bool hex)
         {
             if (hex)
-                hScore = DistanceHex(start, goal);
+                hScore = DistanceHex(pos, goal);
             else
-                hScore = (int)(Math.Abs(goal.x - start.x) + Math.Abs(goal.y - start.y));
+                hScore = (int)(Math.Abs(goal.x - pos.x) + Math.Abs(goal.y - pos.y));
         }
 
         // Transelates offset cordinates to cube cordinates
@@ -230,26 +236,9 @@ public class AStarAlgo {
         // returns distance to target in a offset grid, ignoring obstacles
         private int DistanceHex(Vector2 a, Vector2 b)
         {
-            if (a.x == b.x)
-                return (int)Math.Abs(b.y - a.y);
-            else if (a.y == b.y)
-                return (int)Math.Abs(b.x - a.x);
-            else {
-                int dx = (int)Math.Abs(b.x - a.x);
-                int dy = (int)Math.Abs(b.y - a.y);
-                if (a.y < b.y)
-                    return dx + dy - (int)(Math.Ceiling(dx / 2.0));
-                else
-                    return dx + dy - (int)(Math.Floor(dx / 2.0));
-                 }
-            //return (int)Math.Max(
-            //Math.Abs(b.y - a.y), Math.Max(
-            //Math.Abs(Math.Ceiling(b.y / -2) + b.x - Math.Ceiling(a.y / -2) - a.x),
-            //Math.Abs(-b.y - Math.Ceiling(b.y / -2) - b.x + a.y + Math.Ceiling(a.y / -2) + a.x)
-            //));
-            //Vector3 s = oddROffsetToCube(a);
-            //Vector3 g = oddROffsetToCube(b);
-            //return cubeDistance(s, g);
+            Vector3 s = oddROffsetToCube(a);
+            Vector3 g = oddROffsetToCube(b);
+            return cubeDistance(s, g);
         }
 
         // returns distance to target in a cube grid, ignoring obstacles
