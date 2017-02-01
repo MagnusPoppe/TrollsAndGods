@@ -2,15 +2,13 @@
 using UnityEngine;
 using OverworldObjects;
 using System.Collections.Generic;
+using OverworldObjects;
 
 namespace MapGenerator
 {
 	public class Region
 	{
-		Vector2[] resourceLocations;
-		Vector2[] dwellingLocations;
-		Vector2[] pickupsLocations;
-		Vector2[] miscLocations;
+		Block woodMine;
 
 		Economy economy;
 
@@ -24,7 +22,7 @@ namespace MapGenerator
 		/// </summary>
 		/// <param name="coordinateList">Coordinate list.</param>
 		/// <param name="castlePos">Castle position.</param>
-		public Region( List<Vector2> coordinateList, Vector2 castlePos, Economy economy)
+		public Region( List<Vector2> coordinateList, Vector2 castlePos, Economy economy, bool[,] canWalk)
 		{
 			castle = new Castle(castlePos);
 
@@ -34,6 +32,8 @@ namespace MapGenerator
 				coordinates[i++] = c;
 
 			this.economy = economy;
+
+			classifyRegionTiles(canWalk);
 		}
 
 		/// <summary>
@@ -131,6 +131,42 @@ namespace MapGenerator
 			return false;
 		}
 
+		public void classifyRegionTiles( bool[,] canWalk )
+		{
+			// DEFINERER BYGGNINGSTYPEN TIL HVER TILE:
+			Block[] blocks = new Block[GetArea()];
+			for (int i = 0; i < GetArea(); i++)
+			{
+				blocks[i] = new Block(GetCastle().GetPosition(), coordinates[i], canWalk);
+			}
+
+			for (int i = 0; i < economy.woodMineCount; i++)
+			{
+				float minDistance = 10;
+				float maxDistance = 15;
+
+				for (int j = 0; j < GetArea(); j++)
+				{
+					float distance = blocks[j].GetDistanceFromCastle();
+
+					if (blocks[i].CanPlaceBuilding(OverworldShapes.TRIPLE))
+					{ 
+						if (distance >= minDistance && distance <= maxDistance)
+						{
+							// PLACE WOODMINE();
+							if (i > 0) // FINNES WOODMINE FRA FØR
+							{
+								if (woodMine != null)
+									if (woodMine.GetRating() < blocks[j].GetRating())
+										woodMine = blocks[j];
+							}
+							else
+								woodMine = blocks[j]; // TODO LAG EGEN INDEX FOR DENNE RESSURSE
+						}
+					}
+				}
+			}
+		}
 
 	}
 }

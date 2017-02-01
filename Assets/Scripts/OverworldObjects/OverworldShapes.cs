@@ -20,12 +20,18 @@ namespace OverworldObjects
 		public const int QUAD01x3 	= 12;
 		public const int QUAD02x3 	= 13;
 
-		private static int[] dx = { -2, -1, 0, 1, 2 };
+		private static int[] dx = { -3, -2, -1, 0, 1 };
 		private static int[] dy = dx;
 
 		const int FILTER_SIZE = 5;
 
-		static bool[] GetBuildingFit(Vector2 Position, bool[,] canWalk)
+		/// <summary>
+		/// Tests if the building fits inside the grid.
+		/// </summary>
+		/// <returns>The building fit.</returns>
+		/// <param name="Position">Position.</param>
+		/// <param name="canWalk">Can walk.</param>
+		public static bool[] GetBuildingFit(Vector2 Position, bool[,] canWalk)
 		{
 			int x = (int)Position.x;
 			int y = (int)Position.y;
@@ -46,6 +52,13 @@ namespace OverworldObjects
 			return BuildingTypesFit;
 		}
 
+		/// <summary>
+		/// Fits a building within the area.
+		/// </summary>
+		/// <param name="i">The index.</param>
+		/// <param name="x">The x coordinate.</param>
+		/// <param name="y">The y coordinate.</param>
+		/// <param name="canWalk">Can walk.</param>
 		private static bool fits(int i, int x, int y, bool[,] canWalk)
 		{
 			for (int iy = 0; y < FILTER_SIZE; y++)
