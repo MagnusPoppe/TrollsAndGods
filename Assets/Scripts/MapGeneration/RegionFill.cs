@@ -126,7 +126,8 @@ namespace MapGenerator
 					}
 				}
  			}
-			regions[regionindex++] = new Region(region, center);
+			Economy e = new Economy(Economy.ABUNDANT);
+			regions[regionindex++] = new Region(region, center, e);
 		}
 
 		/// <summary>

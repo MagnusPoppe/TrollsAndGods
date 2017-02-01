@@ -47,15 +47,25 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\AStarAlgo.cs" />
+     <Compile Include="Assets\Scripts\Elements\Air.cs" />
+     <Compile Include="Assets\Scripts\Elements\Bludgeoning.cs" />
+     <Compile Include="Assets\Scripts\Elements\Earth.cs" />
+     <Compile Include="Assets\Scripts\Elements\Element.cs" />
+     <Compile Include="Assets\Scripts\Elements\Fire.cs" />
+     <Compile Include="Assets\Scripts\Elements\Piercing.cs" />
+     <Compile Include="Assets\Scripts\Elements\Slash.cs" />
+     <Compile Include="Assets\Scripts\Elements\Water.cs" />
      <Compile Include="Assets\Scripts\GenerateMap.cs" />
      <Compile Include="Assets\Scripts\Map.cs" />
      <Compile Include="Assets\Scripts\MapGeneration\BinaryMap.cs" />
+     <Compile Include="Assets\Scripts\MapGeneration\Economy.cs" />
      <Compile Include="Assets\Scripts\MapGeneration\Filter\AverageFilter.cs" />
      <Compile Include="Assets\Scripts\MapGeneration\Filter\Filter.cs" />
      <Compile Include="Assets\Scripts\MapGeneration\Filter\MedianFilter.cs" />
      <Compile Include="Assets\Scripts\MapGeneration\MapMaker.cs" />
      <Compile Include="Assets\Scripts\MapGeneration\Region.cs" />
      <Compile Include="Assets\Scripts\MapGeneration\RegionFill.cs" />
+     <Compile Include="Assets\Scripts\MapGeneration\TileRating.cs" />
      <Compile Include="Assets\Scripts\MapGeneration\VoronoiGenerator.cs" />
      <Compile Include="Assets\Scripts\Movement\HeroMovement.cs" />
      <Compile Include="Assets\Scripts\OverworldObjects\BuildingTree.cs" />
@@ -63,13 +73,16 @@
      <Compile Include="Assets\Scripts\OverworldObjects\Hero.cs" />
      <Compile Include="Assets\Scripts\OverworldObjects\IngameObjectLibrary.cs" />
      <Compile Include="Assets\Scripts\OverworldObjects\Item.cs" />
+     <Compile Include="Assets\Scripts\OverworldObjects\OverworldShapes.cs" />
      <Compile Include="Assets\Scripts\OverworldObjects\Resources.cs" />
      <Compile Include="Assets\Scripts\OverworldObjects\Town.cs" />
-     <Compile Include="Assets\Scripts\OverworldObjects\Unit.cs" />
      <Compile Include="Assets\Scripts\Player.cs" />
      <Compile Include="Assets\Scripts\Stats\BaseStats.cs" />
      <Compile Include="Assets\Scripts\Stats\HeroStats.cs" />
      <Compile Include="Assets\Scripts\Stats\UnitStats.cs" />
+     <Compile Include="Assets\Scripts\Units\Melee.cs" />
+     <Compile Include="Assets\Scripts\Units\Ranged.cs" />
+     <Compile Include="Assets\Scripts\Units\Unit.cs" />
      <Compile Include="Assets\Scripts\libs\delunay\Delaunay\Edge.cs" />
      <Compile Include="Assets\Scripts\libs\delunay\Delaunay\EdgeList.cs" />
      <Compile Include="Assets\Scripts\libs\delunay\Delaunay\EdgeReorderer.cs" />
@@ -101,6 +114,7 @@
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityAnalytics/UnityEngine.Analytics.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.HoloLens">
+ <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/UnityHoloLens/RuntimeEditor/UnityEngine.HoloLens.dll</HintPath>
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityHoloLens/RuntimeEditor/UnityEngine.HoloLens.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.VR">
