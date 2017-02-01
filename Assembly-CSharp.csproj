@@ -58,6 +58,7 @@
      <Compile Include="Assets\Scripts\MapGeneration\RegionFill.cs" />
      <Compile Include="Assets\Scripts\MapGeneration\VoronoiGenerator.cs" />
      <Compile Include="Assets\Scripts\Movement\HeroMovement.cs" />
+     <Compile Include="Assets\Scripts\OverworldObjects\BuildingTree.cs" />
      <Compile Include="Assets\Scripts\OverworldObjects\Castle.cs" />
      <Compile Include="Assets\Scripts\OverworldObjects\Hero.cs" />
      <Compile Include="Assets\Scripts\OverworldObjects\IngameObjectLibrary.cs" />
