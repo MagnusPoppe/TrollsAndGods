@@ -8,9 +8,10 @@ using UnityEngine;
 /// </summary>
 public class Town
 {
+    protected const int TOWNSIZE = 15;
+    protected bool hasBuiltThisRound;
     protected BuildingTree buildingTree;
     protected UnitTree unitTree;
-    protected bool canPurchase;
 
     /// <summary>
     /// Constructor that builds the buildingtree with corresponding town according to townId variable
@@ -20,19 +21,28 @@ public class Town
     {
         buildingTree = new BuildingTree(townId);
         unitTree = new UnitTree();
-        CanPurchase = true;
     }
 
-    public bool CanPurchase
+    public bool HasBuiltThisRound
     {
         get
         {
-            return canPurchase;
+            return hasBuiltThisRound;
         }
 
         set
         {
-            canPurchase = value;
+            hasBuiltThisRound = value;
         }
+    }
+
+    public bool canBuild(Building b)
+    {
+        for(int i=0; i<TOWNSIZE; i++)
+        {
+            if (b.GetRequirements()[i] && !buildingTree.GetBuildings()[i].IsBuilt())
+                return false;
+        }
+        return true;
     }
 }

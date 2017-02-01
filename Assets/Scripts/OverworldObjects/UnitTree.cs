@@ -15,6 +15,11 @@ public class UnitTree
         units = new Unit[TREESIZE];
     }
 
+    public UnitTree(Unit[] units)
+    {
+        this.units = units;
+    }
+
     /// <summary>
     /// Swaps the two units in the positions of the unitarray according to int parameters
     /// </summary>

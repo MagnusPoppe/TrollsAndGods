@@ -12,6 +12,7 @@ public class Player
     List<Town> towns;
     int color;
     bool[,] fogOfWar;
+    const int MAXHEROES = 8;
 
     /// <summary>
     /// Constructor that creates a new hero for the player, prepares fog of war, resources and towns
@@ -21,7 +22,7 @@ public class Player
     public Player(int color, int difficulty)
     {
         Res = new Resources(difficulty);
-        Heroes = new Hero[8];
+        Heroes = new Hero[MAXHEROES];
         Heroes[0] = new Hero();
         Towns = new List<Town>();
         this.Color = color;
