@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
+/// <summary>
+/// Class for the player's heroes
+/// </summary>
 public class Hero
 {
     private Sprite portrait;
@@ -12,6 +14,10 @@ public class Hero
     private List<Item> items;
     private List<Item> equippedItems;
 
+
+    /// <summary>
+    /// Constructor that prepares unit, items, and equippeditems list for the hero
+    /// </summary>
     public Hero()
     {
         Units = new Unit[7];
