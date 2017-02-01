@@ -46,3 +46,4 @@ Assets/Scripts/Map.cs
 *.dll
 
 *.dll
+*.csproj
