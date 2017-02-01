@@ -21,6 +21,16 @@ public class Resources
         else
             ResourcesInit(5000, 10, 10, 0, 0, 0, 0);
     }
+    public Resources(int gold, int wood, int ore, int gem, int sulfur, int mercury, int crystal)
+    {
+        this.gold = gold;
+        this.wood = wood;
+        this.ore = ore;
+        this.gem = gem;
+        this.sulfur = sulfur;
+        this.mercury = mercury;
+        this.crystal = crystal;
+    }
 
     protected void ResourcesInit(int gold, int wood, int ore, int gem, int sulfur, int mercury, int crystal)
     {
@@ -31,6 +41,11 @@ public class Resources
         this.sulfur = sulfur;
         this.mercury = mercury;
         this.crystal = crystal;
+    }
+
+    public bool CanPay(int gold, int wood, int ore, int gem, int sulfur, int mercury, int crystal)
+    {
+        return this.gold >= gold && this.wood >= wood && this.ore >= ore && this.gem >= gem && this.sulfur >= sulfur && this.mercury >= mercury && this.crystal >= crystal;
     }
 
     public int GetGold()

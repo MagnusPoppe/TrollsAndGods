@@ -3,11 +3,14 @@ using System;
 namespace HeroClassTester
 {
 	[TestFixture()]
-	public class Test
+	public class HeroClassTester
 	{
+        Hero hero;
+
 		[Test()]
 		public void TestCase()
 		{
+            hero = new Hero();
 		}
 	}
 }

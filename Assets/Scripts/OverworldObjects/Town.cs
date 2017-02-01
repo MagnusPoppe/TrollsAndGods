@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class Town
 {
-    bool canPurchase;
+    protected BuildingTree buildingTree;
+    protected bool canPurchase;
 
-    public Town()
+    public Town(int townId)
     {
+        buildingTree = new BuildingTree(townId);
         CanPurchase = true;
     }
 
