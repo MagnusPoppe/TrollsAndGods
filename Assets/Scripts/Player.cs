@@ -4,19 +4,84 @@ using UnityEngine;
 
 public class Player
 {
-    public const int X = 32;
-    public const int Y = 32;
+    Resources res;
     Hero[] heroes;
     List<Town> towns;
     int color;
     bool[,] fogOfWar;
 
-    public Player(int color)
+    public Player(int color, int difficulty)
     {
-        heroes = new Hero[8];
-        heroes[0] = new Hero();
-        towns = new List<Town>();
-        this.color = color;
-        fogOfWar = new bool[X, Y];
+        Res = new Resources(difficulty);
+        Heroes = new Hero[8];
+        Heroes[0] = new Hero();
+        Towns = new List<Town>();
+        this.Color = color;
+        FogOfWar = new bool[32, 32]; // todo, link to map objects x y size
+    }
+
+    public Hero[] Heroes
+    {
+        get
+        {
+            return heroes;
+        }
+
+        set
+        {
+            heroes = value;
+        }
+    }
+
+    public List<Town> Towns
+    {
+        get
+        {
+            return towns;
+        }
+
+        set
+        {
+            towns = value;
+        }
+    }
+
+    public int Color
+    {
+        get
+        {
+            return color;
+        }
+
+        set
+        {
+            color = value;
+        }
+    }
+
+    public bool[,] FogOfWar
+    {
+        get
+        {
+            return fogOfWar;
+        }
+
+        set
+        {
+            fogOfWar = value;
+        }
+    }
+
+    public Resources Res
+    {
+        get
+        {
+            return res;
+        }
+
+        set
+        {
+            res = value;
+        }
     }
 }

@@ -2,19 +2,94 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Hero : MonoBehaviour
+
+public class Hero
 {
-    Sprite portrait;
-    string name;
-    int faction;
-    Unit[] units;
-    List<Item> items;
-    List<Item> equippedItems;
+    private Sprite portrait;
+    private string name;
+    private int faction;
+    private Unit[] units;
+    private List<Item> items;
+    private List<Item> equippedItems;
 
     public Hero()
     {
-        units = new Unit[7];
-        items = new List<Item>();
-        equippedItems = new List<Item>();
+        Units = new Unit[7];
+        Items = new List<Item>();
+        EquippedItems = new List<Item>();
+    }
+
+    public Hero(Sprite portrait) : this()
+    {
+        this.portrait = portrait;
+    }
+
+    public Sprite GetPortrait()
+    {
+        return portrait;
+    }
+    public string Name
+    {
+        get
+        {
+            return name;
+        }
+
+        set
+        {
+            name = value;
+        }
+    }
+
+    public int Faction
+    {
+        get
+        {
+            return faction;
+        }
+
+        set
+        {
+            faction = value;
+        }
+    }
+
+    public Unit[] Units
+    {
+        get
+        {
+            return units;
+        }
+
+        set
+        {
+            units = value;
+        }
+    }
+
+    public List<Item> Items
+    {
+        get
+        {
+            return items;
+        }
+
+        set
+        {
+            items = value;
+        }
+    }
+
+    public List<Item> EquippedItems
+    {
+        get
+        {
+            return equippedItems;
+        }
+
+        set
+        {
+            equippedItems = value;
+        }
     }
 }

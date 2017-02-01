@@ -2,13 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Item : MonoBehaviour	{
+public class Item
+{
+    int slotType;
 
-	void Start ()	{
-		
-	}
-	
-	void Update ()	{
-		
-	}
+    public Item(int slotType)
+    {
+        this.slotType = slotType;
+    }
+
+    public int SlotType
+    {
+        get
+        {
+            return slotType;
+        }
+
+        set
+        {
+            slotType = value;
+        }
+    }
 }
