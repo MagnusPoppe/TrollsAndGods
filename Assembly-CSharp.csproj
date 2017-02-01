@@ -68,10 +68,7 @@
      <Compile Include="Assets\Scripts\MapGeneration\TileRating.cs" />
      <Compile Include="Assets\Scripts\MapGeneration\VoronoiGenerator.cs" />
      <Compile Include="Assets\Scripts\Movement\HeroMovement.cs" />
-<<<<<<< HEAD
-=======
      <Compile Include="Assets\Scripts\OverworldObjects\BuildingTree.cs" />
->>>>>>> origin/master
      <Compile Include="Assets\Scripts\OverworldObjects\Castle.cs" />
      <Compile Include="Assets\Scripts\OverworldObjects\Hero.cs" />
      <Compile Include="Assets\Scripts\OverworldObjects\IngameObjectLibrary.cs" />
@@ -117,11 +114,8 @@
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityAnalytics/UnityEngine.Analytics.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.HoloLens">
-<<<<<<< HEAD
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/UnityHoloLens/RuntimeEditor/UnityEngine.HoloLens.dll</HintPath>
-=======
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityHoloLens/RuntimeEditor/UnityEngine.HoloLens.dll</HintPath>
->>>>>>> origin/master
  </Reference>
  <Reference Include="UnityEngine.VR">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityVR/RuntimeEditor/UnityEngine.VR.dll</HintPath>
