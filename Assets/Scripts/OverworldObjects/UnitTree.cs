@@ -7,9 +7,9 @@ using UnityEngine;
 /// </summary>
 public class UnitTree
 {
-    protected Unit[] units;
-    protected int[] unitAmount;
-    protected const int TREESIZE = 7;
+    private Unit[] units;
+    private int[] unitAmount;
+    private const int TREESIZE = 7;
 
     public UnitTree()
     {

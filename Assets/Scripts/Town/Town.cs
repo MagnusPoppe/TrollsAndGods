@@ -2,79 +2,82 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// Town class for the players towns. Creates the tree of builings, and holds 
-/// the purchase variable that is flipped every time you buy something, and for every new day.
-/// </summary>
-public class Town
+namespace Town
 {
-    protected bool hasBuiltThisRound;
-    protected Building[] buildings;
-    private Hero stationedHero;
-    private Hero visitingHero;
-    protected UnitTree unitTree;
-
     /// <summary>
-    /// Constructor that builds the buildingtree with corresponding town according to townId variable
+    /// Town class for the players towns. Creates the tree of builings, and holds 
+    /// the purchase variable that is flipped every time you buy something, and for every new day.
     /// </summary>
-    /// <param name="townId">which town shall be built</param>
-    public Town(int townId, Building[] buildings)
+    public class Town
     {
-        this.buildings = buildings;
-        unitTree = new UnitTree();
-    }
-    public bool canBuild(Building b)
-    {
-        for (int i = 0; i < buildings.Length; i++)
+        private bool hasBuiltThisRound;
+        private Building[] buildings;
+        private Hero stationedHero;
+        private Hero visitingHero;
+        private UnitTree unitTree;
+
+        /// <summary>
+        /// Constructor that builds the buildingtree with corresponding town according to townId variable
+        /// </summary>
+        /// <param name="townId">which town shall be built</param>
+        public Town(int townId, Building[] buildings)
         {
-            if (b.GetRequirements()[i] && !buildings[i].IsBuilt())
-                return false;
+            this.buildings = buildings;
+            unitTree = new UnitTree();
         }
-        return true;
-    }
-
-    public void Build(Building b)
-    {
-        b.SetBuilt(true);
-        hasBuiltThisRound = true;
-    }
-
-    public bool HasBuiltThisRound
-    {
-        get
+        public bool canBuild(Building b)
         {
-            return hasBuiltThisRound;
+            for (int i = 0; i < buildings.Length; i++)
+            {
+                if (b.GetRequirements()[i] && !buildings[i].IsBuilt())
+                    return false;
+            }
+            return true;
         }
 
-        set
+        public void Build(Building b)
         {
-            hasBuiltThisRound = value;
-        }
-    }
-
-    protected Hero StationedHero
-    {
-        get
-        {
-            return stationedHero;
+            b.SetBuilt(true);
+            hasBuiltThisRound = true;
         }
 
-        set
+        public bool HasBuiltThisRound
         {
-            stationedHero = value;
-        }
-    }
+            get
+            {
+                return hasBuiltThisRound;
+            }
 
-    protected Hero VisitingHero
-    {
-        get
-        {
-            return visitingHero;
+            set
+            {
+                hasBuiltThisRound = value;
+            }
         }
 
-        set
+        protected Hero StationedHero
         {
-            visitingHero = value;
+            get
+            {
+                return stationedHero;
+            }
+
+            set
+            {
+                stationedHero = value;
+            }
+        }
+
+        protected Hero VisitingHero
+        {
+            get
+            {
+                return visitingHero;
+            }
+
+            set
+            {
+                visitingHero = value;
+            }
         }
     }
 }
