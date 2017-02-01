@@ -5,24 +5,16 @@ using UnityEngine;
 
 public class Building
 {
+    protected const int TOWNSIZE = 15;
     protected string name;
-    protected Sprite sprite;
     protected bool isBuilt;
     protected bool[] requirements;
     protected Resources cost;
+    protected SpriteRenderer spr;
 
-    /// <summary>
-    /// Constructor, sets isbuilt to false upon creation and prepares a list of 
-    /// building parents that must be already built to built it
-    /// </summary>
-    /// <param name="name">Name of building</param>
-    /// <param name="sprite">The image it contains</param>
-    /// <param name="cost">What it costs to build it</param>
-    public Building(string name, Sprite sprite, Resources cost)
+    public Building()
     {
-        this.name = name;
-        this.sprite = sprite;
-        this.cost = cost;
+        requirements = new bool[TOWNSIZE];
         isBuilt = false;
     }
 
@@ -36,24 +28,23 @@ public class Building
         this.isBuilt = isBuilt;
     }
 
+    public bool[] GetRequirements()
+    {
+        return requirements;
+    }
+
     public Resources GetCost()
     {
         return cost;
     }
 
-
-    override public string ToString()
+    public string GetName()
     {
         return name;
     }
 
-    public Sprite GetSprite()
+    public SpriteRenderer GetSpriteRenderer()
     {
-        return sprite;
-    }
-
-    public bool[] GetRequirements()
-    {
-        return requirements;
+        return spr;
     }
 }

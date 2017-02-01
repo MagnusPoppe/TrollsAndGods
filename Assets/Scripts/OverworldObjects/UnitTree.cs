@@ -8,11 +8,13 @@ using UnityEngine;
 public class UnitTree
 {
     protected Unit[] units;
+    protected int[] unitAmount;
     protected const int TREESIZE = 7;
 
     public UnitTree()
     {
         units = new Unit[TREESIZE];
+        unitAmount = new int[TREESIZE];
     }
 
     public UnitTree(Unit[] units)
@@ -25,14 +27,20 @@ public class UnitTree
     /// </summary>
     /// <param name="pos1">position of first unit</param>
     /// <param name="pos2">position of second unit</param>
-    public void swapUnits(int pos1, int pos2)
+    /// <param name="amount1">amount of first stack</param>
+    /// <param name="amount2">amount of second stack</param>
+    public void swapUnits(int pos1, int amount1, int pos2, int amount2)
     {
         Unit tmp = units[pos1];
         units[pos1] = units[pos2];
         units[pos2] = tmp;
+
+        int tmpAmount = amount1;
+        unitAmount[amount1] = amount2;
+        unitAmount[amount2] = tmpAmount;
     }
 
-    public void setUnit(Unit unit, int pos)
+    public void setUnit(Unit unit, int amount, int pos)
     {
         units[pos] = unit;
     }
