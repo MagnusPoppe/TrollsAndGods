@@ -47,6 +47,9 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\AStarAlgo.cs" />
+     <Compile Include="Assets\Scripts\Abilities\Ability.cs" />
+     <Compile Include="Assets\Scripts\Abilities\Active.cs" />
+     <Compile Include="Assets\Scripts\Abilities\Passive.cs" />
      <Compile Include="Assets\Scripts\Elements\Air.cs" />
      <Compile Include="Assets\Scripts\Elements\Bludgeoning.cs" />
      <Compile Include="Assets\Scripts\Elements\Earth.cs" />
@@ -114,7 +117,6 @@
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityAnalytics/UnityEngine.Analytics.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.HoloLens">
- <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/UnityHoloLens/RuntimeEditor/UnityEngine.HoloLens.dll</HintPath>
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityHoloLens/RuntimeEditor/UnityEngine.HoloLens.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.VR">
