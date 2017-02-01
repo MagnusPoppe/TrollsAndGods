@@ -120,12 +120,7 @@ namespace MapGenerator
 			return generatedMap;
 		}
 
-		private Vector2[] SetResourcesSpawnpoint(Region region)
-		{
 
-
-			return null;
-		}
 
 		/// <summary>
 		/// Sets up the voronoi map + the castles/towns

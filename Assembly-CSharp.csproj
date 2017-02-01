@@ -48,20 +48,23 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\AStarAlgo.cs" />
      <Compile Include="Assets\Scripts\GenerateMap.cs" />
-     <Compile Include="Assets\Scripts\HeroMovement.cs" />
      <Compile Include="Assets\Scripts\Map.cs" />
      <Compile Include="Assets\Scripts\MapGeneration\BinaryMap.cs" />
+     <Compile Include="Assets\Scripts\MapGeneration\Economy.cs" />
      <Compile Include="Assets\Scripts\MapGeneration\Filter\AverageFilter.cs" />
      <Compile Include="Assets\Scripts\MapGeneration\Filter\Filter.cs" />
      <Compile Include="Assets\Scripts\MapGeneration\Filter\MedianFilter.cs" />
      <Compile Include="Assets\Scripts\MapGeneration\MapMaker.cs" />
      <Compile Include="Assets\Scripts\MapGeneration\Region.cs" />
      <Compile Include="Assets\Scripts\MapGeneration\RegionFill.cs" />
+     <Compile Include="Assets\Scripts\MapGeneration\TileRating.cs" />
      <Compile Include="Assets\Scripts\MapGeneration\VoronoiGenerator.cs" />
+     <Compile Include="Assets\Scripts\Movement\HeroMovement.cs" />
      <Compile Include="Assets\Scripts\OverworldObjects\Castle.cs" />
      <Compile Include="Assets\Scripts\OverworldObjects\Hero.cs" />
      <Compile Include="Assets\Scripts\OverworldObjects\IngameObjectLibrary.cs" />
      <Compile Include="Assets\Scripts\OverworldObjects\Item.cs" />
+     <Compile Include="Assets\Scripts\OverworldObjects\OverworldShapes.cs" />
      <Compile Include="Assets\Scripts\OverworldObjects\Resources.cs" />
      <Compile Include="Assets\Scripts\OverworldObjects\Town.cs" />
      <Compile Include="Assets\Scripts\OverworldObjects\Unit.cs" />
@@ -84,9 +87,6 @@
      <Compile Include="Assets\Scripts\libs\delunay\Geom\Rectf.cs" />
      <Compile Include="Assets\Scripts\libs\delunay\Geom\Vector2f.cs" />
      <Compile Include="Assets\Scripts\libs\delunay\Geom\Winding.cs" />
- <Reference Include="UnityEngine.Advertisements">
- <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/Advertisements/UnityEngine.Advertisements.dll</HintPath>
- </Reference>
  <Reference Include="UnityEngine.UI">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
@@ -101,9 +101,6 @@
  </Reference>
  <Reference Include="UnityEngine.HoloLens">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/UnityHoloLens/RuntimeEditor/UnityEngine.HoloLens.dll</HintPath>
- </Reference>
- <Reference Include="UnityEngine.Purchasing">
- <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/UnityPurchasing/UnityEngine.Purchasing.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.VR">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/UnityVR/RuntimeEditor/UnityEngine.VR.dll</HintPath>

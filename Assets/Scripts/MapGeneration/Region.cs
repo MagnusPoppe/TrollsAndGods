@@ -7,7 +7,14 @@ namespace MapGenerator
 {
 	public class Region
 	{
-		
+		Vector2[] resourceLocations;
+		Vector2[] dwellingLocations;
+		Vector2[] pickupsLocations;
+		Vector2[] miscLocations;
+
+		Economy economy;
+
+		TileRating[] coordinateValue;
 		Vector2[] coordinates;
 		Castle castle;
 
@@ -17,7 +24,7 @@ namespace MapGenerator
 		/// </summary>
 		/// <param name="coordinateList">Coordinate list.</param>
 		/// <param name="castlePos">Castle position.</param>
-		public Region( List<Vector2> coordinateList, Vector2 castlePos )
+		public Region( List<Vector2> coordinateList, Vector2 castlePos, Economy economy)
 		{
 			castle = new Castle(castlePos);
 
@@ -25,6 +32,8 @@ namespace MapGenerator
 			int i = 0;
 			foreach (Vector2 c in coordinateList)
 				coordinates[i++] = c;
+
+			this.economy = economy;
 		}
 
 		/// <summary>
@@ -37,6 +46,11 @@ namespace MapGenerator
 		{
 			castle = new Castle(castlePos);
 			coordinates = area;
+		}
+
+		public Vector2[] GetCoordinates()
+		{
+			return coordinates;
 		}
 
 		/// <summary>
@@ -116,5 +130,7 @@ namespace MapGenerator
 			}
 			return false;
 		}
+
+
 	}
 }
