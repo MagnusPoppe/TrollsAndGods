@@ -51,11 +51,11 @@ namespace Overworld
 			DrawMap(mapmaker.GetMap());
 
             Region[] regions = mapmaker.GetRegions();
-            for(int i=0; i<regions.Length; i++)
+            /*for(int i=0; i<1; i++) //regions.Length
             {
                 SpawnHero(mapmaker.GetMap(), regions[i].GetCastle());
 
-            }
+            }*/
 		}
 
 		void SpawnHero(int[,] map, Castle castle)
@@ -93,6 +93,13 @@ namespace Overworld
 
 					// Placing the tile on on the map within the board gameobject:
 					tiles[x, y].transform.parent = this.transform;
+
+                    if(x==5 && y== 5)
+                    {
+                        GameObject hero = heroPrefabs[UnityEngine.Random.Range(0, 2)];
+                        hero.transform.position = new Vector2(x + 0.5f, y / 2 + 0.5f);
+                        Instantiate(hero);
+                    }
 				}
 			}
 		}

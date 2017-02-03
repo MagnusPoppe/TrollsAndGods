@@ -49,8 +49,8 @@ public class AStarAlgo {
     /// <returns>A vector2 List containing the shortest path</returns>
     public List<Vector2> calculate(Vector2 start, Vector2 goal)
     {
-        start = HandyMethods.getIsoTilePos(start);
-        goal = HandyMethods.getIsoTilePos(goal);
+        //start = HandyMethods.getIsoTilePos(start);
+        //goal = HandyMethods.getIsoTilePos(goal);
         // Return variable
         List<Vector2> path = new List<Vector2>();
 
@@ -136,6 +136,7 @@ public class AStarAlgo {
             // Sorts openSet by cost
             openSet = openSet.OrderBy(Node => Node.GetF()).ToList();
         }
+        /*
         for (int i=0; i<path.Count;i++)
         {
             if (path[i].y % 2 == 0)
@@ -148,7 +149,7 @@ public class AStarAlgo {
             }
 
         }
-
+        */
         // Returns path array that contains the shortest path
         return path;
     }

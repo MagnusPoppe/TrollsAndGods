@@ -57,8 +57,9 @@ namespace Movement
             {
                 // Fetch the point just clicked and adjust the position in the square to the middle of it
                 Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                pos.x = (int)(pos.x + 0.5);
-                pos.y = (int)(pos.y + 0.5);
+                pos = HandyMethods.getIsoTilePos(pos);
+                //pos.x = (int)(pos.x + 0.5);
+                //pos.y = (int)(pos.y + 0.5);
                 // When mousebutton is clicked, an already ongoing movement shall be stopped
                 if (IsWalking())
                 {
@@ -106,9 +107,11 @@ namespace Movement
                     Destroy(pathObjects[stepNumber]);
                     stepNumber++;
                     animationSpeed = 0f;
+                    Debug.Log(transform.position.ToString());
                     // Stop the movement when amount of tiles moved has reached the limit, or walking is disabled
                     if (IsLastStep())
                     {
+                        Debug.Log(transform.position.ToString());
                         // Set hero position when he stops walking
                         curPos = transform.position;
                         SetWalking(false);
@@ -136,7 +139,7 @@ namespace Movement
             // Needs to clear existing objects if an earlier path was already made
             RemoveMarkers(pathObjects);
             // Call algorithm method that returns a list of Vector2 positions to the point, go through all objects
-            List<Vector2> positions = aStar.calculate(curPos, pos);
+            List<Vector2> positions = aStar.calculate(HandyMethods.getIsoTilePos(curPos), pos);
             // Calculate how many steps the hero will move, if this path is chosen
             curSpeed = Math.Min(positions.Count, heroSpeed);
             int i = curSpeed;
@@ -145,19 +148,29 @@ namespace Movement
             {
                 // Create a cloned gameobject of the prefab corresponding to what the marker shall look like
                 GameObject pathMarker;
-                if (pos == no && i > 0)
+                if (pos.Equals(no) && i > 0)
                     pathMarker = pathDestYes;
-                else if (pos == no)
+                else if (pos.Equals(no))
                     pathMarker = pathDestNo;
                 else if (i > 0)
                     pathMarker = pathYes;
                 else
                     pathMarker = pathNo;
                 i--;
+                Vector2 modified;
+                if (no.y % 2 == 0)
+                {
+                    modified = new Vector2(no.x, no.y / 2);
+                }
+                else
+                {
+                    modified = new Vector2(no.x + 0.5f, no.y / 2);
+                }
                 // set the cloned position to the vector2 object, instantiate it and add it to the list of gameobjects, pathList
-                pathMarker.transform.position = no;
+                pathMarker.transform.position = modified;
                 pathMarker = Instantiate(pathMarker);
                 pathObjects.Add(pathMarker);
+                Debug.Log(no.ToString());
             }
             return pathObjects;
         }
