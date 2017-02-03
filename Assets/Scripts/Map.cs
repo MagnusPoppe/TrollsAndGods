@@ -12,8 +12,11 @@ namespace Overworld
 		public int widthXHeight = 128;
 		int width, height;
 
-		// Unity map objects
-		GameObject[,] tiles;
+        // Unity map objects
+        public const float XRESOLUTION = 2504;
+        public const float YRESOLUTION = 1446;
+        public const float YOFFSET = YRESOLUTION / XRESOLUTION;
+        GameObject[,] tiles;
 		public string seed = "Angelica";
 		[Range(0, 100)]
 		public int fillpercentWalkable = 57;
@@ -76,6 +79,7 @@ namespace Overworld
 		{
 			// DRAWING THE MAP:
 			tiles = new GameObject[width, height];
+            float iy = 0;
 			// Looping through all tile positions:
 			for (int y = 0; y < height; y++)
 			{
@@ -85,8 +89,9 @@ namespace Overworld
 					tiles[x, y] = new GameObject();
 					tiles[x, y].name = "Tile (" + x + ", " + y + ")";
                     if (y % 2 == 0)
-                        tiles[x, y].transform.position = new Vector2(x, y/2);
-                    else tiles[x, y].transform.position = new Vector2(x+0.5f, y/2+0.5f);
+                        tiles[x, y].transform.position = new Vector2(x, iy/2);
+                    else
+                        tiles[x, y].transform.position = new Vector2(x+0.5f, iy/2);
 
 					// Adding a sprite to the gameobject:
 					SpriteRenderer sr = tiles[x, y].AddComponent<SpriteRenderer>();
@@ -94,9 +99,11 @@ namespace Overworld
 
 					// Placing the tile on on the map within the board gameobject:
 					tiles[x, y].transform.parent = this.transform;
-				}
-			}
-		}
+                }
+                //iy += 0.576f;
+                iy += YOFFSET; // 0.57747603833865814696485623003195f;
+            }
+        }
 
 		/// <summary>
 		/// Places a given camera perfectly over the map.
