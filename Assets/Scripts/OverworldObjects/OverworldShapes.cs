@@ -20,12 +20,18 @@ namespace OverworldObjects
 		public const int QUAD01x3 	= 12;
 		public const int QUAD02x3 	= 13;
 
-		private static int[] dx = { -2, -1, 0, 1, 2 };
-		private static int[] dy = dx;
+		public static int[] dx = { -2, -1,  0, 1, 2 };
+		public static int[] dy = { -3, -2, -1, 0, 1 };
 
 		const int FILTER_SIZE = 5;
 
-		static bool[] GetBuildingFit(Vector2 Position, bool[,] canWalk)
+		/// <summary>
+		/// Tests if the building fits inside the grid.
+		/// </summary>
+		/// <returns>The building fit.</returns>
+		/// <param name="Position">Position.</param>
+		/// <param name="canWalk">Can walk.</param>
+		public static bool[] GetBuildingFit(Vector2 Position, bool[,] canWalk)
 		{
 			int x = (int)Position.x;
 			int y = (int)Position.y;
@@ -35,7 +41,7 @@ namespace OverworldObjects
 			if ((x >= FILTER_SIZE/2 && x < canWalk.GetLength(1)-FILTER_SIZE/2) 
 			&&  (y >= FILTER_SIZE/2 && y < canWalk.GetLength(0)-FILTER_SIZE/2))
 			{
-				for (int i = ALL_SHAPES.GetLength(0)-1; i >= 0; i--)
+				for (int i = QUAD02x3-1; i >= 0; i--)
 				{
 					if (fits(i, x, y, canWalk))
 						BuildingTypesFit[i] = true;
@@ -46,6 +52,13 @@ namespace OverworldObjects
 			return BuildingTypesFit;
 		}
 
+		/// <summary>
+		/// Fits a building within the area.
+		/// </summary>
+		/// <param name="i">The index.</param>
+		/// <param name="x">The x coordinate.</param>
+		/// <param name="y">The y coordinate.</param>
+		/// <param name="canWalk">Can walk.</param>
 		private static bool fits(int i, int x, int y, bool[,] canWalk)
 		{
 			for (int iy = 0; y < FILTER_SIZE; y++)
@@ -78,7 +91,8 @@ namespace OverworldObjects
 				{
 					for (int x = 0; x < FILTER_SIZE; x++)
 					{
-						output[x, y] = ALL_SHAPES[shapeType, x, y];
+						// ROTERES HER FORDI?? UKJENT MEN FUNKER.
+						output[x, y] = ALL_SHAPES[shapeType, y, x];
 					}
 				}
 				return output;

@@ -47,3 +47,7 @@ Assets/Scripts/Map.cs
 
 *.dll
 *.csproj
+
+Assets/Resources/Heroes/hero2\.prefab
+
+Assets/Resources/Heroes/hero1\.prefab

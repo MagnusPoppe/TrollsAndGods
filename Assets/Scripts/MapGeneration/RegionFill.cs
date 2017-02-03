@@ -19,7 +19,7 @@ namespace MapGenerator
 		/// </summary>
 		/// <param name="voronoiMap">Voronoi map.</param>
 		/// <param name="seeds">Seeds.</param>
-		public RegionFill(int[,] voronoiMap, Vector2[] seeds )
+		public RegionFill(int[,] voronoiMap, Vector2[] seeds)
         {
             this.map = voronoiMap;
 
