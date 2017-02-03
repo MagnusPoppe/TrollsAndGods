@@ -61,7 +61,7 @@ namespace Overworld
 		void SpawnHero(int[,] map, Castle castle)
 		{
 			Vector2 castlePos = castle.GetPosition();
-			Vector2 heroPos = new Vector2((int)castlePos.x + 1, (int)castlePos.y - 2);
+			Vector2 heroPos = new Vector2((int)castlePos.x + 1, (int)castlePos.y/2 - 2);
 			GameObject hero = heroPrefabs[UnityEngine.Random.Range(0, 2)];
             Debug.Log(castlePos.ToString());
             hero.transform.position = heroPos;
