@@ -41,7 +41,7 @@ namespace OverworldObjects
 			if ((x >= FILTER_SIZE/2 && x < canWalk.GetLength(1)-FILTER_SIZE/2) 
 			&&  (y >= FILTER_SIZE/2 && y < canWalk.GetLength(0)-FILTER_SIZE/2))
 			{
-				for (int i = ALL_SHAPES.GetLength(0)-1; i >= 0; i--)
+				for (int i = QUAD02x3-1; i >= 0; i--)
 				{
 					if (fits(i, x, y, canWalk))
 						BuildingTypesFit[i] = true;

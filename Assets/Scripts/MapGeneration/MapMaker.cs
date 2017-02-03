@@ -53,6 +53,12 @@ namespace MapGenerator
 				spritecount   // Used in castle creation
 			);
 			canWalk = CreateWalkableArea(map);
+
+			regions[0].classifyRegionTiles(canWalk);
+
+			Block woodmine = regions[0].GetWoodMine();
+			map[(int)woodmine.GetPosition().x, (int) woodmine.GetPosition().y] = 3;
+			Debug.Log("WOODMINE @ (" + (int)woodmine.GetPosition().x + "," + (int)woodmine.GetPosition().y+")");
 		}
 
 

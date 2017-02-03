@@ -10,21 +10,6 @@ namespace MapGenerator
 		float rating;
 		float distanceFromCastle;
 
-		public float GetDistanceFromCastle()
-		{
-			return distanceFromCastle;
-		}
-
-		public float GetRating()
-		{
-			return rating;
-		}
-
-		public bool CanPlaceBuilding(int buildingType)
-		{
-			return possibleBuildings[buildingType];
-		}
-		
 		public Block(Vector2 origin, Vector2 position, bool[,] canWalk)
 		{
 			this.position = position;
@@ -39,5 +24,27 @@ namespace MapGenerator
 
 			rating = rating / distanceFromCastle;
 		}
+
+		public float GetDistanceFromCastle()
+		{
+			return distanceFromCastle;
+		}
+
+		public Vector2 GetPosition()
+		{
+			return position;
+		}
+
+		public float GetRating()
+		{
+			return rating;
+		}
+
+		public bool CanPlaceBuilding(int buildingType)
+		{
+			return possibleBuildings[buildingType];
+		}
+		
+
 	}
 }

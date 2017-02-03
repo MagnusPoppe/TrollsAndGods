@@ -11,7 +11,6 @@ namespace MapGenerator
         int[,] map;
 		Region[] regions;
 		int regionindex;
-		bool[,] canWalk;
 
 		/// <summary>
 		/// Takes the voronoi generated map and fills in the regions based
@@ -20,14 +19,12 @@ namespace MapGenerator
 		/// </summary>
 		/// <param name="voronoiMap">Voronoi map.</param>
 		/// <param name="seeds">Seeds.</param>
-		public RegionFill(int[,] voronoiMap, Vector2[] seeds, bool[,] canWalk)
+		public RegionFill(int[,] voronoiMap, Vector2[] seeds)
         {
             this.map = voronoiMap;
 
             this.height = map.GetLength(1);
             this.width = map.GetLength(0);
-
-			this.canWalk = canWalk;
 
 			regions = new Region[seeds.Length];
 			regionindex = 0;
@@ -130,7 +127,7 @@ namespace MapGenerator
 				}
  			}
 			Economy e = new Economy(Economy.ABUNDANT);
-			regions[regionindex++] = new Region(region, center, e, canWalk);
+			regions[regionindex++] = new Region(region, center, e);
 		}
 
 		/// <summary>

@@ -22,7 +22,7 @@ namespace MapGenerator
 		/// </summary>
 		/// <param name="coordinateList">Coordinate list.</param>
 		/// <param name="castlePos">Castle position.</param>
-		public Region( List<Vector2> coordinateList, Vector2 castlePos, Economy economy, bool[,] canWalk)
+		public Region( List<Vector2> coordinateList, Vector2 castlePos, Economy economy )
 		{
 			castle = new Castle(castlePos);
 
@@ -32,8 +32,6 @@ namespace MapGenerator
 				coordinates[i++] = c;
 
 			this.economy = economy;
-
-			classifyRegionTiles(canWalk);
 		}
 
 		/// <summary>
@@ -166,6 +164,11 @@ namespace MapGenerator
 					}
 				}
 			}
+		}
+
+		public Block GetWoodMine()
+		{
+			return woodMine;
 		}
 
 	}
