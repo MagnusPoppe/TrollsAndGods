@@ -147,7 +147,7 @@ namespace MapGenerator
 				{
 					float distance = blocks[j].GetDistanceFromCastle();
 
-					if (blocks[i].CanPlaceBuilding(OverworldShapes.TRIPLE))
+					if (blocks[i].CanPlaceBuilding(OverworldShapes.QUAD01x3))
 					{ 
 						if (distance >= minDistance && distance <= maxDistance)
 						{

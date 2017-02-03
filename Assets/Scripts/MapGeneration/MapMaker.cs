@@ -56,10 +56,13 @@ namespace MapGenerator
 
 			regions[0].classifyRegionTiles(canWalk);
 
-			Block woodmine = regions[0].GetWoodMine();
-			map[(int)woodmine.GetPosition().x, (int) woodmine.GetPosition().y] = 3;
-			Debug.Log("WOODMINE @ (" + (int)woodmine.GetPosition().x + "," + (int)woodmine.GetPosition().y+")");
+			Vector2[] woodmine = regions[0].GetWoodMine().GetOccupiedTiles(OverworldShapes.QUAD01x3);
+			for (int i = 0; i < woodmine.Length; i++)
+				map[(int)woodmine[i].x, (int) woodmine[i].y] = 3;
+
+			Debug.Log("ORIGIN OF WOODMINE:" + regions[0].GetWoodMine().GetPosition().ToString());
 		}
+			
 
 
 		/// <summary>

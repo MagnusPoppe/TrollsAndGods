@@ -20,8 +20,8 @@ namespace OverworldObjects
 		public const int QUAD01x3 	= 12;
 		public const int QUAD02x3 	= 13;
 
-		private static int[] dx = { -3, -2, -1, 0, 1 };
-		private static int[] dy = dx;
+		public static int[] dx = { -2, -1,  0, 1, 2 };
+		public static int[] dy = { -3, -2, -1, 0, 1 };
 
 		const int FILTER_SIZE = 5;
 
@@ -91,7 +91,8 @@ namespace OverworldObjects
 				{
 					for (int x = 0; x < FILTER_SIZE; x++)
 					{
-						output[x, y] = ALL_SHAPES[shapeType, x, y];
+						// ROTERES HER FORDI?? UKJENT MEN FUNKER.
+						output[x, y] = ALL_SHAPES[shapeType, y, x];
 					}
 				}
 				return output;
