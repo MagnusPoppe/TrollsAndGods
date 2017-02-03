@@ -59,6 +59,7 @@
      <Compile Include="Assets\Scripts\Elements\Slash.cs" />
      <Compile Include="Assets\Scripts\Elements\Water.cs" />
      <Compile Include="Assets\Scripts\GenerateMap.cs" />
+     <Compile Include="Assets\Scripts\HandyMethods.cs" />
      <Compile Include="Assets\Scripts\Map.cs" />
      <Compile Include="Assets\Scripts\MapGeneration\BinaryMap.cs" />
      <Compile Include="Assets\Scripts\MapGeneration\Economy.cs" />
