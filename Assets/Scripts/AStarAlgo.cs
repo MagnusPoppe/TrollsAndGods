@@ -274,7 +274,7 @@ public class AStarAlgo {
             if (hex)
                 hScore = DistanceHex(pos, goal);
             else
-                hScore = (int)(Math.Abs(goal.x - pos.x) + Math.Abs(goal.y - pos.y));
+                hScore =(int) Math.Sqrt(Math.Abs(goal.x - pos.x) + Math.Abs(goal.y - pos.y));
         }
 
         // Transelates offset cordinates to cube cordinates
