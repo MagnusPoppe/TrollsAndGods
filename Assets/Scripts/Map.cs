@@ -12,8 +12,11 @@ namespace Overworld
 		public int widthXHeight = 128;
 		int width, height;
 
-		// Unity map objects
-		GameObject[,] tiles;
+        // Unity map objects
+        public const float XRESOLUTION = 2598;
+        public const float YRESOLUTION = 1299;
+        public const float YOFFSET = YRESOLUTION / XRESOLUTION;
+        GameObject[,] tiles;
 		public string seed = "Angelica";
 		[Range(0, 100)]
 		public int fillpercentWalkable = 57;
@@ -51,10 +54,18 @@ namespace Overworld
 			DrawMap(mapmaker.GetMap());
 
             Region[] regions = mapmaker.GetRegions();
+<<<<<<< HEAD
             //for(int i=0; i<regions.Length; i++)
             //{
             //    SpawnHero(mapmaker.GetMap(), regions[i].GetCastle());
             //}
+=======
+            for(int i=0; i<regions.Length; i++)
+            {
+                //SpawnHero(mapmaker.GetMap(), regions[i].GetCastle());
+
+            }
+>>>>>>> master
 		}
 
 		void SpawnHero(int[,] map, Castle castle)
@@ -74,9 +85,11 @@ namespace Overworld
 		{
 			// DRAWING THE MAP:
 			tiles = new GameObject[width, height];
+            float iy = 0;
 			// Looping through all tile positions:
 			for (int y = 0; y < height; y++)
 			{
+<<<<<<< HEAD
 				for (int x = 0; x < width; x++)
 				{
 					// Creating a new game object to place on the board:
@@ -95,6 +108,35 @@ namespace Overworld
 				}
 			}
 		}
+=======
+                for (int x = 0; x < width; x++)
+                {
+                    // Creating a new game object to place on the board:
+                    tiles[x, y] = new GameObject();
+                    tiles[x, y].name = "Tile (" + x + ", " + y + ")";
+                    if (y % 2 == 0)
+                        tiles[x, y].transform.position = new Vector2(x, iy / 2);
+                    else
+                        tiles[x, y].transform.position = new Vector2(x + 0.5f, iy / 2);
+
+                    // Adding a sprite to the gameobject:
+                    SpriteRenderer sr = tiles[x, y].AddComponent<SpriteRenderer>();
+                    sr.sprite = groundTiles[map[x, y]];
+
+                    // Placing the tile on on the map within the board gameobject:
+                    tiles[x, y].transform.parent = this.transform;
+                    //iy += 0.576f;
+                    if (x == 5 && y == 5)
+                    {
+                        GameObject hero = heroPrefabs[UnityEngine.Random.Range(0, 2)];
+                        hero.transform.position = new Vector2(x + 0.5f, y / 2 + 0.5f);
+                        Instantiate(hero);
+                    }
+                }
+                iy += YOFFSET; // 0.57747603833865814696485623003195f;
+            }
+        }
+>>>>>>> master
 
 		/// <summary>
 		/// Places a given camera perfectly over the map.
@@ -125,6 +167,5 @@ namespace Overworld
 		{
 			return width;
 		}
-
 	}
 }

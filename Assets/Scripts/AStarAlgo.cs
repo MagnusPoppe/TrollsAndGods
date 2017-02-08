@@ -49,6 +49,7 @@ public class AStarAlgo {
     /// <returns>A vector2 List containing the shortest path</returns>
     public List<Vector2> calculate(Vector2 start, Vector2 goal)
     {
+        
         // Return variable
         List<Vector2> path = new List<Vector2>();
 
@@ -134,6 +135,7 @@ public class AStarAlgo {
             // Sorts openSet by cost
             openSet = openSet.OrderBy(Node => Node.GetF()).ToList();
         }
+        
 
         // Returns path array that contains the shortest path
         return path;
@@ -259,7 +261,7 @@ public class AStarAlgo {
             if (hex)
                 hScore = DistanceHex(pos, goal);
             else
-                hScore = (int)(Math.Abs(goal.x - pos.x) + Math.Abs(goal.y - pos.y));
+                hScore = (int)Math.Sqrt(Math.Abs(goal.x - pos.x) + Math.Abs(goal.y - pos.y));
         }
 
         // Transelates offset cordinates to cube cordinates

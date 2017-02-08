@@ -2,26 +2,29 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
+/// <summary>
+/// Class for the player's heroes
+/// </summary>
 public class Hero
 {
     private Sprite portrait;
     private string name;
     private int faction;
+    private int color;
     private Unit[] units;
     private List<Item> items;
     private List<Item> equippedItems;
 
-    public Hero()
+    /// <summary>
+    /// Constructor that prepares unit, items, and equippeditems list for the hero
+    /// </summary>
+    /// <param name="color">id of which player gets the hero</param>
+    public Hero(int color)
     {
+        this.color = color;
         Units = new Unit[7];
         Items = new List<Item>();
         EquippedItems = new List<Item>();
-    }
-
-    public Hero(Sprite portrait) : this()
-    {
-        this.portrait = portrait;
     }
 
     public Sprite GetPortrait()
@@ -38,6 +41,14 @@ public class Hero
         set
         {
             name = value;
+        }
+    }
+
+    public int Color
+    {
+        get
+        {
+            return color;
         }
     }
 

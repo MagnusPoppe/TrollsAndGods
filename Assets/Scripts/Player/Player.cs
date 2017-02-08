@@ -2,20 +2,29 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Player class that holds everything corresponding to the players values and actions.
+/// </summary>
 public class Player
 {
-    Resources res;
-    Hero[] heroes;
-    List<Town> towns;
-    int color;
-    bool[,] fogOfWar;
+    private Resources res;
+    private Hero[] heroes;
+    private List<Town.Town> towns;
+    private int color;
+    private bool[,] fogOfWar;
+    private const int MAXHEROES = 8;
 
+    /// <summary>
+    /// Constructor that creates a new hero for the player, prepares fog of war, resources and towns
+    /// </summary>
+    /// <param name="color">Which color the player will get</param>
+    /// <param name="difficulty">How difficult the game is set to be</param>
     public Player(int color, int difficulty)
     {
         Res = new Resources(difficulty);
-        Heroes = new Hero[8];
-        Heroes[0] = new Hero();
-        Towns = new List<Town>();
+        Heroes = new Hero[MAXHEROES];
+        Heroes[0] = new Hero(color);
+        Towns = new List<Town.Town>();
         this.Color = color;
         FogOfWar = new bool[32, 32]; // todo, link to map objects x y size
     }
@@ -33,7 +42,7 @@ public class Player
         }
     }
 
-    public List<Town> Towns
+    public List<Town.Town> Towns
     {
         get
         {
