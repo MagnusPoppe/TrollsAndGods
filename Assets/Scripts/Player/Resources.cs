@@ -8,13 +8,7 @@ using UnityEngine;
 /// </summary>
 public class Resources
 {
-    protected int gold;
-    protected int wood;
-    protected int ore;
-    protected int gem;
-    protected int sulfur;
-    protected int mercury;
-    protected int crystal;
+    protected int[] resourceTab;
 
     /// <summary>
     /// Consctructor that sets resource values according to set difficulty
@@ -23,33 +17,11 @@ public class Resources
     public Resources(int difficulty)
     {
         if (difficulty == 0)
-            ResourcesInit(15000, 20, 20, 10, 10, 10, 10);
+            Resources = new int { 15000, 20, 20, 10, 10, 10, 10 };
         else if (difficulty == 1)
-            ResourcesInit(10000, 15, 15, 5, 5, 5, 5);
+            Resources = new int { 10000, 15, 15, 5, 5, 5, 5 };
         else
-            ResourcesInit(5000, 10, 10, 0, 0, 0, 0);
-    }
-
-    public Resources(int gold, int wood, int ore, int gem, int sulfur, int mercury, int crystal)
-    {
-        this.gold = gold;
-        this.wood = wood;
-        this.ore = ore;
-        this.gem = gem;
-        this.sulfur = sulfur;
-        this.mercury = mercury;
-        this.crystal = crystal;
-    }
-
-    protected void ResourcesInit(int gold, int wood, int ore, int gem, int sulfur, int mercury, int crystal)
-    {
-        this.gold = gold;
-        this.wood = wood;
-        this.ore = ore;
-        this.gem = gem;
-        this.sulfur = sulfur;
-        this.mercury = mercury;
-        this.crystal = crystal;
+            Resources = new int { 5000, 10, 10, 0, 0, 0, 0 };
     }
 
     /// <summary>
@@ -62,66 +34,18 @@ public class Resources
     /// <param name="sulfur">sulfur</param>
     /// <param name="mercury">mercury</param>
     /// <param name="crystal">crystal</param>
-    /// <returns></returns>
+    /// <returns>true if there is enough resources</returns>
     public bool CanPay(int gold, int wood, int ore, int gem, int sulfur, int mercury, int crystal)
     {
-        return this.gold >= gold && this.wood >= wood && this.ore >= ore && this.gem >= gem && this.sulfur >= sulfur && this.mercury >= mercury && this.crystal >= crystal;
+        return this.resourceTab[0] >= gold && this.resourceTab[1] >= wood && this.resourceTab[2] >= ore && this.resourceTab[3] >= gem && this.resourceTab[4] >= sulfur && this.resourceTab[5] >= mercury && this.resourceTab[6] >= crystal;
     }
 
-    public int GetGold()
+    public int GetResource(int i)
     {
-        return gold;
+        return resourceTab[i];
     }
-    public int GetWood()
+    public void adjustResource(int i, int amount)
     {
-        return wood;
-    }
-    public int GetOre()
-    {
-        return ore;
-    }
-    public int GetGem()
-    {
-        return gem;
-    }
-    public int GetMercury()
-    {
-        return mercury;
-    }
-    public int GetSulfur()
-    {
-        return sulfur;
-    }
-    public int GetCrystal()
-    {
-        return crystal;
-    }
-    public void adjustGold(int i)
-    {
-        gold += i;
-    }
-    public void adjustWood(int i)
-    {
-        wood += i;
-    }
-    public void adjustOre(int i)
-    {
-        ore += i;
-    }
-    public void adjustGem(int i)
-    {
-        gem += i;
-    }
-    public void adjustMercury(int i)
-    {
-        mercury += i;
-    }
-    public void adjustSulfur(int i)
-    {
-        sulfur += i;
-    }
-    public void adjustCrystal(int i)
-    {
-        crystal += i;
+        resourceTab[i] += amount;
     }
 }
