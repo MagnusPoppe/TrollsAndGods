@@ -56,7 +56,7 @@ namespace Overworld
             Region[] regions = mapmaker.GetRegions();
             for(int i=0; i<regions.Length; i++)
             {
-                SpawnHero(mapmaker.GetMap(), regions[i].GetCastle());
+                //SpawnHero(mapmaker.GetMap(), regions[i].GetCastle());
 
             }
 		}
