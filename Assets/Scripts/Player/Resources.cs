@@ -17,11 +17,24 @@ public class Resources
     public Resources(int difficulty)
     {
         if (difficulty == 0)
-            Resources = new int { 15000, 20, 20, 10, 10, 10, 10 };
+            resourceTab = new int[] { 15000, 20, 20, 10, 10, 10, 10 };
         else if (difficulty == 1)
-            Resources = new int { 10000, 15, 15, 5, 5, 5, 5 };
+            resourceTab = new int[] { 10000, 15, 15, 5, 5, 5, 5 };
         else
-            Resources = new int { 5000, 10, 10, 0, 0, 0, 0 };
+            resourceTab = new int[] { 5000, 10, 10, 0, 0, 0, 0 };
+    }
+
+    /// <summary>
+    /// Constructor for buildings or units that costs specific resources
+    /// </summary>
+    /// <param name="goldCost">gold</param>
+    /// <param name="woodCost">wood</param>
+    /// <param name="oreCost">ore</param>
+    /// <param name="crystalCost">crystal</param>
+    /// <param name="gemCost">gem</param>
+    public Resources(int goldCost, int woodCost, int oreCost, int crystalCost, int gemCost)
+    {
+        resourceTab = new int[] { goldCost, woodCost, oreCost, crystalCost, gemCost };
     }
 
     /// <summary>
@@ -30,14 +43,12 @@ public class Resources
     /// <param name="gold">gold</param>
     /// <param name="wood">wood</param>
     /// <param name="ore">ore</param>
-    /// <param name="gem">gem</param>
-    /// <param name="sulfur">sulfur</param>
-    /// <param name="mercury">mercury</param>
     /// <param name="crystal">crystal</param>
+    /// <param name="gem">gem</param>
     /// <returns>true if there is enough resources</returns>
-    public bool CanPay(int gold, int wood, int ore, int gem, int sulfur, int mercury, int crystal)
+    public bool CanPay(int gold, int wood, int ore, int crystal, int gem)
     {
-        return this.resourceTab[0] >= gold && this.resourceTab[1] >= wood && this.resourceTab[2] >= ore && this.resourceTab[3] >= gem && this.resourceTab[4] >= sulfur && this.resourceTab[5] >= mercury && this.resourceTab[6] >= crystal;
+        return this.resourceTab[0] >= gold && this.resourceTab[1] >= wood && this.resourceTab[2] >= ore && this.resourceTab[3] >= crystal && this.resourceTab[4] >= gem;
     }
 
     public int GetResource(int i)
