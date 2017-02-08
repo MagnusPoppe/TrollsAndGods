@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using OverworldObjects;
+using Filter;
 
 namespace MapGenerator
 {
@@ -21,7 +22,12 @@ namespace MapGenerator
 		public const int  GROUND 					= 0;
 		public const int  WALL 						= 1;
 		public const int  CASTLE 					= 2;
-		public const int  FIRST_AVAILABLE_SPRITE	= 3;
+		public const int  WATER 					= 3;
+		public const int  DIRT						= 4;
+		public const int  WOODS 					= 5;
+		public const int  BUILDING 					= 6;
+		public const int GRASS_WATER = 7;
+		public const int GRASS_TO_WATER_DIRECTION_END = 15;
 		public const bool KEEP_VORONOI_REGION_LINES = false;
 
 		/// <summary>
@@ -52,18 +58,239 @@ namespace MapGenerator
 				fill, smooth, // Used for Binary map generation algorithm
 				spritecount   // Used in castle creation
 			);
-			canWalk = CreateWalkableArea(map);
 
-			regions[0].classifyRegionTiles(canWalk);
+			// PLACE TREES IN OCCUPIED AREAS:
+			for (int y = 0; y < height; y++)
+			{
+				for (int x = 0; x < width; x++)
+				{
+					if (map[x, y] == WALL)
+						map[x, y] = WOODS;
+				}
+			}
 
-			Vector2[] woodmine = regions[0].GetWoodMine().GetOccupiedTiles(OverworldShapes.QUAD01x3);
-			for (int i = 0; i < woodmine.Length; i++)
-				map[(int)woodmine[i].x, (int) woodmine[i].y] = 3;
+			canWalk = CreateWalkableArea();
+			for (int i = 0; i < regions.Length; i++) 
+				placeWoodMine(regions[i]);
 
-			Debug.Log("ORIGIN OF WOODMINE:" + regions[0].GetWoodMine().GetPosition().ToString());
+			FillRandomRegionsWithWater();
+			CreateTransitions();
 		}
-			
 
+		private void FillRandomRegionsWithWater()
+		{
+			System.Random prng = new System.Random(seed.GetHashCode());
+
+			for (int i = 0; i < castles.Length/2; i++)
+			{
+				// Pesuedo random number generator:
+				int r = prng.Next(0, castles.Length);
+    			regions[r].FillRegionWithWater(map);
+			}
+		}
+		private void CreateTransitions()
+		{
+
+			float[,] copy = new float[width, height];
+
+			int[,] northfilter = {
+				{1,   2,  1},
+				{0,   0,  0},
+				{-1, -2, -1}
+			};
+
+			int[,] eastfilter = {
+				{-1, 0, 1},
+				{-2, 0, 2},
+				{-1, 0, 1}
+			};
+
+
+			int range = northfilter.GetLength(0) / 2;
+
+			for (int y = 1; y < height - 1; y++)
+			{
+				for (int x = 1; x < width - 1; x++)
+				{
+					int dx = 0;
+					int dy = 0;
+
+					// GÅR IGJENNOM FILTER
+					for (int fy = 0; fy < northfilter.GetLength(0); fy++)
+					{
+						for (int fx = 0; fx < northfilter.GetLength(0); fx++)
+						{
+							if (map[x - (fx - range), y - (fy - range)] == WATER ||
+							   map[x - (fx - range), y - (fy - range)] == GROUND)
+							{
+								dy += northfilter[fx, fy] * map[x - (fx - range), y - (fy - range)];
+								dx += eastfilter[fx, fy] * map[x - (fx - range), y - (fy - range)];
+							}
+						}
+					}
+					if (dx != 0 || dy != 0)
+					{ 
+						copy[x, y] = Mathf.Sqrt(dx * dx + dy * dy);
+					}
+				}
+			}
+
+			for (int y = 1; y < height - 1; y++)
+			{
+				for (int x = 1; x < width - 1; x++)
+				{
+					if (copy[x, y] > 0)
+					{
+							 if (Transition(northfilter, x, y)) map[x, y] = GRASS_WATER + 0;
+						else if (Transition(eastfilter, x, y))  map[x, y] = GRASS_WATER + 2;
+						//else if (Transition(northfilter, x, y)) map[x, y] = GRASS_WATER + 0;
+						//else if (Transition(northfilter, x, y)) map[x, y] = GRASS_WATER + 0;
+
+					}
+				}
+			}
+		}
+
+		private bool Transition(int[,] filter, int x, int y)
+		{
+			int range = filter.GetLength(0) / 2;
+
+			for (int fy = 0; fy < filter.GetLength(0); fy++)
+			{
+				for (int fx = 0; fx < filter.GetLength(0); fx++)
+				{
+					if (filter[fx, fy] == 1) // HER SKAL DET VÆRE VANN
+					{
+						if (map[x - (fx - range), y - (fy - range)] != WATER)
+							return false;
+					}
+					else if (filter[fx, fy] == 0 || filter[fx, fy] == -1) // HER SKAL DET VÆRE BAKKE
+					{
+						if (map[x - (fx - range), y - (fy - range)] == WATER)
+							return false;
+					}
+				}
+			}
+			return true;
+		}
+
+		//private void CreateTransitions()
+		//{
+
+		//	int[,] copy = new int[width, height];
+
+		//	int[,] northfilter = {
+		//		{1,   1,  1},
+		//		{0,   0,  0},
+		//		{-1, -1, -1}
+		//	};
+		//	int[,] northeastfilter = {
+		//		{0,   1, 1},
+		//		{-1,  0, 1},
+		//		{-1, -1, 0}
+		//	};
+		//	int[,] eastfilter = {
+		//		{-1, 0, 1},
+		//		{-1, 0, 1},
+		//		{-1, 0, 1}
+		//	};
+		//	int[,] southEastfilter = {
+		//		{-1, -1, 0},
+		//		{-1,  0, 1},
+		//		{ 0,  1, 1}
+		//	};
+
+		//	int range = northfilter.GetLength(0) / 2;
+
+		//	for (int y = 1; y < height-1; y++)
+		//	{
+		//		for (int x = 1; x < width-1; x++)
+		//		{
+		//			int[] response = new int[8];
+
+		//			// GÅR IGJENNOM FILTER
+		//			for (int fy = 0; fy < northfilter.GetLength(0); fy++)
+		//			{
+		//				for (int fx = 0; fx < northfilter.GetLength(0); fx++)
+		//				{
+		//					if (map[x - (fx - range), y - (fy - range)] == WATER ||
+		//					   map[x - (fx - range), y - (fy - range)] == GROUND)
+		//					{
+		//						response[(int)CompassFilter.north]		+= northfilter[fx, fy] 		* map[x - (fx - range), y - (fy - range)];
+		//						response[(int)CompassFilter.northEast]	+= northeastfilter[fx, fy]  * map[x - (fx - range), y - (fy - range)];
+		//						response[(int)CompassFilter.east]		+= eastfilter[fx, fy] 	 	* map[x - (fx - range), y - (fy - range)];
+		//						response[(int)CompassFilter.southeast]	+= southEastfilter[fx, fy]  * map[x - (fx - range), y - (fy - range)];
+		//					}
+		//				}
+		//			}
+
+		//			// SNUR VERDIER FOR Å FÅ ALLE RETNINGER
+		//			response[(int)CompassFilter.south] 
+		//				= -response[(int)CompassFilter.north];
+		//			response[(int)CompassFilter.southwest] 
+		//				= -response[(int)CompassFilter.northEast];
+		//			response[(int)CompassFilter.west] 
+		//				= -response[(int)CompassFilter.east];
+		//			response[(int)CompassFilter.northwest] 
+		//				= -response[(int)CompassFilter.southeast];
+
+		//			float retning = Mathf.Atan2(response[(int)CompassFilter.north], response[(int)CompassFilter.east]);
+		//			if (retning > 0)
+		//			{
+						
+
+		//				retning += Mathf.PI;
+
+		//				float perRetning = retning / 8;
+
+		//				copy[x, y] = (int)(perRetning / retning);
+		//			}
+		//			//int max = 0;
+		//			//int index = 0;
+		//			//for (int i = 0; i < response.Length; i++)
+		//			//{
+		//			//	if (max < response[i])
+		//			//	{
+		//			//		max = response[i];
+		//			//		index = i;
+		//			//	}
+		//	 	//	}
+
+		//			//if (max > 0)
+		//			//{
+		//			//	copy[x, y] = index;
+		//			//	Debug.Log("Changed to direction: " + index + ", Max: " + max);
+		//			//}
+		//			//else
+		//			//	copy[x, y] = 8;
+
+		//		}
+		//	}
+
+
+		//	for (int y = 1; y < height - 1; y++)
+		//	{
+		//		for (int x = 1; x < width - 1; x++)
+		//		{
+		//			if (copy[x, y] != 8)
+		//				map[x, y] = GRASS_TO_WATER_DIRECTION_START + copy[x, y];
+		//		}
+		//	}
+		//}
+
+		private void placeWoodMine(Region r)
+		{ 
+			r.classifyRegionTiles(canWalk);
+
+			if (r.GetWoodMine() != null)
+			{
+				Vector2[] woodmine = r.GetWoodMine().GetOccupiedTiles(OverworldShapes.QUAD01x3);
+
+				if (woodmine != null)
+					for (int i = 0; i < woodmine.Length; i++)
+						map[(int)woodmine[i].x, (int)woodmine[i].y] = BUILDING;
+			}
+		}
 
 		/// <summary>
 		/// Returns the generated map.

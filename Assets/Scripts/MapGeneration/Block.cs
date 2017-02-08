@@ -24,7 +24,7 @@ namespace MapGenerator
 				if (possibleBuildings[i])
 					rating++;
 
-			rating = rating - distanceFromCastle;
+			rating = (float)Math.Pow(rating/13, 3)*13;
 			//TODO Debug.Log("RATING: " + rating);
 		}
 
@@ -67,7 +67,10 @@ namespace MapGenerator
 						occupiedArea.Add(new Vector2(x + dx, y + dy));
 				}
 			}
-			return occupiedArea.ToArray();
+			if (occupiedArea.Count > 0)
+				return occupiedArea.ToArray();
+
+			return null;
 		}
 		
 
