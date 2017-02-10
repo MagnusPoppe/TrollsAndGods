@@ -129,7 +129,7 @@ namespace MapGenerator
 			return false;
 		}
 
-		public void classifyRegionTiles( bool[,] canWalk )
+		public void classifyRegionTiles( int[,] canWalk )
 		{
 			// DEFINERER BYGGNINGSTYPEN TIL HVER TILE:
 			Block[] blocks = new Block[GetArea()];
@@ -146,7 +146,7 @@ namespace MapGenerator
 				{
 					float distance = blocks[j].GetDistanceFromCastle();
 
-					if (blocks[j].CanPlaceBuilding(OverworldShapes.QUAD01x3))
+					if (blocks[j].CanPlaceBuilding(Shapes.QUAD01x3))
 					{ 
 						if (distance >= minDistance && distance <= maxDistance)
 						{

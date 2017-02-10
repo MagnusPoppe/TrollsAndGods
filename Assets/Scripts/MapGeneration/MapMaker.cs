@@ -13,7 +13,7 @@ namespace MapGenerator
 		// Information about the map:
 		Region[] regions;
 		int[,] map;
-		bool[,] canWalk;
+		int[,] canWalk;
 
 		// Overworld objects
 		Castle[] castles;
@@ -29,6 +29,12 @@ namespace MapGenerator
 		public const int GRASS_WATER = 7;
 		public const int GRASS_TO_WATER_DIRECTION_END = 15;
 		public const bool KEEP_VORONOI_REGION_LINES = false;
+
+		// CANWALK 
+		public const int CANNOTWALK = 0;
+		public const int CANWALK 	= 1;
+		public const int TRIGGER 	= 2;
+
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:MapGenerator.MapMaker"/> class.
@@ -68,13 +74,15 @@ namespace MapGenerator
 						map[x, y] = WOODS;
 				}
 			}
+			FillRandomRegionsWithWater();
+
+			//CreateTransitions();
 
 			canWalk = CreateWalkableArea();
+
 			for (int i = 0; i < regions.Length; i++) 
 				placeWoodMine(regions[i]);
 
-			FillRandomRegionsWithWater();
-			CreateTransitions();
 		}
 
 		private void FillRandomRegionsWithWater()
@@ -88,67 +96,51 @@ namespace MapGenerator
     			regions[r].FillRegionWithWater(map);
 			}
 		}
+
 		private void CreateTransitions()
 		{
-
-			float[,] copy = new float[width, height];
-
-			int[,] northfilter = {
-				{1,   2,  1},
-				{0,   0,  0},
-				{-1, -2, -1}
-			};
-
-			int[,] eastfilter = {
-				{-1, 0, 1},
-				{-2, 0, 2},
-				{-1, 0, 1}
-			};
-
-
-			int range = northfilter.GetLength(0) / 2;
-
 			for (int y = 1; y < height - 1; y++)
 			{
 				for (int x = 1; x < width - 1; x++)
 				{
-					int dx = 0;
-					int dy = 0;
+					int direction = FindDirection(x, y);
 
-					// GÅR IGJENNOM FILTER
-					for (int fy = 0; fy < northfilter.GetLength(0); fy++)
-					{
-						for (int fx = 0; fx < northfilter.GetLength(0); fx++)
-						{
-							if (map[x - (fx - range), y - (fy - range)] == WATER ||
-							   map[x - (fx - range), y - (fy - range)] == GROUND)
-							{
-								dy += northfilter[fx, fy] * map[x - (fx - range), y - (fy - range)];
-								dx += eastfilter[fx, fy] * map[x - (fx - range), y - (fy - range)];
-							}
-						}
-					}
-					if (dx != 0 || dy != 0)
+					if (direction >= 0)
 					{ 
-						copy[x, y] = Mathf.Sqrt(dx * dx + dy * dy);
+						Debug.Log("Direction " + direction + " found for (" + x + "," + y + ")");
+						map[x, y] = GRASS_WATER + direction;
 					}
 				}
 			}
+		}
 
-			for (int y = 1; y < height - 1; y++)
-			{
-				for (int x = 1; x < width - 1; x++)
-				{
-					if (copy[x, y] > 0)
-					{
-							 if (Transition(northfilter, x, y)) map[x, y] = GRASS_WATER + 0;
-						else if (Transition(eastfilter, x, y))  map[x, y] = GRASS_WATER + 2;
-						//else if (Transition(northfilter, x, y)) map[x, y] = GRASS_WATER + 0;
-						//else if (Transition(northfilter, x, y)) map[x, y] = GRASS_WATER + 0;
+		private int FindDirection(int x, int y)
+		{
+			if (Transition(CompassF.NORTH, x, y))
+				return (int)CompassF.Directions.north;
 
-					}
-				}
-			}
+			//else if (Transition(CompassF.NORTH_EAST, x, y))
+			//	return (int)CompassF.Directions.northEast;
+
+			//else if (Transition(CompassF.EAST, x, y))
+			//	return (int)CompassF.Directions.east;
+
+			//else if (Transition(CompassF.SOUTH_EAST, x, y))
+			//	return (int)CompassF.Directions.southEast;
+
+			//else if (Transition(CompassF.SOUTH, x, y))
+			//	return (int)CompassF.Directions.south;
+
+			//else if (Transition(CompassF.SOUTH_WEST, x, y))
+			//	return (int)CompassF.Directions.southWest;
+
+			//else if (Transition(CompassF.WEST, x, y))
+			//	return (int)CompassF.Directions.west;
+
+			//else if (Transition(CompassF.NORTH_WEST, x, y))
+			//	return (int)CompassF.Directions.northWest;
+			
+			return -1; // AREA IS HOMOGENUS
 		}
 
 		private bool Transition(int[,] filter, int x, int y)
@@ -159,124 +151,23 @@ namespace MapGenerator
 			{
 				for (int fx = 0; fx < filter.GetLength(0); fx++)
 				{
+
 					if (filter[fx, fy] == 1) // HER SKAL DET VÆRE VANN
 					{
-						if (map[x - (fx - range), y - (fy - range)] != WATER)
+						if (map[x + (fx - range), y + (fy - range)] != WATER)
 							return false;
 					}
-					else if (filter[fx, fy] == 0 || filter[fx, fy] == -1) // HER SKAL DET VÆRE BAKKE
+					else
 					{
-						if (map[x - (fx - range), y - (fy - range)] == WATER)
+						if (map[x + (fx - range), y + (fy - range)] == WATER)
 							return false;
 					}
+
 				}
 			}
 			return true;
 		}
 
-		//private void CreateTransitions()
-		//{
-
-		//	int[,] copy = new int[width, height];
-
-		//	int[,] northfilter = {
-		//		{1,   1,  1},
-		//		{0,   0,  0},
-		//		{-1, -1, -1}
-		//	};
-		//	int[,] northeastfilter = {
-		//		{0,   1, 1},
-		//		{-1,  0, 1},
-		//		{-1, -1, 0}
-		//	};
-		//	int[,] eastfilter = {
-		//		{-1, 0, 1},
-		//		{-1, 0, 1},
-		//		{-1, 0, 1}
-		//	};
-		//	int[,] southEastfilter = {
-		//		{-1, -1, 0},
-		//		{-1,  0, 1},
-		//		{ 0,  1, 1}
-		//	};
-
-		//	int range = northfilter.GetLength(0) / 2;
-
-		//	for (int y = 1; y < height-1; y++)
-		//	{
-		//		for (int x = 1; x < width-1; x++)
-		//		{
-		//			int[] response = new int[8];
-
-		//			// GÅR IGJENNOM FILTER
-		//			for (int fy = 0; fy < northfilter.GetLength(0); fy++)
-		//			{
-		//				for (int fx = 0; fx < northfilter.GetLength(0); fx++)
-		//				{
-		//					if (map[x - (fx - range), y - (fy - range)] == WATER ||
-		//					   map[x - (fx - range), y - (fy - range)] == GROUND)
-		//					{
-		//						response[(int)CompassFilter.north]		+= northfilter[fx, fy] 		* map[x - (fx - range), y - (fy - range)];
-		//						response[(int)CompassFilter.northEast]	+= northeastfilter[fx, fy]  * map[x - (fx - range), y - (fy - range)];
-		//						response[(int)CompassFilter.east]		+= eastfilter[fx, fy] 	 	* map[x - (fx - range), y - (fy - range)];
-		//						response[(int)CompassFilter.southeast]	+= southEastfilter[fx, fy]  * map[x - (fx - range), y - (fy - range)];
-		//					}
-		//				}
-		//			}
-
-		//			// SNUR VERDIER FOR Å FÅ ALLE RETNINGER
-		//			response[(int)CompassFilter.south] 
-		//				= -response[(int)CompassFilter.north];
-		//			response[(int)CompassFilter.southwest] 
-		//				= -response[(int)CompassFilter.northEast];
-		//			response[(int)CompassFilter.west] 
-		//				= -response[(int)CompassFilter.east];
-		//			response[(int)CompassFilter.northwest] 
-		//				= -response[(int)CompassFilter.southeast];
-
-		//			float retning = Mathf.Atan2(response[(int)CompassFilter.north], response[(int)CompassFilter.east]);
-		//			if (retning > 0)
-		//			{
-						
-
-		//				retning += Mathf.PI;
-
-		//				float perRetning = retning / 8;
-
-		//				copy[x, y] = (int)(perRetning / retning);
-		//			}
-		//			//int max = 0;
-		//			//int index = 0;
-		//			//for (int i = 0; i < response.Length; i++)
-		//			//{
-		//			//	if (max < response[i])
-		//			//	{
-		//			//		max = response[i];
-		//			//		index = i;
-		//			//	}
-		//	 	//	}
-
-		//			//if (max > 0)
-		//			//{
-		//			//	copy[x, y] = index;
-		//			//	Debug.Log("Changed to direction: " + index + ", Max: " + max);
-		//			//}
-		//			//else
-		//			//	copy[x, y] = 8;
-
-		//		}
-		//	}
-
-
-		//	for (int y = 1; y < height - 1; y++)
-		//	{
-		//		for (int x = 1; x < width - 1; x++)
-		//		{
-		//			if (copy[x, y] != 8)
-		//				map[x, y] = GRASS_TO_WATER_DIRECTION_START + copy[x, y];
-		//		}
-		//	}
-		//}
 
 		private void placeWoodMine(Region r)
 		{ 
@@ -284,7 +175,7 @@ namespace MapGenerator
 
 			if (r.GetWoodMine() != null)
 			{
-				Vector2[] woodmine = r.GetWoodMine().GetOccupiedTiles(OverworldShapes.QUAD01x3);
+				Vector2[] woodmine = r.GetWoodMine().GetOccupiedTiles(Shapes.QUAD01x3);
 
 				if (woodmine != null)
 					for (int i = 0; i < woodmine.Length; i++)
@@ -305,7 +196,7 @@ namespace MapGenerator
 		/// Gets the can walk map.
 		/// </summary>
 		/// <returns>The can walk map.</returns>
-		public bool[,] GetCanWalkMap()
+		public int[,] GetCanWalkMap()
 		{
 			return canWalk;
 		}
@@ -392,17 +283,17 @@ namespace MapGenerator
 		/// </summary>
 		/// <returns>The walkable area.</returns>
 		/// <param name="map">Map.</param>
-		private bool[,] CreateWalkableArea(int[,] map)
+		private int[,] CreateWalkableArea(int[,] map)
 		{
-			bool[,] canWalk = new bool[width, height];
+			int[,] canWalk = new int[width, height];
 			for (int y = 0; y < height; y++)
 			{
 				for (int x = 0; x < width; x++)
 				{
 					if (map[x, y] == GROUND)
-						canWalk[x, y] = true;
+						canWalk[x, y] = 1;
 					else
-						canWalk[x, y] = false;
+						canWalk[x, y] = 0;
 				}
 			}
 			return canWalk;
@@ -413,7 +304,7 @@ namespace MapGenerator
 		 /// </summary>
 		 /// <returns>The walkable area.</returns>
 		 /// <param name="map">Map.</param>
-		private bool[,] CreateWalkableArea()
+		private int[,] CreateWalkableArea()
 		{
 			return CreateWalkableArea(map);
 		}

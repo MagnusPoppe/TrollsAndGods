@@ -2,7 +2,7 @@
 using UnityEngine;
 namespace OverworldObjects
 {
-	public class OverworldShapes
+	public class Shapes
 	{
 		public const int NOTHING 	= -1;
 		public const int SINGLE 	= 0;
@@ -31,7 +31,7 @@ namespace OverworldObjects
 		/// <returns>The building fit.</returns>
 		/// <param name="Position">Position.</param>
 		/// <param name="canWalk">Can walk.</param>
-		public static bool[] GetBuildingFit(Vector2 Position, bool[,] canWalk)
+		public static bool[] GetBuildingFit(Vector2 Position, int[,] canWalk)
 		{
 			int x = (int)Position.x;
 			int y = (int)Position.y;
@@ -54,7 +54,7 @@ namespace OverworldObjects
 		/// <param name="x">The x coordinate.</param>
 		/// <param name="y">The y coordinate.</param>
 		/// <param name="canWalk">Can walk.</param>
-		private static bool fits(int shapeType, int ekteX, int ekteY, bool[,] canWalk)
+		private static bool fits(int shapeType, int ekteX, int ekteY, int[,] canWalk)
 		{
 			int[,] shape = GetShape(shapeType);
 
@@ -66,7 +66,7 @@ namespace OverworldObjects
 					int dyy = ekteY + dy[y];
 
 					if (shape[x, y] == 1)
-						if (!canWalk[dxx, dyy])
+						if (canWalk[dxx, dyy] == MapGenerator.MapMaker.CANNOTWALK)
 							return false;
 				}
 			}

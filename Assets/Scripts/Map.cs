@@ -54,18 +54,12 @@ namespace Overworld
 			DrawMap(mapmaker.GetMap());
 
             Region[] regions = mapmaker.GetRegions();
-<<<<<<< HEAD
+
             //for(int i=0; i<regions.Length; i++)
             //{
             //    SpawnHero(mapmaker.GetMap(), regions[i].GetCastle());
             //}
-=======
-            for(int i=0; i<regions.Length; i++)
-            {
-                //SpawnHero(mapmaker.GetMap(), regions[i].GetCastle());
 
-            }
->>>>>>> master
 		}
 
 		void SpawnHero(int[,] map, Castle castle)
@@ -89,26 +83,7 @@ namespace Overworld
 			// Looping through all tile positions:
 			for (int y = 0; y < height; y++)
 			{
-<<<<<<< HEAD
-				for (int x = 0; x < width; x++)
-				{
-					// Creating a new game object to place on the board:
-					tiles[x, y] = new GameObject();
-					tiles[x, y].name = "Tile (" + x + ", " + (height - 1 - y) + ")";
-                    if (y % 2 == 0)
-                        tiles[x, y].transform.position = new Vector2(x, y/2);
-                    else tiles[x, y].transform.position = new Vector2(x+0.5f, y/2+0.5f);
 
-					// Adding a sprite to the gameobject:
-					SpriteRenderer sr = tiles[x, y].AddComponent<SpriteRenderer>();
-					sr.sprite = groundTiles[map[x, height - 1 - y]];
-
-					// Placing the tile on on the map within the board gameobject:
-					tiles[x, y].transform.parent = this.transform;
-				}
-			}
-		}
-=======
                 for (int x = 0; x < width; x++)
                 {
                     // Creating a new game object to place on the board:
@@ -121,7 +96,7 @@ namespace Overworld
 
                     // Adding a sprite to the gameobject:
                     SpriteRenderer sr = tiles[x, y].AddComponent<SpriteRenderer>();
-                    sr.sprite = groundTiles[map[x, y]];
+                    sr.sprite = groundTiles[map[x, height - 1 - y]];
 
                     // Placing the tile on on the map within the board gameobject:
                     tiles[x, y].transform.parent = this.transform;
@@ -136,7 +111,6 @@ namespace Overworld
                 iy += YOFFSET; // 0.57747603833865814696485623003195f;
             }
         }
->>>>>>> master
 
 		/// <summary>
 		/// Places a given camera perfectly over the map.
