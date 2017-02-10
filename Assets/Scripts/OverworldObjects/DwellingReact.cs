@@ -29,6 +29,13 @@ public class DwellingReact : Reaction {
 
     public override bool React(Hero h)
     {
-        throw new System.Exception();
+        if (dwelling.Owner != h.Player)
+        {
+            if (dwelling.Owner != null) dwelling.Owner.DwellingsOwned.Remove(dwelling);
+            dwelling.Owner = h.Player;
+            h.Player.DwellingsOwned.Add(dwelling);
+        }
+        // todo hire units
+        return true;
     }
 }
