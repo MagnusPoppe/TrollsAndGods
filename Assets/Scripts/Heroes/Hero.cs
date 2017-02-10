@@ -15,18 +15,21 @@ public class Hero
     private List<Item> items;
     private Item[] equippedItems;
     private GameObject self;
+    private int movementSpeed;
+    private int curMovementSpeed;
 
     /// <summary>
     /// Constructor that prepares unit, items, and equippeditems list for the hero
     /// </summary>
     /// <param name="color">id of which player gets the hero</param>
-    public Hero(Player player, GameObject self)
+    public Hero(Player player, GameObject self, int movementSpeed)
     {
         Self = self;
         Player = player;
         Units = new Unit[7];
         Items = new List<Item>();
         EquippedItems = new Item[7];
+        CurMovementSpeed = MovementSpeed = movementSpeed;
     }
 
     public Sprite GetPortrait()
@@ -121,6 +124,32 @@ public class Hero
         set
         {
             self = value;
+        }
+    }
+
+    public int MovementSpeed
+    {
+        get
+        {
+            return movementSpeed;
+        }
+
+        set
+        {
+            movementSpeed = value;
+        }
+    }
+
+    public int CurMovementSpeed
+    {
+        get
+        {
+            return curMovementSpeed;
+        }
+
+        set
+        {
+            curMovementSpeed = value;
         }
     }
 }

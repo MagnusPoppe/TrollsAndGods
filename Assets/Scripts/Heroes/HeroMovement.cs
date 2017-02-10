@@ -24,17 +24,28 @@ namespace Movement
         public GameObject pathDestNo;
         public GameObject pathYes;
         public GameObject pathNo;
-        int heroSpeed;
-        int curSpeed;
-        Vector2 curPos;
-        Vector2 toPos;
-        List<GameObject> pathObjects;
-        bool pathMarked;
-        int stepNumber;
-        float animationSpeed;
+        private Vector2 curPos;
+        private Vector2 toPos;
+        private List<GameObject> pathObjects;
+        private bool pathMarked;
+        private int stepNumber;
+        private float animationSpeed;
         private bool walking;
         private bool lastStep;
-        Hero hero;
+        private Hero hero;
+
+        public Hero Hero
+        {
+            get
+            {
+                return hero;
+            }
+
+            set
+            {
+                hero = value;
+            }
+        }
 
         /// <summary>
         /// Upon creation, set current position and a reference to the generated map object
@@ -44,7 +55,6 @@ namespace Movement
             g = GameObject.Find("Map");
             m = g.GetComponent<Map>();
             canWalk = m.mapmaker.GetCanWalkMap();
-            heroSpeed = 8; // todo
             curPos = HandyMethods.getIsoTilePos(transform.position);
             pathObjects = new List<GameObject>();
             aStar = new AStarAlgo(canWalk, m.GetWidthOfMap(), m.GetHeightOfMap(), false);
@@ -57,11 +67,9 @@ namespace Movement
         {
             if (Input.GetMouseButtonDown(0))
             {
-                // Fetch the point just clicked and adjust the position in the square to the middle of it
+                // Fetch the point just clicked and adjust the position in the square to the corresponding isometric position
                 Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 pos = HandyMethods.getIsoTilePos(pos);
-                //pos.x = (int)(pos.x + 0.5);
-                //pos.y = (int)(pos.y + 0.5);
                 // When mousebutton is clicked, an already ongoing movement shall be stopped
                 if (IsWalking())
                 {
@@ -112,12 +120,16 @@ namespace Movement
                     // Stop the movement when amount of tiles moved has reached the limit, or walking is disabled
                     if (IsLastStep())
                     {
-                        // Set hero position when he stops walking
+                        // Set hero position when he stops walking to his isometric position
                         curPos = HandyMethods.getIsoTilePos(transform.position);
                         SetWalking(false);
                         SetPathMarked(false);
                         RemoveMarkers(pathObjects);
-                        // todo - if(objectcollision)
+                        // objectcollision, when final destination is reached
+                        if(canWalk[(int)curPos.x, (int)curPos.y] == 2)
+                        {
+                            // todo - reaction
+                        }
                     }
                 }
                 // Execute the movement
@@ -141,8 +153,8 @@ namespace Movement
             // Call algorithm method that returns a list of Vector2 positions to the point, go through all objects
             List<Vector2> positions = aStar.calculate(curPos, pos);
             // Calculate how many steps the hero will move, if this path is chosen
-            curSpeed = Math.Min(positions.Count, heroSpeed);
-            int i = curSpeed;
+            Hero.CurMovementSpeed = Math.Min(positions.Count, Hero.MovementSpeed);
+            int i = Hero.CurMovementSpeed;
             // For each position, create a gameobject with an image and instantiate it, and add it to a gameobject list for later to be removed
             foreach (Vector2 no in positions)
             {
@@ -198,7 +210,7 @@ namespace Movement
 
         public bool IsLastStep()
         {
-            return stepNumber == curSpeed || lastStep;
+            return stepNumber == Hero.CurMovementSpeed || lastStep;
         }
 
         public void SetLastStep(bool w)
