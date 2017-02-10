@@ -8,5 +8,44 @@ abstract public class Reaction {
     GameObject self;
     Reaction[,] reactionTab;
 
-	abstract public bool React(Hero h);
+    public Vector2 Pos
+    {
+        get
+        {
+            return pos;
+        }
+
+        set
+        {
+            pos = value;
+        }
+    }
+
+    public GameObject Self
+    {
+        get
+        {
+            return self;
+        }
+
+        set
+        {
+            self = value;
+        }
+    }
+
+    public Reaction[,] ReactionTab
+    {
+        get
+        {
+            return reactionTab;
+        }
+
+        set
+        {
+            reactionTab = value;
+        }
+    }
+
+    abstract public bool React(Hero h);
 }
