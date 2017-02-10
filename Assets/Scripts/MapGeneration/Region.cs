@@ -90,7 +90,7 @@ namespace MapGenerator
 		{
 			foreach (Vector2 v in coordinates)
 			{
-				if ( map[(int)v.x, (int)v.y] >= MapMaker.FIRST_AVAILABLE_SPRITE
+				if ( map[(int)v.x, (int)v.y] >= MapMaker.DIRT
 				   || map[(int)v.x, (int)v.y] == MapMaker.GROUND)
 					map[(int)v.x, (int)v.y] = MapMaker.GROUND;
 			}
@@ -129,7 +129,7 @@ namespace MapGenerator
 			return false;
 		}
 
-		public void classifyRegionTiles( bool[,] canWalk )
+		public void classifyRegionTiles( int[,] canWalk )
 		{
 			// DEFINERER BYGGNINGSTYPEN TIL HVER TILE:
 			Block[] blocks = new Block[GetArea()];
@@ -137,17 +137,16 @@ namespace MapGenerator
 			{
 				blocks[i] = new Block(GetCastle().GetPosition(), coordinates[i], canWalk);
 			}
-
 			for (int i = 0; i < economy.woodMineCount; i++)
 			{
 				float minDistance = 10;
-				float maxDistance = 15;
+				float maxDistance = 12;
 
 				for (int j = 0; j < GetArea(); j++)
 				{
 					float distance = blocks[j].GetDistanceFromCastle();
 
-					if (blocks[i].CanPlaceBuilding(OverworldShapes.QUAD01x3))
+					if (blocks[j].CanPlaceBuilding(Shapes.QUAD01x3))
 					{ 
 						if (distance >= minDistance && distance <= maxDistance)
 						{
@@ -166,6 +165,43 @@ namespace MapGenerator
 			}
 		}
 
+		/// <summary>
+		/// Fills the region with water.
+		/// Replaces walkable area with water and 
+		/// not walkable area turns into land (regular ground).
+		/// </summary>
+		/// <param name="map">Map.</param>
+		public void FillRegionWithWater(int[,] map)
+		{
+			for (int i = 0; i < coordinates.Length; i++)
+			{
+				int x = (int)coordinates[i].x;
+				int y = (int)coordinates[i].y;
+
+				if (map[x, y] == MapMaker.GROUND)
+				{
+					map[x, y] = MapMaker.WATER;
+				}
+				else if (map[x, y] == MapMaker.CASTLE)
+				{
+					map[x, y] = MapMaker.WATER;
+				}
+				else if (map[x, y] == MapMaker.BUILDING)
+				{
+					map[x, y] = MapMaker.WATER;
+				}
+
+				else if (map[x, y] == MapMaker.WOODS)
+				{
+					map[x, y] = MapMaker.GROUND;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets the wood mine.
+		/// </summary>
+		/// <returns>The wood mine.</returns>
 		public Block GetWoodMine()
 		{
 			return woodMine;

@@ -54,11 +54,12 @@ namespace Overworld
 			DrawMap(mapmaker.GetMap());
 
             Region[] regions = mapmaker.GetRegions();
-            for(int i=0; i<regions.Length; i++)
-            {
-                //SpawnHero(mapmaker.GetMap(), regions[i].GetCastle());
 
-            }
+            //for(int i=0; i<regions.Length; i++)
+            //{
+            //    SpawnHero(mapmaker.GetMap(), regions[i].GetCastle());
+            //}
+
 		}
 
 		void SpawnHero(int[,] map, Castle castle)
@@ -82,6 +83,7 @@ namespace Overworld
 			// Looping through all tile positions:
 			for (int y = 0; y < height; y++)
 			{
+
                 for (int x = 0; x < width; x++)
                 {
                     // Creating a new game object to place on the board:
@@ -94,7 +96,7 @@ namespace Overworld
 
                     // Adding a sprite to the gameobject:
                     SpriteRenderer sr = tiles[x, y].AddComponent<SpriteRenderer>();
-                    sr.sprite = groundTiles[map[x, y]];
+                    sr.sprite = groundTiles[map[x, height - 1 - y]];
 
                     // Placing the tile on on the map within the board gameobject:
                     tiles[x, y].transform.parent = this.transform;

@@ -2,7 +2,7 @@
 using UnityEngine;
 namespace OverworldObjects
 {
-	public class OverworldShapes
+	public class Shapes
 	{
 		public const int NOTHING 	= -1;
 		public const int SINGLE 	= 0;
@@ -20,8 +20,8 @@ namespace OverworldObjects
 		public const int QUAD01x3 	= 12;
 		public const int QUAD02x3 	= 13;
 
-		public static int[] dx = { -2, -1,  0, 1, 2 };
-		public static int[] dy = { -3, -2, -1, 0, 1 };
+		public static int[] dx = { -2, -1, 0, 1, 2 };
+		public static int[] dy = { 1, 0, -1, -2, -3 };
 
 		const int FILTER_SIZE = 5;
 
@@ -31,7 +31,7 @@ namespace OverworldObjects
 		/// <returns>The building fit.</returns>
 		/// <param name="Position">Position.</param>
 		/// <param name="canWalk">Can walk.</param>
-		public static bool[] GetBuildingFit(Vector2 Position, bool[,] canWalk)
+		public static bool[] GetBuildingFit(Vector2 Position, int[,] canWalk)
 		{
 			int x = (int)Position.x;
 			int y = (int)Position.y;
@@ -41,13 +41,8 @@ namespace OverworldObjects
 			if ((x >= FILTER_SIZE/2 && x < canWalk.GetLength(1)-FILTER_SIZE/2) 
 			&&  (y >= FILTER_SIZE/2 && y < canWalk.GetLength(0)-FILTER_SIZE/2))
 			{
-				for (int i = QUAD02x3-1; i >= 0; i--)
-				{
-					if (fits(i, x, y, canWalk))
-						BuildingTypesFit[i] = true;
-					else
-						BuildingTypesFit[i] = false;
-				}
+				for (int i = 0; i < QUAD02x3; i++)
+					BuildingTypesFit[i] = fits(i, x, y, canWalk);
 			}
 			return BuildingTypesFit;
 		}
@@ -55,23 +50,24 @@ namespace OverworldObjects
 		/// <summary>
 		/// Fits a building within the area.
 		/// </summary>
-		/// <param name="i">The index.</param>
+		/// <param name="shapeType">The index.</param>
 		/// <param name="x">The x coordinate.</param>
 		/// <param name="y">The y coordinate.</param>
 		/// <param name="canWalk">Can walk.</param>
-		private static bool fits(int i, int x, int y, bool[,] canWalk)
+		private static bool fits(int shapeType, int ekteX, int ekteY, int[,] canWalk)
 		{
-			for (int iy = 0; y < FILTER_SIZE; y++)
-			{
-				for (int ix = 0; x < FILTER_SIZE; x++)
-				{
-					if (ALL_SHAPES[i, ix, iy] == 1)
-					{
-						if (canWalk[x + dx[ix], y + dy[iy]]) // KAN BYGGE; BARE FORTSETT.
-							continue;
+			int[,] shape = GetShape(shapeType);
 
-						return false;
-					}
+			for (int y = 0; y < FILTER_SIZE; y++)
+			{
+				for (int x = 0; x < FILTER_SIZE; x++)
+				{
+					int dxx = ekteX + dx[x];
+					int dyy = ekteY + dy[y];
+
+					if (shape[x, y] == 1)
+						if (canWalk[dxx, dyy] == MapGenerator.MapMaker.CANNOTWALK)
+							return false;
 				}
 			}
 			return true;
@@ -84,20 +80,35 @@ namespace OverworldObjects
 		/// <param name="shapeType">Shape type (CONSTANTS).</param>
 		public static int[,] GetShape(int shapeType)
 		{
-			if (shapeType >= 0 && shapeType < ALL_SHAPES.GetLength(0))
+			int[,] a = new int[FILTER_SIZE, FILTER_SIZE];
+
+			for (int y = 0; y < FILTER_SIZE; y++)
 			{
-				int[,] output = new int[FILTER_SIZE,FILTER_SIZE];
-				for (int y = 0; y < FILTER_SIZE; y++)
+				for (int x = 0; x < FILTER_SIZE; x++)
 				{
-					for (int x = 0; x < FILTER_SIZE; x++)
-					{
-						// ROTERES HER FORDI?? UKJENT MEN FUNKER.
-						output[x, y] = ALL_SHAPES[shapeType, y, x];
-					}
+					a[x, y] = ALL_SHAPES[shapeType, x, y];
 				}
-				return output;
 			}
-			return null;
+
+			// TODO FIKS TABELLEN SLIK AT DU IKKE TRENGER ROTERE.
+			return rotateGrid90(a);
+		}
+
+
+		private static int[,] rotateGrid90(int[,] grid)
+		{
+			int maxX = grid.GetLength(0);
+			int maxY = grid.GetLength(1);
+			int[,] copy = new int[maxX, maxY];
+
+			for (int y = 0; y < maxY; y++)
+			{
+				for (int x = 0; x < maxX; x++)
+				{
+					copy[x, maxY - 1 - y] = grid[y, x];
+				}
+			}
+			return copy;
 		}
 
 		private static int[,,] ALL_SHAPES =

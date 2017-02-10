@@ -12,10 +12,10 @@ namespace MapGenerator
 		float rating;
 		float distanceFromCastle;
 
-		public Block(Vector2 origin, Vector2 position, bool[,] canWalk)
+		public Block(Vector2 origin, Vector2 position, int[,] canWalk)
 		{
 			this.position = position;
-			possibleBuildings = OverworldShapes.GetBuildingFit(position, canWalk);
+			possibleBuildings = Shapes.GetBuildingFit(position, canWalk);
 			rating = 0.0f;
 
 			distanceFromCastle = Vector2.Distance(origin, position);
@@ -24,7 +24,7 @@ namespace MapGenerator
 				if (possibleBuildings[i])
 					rating++;
 
-			rating = rating - distanceFromCastle;
+			rating = (float)Math.Pow(rating/13, 3)*13;
 			//TODO Debug.Log("RATING: " + rating);
 		}
 
@@ -53,21 +53,24 @@ namespace MapGenerator
 			int x = (int)position.x;
 			int y = (int)position.y;
 
-			int[,] shape = OverworldShapes.GetShape(buildingType);
+			int[,] shape = Shapes.GetShape(buildingType);
 			List<Vector2> occupiedArea = new List<Vector2>();
 
 			for (int iy = 0; iy < shape.GetLength(0); iy++)
 			{
 				for (int ix = 0; ix < shape.GetLength(1); ix++)
 				{
-					int dx = OverworldShapes.dx[ix];
-					int dy = OverworldShapes.dy[iy];
+					int dx = Shapes.dx[ix];
+					int dy = Shapes.dy[iy];
 
 					if (shape[ix, iy] == 1)
 						occupiedArea.Add(new Vector2(x + dx, y + dy));
 				}
 			}
-			return occupiedArea.ToArray();
+			if (occupiedArea.Count > 0)
+				return occupiedArea.ToArray();
+
+			return null;
 		}
 		
 

@@ -29,7 +29,7 @@ namespace MapGenerator
 			regions = new Region[seeds.Length];
 			regionindex = 0;
 
-            int label = 3;
+			int label = MapMaker.DIRT;
 			for (int i = 0; i < seeds.Length; i++)
 			{
 				if (map[(int)seeds[i].x,(int)seeds[i].y] == 0) //UNMARKED

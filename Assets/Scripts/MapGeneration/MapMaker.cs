@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using OverworldObjects;
+using Filter;
 
 namespace MapGenerator
 {
@@ -12,7 +13,7 @@ namespace MapGenerator
 		// Information about the map:
 		Region[] regions;
 		int[,] map;
-		bool[,] canWalk;
+		int[,] canWalk;
 
 		// Overworld objects
 		Castle[] castles;
@@ -21,8 +22,19 @@ namespace MapGenerator
 		public const int  GROUND 					= 0;
 		public const int  WALL 						= 1;
 		public const int  CASTLE 					= 2;
-		public const int  FIRST_AVAILABLE_SPRITE	= 3;
+		public const int  WATER 					= 3;
+		public const int  DIRT						= 4;
+		public const int  WOODS 					= 5;
+		public const int  BUILDING 					= 6;
+		public const int GRASS_WATER = 7;
+		public const int GRASS_TO_WATER_DIRECTION_END = 15;
 		public const bool KEEP_VORONOI_REGION_LINES = false;
+
+		// CANWALK 
+		public const int CANNOTWALK = 0;
+		public const int CANWALK 	= 1;
+		public const int TRIGGER 	= 2;
+
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:MapGenerator.MapMaker"/> class.
@@ -52,18 +64,124 @@ namespace MapGenerator
 				fill, smooth, // Used for Binary map generation algorithm
 				spritecount   // Used in castle creation
 			);
-			canWalk = CreateWalkableArea(map);
 
-			regions[0].classifyRegionTiles(canWalk);
+			// PLACE TREES IN OCCUPIED AREAS:
+			for (int y = 0; y < height; y++)
+			{
+				for (int x = 0; x < width; x++)
+				{
+					if (map[x, y] == WALL)
+						map[x, y] = WOODS;
+				}
+			}
+			FillRandomRegionsWithWater();
 
-			Vector2[] woodmine = regions[0].GetWoodMine().GetOccupiedTiles(OverworldShapes.QUAD01x3);
-			for (int i = 0; i < woodmine.Length; i++)
-				map[(int)woodmine[i].x, (int) woodmine[i].y] = 3;
+			//CreateTransitions();
 
-			Debug.Log("ORIGIN OF WOODMINE:" + regions[0].GetWoodMine().GetPosition().ToString());
+			canWalk = CreateWalkableArea();
+
+			for (int i = 0; i < regions.Length; i++) 
+				placeWoodMine(regions[i]);
+
 		}
-			
 
+		private void FillRandomRegionsWithWater()
+		{
+			System.Random prng = new System.Random(seed.GetHashCode());
+
+			for (int i = 0; i < castles.Length/2; i++)
+			{
+				// Pesuedo random number generator:
+				int r = prng.Next(0, castles.Length);
+    			regions[r].FillRegionWithWater(map);
+			}
+		}
+
+		private void CreateTransitions()
+		{
+			for (int y = 1; y < height - 1; y++)
+			{
+				for (int x = 1; x < width - 1; x++)
+				{
+					int direction = FindDirection(x, y);
+
+					if (direction >= 0)
+					{ 
+						Debug.Log("Direction " + direction + " found for (" + x + "," + y + ")");
+						map[x, y] = GRASS_WATER + direction;
+					}
+				}
+			}
+		}
+
+		private int FindDirection(int x, int y)
+		{
+			if (Transition(CompassF.NORTH, x, y))
+				return (int)CompassF.Directions.north;
+
+			//else if (Transition(CompassF.NORTH_EAST, x, y))
+			//	return (int)CompassF.Directions.northEast;
+
+			//else if (Transition(CompassF.EAST, x, y))
+			//	return (int)CompassF.Directions.east;
+
+			//else if (Transition(CompassF.SOUTH_EAST, x, y))
+			//	return (int)CompassF.Directions.southEast;
+
+			//else if (Transition(CompassF.SOUTH, x, y))
+			//	return (int)CompassF.Directions.south;
+
+			//else if (Transition(CompassF.SOUTH_WEST, x, y))
+			//	return (int)CompassF.Directions.southWest;
+
+			//else if (Transition(CompassF.WEST, x, y))
+			//	return (int)CompassF.Directions.west;
+
+			//else if (Transition(CompassF.NORTH_WEST, x, y))
+			//	return (int)CompassF.Directions.northWest;
+			
+			return -1; // AREA IS HOMOGENUS
+		}
+
+		private bool Transition(int[,] filter, int x, int y)
+		{
+			int range = filter.GetLength(0) / 2;
+
+			for (int fy = 0; fy < filter.GetLength(0); fy++)
+			{
+				for (int fx = 0; fx < filter.GetLength(0); fx++)
+				{
+
+					if (filter[fx, fy] == 1) // HER SKAL DET VÆRE VANN
+					{
+						if (map[x + (fx - range), y + (fy - range)] != WATER)
+							return false;
+					}
+					else
+					{
+						if (map[x + (fx - range), y + (fy - range)] == WATER)
+							return false;
+					}
+
+				}
+			}
+			return true;
+		}
+
+
+		private void placeWoodMine(Region r)
+		{ 
+			r.classifyRegionTiles(canWalk);
+
+			if (r.GetWoodMine() != null)
+			{
+				Vector2[] woodmine = r.GetWoodMine().GetOccupiedTiles(Shapes.QUAD01x3);
+
+				if (woodmine != null)
+					for (int i = 0; i < woodmine.Length; i++)
+						map[(int)woodmine[i].x, (int)woodmine[i].y] = BUILDING;
+			}
+		}
 
 		/// <summary>
 		/// Returns the generated map.
@@ -78,7 +196,7 @@ namespace MapGenerator
 		/// Gets the can walk map.
 		/// </summary>
 		/// <returns>The can walk map.</returns>
-		public bool[,] GetCanWalkMap()
+		public int[,] GetCanWalkMap()
 		{
 			return canWalk;
 		}
@@ -165,17 +283,17 @@ namespace MapGenerator
 		/// </summary>
 		/// <returns>The walkable area.</returns>
 		/// <param name="map">Map.</param>
-		private bool[,] CreateWalkableArea(int[,] map)
+		private int[,] CreateWalkableArea(int[,] map)
 		{
-			bool[,] canWalk = new bool[width, height];
+			int[,] canWalk = new int[width, height];
 			for (int y = 0; y < height; y++)
 			{
 				for (int x = 0; x < width; x++)
 				{
 					if (map[x, y] == GROUND)
-						canWalk[x, y] = true;
+						canWalk[x, y] = 1;
 					else
-						canWalk[x, y] = false;
+						canWalk[x, y] = 0;
 				}
 			}
 			return canWalk;
@@ -186,7 +304,7 @@ namespace MapGenerator
 		 /// </summary>
 		 /// <returns>The walkable area.</returns>
 		 /// <param name="map">Map.</param>
-		private bool[,] CreateWalkableArea()
+		private int[,] CreateWalkableArea()
 		{
 			return CreateWalkableArea(map);
 		}

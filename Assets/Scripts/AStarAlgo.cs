@@ -10,7 +10,7 @@ using System.Linq;
 public class AStarAlgo {
 
 
-    bool[,] canWalk;
+    int[,] canWalk;
     Node[,] nodes;
     int width, height;
     protected bool hex;
@@ -32,7 +32,7 @@ public class AStarAlgo {
     /// <param name="w">The width of the map</param>
     /// <param name="h">The height of the map</param>
     /// <param name="hex">If the map is hex based or square based</param>
-    public AStarAlgo(bool[,] canWalk, int w, int h, bool hex)
+    public AStarAlgo(int[,] canWalk, int w, int h, bool hex)
     {
         this.canWalk = canWalk;
         width = w;
@@ -157,7 +157,7 @@ public class AStarAlgo {
             {
                 if (posX + v.x >= 0 && posX + v.x < width
                     && posY + v.y >= 0 && posY + v.y < height
-                    && canWalk[posX + (int)v.x, posY + (int)v.y])
+				    && canWalk[posX + (int)v.x, posY + (int)v.y] == MapGenerator.MapMaker.CANWALK)
                 {
                     neighbours[logPos] = nodes[posX + (int)v.x, posY + (int)v.y];
                     logPos++;
@@ -170,7 +170,7 @@ public class AStarAlgo {
             {
                 if (posX + v.x >= 0 && posX + v.x < width
                     && posY + v.y >= 0 && posY + v.y < height
-                    && canWalk[posX + (int)v.x, posY + (int)v.y])
+                    && canWalk[posX + (int)v.x, posY + (int)v.y] == MapGenerator.MapMaker.CANWALK)
                 {
                     neighbours[logPos] = nodes[posX + (int)v.x, posY + (int)v.y];
                     logPos++;
@@ -225,7 +225,7 @@ public class AStarAlgo {
                 //adds neighbour if you can walk there
                 if (posX + x - 1 >= 0 && posX + x - 1 < width
                     && posY + y - 1 >= 0 && posY + y - 1 < height
-                    && canWalk[posX + x - 1, posY + y - 1])
+                    && canWalk[posX + x - 1, posY + y - 1] == MapGenerator.MapMaker.CANWALK)
                 {
                     neighbours[logPos] = nodes[posX + x - 1, posY + y - 1];
                     logPos++;

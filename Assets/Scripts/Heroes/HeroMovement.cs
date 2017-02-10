@@ -18,7 +18,7 @@ namespace Movement
         GameObject g;
         private Map m;
         private AStarAlgo aStar;
-        private bool[,] canWalk;
+        private int[,] canWalk;
         private Reaction[,] reactionTab;
         public GameObject pathDestYes;
         public GameObject pathDestNo;
@@ -73,7 +73,7 @@ namespace Movement
                     // Todo, open hero menu
                 }
                 // If an open square is clicked
-                else if (canWalk[(int)pos.x, (int)pos.y])
+				else if (canWalk[(int)pos.x, (int)pos.y] == MapMaker.CANWALK)
                 {
                     // Walk to pointer if marked square is clicked by enabling variables that triggers moveHero method on update
                     if (pathMarked && pos.Equals(toPos))
