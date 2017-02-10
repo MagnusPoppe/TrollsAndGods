@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// parent class for Reactions, wich governs what happens when objects are triggered
+/// </summary>
 abstract public class Reaction {
 
     Vector2 pos;
