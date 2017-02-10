@@ -19,6 +19,7 @@ namespace Movement
         private Map m;
         private AStarAlgo aStar;
         private int[,] canWalk;
+        private Reaction[,] reactionTab;
         public GameObject pathDestYes;
         public GameObject pathDestNo;
         public GameObject pathYes;
@@ -33,6 +34,7 @@ namespace Movement
         float animationSpeed;
         private bool walking;
         private bool lastStep;
+        Hero hero;
 
         /// <summary>
         /// Upon creation, set current position and a reference to the generated map object
@@ -43,7 +45,7 @@ namespace Movement
             m = g.GetComponent<Map>();
             canWalk = m.mapmaker.GetCanWalkMap();
             heroSpeed = 8; // todo
-            curPos = transform.position;
+            curPos = HandyMethods.getIsoTilePos(transform.position);
             pathObjects = new List<GameObject>();
             aStar = new AStarAlgo(canWalk, m.GetWidthOfMap(), m.GetHeightOfMap(), false);
         }
@@ -111,7 +113,7 @@ namespace Movement
                     if (IsLastStep())
                     {
                         // Set hero position when he stops walking
-                        curPos = transform.position;
+                        curPos = HandyMethods.getIsoTilePos(transform.position);
                         SetWalking(false);
                         SetPathMarked(false);
                         RemoveMarkers(pathObjects);
@@ -137,7 +139,7 @@ namespace Movement
             // Needs to clear existing objects if an earlier path was already made
             RemoveMarkers(pathObjects);
             // Call algorithm method that returns a list of Vector2 positions to the point, go through all objects
-            List<Vector2> positions = aStar.calculate(HandyMethods.getIsoTilePos(curPos), pos);
+            List<Vector2> positions = aStar.calculate(curPos, pos);
             // Calculate how many steps the hero will move, if this path is chosen
             curSpeed = Math.Min(positions.Count, heroSpeed);
             int i = curSpeed;

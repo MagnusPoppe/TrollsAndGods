@@ -8,13 +8,7 @@ using UnityEngine;
 /// </summary>
 public class Resources
 {
-    protected int gold;
-    protected int wood;
-    protected int ore;
-    protected int gem;
-    protected int sulfur;
-    protected int mercury;
-    protected int crystal;
+    protected int[] resourceTab;
 
     /// <summary>
     /// Consctructor that sets resource values according to set difficulty
@@ -23,33 +17,24 @@ public class Resources
     public Resources(int difficulty)
     {
         if (difficulty == 0)
-            ResourcesInit(15000, 20, 20, 10, 10, 10, 10);
+            resourceTab = new int[] { 15000, 20, 20, 10, 10, 10, 10 };
         else if (difficulty == 1)
-            ResourcesInit(10000, 15, 15, 5, 5, 5, 5);
+            resourceTab = new int[] { 10000, 15, 15, 5, 5, 5, 5 };
         else
-            ResourcesInit(5000, 10, 10, 0, 0, 0, 0);
+            resourceTab = new int[] { 5000, 10, 10, 0, 0, 0, 0 };
     }
 
-    public Resources(int gold, int wood, int ore, int gem, int sulfur, int mercury, int crystal)
+    /// <summary>
+    /// Constructor for buildings or units that costs specific resources
+    /// </summary>
+    /// <param name="goldCost">gold</param>
+    /// <param name="woodCost">wood</param>
+    /// <param name="oreCost">ore</param>
+    /// <param name="crystalCost">crystal</param>
+    /// <param name="gemCost">gem</param>
+    public Resources(int goldCost, int woodCost, int oreCost, int crystalCost, int gemCost)
     {
-        this.gold = gold;
-        this.wood = wood;
-        this.ore = ore;
-        this.gem = gem;
-        this.sulfur = sulfur;
-        this.mercury = mercury;
-        this.crystal = crystal;
-    }
-
-    protected void ResourcesInit(int gold, int wood, int ore, int gem, int sulfur, int mercury, int crystal)
-    {
-        this.gold = gold;
-        this.wood = wood;
-        this.ore = ore;
-        this.gem = gem;
-        this.sulfur = sulfur;
-        this.mercury = mercury;
-        this.crystal = crystal;
+        resourceTab = new int[] { goldCost, woodCost, oreCost, crystalCost, gemCost };
     }
 
     /// <summary>
@@ -58,70 +43,20 @@ public class Resources
     /// <param name="gold">gold</param>
     /// <param name="wood">wood</param>
     /// <param name="ore">ore</param>
-    /// <param name="gem">gem</param>
-    /// <param name="sulfur">sulfur</param>
-    /// <param name="mercury">mercury</param>
     /// <param name="crystal">crystal</param>
-    /// <returns></returns>
-    public bool CanPay(int gold, int wood, int ore, int gem, int sulfur, int mercury, int crystal)
+    /// <param name="gem">gem</param>
+    /// <returns>true if there is enough resources</returns>
+    public bool CanPay(int gold, int wood, int ore, int crystal, int gem)
     {
-        return this.gold >= gold && this.wood >= wood && this.ore >= ore && this.gem >= gem && this.sulfur >= sulfur && this.mercury >= mercury && this.crystal >= crystal;
+        return this.resourceTab[0] >= gold && this.resourceTab[1] >= wood && this.resourceTab[2] >= ore && this.resourceTab[3] >= crystal && this.resourceTab[4] >= gem;
     }
 
-    public int GetGold()
+    public int GetResource(int i)
     {
-        return gold;
+        return resourceTab[i];
     }
-    public int GetWood()
+    public void adjustResource(int i, int amount)
     {
-        return wood;
-    }
-    public int GetOre()
-    {
-        return ore;
-    }
-    public int GetGem()
-    {
-        return gem;
-    }
-    public int GetMercury()
-    {
-        return mercury;
-    }
-    public int GetSulfur()
-    {
-        return sulfur;
-    }
-    public int GetCrystal()
-    {
-        return crystal;
-    }
-    public void adjustGold(int i)
-    {
-        gold += i;
-    }
-    public void adjustWood(int i)
-    {
-        wood += i;
-    }
-    public void adjustOre(int i)
-    {
-        ore += i;
-    }
-    public void adjustGem(int i)
-    {
-        gem += i;
-    }
-    public void adjustMercury(int i)
-    {
-        mercury += i;
-    }
-    public void adjustSulfur(int i)
-    {
-        sulfur += i;
-    }
-    public void adjustCrystal(int i)
-    {
-        crystal += i;
+        resourceTab[i] += amount;
     }
 }
