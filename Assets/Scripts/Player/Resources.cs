@@ -17,11 +17,11 @@ public class Resources
     public Resources(int difficulty)
     {
         if (difficulty == 0)
-            Resources = new int { 15000, 20, 20, 10, 10, 10, 10 };
+            resourceTab = new int[] { 15000, 20, 20, 10, 10, 10, 10 };
         else if (difficulty == 1)
-            Resources = new int { 10000, 15, 15, 5, 5, 5, 5 };
+            resourceTab = new int[] { 10000, 15, 15, 5, 5, 5, 5 };
         else
-            Resources = new int { 5000, 10, 10, 0, 0, 0, 0 };
+            resourceTab = new int[] { 5000, 10, 10, 0, 0, 0, 0 };
     }
 
     /// <summary>
