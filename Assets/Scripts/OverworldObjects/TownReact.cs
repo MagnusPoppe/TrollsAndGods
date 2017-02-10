@@ -40,4 +40,14 @@ public class TownReact : Reaction {
         }
         return true;
     }
+
+    public bool React(Player player)
+    {
+        if (town.Player.Equals(player))
+        {
+            //todo open town window
+            return true;
+        }
+        return false;
+    }
 }
