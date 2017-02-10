@@ -14,13 +14,15 @@ public class Hero
     private Unit[] units;
     private List<Item> items;
     private Item[] equippedItems;
+    private GameObject self;
 
     /// <summary>
     /// Constructor that prepares unit, items, and equippeditems list for the hero
     /// </summary>
     /// <param name="color">id of which player gets the hero</param>
-    public Hero(Player player)
+    public Hero(Player player, GameObject self)
     {
+        Self = self;
         Player = player;
         Units = new Unit[7];
         Items = new List<Item>();
@@ -106,6 +108,19 @@ public class Hero
         set
         {
             player = value;
+        }
+    }
+
+    public GameObject Self
+    {
+        get
+        {
+            return self;
+        }
+
+        set
+        {
+            self = value;
         }
     }
 }

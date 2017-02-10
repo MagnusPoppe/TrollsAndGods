@@ -15,15 +15,17 @@ namespace Town
         private Hero stationedHero;
         private Hero visitingHero;
         private UnitTree unitTree;
+        Player player;
 
         /// <summary>
         /// Constructor that builds the buildingtree with corresponding town according to townId variable
         /// </summary>
         /// <param name="townId">which town shall be built</param>
-        public Town(int townId, Building[] buildings)
+        public Town(int townId, Building[] buildings, Player player)
         {
             this.buildings = buildings;
             unitTree = new UnitTree();
+            Player = player;
         }
         public bool canBuild(Building b)
         {
@@ -77,6 +79,19 @@ namespace Town
             set
             {
                 visitingHero = value;
+            }
+        }
+
+        public Player Player
+        {
+            get
+            {
+                return player;
+            }
+
+            set
+            {
+                player = value;
             }
         }
     }

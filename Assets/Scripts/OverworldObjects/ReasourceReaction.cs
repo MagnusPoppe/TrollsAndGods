@@ -46,6 +46,13 @@ public class ResourceReaction : Reaction
 
     public override bool React(Hero h)
     {
-        h.Player.
+        h.Player.Res.adjustResource(resID, amount);
+
+        Self.SetActive(false);
+        GameObject.Destroy(Self);
+
+        ReactionTab[(int)Pos.x, (int)Pos.y] = null;
+
+        return true;
     }
 }
