@@ -28,7 +28,7 @@ public class AStarAlgo {
     /// <summary>
     /// Constructor
     /// </summary>
-    /// <param name="canWalk">2D bool array with true where you can walk</param>
+    /// <param name="canWalk">2D int array with 1 where you can walk and 2 where triggers are</param>
     /// <param name="w">The width of the map</param>
     /// <param name="h">The height of the map</param>
     /// <param name="hex">If the map is hex based or square based</param>
@@ -91,9 +91,9 @@ public class AStarAlgo {
             // Fetches all walkable neighbor nodes
             Node[] neighbours;
             if (hex)
-                neighbours = findNeighboursHex(posX, posY);
+                neighbours = findNeighboursHex(posX, posY, goal);
             else 
-                neighbours = findNeighboursSquare(posX, posY);
+                neighbours = findNeighboursIso(posX, posY, goal);
             // Calculates pathcost to neighbor nodes
             for (int i = 0; i < neighbours.Length && neighbours[i] != null; i++)
             {
@@ -142,22 +142,27 @@ public class AStarAlgo {
     }
 
     /// <summary>
-    /// This method finds neighbours in a square grid
+    /// This method finds neighbours in a isometric grid
     /// </summary>
     /// <param name="posX">Current position for x</param>
     /// <param name="posY">Current position for y</param>
+    /// <param name="goal">goal to make it possible to walk to triggers</param>
     /// <returns>Array with neighbour nodes</returns>
-    private Node[] findNeighboursSquare(int posX, int posY)
+    private Node[] findNeighboursIso(int posX, int posY, Vector2 goal)
     {
         Node[] neighbours = new Node[8];
         int logPos = 0;
+        // checks if your at en even or odd place in the y direction and uses the correct
+        // array for directions based on that
         if (posY % 2 == 0)
         {
             foreach (Vector2 v in evenIsometricDirections)
             {
                 if (posX + v.x >= 0 && posX + v.x < width
                     && posY + v.y >= 0 && posY + v.y < height
-				    && canWalk[posX + (int)v.x, posY + (int)v.y] == MapGenerator.MapMaker.CANWALK)
+				    && (canWalk[posX + (int)v.x, posY + (int)v.y] == MapGenerator.MapMaker.CANWALK
+                    || (canWalk[posX + (int)v.x, posY + (int)v.y] == MapGenerator.MapMaker.TRIGGER
+                    && posX + (int)v.x == goal.x && posY + (int)v.y == goal.y)))
                 {
                     neighbours[logPos] = nodes[posX + (int)v.x, posY + (int)v.y];
                     logPos++;
@@ -170,32 +175,15 @@ public class AStarAlgo {
             {
                 if (posX + v.x >= 0 && posX + v.x < width
                     && posY + v.y >= 0 && posY + v.y < height
-                    && canWalk[posX + (int)v.x, posY + (int)v.y] == MapGenerator.MapMaker.CANWALK)
+                    && (canWalk[posX + (int)v.x, posY + (int)v.y] == MapGenerator.MapMaker.CANWALK
+                    || (canWalk[posX + (int)v.x, posY + (int)v.y] == MapGenerator.MapMaker.TRIGGER
+                    && posX + (int)v.x == goal.x && posY + (int)v.y == goal.y)))
                 {
                     neighbours[logPos] = nodes[posX + (int)v.x, posY + (int)v.y];
                     logPos++;
                 }
             }
         }
-        /*
-        for (int x = 0; x < 3; x++)
-        {
-            for (int y = 0; y < 3; y++)
-            {
-                //ignore self
-                if (x == 1 && y == 1)
-                    continue;
-                //adds neighbour if you can walk there
-                if (posX + x - 1 >= 0 && posX + x - 1 < width
-                    && posY + y - 1 >= 0 && posY + y - 1 < height
-                    && canWalk[posX + x - 1, posY + y - 1])
-                {
-                    neighbours[logPos] = nodes[posX + x - 1, posY + y - 1];
-                    logPos++;
-                }
-            }
-        }
-        */
         return neighbours;
     }
 
@@ -204,8 +192,9 @@ public class AStarAlgo {
     /// </summary>
     /// <param name="posX">Current position for x</param>
     /// <param name="posY">Current position for y</param>
+    /// <param name="goal">goal to make it possible to walk to triggers</param>
     /// <returns>Array with neighbour nodes</returns>
-    private Node[] findNeighboursHex(int posX, int posY)
+    private Node[] findNeighboursHex(int posX, int posY, Vector2 goal)
     {
         Node[] neighbours = new Node[6];
         int logPos = 0;
@@ -225,7 +214,9 @@ public class AStarAlgo {
                 //adds neighbour if you can walk there
                 if (posX + x - 1 >= 0 && posX + x - 1 < width
                     && posY + y - 1 >= 0 && posY + y - 1 < height
-                    && canWalk[posX + x - 1, posY + y - 1] == MapGenerator.MapMaker.CANWALK)
+                    && (canWalk[posX + x - 1, posY + y - 1] == MapGenerator.MapMaker.CANWALK
+                    || (canWalk[posX + x - 1, posY + y - 1] == MapGenerator.MapMaker.TRIGGER
+                    && posX + posX + x - 1 == goal.x && posY + y - 1 == goal.y)))
                 {
                     neighbours[logPos] = nodes[posX + x - 1, posY + y - 1];
                     logPos++;
