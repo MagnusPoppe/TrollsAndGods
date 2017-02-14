@@ -10,14 +10,20 @@ namespace Buildings
 		protected int owner;
 		protected int spriteID;
 
-		public OverworldBuilding(Vector2 center, int shape, int owner, int spriteID) : base(center)
+		private int minDistFromTown;
+		private int maxDistFromTown;
+
+		public OverworldBuilding(int shape, int owner, int spriteID, int minDistFromTown, int maxDistFromTown) 
+			: base()
 		{
 			this.shapeType = shape;
 			this.owner = owner;
 			this.spriteID = spriteID;
+			this.minDistFromTown = minDistFromTown;
+			this.maxDistFromTown = maxDistFromTown;
 		}
 
-		protected void FilpCanWalk( bool[,] canWalk )
+		public void FilpCanWalk( int[,] canWalk )
 		{
 			int x = (int)origo.x;
 			int y = (int)origo.y;
@@ -32,11 +38,29 @@ namespace Buildings
 					int dyy = y + Shapes.dy[fy];
 
 					if (shape[fx,fy] == 1)
-						canWalk[dxx,dyy] = false;
+						canWalk[dxx,dyy] = MapGenerator.MapMaker.CANWALK;
 				}
 			}
 		}
 
+		public int GetSprite()
+		{
+			return spriteID;
+		}
 
+		public int GetShape()
+		{
+			return shapeType;
+		}
+
+		public int GetMinDistanceFromTown()
+		{
+			return minDistFromTown;
+		}
+
+		public int GetMaxDistanceFromTown()
+		{
+			return maxDistFromTown;
+		}
 	}
 }

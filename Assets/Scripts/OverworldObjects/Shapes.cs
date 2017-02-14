@@ -20,6 +20,8 @@ namespace OverworldObjects
 		public const int QUAD01x3 	= 12;
 		public const int QUAD02x3 	= 13;
 
+		public const int SHAPE_COUNT = 13;
+
 		public static int[] dx = { -2, -1, 0, 1, 2 };
 		public static int[] dy = { 1, 0, -1, -2, -3 };
 
@@ -35,13 +37,12 @@ namespace OverworldObjects
 		{
 			int x = (int)Position.x;
 			int y = (int)Position.y;
-			bool[] BuildingTypesFit = new bool[QUAD02x3];
-
+			bool[] BuildingTypesFit = new bool[SHAPE_COUNT];
 
 			if ((x >= FILTER_SIZE/2 && x < canWalk.GetLength(1)-FILTER_SIZE/2) 
 			&&  (y >= FILTER_SIZE/2 && y < canWalk.GetLength(0)-FILTER_SIZE/2))
 			{
-				for (int i = 0; i < QUAD02x3; i++)
+				for (int i = 0; i < SHAPE_COUNT; i++)
 					BuildingTypesFit[i] = fits(i, x, y, canWalk);
 			}
 			return BuildingTypesFit;

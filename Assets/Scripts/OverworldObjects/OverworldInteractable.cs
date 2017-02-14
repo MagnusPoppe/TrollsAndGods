@@ -11,5 +11,20 @@ namespace OverworldObjects
 		{
 			this.origo = center;
 		}
+
+		public OverworldInteractable()
+		{
+			
+		}
+
+		public Vector2 GetOrigo()
+		{
+			return origo;
+		}
+
+		public void SetOrigo(Vector2 origo)
+		{
+			this.origo = origo;
+		}
 	}
 }
