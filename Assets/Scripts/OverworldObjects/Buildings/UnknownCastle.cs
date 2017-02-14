@@ -14,7 +14,7 @@ namespace Buildings
         public UnknownCastle(Vector2 origo, int owner ) 
             : base(origo, shape, owner, spriteID, environmentTileType)
         {
-            EnvironmentTileType = 0;
+			EnvironmentTileType = MapGenerator.MapMaker.GROUND;
         }
 
         public UnknownCastle( int owner ) 
