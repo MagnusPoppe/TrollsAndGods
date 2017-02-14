@@ -29,13 +29,16 @@ public class ResourceBuildingReaction : Reaction {
 
     public override bool React(Hero h)
     {
+        // TODO objektreferanse
+        /*
         if (!h.Player.ResourceBuildings.Contains(ResourceBuilding))
         {
-            ResourceBuilding.Player.ResourceBuildings.Remove(ResourceBuilding);
+            //ResourceBuilding.Player.ResourceBuildings.Remove(ResourceBuilding);
             ResourceBuilding.Player = h.Player;
             h.Player.ResourceBuildings.Add(ResourceBuilding);
             return true;
         }
+        */
         return false;
     }
 }

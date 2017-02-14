@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using OverworldObjects;
+using Buildings;
 using Filter;
 
 namespace MapGenerator
@@ -14,9 +15,10 @@ namespace MapGenerator
 		Region[] regions;
 		int[,] map;
 		int[,] canWalk;
+        Reaction reactions;
 
-		// Overworld objects
-		Castle[] castles;
+        // Overworld objects
+        Castle[] castles;
 
 		// Constants
 		public const int  GROUND 					= 0;
@@ -89,15 +91,20 @@ namespace MapGenerator
 
 		}
 
+        private void AddReaction(int x, int y, Buildings.OverworldBuilding building)
+        {
+            //reactions.
+        }
+
 		private void InitBuildings(Region r)
 		{
 			r.createEconomy(canWalk, new Economy(Economy.POOR));
 
 			foreach (Buildings.OverworldBuilding building in r.GetBuildings())
 			{
-				int x = (int)building.GetOrigo().x;
-				int y = (int)building.GetOrigo().y;
-				map[x, y] = building.GetSprite();
+				int x = (int)building.Origo.x;
+				int y = (int)building.Origo.y;
+				map[x, y] = building.SpriteID;
 			}
 		}
 
@@ -242,7 +249,7 @@ namespace MapGenerator
 			// Setting the enviroment for each region:
 			foreach (Region region in regions)
 			{
-				region.SetRegionGroundTileType(region.GetCastle().GetEnvironment(), generatedMap);
+				region.SetRegionGroundTileType(region.GetCastle().EnvironmentTileType, generatedMap);
 			}
 
 			return generatedMap;
@@ -272,8 +279,7 @@ namespace MapGenerator
 
 			for (int i = 0; i < castles.Length; i++)
 			{
-				int color = Random.Range(3, totalSprites);
-				castles[i] = new Castle(sitelist[i], color);
+                castles[i] = new UnknownCastle(sitelist[i], 0);
 			}
 
 			return voronoi;

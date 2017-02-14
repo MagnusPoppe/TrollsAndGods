@@ -18,7 +18,7 @@ namespace MapGenerator
 			Vector2 castlePlacement = region.GetCastle().GetPosition();
 			foreach (OverworldBuilding building in region.GetBuildings())
 			{
-				Vector2 buildingPlacement = building.GetOrigo();
+				Vector2 buildingPlacement = building.Origo;
 				if (aStar.calculate(castlePlacement, buildingPlacement).Count == 0)
 				{
 					return false;

@@ -5,26 +5,29 @@ namespace OverworldObjects
 {
 	public class OverworldInteractable
 	{
-		protected Vector2 origo;
+        private Vector2 origo;
 
-		public OverworldInteractable( Vector2 center )
+        public Vector2 Origo
+        {
+            get
+            {
+                return origo;
+            }
+
+            set
+            {
+                origo = value;
+            }
+        }
+
+        public OverworldInteractable( Vector2 origo )
 		{
-			this.origo = center;
+			Origo = origo;
 		}
 
 		public OverworldInteractable()
 		{
 			
-		}
-
-		public Vector2 GetOrigo()
-		{
-			return origo;
-		}
-
-		public void SetOrigo(Vector2 origo)
-		{
-			this.origo = origo;
 		}
 	}
 }

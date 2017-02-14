@@ -7,10 +7,10 @@ using UnityEngine;
 /// </summary>
 public class Player
 {
-    private Resources res;
+    private Resources resources;
     private Hero[] heroes;
     private List<Town.Town> towns;
-    private int color;
+    private int playerID;
     private bool[,] fogOfWar;
     private const int MAXHEROES = 8;
     private List<ResourceBuilding> resourceBuildings;
@@ -23,7 +23,7 @@ public class Player
     /// <param name="difficulty">How difficult the game is set to be</param>
     public Player(int color, int difficulty)
     {
-        Res = new Resources(difficulty);
+        Resources = new Resources(difficulty);
         Heroes = new Hero[MAXHEROES];
         Towns = new List<Town.Town>();
         this.Color = color;
@@ -61,12 +61,12 @@ public class Player
     {
         get
         {
-            return color;
+            return playerID;
         }
 
         set
         {
-            color = value;
+            playerID = value;
         }
     }
 
@@ -83,16 +83,16 @@ public class Player
         }
     }
 
-    public Resources Res
+    public Resources Resources
     {
         get
         {
-            return res;
+            return resources;
         }
 
         set
         {
-            res = value;
+            resources = value;
         }
     }
 

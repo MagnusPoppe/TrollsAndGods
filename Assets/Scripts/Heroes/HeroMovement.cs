@@ -52,6 +52,7 @@ namespace Movement
         /// </summary>
         void Start()
         {
+            hero = new Hero(0, new GameObject(), 8); // TODO playerID first constructor variable
             g = GameObject.Find("Map");
             m = g.GetComponent<Map>();
             canWalk = m.mapmaker.GetCanWalkMap();
@@ -152,6 +153,7 @@ namespace Movement
             RemoveMarkers(pathObjects);
             // Call algorithm method that returns a list of Vector2 positions to the point, go through all objects
             List<Vector2> positions = aStar.calculate(curPos, pos);
+            hero.CurMovementSpeed = 8; // dummy
             // Calculate how many steps the hero will move, if this path is chosen
             Hero.CurMovementSpeed = Math.Min(positions.Count, Hero.MovementSpeed);
             int i = Hero.CurMovementSpeed;

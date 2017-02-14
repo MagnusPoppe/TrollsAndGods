@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using MapGenerator;
-using OverworldObjects;
+using Buildings;
 
 namespace Overworld
 {

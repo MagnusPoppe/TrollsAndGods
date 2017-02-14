@@ -23,12 +23,12 @@ namespace MapGenerator
 		/// Initializes a new instance of the <see cref="T:MapGenerator.Region"/> class.
 		/// </summary>
 		/// <param name="coordinateList">Coordinate list.</param>
-		/// <param name="castlePos">Castle position.</param>
-		public Region( List<Vector2> coordinateList, Vector2 castlePos )
+		/// <param name="regionCenter">Castle position.</param>
+		public Region( List<Vector2> coordinateList, Vector2 regionCenter )
 		{
-			castle = new Castle(castlePos);
+            castle = new UnknownCastle(regionCenter, 0); // TODO: Set player dynamically 
 
-			coordinates = new Vector2[coordinateList.Count];
+            coordinates = new Vector2[coordinateList.Count];
 			int i = 0;
 			foreach (Vector2 c in coordinateList)
 				coordinates[i++] = c;
@@ -41,10 +41,10 @@ namespace MapGenerator
 		/// Initializes a new instance of the <see cref="T:MapGenerator.Region"/> class.
 		/// </summary>
 		/// <param name="area">Area.</param>
-		/// <param name="castlePos">Castle position.</param>
-		public Region( Vector2[] area, Vector2 castlePos)
+		/// <param name="regionCenter">Castle position.</param>
+		public Region( Vector2[] area, Vector2 regionCenter)
 		{
-			castle = new Castle(castlePos);
+			castle = new UnknownCastle(regionCenter , 0);
 			coordinates = area;
 		}
 
@@ -91,7 +91,7 @@ namespace MapGenerator
 			for (int i = 0; i < economy.oreMineCount; i++)
 			{
 				OreMine mine = new OreMine(0);
-				PlaceBuildingInRegion(mine, canWalk);
+				PlaceResourceBuilding(mine, canWalk);
 			}
 
 			// TODO: COPY FOR ALL OTHER MINETYPES.
@@ -160,26 +160,26 @@ namespace MapGenerator
 		}
 
 
-		public void PlaceBuildingInRegion( OverworldBuilding building, int[,] canWalk )
+		public void PlaceResourceBuilding(ResourceBuilding building, int[,] canWalk )
 		{
 			Block[] blocks = RateRegionTiles(canWalk);
 
 			// DEFINERER BYGGNINGSTYPEN TIL HVER TILE:
 			for (int i = 0; i < economy.woodMineCount; i++)
 			{
-				float minDistance = building.GetMinDistanceFromTown();
-				float maxDistance = building.GetMaxDistanceFromTown();
+                float minDistance = building.MinDistFromTown;
+				float maxDistance = building.MaxDistFromTown;
 
 				for (int j = 0; j < GetArea(); j++)
 				{
 					float distance = blocks[j].GetDistanceFromCastle();
 
-					if (blocks[j].CanPlaceBuilding(building.GetShape()))
+					if (blocks[j].CanPlaceBuilding(building.ShapeType))
 					{
 						if (distance >= minDistance && distance <= maxDistance)
 						{
 							// KLAR TIL Å PLASSERE
-							building.SetOrigo(blocks[j].GetPosition());
+							building.Origo = (blocks[j].GetPosition());
 							building.FilpCanWalk(canWalk);
 
 							// Plasserer bygning.

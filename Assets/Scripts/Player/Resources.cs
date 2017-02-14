@@ -10,6 +10,8 @@ public class Resources
 {
     protected int[] resourceTab;
 
+    public enum type { GOLD, WOOD, ORE, CRYSTAL, GEM };
+
     /// <summary>
     /// Consctructor that sets resource values according to set difficulty
     /// </summary>
@@ -51,12 +53,12 @@ public class Resources
         return this.resourceTab[0] >= gold && this.resourceTab[1] >= wood && this.resourceTab[2] >= ore && this.resourceTab[3] >= crystal && this.resourceTab[4] >= gem;
     }
 
-    public int GetResource(int i)
+    public int GetResource(type i)
     {
-        return resourceTab[i];
+        return resourceTab[(int)i];
     }
-    public void adjustResource(int i, int amount)
+    public void adjustResource(type i, int amount)
     {
-        resourceTab[i] += amount;
+        resourceTab[(int)i] += amount;
     }
 }

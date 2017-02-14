@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using OverworldObjects;
+using Buildings;
 
 namespace MapGenerator
 {
@@ -57,7 +58,7 @@ namespace MapGenerator
 			regionindex = 0;
 
 			for (int i = 0; i < castles.Length; i++)
-				FloodFill(castles[i].GetPosition(), castles[i].GetEnvironment());
+				FloodFill(castles[i].GetPosition(), castles[i].EnvironmentTileType);
 			
 		}
 
@@ -107,7 +108,7 @@ namespace MapGenerator
 				int y = (int)current.y;
 
 				// Checking if inbounds
-				if (x >= 0 && x < width && y >= 0 && y < height)
+				if (x > 0 && x < width && y > 0 && y < height)
 				{
 					// Checking if  ground or castle
 					if (map[x, y] == MapMaker.GROUND || map[x, y] == MapMaker.CASTLE)

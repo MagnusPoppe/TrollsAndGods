@@ -6,29 +6,69 @@ namespace Buildings
 {
 	public class OverworldBuilding : OverworldInteractable
 	{
-		protected int shapeType;
-		protected int owner;
-		protected int spriteID;
+        private int shapeType;
+        private int player;
+        private int spriteID;
 
-		private int minDistFromTown;
-		private int maxDistFromTown;
+        public int ShapeType
+        {
+            get
+            {
+                return shapeType;
+            }
 
-		public OverworldBuilding(int shape, int owner, int spriteID, int minDistFromTown, int maxDistFromTown) 
+            set
+            {
+                shapeType = value;
+            }
+        }
+
+        public int Player
+        {
+            get
+            {
+                return player;
+            }
+
+            set
+            {
+                player = value;
+            }
+        }
+
+        public int SpriteID
+        {
+            get
+            {
+                return spriteID;
+            }
+
+            set
+            {
+                spriteID = value;
+            }
+        }
+
+        public OverworldBuilding(int shape, int owner, int spriteID)
 			: base()
 		{
-			this.shapeType = shape;
-			this.owner = owner;
-			this.spriteID = spriteID;
-			this.minDistFromTown = minDistFromTown;
-			this.maxDistFromTown = maxDistFromTown;
+			this.ShapeType = shape;
+			this.Player = owner;
+			this.SpriteID = spriteID;
 		}
-
-		public void FilpCanWalk( int[,] canWalk )
+        public OverworldBuilding(Vector2 origo, int shape, int owner, int spriteID)
+            : base(origo)
+        {
+            this.ShapeType = shape;
+            this.Player = owner;
+            this.SpriteID = spriteID;
+        }
+        public void FilpCanWalk( int[,] canWalk )
 		{
-			int x = (int)origo.x;
-			int y = (int)origo.y;
+			int x = (int)Origo.x;
+			int y = (int)Origo.y;
 
-			int[,] shape = Shapes.GetShape(shapeType);
+			int[,] shape = Shapes.GetShape(ShapeType);
 
 			for (int fy = 0; fy < shape.GetLength(0); fy++)
 			{
@@ -41,26 +81,7 @@ namespace Buildings
 						canWalk[dxx,dyy] = MapGenerator.MapMaker.CANWALK;
 				}
 			}
-		}
-
-		public int GetSprite()
-		{
-			return spriteID;
-		}
-
-		public int GetShape()
-		{
-			return shapeType;
-		}
-
-		public int GetMinDistanceFromTown()
-		{
-			return minDistFromTown;
-		}
-
-		public int GetMaxDistanceFromTown()
-		{
-			return maxDistFromTown;
-		}
+            canWalk[x,y] = MapGenerator.MapMaker.TRIGGER;
+        } 
 	}
 }

@@ -6,19 +6,19 @@ using UnityEngine;
 public class ResourceReaction : Reaction
 {
 
-    int resID;
+    Resources.type resourceID;
     int amount;
 
-    public int ResID
+    public Resources.type ResourceID
     {
         get
         {
-            return resID;
+            return resourceID;
         }
 
         set
         {
-            resID = value;
+            resourceID = value;
         }
     }
 
@@ -35,9 +35,9 @@ public class ResourceReaction : Reaction
         }
     }
 
-    public ResourceReaction(int resID, int amount, Vector2 pos, GameObject self,Reaction[,] reactionTab)
+    public ResourceReaction(Resources.type resID, int amount, Vector2 pos, GameObject self,Reaction[,] reactionTab)
     {
-        ResID = resID;
+        ResourceID = resID;
         Amount = amount;
         Pos = pos;
         Self = self;
@@ -46,7 +46,7 @@ public class ResourceReaction : Reaction
 
     public override bool React(Hero h)
     {
-        h.Player.Res.adjustResource(resID, amount);
+        //h.Player.Resources.adjustResource(resourceID, amount); // TODO objektreferanse
 
         Self.SetActive(false);
         GameObject.Destroy(Self);
