@@ -80,9 +80,25 @@ namespace MapGenerator
 
 			canWalk = CreateWalkableArea();
 
-			for (int i = 0; i < regions.Length; i++) 
-				placeWoodMine(regions[i]);
+			foreach (Region r in regions)
+			{ 
+				InitBuildings(r);
+			}
 
+			QuailtyAssurance quality = new QuailtyAssurance();
+
+		}
+
+		private void InitBuildings(Region r)
+		{
+			r.createEconomy(canWalk, new Economy(Economy.POOR));
+
+			foreach (Buildings.OverworldBuilding building in r.GetBuildings())
+			{
+				int x = (int)building.GetOrigo().x;
+				int y = (int)building.GetOrigo().y;
+				map[x, y] = building.GetSprite();
+			}
 		}
 
 		private void FillRandomRegionsWithWater()
@@ -166,21 +182,6 @@ namespace MapGenerator
 				}
 			}
 			return true;
-		}
-
-
-		private void placeWoodMine(Region r)
-		{ 
-			r.classifyRegionTiles(canWalk);
-
-			if (r.GetWoodMine() != null)
-			{
-				Vector2[] woodmine = r.GetWoodMine().GetOccupiedTiles(Shapes.QUAD01x3);
-
-				if (woodmine != null)
-					for (int i = 0; i < woodmine.Length; i++)
-						map[(int)woodmine[i].x, (int)woodmine[i].y] = BUILDING;
-			}
 		}
 
 		/// <summary>

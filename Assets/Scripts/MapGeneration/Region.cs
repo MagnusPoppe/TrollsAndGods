@@ -3,12 +3,14 @@ using UnityEngine;
 using OverworldObjects;
 using System.Collections.Generic;
 using OverworldObjects;
+using Buildings;
 
 namespace MapGenerator
 {
 	public class Region
 	{
 		Block woodMine;
+		List<OverworldBuilding> buildings;
 
 		Economy economy;
 
@@ -22,7 +24,7 @@ namespace MapGenerator
 		/// </summary>
 		/// <param name="coordinateList">Coordinate list.</param>
 		/// <param name="castlePos">Castle position.</param>
-		public Region( List<Vector2> coordinateList, Vector2 castlePos, Economy economy )
+		public Region( List<Vector2> coordinateList, Vector2 castlePos )
 		{
 			castle = new Castle(castlePos);
 
@@ -30,8 +32,8 @@ namespace MapGenerator
 			int i = 0;
 			foreach (Vector2 c in coordinateList)
 				coordinates[i++] = c;
-
-			this.economy = economy;
+				
+			buildings = new List<OverworldBuilding>();
 		}
 
 		/// <summary>
@@ -77,6 +79,24 @@ namespace MapGenerator
 		{
 			castle.SetEnvironment(id);
 		}
+
+		public List<OverworldBuilding> GetBuildings()
+		{
+			return buildings;
+		}
+
+		public void createEconomy(int[,] canWalk, Economy economy)
+		{
+			this.economy = economy;
+			for (int i = 0; i < economy.oreMineCount; i++)
+			{
+				OreMine mine = new OreMine(0);
+				PlaceBuildingInRegion(mine, canWalk);
+			}
+
+			// TODO: COPY FOR ALL OTHER MINETYPES.
+		}
+
 
 		/// <summary>
 		/// Resets the type of groundtile to the standard ground
@@ -129,37 +149,43 @@ namespace MapGenerator
 			return false;
 		}
 
-		public void classifyRegionTiles( int[,] canWalk )
+		private Block[] RateRegionTiles(int[,] canWalk)
 		{
-			// DEFINERER BYGGNINGSTYPEN TIL HVER TILE:
 			Block[] blocks = new Block[GetArea()];
 			for (int i = 0; i < GetArea(); i++)
 			{
 				blocks[i] = new Block(GetCastle().GetPosition(), coordinates[i], canWalk);
 			}
+			return blocks;
+		}
+
+
+		public void PlaceBuildingInRegion( OverworldBuilding building, int[,] canWalk )
+		{
+			Block[] blocks = RateRegionTiles(canWalk);
+
+			// DEFINERER BYGGNINGSTYPEN TIL HVER TILE:
 			for (int i = 0; i < economy.woodMineCount; i++)
 			{
-				float minDistance = 10;
-				float maxDistance = 12;
+				float minDistance = building.GetMinDistanceFromTown();
+				float maxDistance = building.GetMaxDistanceFromTown();
 
 				for (int j = 0; j < GetArea(); j++)
 				{
 					float distance = blocks[j].GetDistanceFromCastle();
 
-					if (blocks[j].CanPlaceBuilding(Shapes.QUAD01x3))
-					{ 
+					if (blocks[j].CanPlaceBuilding(building.GetShape()))
+					{
 						if (distance >= minDistance && distance <= maxDistance)
 						{
-							// PLACE WOODMINE();
-							if (i > 0) // FINNES WOODMINE FRA FØR
-							{
-								if (woodMine != null)
-									if (woodMine.GetRating() < blocks[j].GetRating())
-										woodMine = blocks[j];
-							}
-							else
-								woodMine = blocks[j]; // TODO LAG EGEN INDEX FOR DENNE RESSURSE
+							// KLAR TIL Å PLASSERE
+							building.SetOrigo(blocks[j].GetPosition());
+							building.FilpCanWalk(canWalk);
+
+							// Plasserer bygning.
+							buildings.Add(building);
 						}
+						// TODO: CANT PLACE.
 					}
 				}
 			}

@@ -77,6 +77,8 @@ namespace Overworld
 		/// <param name="map">Map.</param>
 		protected void DrawMap(int[,] map)
 		{
+			GameObject[,] objectsInBuildingLayer = new GameObject[width,height];
+
 			// DRAWING THE MAP:
 			tiles = new GameObject[width, height];
             float iy = 0;
@@ -96,7 +98,28 @@ namespace Overworld
 
                     // Adding a sprite to the gameobject:
                     SpriteRenderer sr = tiles[x, y].AddComponent<SpriteRenderer>();
-                    sr.sprite = groundTiles[map[x, height - 1 - y]];
+
+					int spriteID = map[x, height - 1 - y];
+					if (spriteID >= 15) // TODO: MAKE CONSTANT!
+					{
+						objectsInBuildingLayer[x, y] = new GameObject();
+						objectsInBuildingLayer[x, y].name = "objectsInBuildingLayer (" + x + ", " + y + ")";
+						if (y % 2 == 0)
+							objectsInBuildingLayer[x, y].transform.position = new Vector2(x, iy / 2);
+						else
+							objectsInBuildingLayer[x, y].transform.position = new Vector2(x + 0.5f, iy / 2);
+
+						SpriteRenderer oibl = objectsInBuildingLayer[x, y].AddComponent<SpriteRenderer>();
+						oibl.sprite = groundTiles[spriteID];
+						oibl.sortingLayerName = "Buildings";
+						sr.sprite = groundTiles[0]; // TODO: HARDKODET GRESS UNDER BYGNINGER.
+					}
+					else if (spriteID >= 0)
+					{
+						sr.sortingLayerName = "Ground";
+						sr.sprite = groundTiles[spriteID];
+					}
+
 
                     // Placing the tile on on the map within the board gameobject:
                     tiles[x, y].transform.parent = this.transform;
