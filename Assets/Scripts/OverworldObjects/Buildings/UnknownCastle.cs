@@ -14,9 +14,7 @@ namespace Buildings
         public UnknownCastle(Vector2 origo, int owner ) 
             : base(origo, shape, owner, spriteID, environmentTileType)
         {
-            int color = UnityEngine.Random.Range(3, 15);
-
-            EnvironmentTileType = color;
+			EnvironmentTileType = MapGenerator.MapMaker.GROUND;
         }
 
         public UnknownCastle( int owner ) 

@@ -2,6 +2,7 @@
 using UnityEngine;
 using MapGenerator;
 using Buildings;
+using OverworldObjects;
 
 namespace Overworld
 {
@@ -78,7 +79,7 @@ namespace Overworld
 		protected void DrawMap(int[,] map)
 		{
 			GameObject[,] objectsInBuildingLayer = new GameObject[width,height];
-
+			IngameObjectLibrary SpriteLibrary = new IngameObjectLibrary();
 			// DRAWING THE MAP:
 			tiles = new GameObject[width, height];
             float iy = 0;
@@ -114,6 +115,32 @@ namespace Overworld
 						oibl.sortingLayerName = "Buildings";
 						sr.sprite = groundTiles[0]; // TODO: HARDKODET GRESS UNDER BYGNINGER.
 					}
+
+					//else if (spriteID == MapMaker.CASTLE)
+					//{
+					//	Region[] r = mapmaker.GetRegions();
+					//	for (int i = 0; i < r.Length; i++)
+					//	{
+					//		if ((int)r[i].GetCastle().Origo.x == x && (int)r[i].GetCastle().Origo.y == y)
+					//		{
+					//			Castle c = r[i].GetCastle();
+					//			objectsInBuildingLayer[x, y] = new GameObject();
+					//			objectsInBuildingLayer[x, y].name = "objectsInBuildingLayer (" + x + ", " + y + ")";
+
+					//			if (y % 2 == 0)
+					//				objectsInBuildingLayer[x, y].transform.position = new Vector2(x, iy / 2);
+					//			else
+					//				objectsInBuildingLayer[x, y].transform.position = new Vector2(x + 0.5f, iy / 2);
+
+					//			SpriteRenderer oibl = objectsInBuildingLayer[x, y].AddComponent<SpriteRenderer>();
+					//			oibl.sprite = groundTiles[c.SpriteID];
+					//			oibl.sortingLayerName = "Buildings";
+					//			sr.sprite = groundTiles[c.EnvironmentTileType]; // TODO: HARDKODET GRESS UNDER BYGNINGER.
+					//		}
+					//	}
+					//}
+
+
 					else if (spriteID >= 0)
 					{
 						sr.sortingLayerName = "Ground";
