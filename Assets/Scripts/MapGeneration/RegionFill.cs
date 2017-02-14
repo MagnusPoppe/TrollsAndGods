@@ -57,9 +57,11 @@ namespace MapGenerator
 			regions = new Region[castles.Length];
 			regionindex = 0;
 
+			int label = 3;
 			for (int i = 0; i < castles.Length; i++)
-				FloodFill(castles[i].GetPosition(), castles[i].EnvironmentTileType);
-			
+			{
+				FloodFill(castles[i].GetPosition(), label++);
+			}
 		}
 
 		/// <summary>
@@ -108,7 +110,7 @@ namespace MapGenerator
 				int y = (int)current.y;
 
 				// Checking if inbounds
-				if (x > 0 && x < width && y > 0 && y < height)
+				if (x >= 0 && x < width && y >= 0 && y < height)
 				{
 					// Checking if  ground or castle
 					if (map[x, y] == MapMaker.GROUND || map[x, y] == MapMaker.CASTLE)
