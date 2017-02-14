@@ -20,12 +20,10 @@ public class ArtifactReaction : Reaction {
         }
     }
 
-    public ArtifactReaction(Item artifact, Vector2 pos, GameObject self, Reaction[,] reactionTab)
+    public ArtifactReaction(Item artifact, Vector2 pos)
     {
         Artifact = artifact;
         Pos = pos;
-        Self = self;
-        ReactionTab = reactionTab;
     }
 
     public override bool React(Hero h) 
@@ -35,11 +33,6 @@ public class ArtifactReaction : Reaction {
             h.EquippedItems[artifact.SlotType] = artifact;
         }
         else h.Items.Add(artifact);
-
-        Self.SetActive(false);
-        GameObject.Destroy(Self);
-
-        ReactionTab[(int)Pos.x, (int)Pos.y] = null;
 
         return true;
     }

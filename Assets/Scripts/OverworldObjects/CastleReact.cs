@@ -3,34 +3,33 @@ using System.Collections.Generic;
 using Town;
 using UnityEngine;
 
-public class TownReact : Reaction {
+public class CastleReact : Reaction {
 
-    Town.Town town;
+    Buildings.Castle castle;
 
-    public TownReact(Town.Town town, Vector2 pos, GameObject self, Reaction[,] reactionTab)
+    public CastleReact(Buildings.Castle castle, Vector2 pos)
     {
-        Town = town;
+        Castle = castle;
         Pos = pos;
-        Self = self;
-        ReactionTab = reactionTab;
     }
 
-    public Town.Town Town
+    public Buildings.Castle Castle
     {
         get
         {
-            return town;
+            return castle;
         }
 
         set
         {
-            town = value;
+            castle = value;
         }
     }
 
     public override bool React(Hero h)
     {
-        if (town.Player.Equals(h.Player))
+        //todo check if owner matches heroes owner
+        if (true)
         {
             //Todo visit town
         }
@@ -43,7 +42,8 @@ public class TownReact : Reaction {
 
     public bool React(Player player)
     {
-        if (town.Player.Equals(player))
+        //todo check if player owns town
+        if (true)
         {
             //todo open town window
             return true;

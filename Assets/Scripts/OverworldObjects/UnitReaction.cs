@@ -7,13 +7,11 @@ public class UnitReaction : Reaction {
     Unit unit;
     int amount;
 
-    public UnitReaction(Unit unit, int amount, Vector2 pos, GameObject self, Reaction[,] reactionTab)
+    public UnitReaction(Unit unit, int amount, Vector2 pos)
     {
         Unit = unit;
         Amount = amount;
         Pos = pos;
-        Self = self;
-        ReactionTab = reactionTab;
     }
 
     public Unit Unit

@@ -3,94 +3,103 @@ using System.Collections.Generic;
 using Town;
 using UnityEngine;
 
-public class Dwelling {
+namespace Buildings
+{
 
-    Town.Town town;
-    Player owner;
-    Unit unitType;
-    int unitsPresent;
-    int unitsPerWeek;
+    public class Dwelling : OverworldBuilding{
 
-    public Town.Town Town
-    {
-        get
+        Town.Town town;
+        Player owner;
+        Unit unitType;
+        int unitsPresent;
+        int unitsPerWeek;
+
+        public Town.Town Town
         {
-            return town;
+            get
+            {
+                return town;
+            }
+
+            set
+            {
+                town = value;
+            }
         }
 
-        set
+        public Unit UnitType
         {
-            town = value;
-        }
-    }
+            get
+            {
+                return unitType;
+            }
 
-    public Unit UnitType
-    {
-        get
-        {
-            return unitType;
-        }
-
-        set
-        {
-            unitType = value;
-        }
-    }
-
-    public int UnitsPresent
-    {
-        get
-        {
-            return unitsPresent;
+            set
+            {
+                unitType = value;
+            }
         }
 
-        set
+        public int UnitsPresent
         {
-            unitsPresent = value;
-        }
-    }
+            get
+            {
+                return unitsPresent;
+            }
 
-    public int UnitsPerWeek
-    {
-        get
-        {
-            return unitsPerWeek;
-        }
-
-        set
-        {
-            unitsPerWeek = value;
-        }
-    }
-
-    public Player Owner
-    {
-        get
-        {
-            return owner;
+            set
+            {
+                unitsPresent = value;
+            }
         }
 
-        set
+        public int UnitsPerWeek
         {
-            owner = value;
+            get
+            {
+                return unitsPerWeek;
+            }
+
+            set
+            {
+                unitsPerWeek = value;
+            }
         }
-    }
 
-    public Dwelling(Town.Town town,Unit unitType, int unitsPresent, int unitsPerWeek)
-    {
-        Town = town;
-        UnitType = UnitType;
-        UnitsPresent = unitsPresent;
-        UnitsPerWeek = unitsPerWeek;
-    }
+        public Player Owner
+        {
+            get
+            {
+                return owner;
+            }
 
-    public void populate()
-    {
-        unitsPresent += unitsPerWeek;
-    }
+            set
+            {
+                owner = value;
+            }
+        }
 
-    public void populate(int more)
-    {
-        unitsPresent += unitsPerWeek * more;
+        public Dwelling(Vector2 origo, int shape, int owner, int spriteID, Town.Town town, Unit unitType, int unitsPresent, int unitsPerWeek) : base(origo, shape, owner, spriteID)
+        {
+            Town = town;
+            UnitType = UnitType;
+            UnitsPresent = unitsPresent;
+            UnitsPerWeek = unitsPerWeek;
+        }
+
+        public void populate()
+        {
+            unitsPresent += unitsPerWeek;
+        }
+
+        public void populate(int more)
+        {
+            unitsPresent += unitsPerWeek * more;
+        }
+
+        public override void makeReaction(int x, int y)
+        {
+            Reaction = new DwellingReact(this, new Vector2(x, y));
+        }
     }
 }

@@ -14,7 +14,7 @@ public class Player
     private bool[,] fogOfWar;
     private const int MAXHEROES = 8;
     private List<ResourceBuilding> resourceBuildings;
-    private List<Dwelling> dwellingsOwned;
+    private List<Buildings.Dwelling> dwellingsOwned;
 
     /// <summary>
     /// Constructor that creates a new hero for the player, prepares fog of war, resources and towns
@@ -28,7 +28,7 @@ public class Player
         Towns = new List<Town.Town>();
         this.Color = color;
         FogOfWar = new bool[32, 32]; // todo, link to map objects x y size
-        DwellingsOwned = new List<Dwelling>();
+        DwellingsOwned = new List<Buildings.Dwelling>();
     }
 
     public Hero[] Heroes
@@ -109,7 +109,7 @@ public class Player
         }
     }
 
-    public List<Dwelling> DwellingsOwned
+    public List<Buildings.Dwelling> DwellingsOwned
     {
         get
         {

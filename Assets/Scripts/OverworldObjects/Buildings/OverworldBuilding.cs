@@ -9,6 +9,7 @@ namespace Buildings
         private int shapeType;
         private int player;
         private int spriteID;
+        private Reaction reaction;
 
         public int ShapeType
         {
@@ -49,6 +50,19 @@ namespace Buildings
             }
         }
 
+        public Reaction Reaction
+        {
+            get
+            {
+                return reaction;
+            }
+
+            set
+            {
+                reaction = value;
+            }
+        }
+
         public OverworldBuilding(int shape, int owner, int spriteID)
 			: base()
 		{
@@ -82,6 +96,11 @@ namespace Buildings
 				}
 			}
             canWalk[x,y] = MapGenerator.MapMaker.TRIGGER;
+        }
+        
+        public virtual void makeReaction(int x,int y)
+        {
+            //implemented in subclasses
         } 
 	}
 }

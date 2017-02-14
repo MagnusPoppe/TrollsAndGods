@@ -65,5 +65,10 @@ namespace Buildings
 		{
 			return "Castle " + Name+ " at " +Origo.ToString();
 		}
+
+        public override void makeReaction(int x, int y)
+        {
+            Reaction = new CastleReact(this, new Vector2(x, y));
+        }
 	}
 }

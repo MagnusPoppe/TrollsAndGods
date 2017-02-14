@@ -35,23 +35,16 @@ public class ResourceReaction : Reaction
         }
     }
 
-    public ResourceReaction(Resources.type resID, int amount, Vector2 pos, GameObject self,Reaction[,] reactionTab)
+    public ResourceReaction(Resources.type resID, int amount, Vector2 pos)
     {
         ResourceID = resID;
         Amount = amount;
         Pos = pos;
-        Self = self;
-        ReactionTab = reactionTab;
     }
 
     public override bool React(Hero h)
     {
         //h.Player.Resources.adjustResource(resourceID, amount); // TODO objektreferanse
-
-        Self.SetActive(false);
-        GameObject.Destroy(Self);
-
-        ReactionTab[(int)Pos.x, (int)Pos.y] = null;
 
         return true;
     }

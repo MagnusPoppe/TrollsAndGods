@@ -56,4 +56,9 @@ public class ResourceBuilding : OverworldBuilding {
         MaxDistFromTown = maxDistFromTown;
         ResourceID = resourceID;
     }
+
+    public override void makeReaction(int x, int y)
+    {
+        Reaction = new ResourceBuildingReaction(this, new Vector2(x, y));
+    }
 }

@@ -15,7 +15,7 @@ namespace MapGenerator
 		Region[] regions;
 		int[,] map;
 		int[,] canWalk;
-        Reaction reactions;
+        Reaction[,] reactions;
 
         // Overworld objects
         Castle[] castles;
@@ -82,6 +82,8 @@ namespace MapGenerator
 
 			canWalk = CreateWalkableArea();
 
+            reactions = new Reaction[width, height];
+
 			foreach (Region r in regions)
 			{ 
 				InitBuildings(r);
@@ -93,7 +95,8 @@ namespace MapGenerator
 
         private void AddReaction(int x, int y, Buildings.OverworldBuilding building)
         {
-            //reactions.
+            building.makeReaction(x, y);
+            reactions[x, y] = building.Reaction;
         }
 
 		private void InitBuildings(Region r)

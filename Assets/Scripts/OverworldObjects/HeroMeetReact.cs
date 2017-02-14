@@ -19,12 +19,10 @@ public class HeroMeetReact : Reaction {
         }
     }
 
-    public HeroMeetReact(Hero hero, Vector2 pos, GameObject self, Reaction[,] reactionTab)
+    public HeroMeetReact(Hero hero, Vector2 pos)
     {
         Hero = hero;
         Pos = pos;
-        Self = self;
-        ReactionTab = reactionTab;
     }
 
     public override bool React(Hero h)

@@ -6,12 +6,10 @@ public class ResourceBuildingReaction : Reaction {
 
     ResourceBuilding resourceBuilding;
 
-    public ResourceBuildingReaction(ResourceBuilding resourceBuilding, Vector2 pos, GameObject self, Reaction[,] reactionTab)
+    public ResourceBuildingReaction(ResourceBuilding resourceBuilding, Vector2 pos)
     {
         ResourceBuilding = resourceBuilding;
         Pos = pos;
-        Self = self;
-        ReactionTab = reactionTab;
     }
 
     public ResourceBuilding ResourceBuilding

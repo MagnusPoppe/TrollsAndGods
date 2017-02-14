@@ -12,7 +12,7 @@ namespace Town
     {
         private bool hasBuiltThisRound;
         private Building[] buildings;
-        private List<Dwelling> relatedDwellings;
+        private List<Buildings.Dwelling> relatedDwellings;
         private Hero stationedHero;
         private Hero visitingHero;
         private UnitTree unitTree;
@@ -26,7 +26,7 @@ namespace Town
         {
             this.buildings = buildings;
             unitTree = new UnitTree();
-            RelatedDwellings = new List<Dwelling>();
+            RelatedDwellings = new List<Buildings.Dwelling>();
             Player = player;
         }
         public bool canBuild(Building b)
@@ -97,7 +97,7 @@ namespace Town
             }
         }
 
-        public List<Dwelling> RelatedDwellings
+        public List<Buildings.Dwelling> RelatedDwellings
         {
             get
             {

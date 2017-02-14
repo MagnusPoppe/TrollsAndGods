@@ -4,17 +4,15 @@ using UnityEngine;
 
 public class DwellingReact : Reaction {
 
-    Dwelling dwelling;
+    Buildings.Dwelling dwelling;
 
-    public DwellingReact(Dwelling dwelling, Vector2 pos, GameObject self, Reaction[,] reactionTab)
+    public DwellingReact(Buildings.Dwelling dwelling, Vector2 pos)
     {
         Dwelling = dwelling;
         Pos = pos;
-        Self = self;
-        ReactionTab = reactionTab;
     }
 
-    public Dwelling Dwelling
+    public Buildings.Dwelling Dwelling
     {
         get
         {
