@@ -10,7 +10,7 @@ public class Hero
     private Sprite portrait;
     private string name;
     private int faction;
-    private int playerID;
+    private Player player;
     private Unit[] units;
     private List<Item> items;
     private Item[] equippedItems;
@@ -22,10 +22,10 @@ public class Hero
     /// Constructor that prepares unit, items, and equippeditems list for the hero
     /// </summary>
     /// <param name="color">id of which player gets the hero</param>
-    public Hero(int player, GameObject self, int movementSpeed)
+    public Hero(Player player, GameObject self, int movementSpeed)
     {
         Self = self;
-        PlayerID = player;
+        Player = player;
         Units = new Unit[7];
         Items = new List<Item>();
         EquippedItems = new Item[7];
@@ -101,16 +101,16 @@ public class Hero
         }
     }
 
-    public int PlayerID
+    public Player Player
     {
         get
         {
-            return playerID;
+            return player;
         }
 
         set
         {
-            playerID = value;
+            player = value;
         }
     }
 

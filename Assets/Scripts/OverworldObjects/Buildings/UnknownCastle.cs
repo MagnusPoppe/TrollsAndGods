@@ -11,13 +11,13 @@ namespace OverworldObjects
         const int spriteID = MapGenerator.MapMaker.CASTLE;
         const int environmentTileType = MapGenerator.MapMaker.GROUND;
 
-        public UnknownCastle(Vector2 origo, int owner ) 
+        public UnknownCastle(Vector2 origo, Player owner ) 
             : base(origo, shape, owner, spriteID, environmentTileType)
         {
 			EnvironmentTileType = MapGenerator.MapMaker.GROUND;
         }
 
-        public UnknownCastle( int owner ) 
+        public UnknownCastle( Player owner ) 
             : base( shape, owner, spriteID)
         {
         }

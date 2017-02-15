@@ -281,7 +281,7 @@ namespace MapGenerator
 
 			for (int i = 0; i < castles.Length; i++)
 			{
-                castles[i] = new UnknownCastle(sitelist[i], 0);
+                castles[i] = new UnknownCastle(sitelist[i], null);
 			}
 
 			return voronoi;

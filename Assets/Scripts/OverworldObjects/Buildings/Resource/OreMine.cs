@@ -13,7 +13,7 @@ namespace OverworldObjects
 		const int MINIMUM_PREFERED_DISTANCE_FROM_TOWN = 10;
 		const int MAXIMUM_PREFERED_DISTANCE_FROM_TOWN = 15;
 
-		public OreMine(int owner) 
+		public OreMine(Player owner) 
 		: base(SHAPE, owner, SPRITE_ID, RESOURCE_ID, MINIMUM_PREFERED_DISTANCE_FROM_TOWN, MAXIMUM_PREFERED_DISTANCE_FROM_TOWN)
 		{
 			

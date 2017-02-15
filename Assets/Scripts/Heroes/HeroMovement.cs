@@ -52,7 +52,7 @@ namespace Movement
         /// </summary>
         void Start()
         {
-            hero = new Hero(0, new GameObject(), 8); // TODO playerID first constructor variable
+            //hero = new Hero(new Player(), new GameObject(), 8); // TODO playerID first constructor variable
             g = GameObject.Find("Map");
             m = g.GetComponent<Map>();
             canWalk = m.mapmaker.GetCanWalkMap();
@@ -82,7 +82,7 @@ namespace Movement
                     // Todo, open hero menu
                 }
                 // If an open square is clicked
-				else if (canWalk[(int)pos.x, (int)pos.y] == MapMaker.CANWALK)
+                else if (canWalk[(int)pos.x, (int)pos.y] == MapMaker.CANWALK)
                 {
                     // Walk to pointer if marked square is clicked by enabling variables that triggers moveHero method on update
                     if (pathMarked && pos.Equals(toPos))
@@ -127,7 +127,7 @@ namespace Movement
                         SetPathMarked(false);
                         RemoveMarkers(pathObjects);
                         // objectcollision, when final destination is reached
-                        if(canWalk[(int)curPos.x, (int)curPos.y] == 2)
+                        if (canWalk[(int)curPos.x, (int)curPos.y] == 2)
                         {
                             // todo - reaction
                         }
@@ -143,7 +143,7 @@ namespace Movement
         /// </summary>
         /// <param name="pos">Destination tile position</param>
         /// <returns>List of instantiated marker objects</returns>
-        private List<GameObject> MarkPath(Vector2 pos)
+        public List<GameObject> MarkPath(Vector2 pos)
         {
             stepNumber = 0;
             SetPathMarked(true);
@@ -192,7 +192,7 @@ namespace Movement
         /// Creates a position with animationspeed and returns it
         /// </summary>
         /// <returns>Position the hero shall be moved to</returns>
-        private Vector2 PrepareMovement()
+        public Vector2 PrepareMovement()
         {
             // Add animation, transform hero position
             animationSpeed += Time.deltaTime;
@@ -203,7 +203,7 @@ namespace Movement
         /// Destroy the tile gameobjects and refresh list
         /// </summary>
         /// <param name="li">List that shall be cleared</param>
-        private void RemoveMarkers(List<GameObject> li)
+        public void RemoveMarkers(List<GameObject> li)
         {
             foreach (GameObject go in li)
                 Destroy(go);
