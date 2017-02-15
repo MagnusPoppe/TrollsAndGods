@@ -1,19 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using Town;
 using UnityEngine;
+using OverworldObjects;
 
 public class CastleReact : Reaction {
 
-    Buildings.Castle castle;
+    Castle castle;
 
-    public CastleReact(Buildings.Castle castle, Vector2 pos)
+    public CastleReact(Castle castle, Vector2 pos)
     {
         Castle = castle;
         Pos = pos;
     }
 
-    public Buildings.Castle Castle
+    public Castle Castle
     {
         get
         {
@@ -29,9 +29,10 @@ public class CastleReact : Reaction {
     public override bool React(Hero h)
     {
         //todo check if owner matches heroes owner
-        if (true)
+        if (castle.Player.Equals(h.Player))
         {
             //Todo visit town
+            return false;
         }
         else
         {

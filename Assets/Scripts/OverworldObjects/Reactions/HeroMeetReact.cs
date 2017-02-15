@@ -30,6 +30,7 @@ public class HeroMeetReact : Reaction {
         if (hero.Player.Equals(h.Player))
         {
             //TODO friendly meeting
+            return false;
         }
         else
         {

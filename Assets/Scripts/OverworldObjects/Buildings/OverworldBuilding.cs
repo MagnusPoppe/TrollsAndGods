@@ -2,12 +2,12 @@
 using UnityEngine;
 using OverworldObjects;
 
-namespace Buildings
+namespace OverworldObjects
 {
 	public class OverworldBuilding : OverworldInteractable
 	{
         private int shapeType;
-        private int player;
+        private Player player;
         private int spriteID;
         private Reaction reaction;
 
@@ -24,7 +24,7 @@ namespace Buildings
             }
         }
 
-        public int Player
+        public Player Player
         {
             get
             {
@@ -63,19 +63,19 @@ namespace Buildings
             }
         }
 
-        public OverworldBuilding(int shape, int owner, int spriteID)
+        public OverworldBuilding(int shape, Player owner, int spriteID)
 			: base()
 		{
-			this.ShapeType = shape;
-			this.Player = owner;
-			this.SpriteID = spriteID;
+			ShapeType = shape;
+			Player = owner;
+			SpriteID = spriteID;
 		}
-        public OverworldBuilding(Vector2 origo, int shape, int owner, int spriteID)
+        public OverworldBuilding(Vector2 origo, int shape, Player owner, int spriteID)
             : base(origo)
         {
-            this.ShapeType = shape;
-            this.Player = owner;
-            this.SpriteID = spriteID;
+            ShapeType = shape;
+            Player = owner;
+            SpriteID = spriteID;
         }
         public void FlipCanWalk( int[,] canWalk )
 		{

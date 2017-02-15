@@ -3,7 +3,6 @@ using UnityEngine;
 using OverworldObjects;
 using System.Collections.Generic;
 using OverworldObjects;
-using Buildings;
 
 namespace MapGenerator
 {
@@ -26,7 +25,7 @@ namespace MapGenerator
 		/// <param name="regionCenter">Castle position.</param>
 		public Region( List<Vector2> coordinateList, Vector2 regionCenter )
 		{
-            castle = new UnknownCastle(regionCenter, 0); // TODO: Set player dynamically 
+            castle = new UnknownCastle(regionCenter, null); // TODO: Set player dynamically 
 
             coordinates = new Vector2[coordinateList.Count];
 			int i = 0;
@@ -44,7 +43,7 @@ namespace MapGenerator
 		/// <param name="regionCenter">Castle position.</param>
 		public Region( Vector2[] area, Vector2 regionCenter)
 		{
-			castle = new UnknownCastle(regionCenter , 0);
+			castle = new UnknownCastle(regionCenter , null);
 			coordinates = area;
 		}
 
@@ -90,7 +89,7 @@ namespace MapGenerator
 			this.economy = economy;
 			for (int i = 0; i < economy.oreMineCount; i++)
 			{
-				OreMine mine = new OreMine(0);
+				OreMine mine = new OreMine(null);
 				PlaceResourceBuilding(mine, canWalk);
 			}
 

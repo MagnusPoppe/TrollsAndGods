@@ -1,20 +1,20 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-namespace Buildings
+namespace OverworldObjects
 {
 	public class Castle : OverworldBuilding
 	{
 		int environmentTileType;
 		string name;
 
-        public Castle(Vector2 origo, int shape, int owner, int spriteID, int environmentTileType)
+        public Castle(Vector2 origo, int shape, Player owner, int spriteID, int environmentTileType)
             : base(origo, shape, owner, spriteID)
         {
             Name = "unnamed";
             EnvironmentTileType = environmentTileType;
         }
-        public Castle( int shape, int owner, int spriteID)
+        public Castle( int shape, Player owner, int spriteID)
                 : base( shape, owner, spriteID)
         {
             this.Name = "unnamed";

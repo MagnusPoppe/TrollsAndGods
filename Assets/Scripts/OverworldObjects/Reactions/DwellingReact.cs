@@ -1,18 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using OverworldObjects;
 
 public class DwellingReact : Reaction {
 
-    Buildings.Dwelling dwelling;
+    Dwelling dwelling;
 
-    public DwellingReact(Buildings.Dwelling dwelling, Vector2 pos)
+    public DwellingReact(Dwelling dwelling, Vector2 pos)
     {
         Dwelling = dwelling;
         Pos = pos;
     }
 
-    public Buildings.Dwelling Dwelling
+    public Dwelling Dwelling
     {
         get
         {
@@ -27,12 +28,11 @@ public class DwellingReact : Reaction {
 
     public override bool React(Hero h)
     {
-        // TODO objektreferanse
         /*
-        if (dwelling.Owner != h.Player)
+        if (dwelling.Owner != h.PlayerID)
         {
-            if (dwelling.Owner != null) dwelling.Owner.DwellingsOwned.Remove(dwelling);
-            dwelling.Owner = h.Player;
+            if (dwelling.Owner != null) GameManager.get.DwellingsOwned.Remove(dwelling);
+            dwelling.Owner = h.PlayerID;
             h.Player.DwellingsOwned.Add(dwelling);
         }
         */
