@@ -1,18 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using OverworldObjects;
 
 public class DwellingReact : Reaction {
 
-    Buildings.Dwelling dwelling;
+    Dwelling dwelling;
 
-    public DwellingReact(Buildings.Dwelling dwelling, Vector2 pos)
+    public DwellingReact(Dwelling dwelling, Vector2 pos)
     {
         Dwelling = dwelling;
         Pos = pos;
     }
 
-    public Buildings.Dwelling Dwelling
+    public Dwelling Dwelling
     {
         get
         {

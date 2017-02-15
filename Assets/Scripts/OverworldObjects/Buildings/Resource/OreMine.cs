@@ -2,7 +2,7 @@
 using OverworldObjects;
 using UnityEngine;
 
-namespace Buildings
+namespace OverworldObjects
 {
 	public class OreMine : ResourceBuilding
 	{

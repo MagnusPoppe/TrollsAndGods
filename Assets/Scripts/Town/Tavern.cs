@@ -3,8 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Town
-{
     public class Tavern : Building
     {
 
@@ -18,4 +16,3 @@ namespace Town
             cost = new Resources(1000, 5, 5, 0, 0);
         }
     }
-}

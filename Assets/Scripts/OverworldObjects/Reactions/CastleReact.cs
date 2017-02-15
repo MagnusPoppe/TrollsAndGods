@@ -1,19 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using Town;
 using UnityEngine;
+using OverworldObjects;
 
 public class CastleReact : Reaction {
 
-    Buildings.Castle castle;
+    Castle castle;
 
-    public CastleReact(Buildings.Castle castle, Vector2 pos)
+    public CastleReact(Castle castle, Vector2 pos)
     {
         Castle = castle;
         Pos = pos;
     }
 
-    public Buildings.Castle Castle
+    public Castle Castle
     {
         get
         {

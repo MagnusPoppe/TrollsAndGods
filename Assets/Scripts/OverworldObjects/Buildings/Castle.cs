@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-namespace Buildings
+namespace OverworldObjects
 {
 	public class Castle : OverworldBuilding
 	{

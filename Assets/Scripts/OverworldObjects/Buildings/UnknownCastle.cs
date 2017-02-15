@@ -2,7 +2,7 @@
 using OverworldObjects;
 using UnityEngine;
 
-namespace Buildings
+namespace OverworldObjects
 {
     class UnknownCastle : Castle
     {
