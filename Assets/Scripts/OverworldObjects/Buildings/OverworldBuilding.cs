@@ -77,7 +77,7 @@ namespace Buildings
             this.Player = owner;
             this.SpriteID = spriteID;
         }
-        public void FilpCanWalk( int[,] canWalk )
+        public void FlipCanWalk( int[,] canWalk )
 		{
 			int x = (int)Origo.x;
 			int y = (int)Origo.y;

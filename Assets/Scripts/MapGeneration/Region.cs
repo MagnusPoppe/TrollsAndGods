@@ -180,7 +180,7 @@ namespace MapGenerator
 						{
 							// KLAR TIL Å PLASSERE
 							building.Origo = (blocks[j].GetPosition());
-							building.FilpCanWalk(canWalk);
+							building.FlipCanWalk(canWalk);
 
 							// Plasserer bygning.
 							buildings.Add(building);

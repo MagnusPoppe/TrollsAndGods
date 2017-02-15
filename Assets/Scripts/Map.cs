@@ -3,6 +3,7 @@ using UnityEngine;
 using MapGenerator;
 using Buildings;
 using OverworldObjects;
+using System.Collections.Generic;
 
 namespace Overworld
 {
@@ -35,6 +36,7 @@ namespace Overworld
 		public Sprite[] groundTiles;
 
         public GameObject[] heroPrefabs;
+
         void Awake()
         {
             heroPrefabs = UnityEngine.Resources.LoadAll<GameObject>("Heroes");
@@ -79,7 +81,7 @@ namespace Overworld
 		protected void DrawMap(int[,] map)
 		{
 			GameObject[,] objectsInBuildingLayer = new GameObject[width,height];
-			IngameObjectLibrary SpriteLibrary = new IngameObjectLibrary();
+			IngameObjectLibrary spriteLibrary = new IngameObjectLibrary();
 			// DRAWING THE MAP:
 			tiles = new GameObject[width, height];
             float iy = 0;
@@ -101,51 +103,77 @@ namespace Overworld
                     SpriteRenderer sr = tiles[x, y].AddComponent<SpriteRenderer>();
 
 					int spriteID = map[x, height - 1 - y];
-					if (spriteID >= 15) // TODO: MAKE CONSTANT!
-					{
-						objectsInBuildingLayer[x, y] = new GameObject();
-						objectsInBuildingLayer[x, y].name = "objectsInBuildingLayer (" + x + ", " + y + ")";
-						if (y % 2 == 0)
-							objectsInBuildingLayer[x, y].transform.position = new Vector2(x, iy / 2);
-						else
-							objectsInBuildingLayer[x, y].transform.position = new Vector2(x + 0.5f, iy / 2);
+                    //if (spriteID >= 15) // TODO: MAKE CONSTANT!
+                    //{
+                    //	objectsInBuildingLayer[x, y] = new GameObject();
+                    //	objectsInBuildingLayer[x, y].name = "objectsInBuildingLayer (" + x + ", " + y + ")";
+                    //	if (y % 2 == 0)
+                    //		objectsInBuildingLayer[x, y].transform.position = new Vector2(x, iy / 2);
+                    //	else
+                    //		objectsInBuildingLayer[x, y].transform.position = new Vector2(x + 0.5f, iy / 2);
 
-						SpriteRenderer oibl = objectsInBuildingLayer[x, y].AddComponent<SpriteRenderer>();
-						oibl.sprite = groundTiles[spriteID];
-						oibl.sortingLayerName = "Buildings";
-						sr.sprite = groundTiles[0]; // TODO: HARDKODET GRESS UNDER BYGNINGER.
+                    //	SpriteRenderer oibl = objectsInBuildingLayer[x, y].AddComponent<SpriteRenderer>();
+                    //  oibl.sprite = groundTiles[spriteID];
+                    //	oibl.sortingLayerName = "Buildings";
+                    //	sr.sprite = groundTiles[0]; // TODO: HARDKODET GRESS UNDER BYGNINGER.
+                    //}
+
+                    //else if (spriteID == MapMaker.CASTLE)
+                    //{
+                    //	Region[] r = mapmaker.GetRegions();
+                    //	for (int i = 0; i < r.Length; i++)
+                    //	{
+                    //		if ((int)r[i].GetCastle().Origo.x == x && (int)r[i].GetCastle().Origo.y == y)
+                    //		{
+                    //			Castle c = r[i].GetCastle();
+                    //			objectsInBuildingLayer[x, y] = new GameObject();
+                    //			objectsInBuildingLayer[x, y].name = "objectsInBuildingLayer (" + x + ", " + y + ")";
+
+                    //			if (y % 2 == 0)
+                    //				objectsInBuildingLayer[x, y].transform.position = new Vector2(x, iy / 2);
+                    //			else
+                    //				objectsInBuildingLayer[x, y].transform.position = new Vector2(x + 0.5f, iy / 2);
+
+                    //			SpriteRenderer oibl = objectsInBuildingLayer[x, y].AddComponent<SpriteRenderer>();
+                    //			oibl.sprite = groundTiles[c.SpriteID];
+                    //			oibl.sortingLayerName = "Buildings";
+                    //			sr.sprite = groundTiles[c.EnvironmentTileType]; // TODO: HARDKODET GRESS UNDER BYGNINGER.
+                    //		}
+                    //	}
+                    //}
+
+
+                    // TODO: Fjern statiske values
+                    //else if (spriteID >= 0)
+                    //else if (spriteID >= spriteLibrary.GetTileStart())
+                    //else if (spriteID >= 0 && spriteID <= 5) 
+                    if (spriteID >= 0 && spriteID <= 5)
+                    {
+                        // TODO: Fjern castle fra verdi "2"
+                        if (spriteID == 2)
+                        {
+                            // make "castle" into "building"
+                            spriteID = 6;
+                            sr.sortingLayerName = "Buildings";
+                            sr.sprite = spriteLibrary.GetBuilding(spriteID);
+                        }
+                        else
+                        {
+                            // if "ground" or "wall", make "dirt"
+                            if (spriteID >= 0 && spriteID <= 1)
+                                spriteID = 4;
+
+                            sr.sortingLayerName = "Ground";
+                            //sr.sprite = groundTiles[spriteID];            // gammel metode
+                            sr.sprite = spriteLibrary.GetTile(spriteID);    // ny metode
+                        }
 					}
-
-					//else if (spriteID == MapMaker.CASTLE)
-					//{
-					//	Region[] r = mapmaker.GetRegions();
-					//	for (int i = 0; i < r.Length; i++)
-					//	{
-					//		if ((int)r[i].GetCastle().Origo.x == x && (int)r[i].GetCastle().Origo.y == y)
-					//		{
-					//			Castle c = r[i].GetCastle();
-					//			objectsInBuildingLayer[x, y] = new GameObject();
-					//			objectsInBuildingLayer[x, y].name = "objectsInBuildingLayer (" + x + ", " + y + ")";
-
-					//			if (y % 2 == 0)
-					//				objectsInBuildingLayer[x, y].transform.position = new Vector2(x, iy / 2);
-					//			else
-					//				objectsInBuildingLayer[x, y].transform.position = new Vector2(x + 0.5f, iy / 2);
-
-					//			SpriteRenderer oibl = objectsInBuildingLayer[x, y].AddComponent<SpriteRenderer>();
-					//			oibl.sprite = groundTiles[c.SpriteID];
-					//			oibl.sortingLayerName = "Buildings";
-					//			sr.sprite = groundTiles[c.EnvironmentTileType]; // TODO: HARDKODET GRESS UNDER BYGNINGER.
-					//		}
-					//	}
-					//}
-
-
-					else if (spriteID >= 0)
-					{
-						sr.sortingLayerName = "Ground";
-						sr.sprite = groundTiles[spriteID];
-					}
+                    // if building
+                    else if (spriteID > 5)
+                    {
+                        sr.sortingLayerName = "Buildings";
+                        sr.sprite = spriteLibrary.GetBuilding(spriteID);
+                    }
 
 
                     // Placing the tile on on the map within the board gameobject:

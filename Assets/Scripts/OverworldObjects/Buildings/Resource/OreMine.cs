@@ -7,7 +7,7 @@ namespace Buildings
 	public class OreMine : ResourceBuilding
 	{
 		const int SHAPE = Shapes.CUBE01;
-		const int SPRITE_ID = 0;
+		const int SPRITE_ID = 7; // TODO: hardkode?
         const Resources.type RESOURCE_ID = Resources.type.WOOD;
 
 		const int MINIMUM_PREFERED_DISTANCE_FROM_TOWN = 10;
