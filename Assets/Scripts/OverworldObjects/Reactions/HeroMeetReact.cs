@@ -27,9 +27,10 @@ public class HeroMeetReact : Reaction {
 
     public override bool React(Hero h)
     {
-        if (hero.Player.Equals(h.Player))
+        if (hero.PlayerID == h.PlayerID)
         {
             //TODO friendly meeting
+            return false;
         }
         else
         {

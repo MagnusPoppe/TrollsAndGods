@@ -28,12 +28,11 @@ public class DwellingReact : Reaction {
 
     public override bool React(Hero h)
     {
-        // TODO objektreferanse
         /*
-        if (dwelling.Owner != h.Player)
+        if (dwelling.Owner != h.PlayerID)
         {
-            if (dwelling.Owner != null) dwelling.Owner.DwellingsOwned.Remove(dwelling);
-            dwelling.Owner = h.Player;
+            if (dwelling.Owner != null) GameManager.get.DwellingsOwned.Remove(dwelling);
+            dwelling.Owner = h.PlayerID;
             h.Player.DwellingsOwned.Add(dwelling);
         }
         */

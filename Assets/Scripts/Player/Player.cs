@@ -20,14 +20,14 @@ public class Player
     /// <summary>
     /// Constructor that creates a new hero for the player, prepares fog of war, resources and towns
     /// </summary>
-    /// <param name="color">Which color the player will get</param>
+    /// <param name="playerID">Which color the player will get</param>
     /// <param name="difficulty">How difficult the game is set to be</param>
-    public Player(int color, int difficulty)
+    public Player(int playerID, int difficulty)
     {
         Resources = new Resources(difficulty);
         Heroes = new Hero[MAXHEROES];
         Towns = new List<Town>();
-        this.Color = color;
+        PlayerID = playerID;
         FogOfWar = new bool[32, 32]; // todo, link to map objects x y size
         DwellingsOwned = new List<Dwelling>();
     }
@@ -58,7 +58,7 @@ public class Player
         }
     }
 
-    public int Color
+    public int PlayerID
     {
         get
         {

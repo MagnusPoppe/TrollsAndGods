@@ -25,7 +25,7 @@ public class Hero
     public Hero(int player, GameObject self, int movementSpeed)
     {
         Self = self;
-        Player = player;
+        PlayerID = player;
         Units = new Unit[7];
         Items = new List<Item>();
         EquippedItems = new Item[7];
@@ -101,7 +101,7 @@ public class Hero
         }
     }
 
-    public int Player
+    public int PlayerID
     {
         get
         {

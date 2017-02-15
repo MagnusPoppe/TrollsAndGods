@@ -8,7 +8,7 @@ namespace OverworldObjects
     public class Dwelling : OverworldBuilding{
 
         Town town;
-        Player owner;
+        int owner;
         Unit unitType;
         int unitsPresent;
         int unitsPerWeek;
@@ -65,7 +65,7 @@ namespace OverworldObjects
             }
         }
 
-        public Player Owner
+        public int Owner
         {
             get
             {
