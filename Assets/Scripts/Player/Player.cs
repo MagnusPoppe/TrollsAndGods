@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using OverworldObjects;
 
 /// <summary>
 /// Player class that holds everything corresponding to the players values and actions.
@@ -9,12 +10,12 @@ public class Player
 {
     private Resources resources;
     private Hero[] heroes;
-    private List<Town.Town> towns;
+    private List<Town> towns;
     private int playerID;
     private bool[,] fogOfWar;
     private const int MAXHEROES = 8;
     private List<ResourceBuilding> resourceBuildings;
-    private List<Buildings.Dwelling> dwellingsOwned;
+    private List<Dwelling> dwellingsOwned;
 
     /// <summary>
     /// Constructor that creates a new hero for the player, prepares fog of war, resources and towns
@@ -25,10 +26,10 @@ public class Player
     {
         Resources = new Resources(difficulty);
         Heroes = new Hero[MAXHEROES];
-        Towns = new List<Town.Town>();
+        Towns = new List<Town>();
         this.Color = color;
         FogOfWar = new bool[32, 32]; // todo, link to map objects x y size
-        DwellingsOwned = new List<Buildings.Dwelling>();
+        DwellingsOwned = new List<Dwelling>();
     }
 
     public Hero[] Heroes
@@ -44,7 +45,7 @@ public class Player
         }
     }
 
-    public List<Town.Town> Towns
+    public List<Town> Towns
     {
         get
         {
@@ -109,7 +110,7 @@ public class Player
         }
     }
 
-    public List<Buildings.Dwelling> DwellingsOwned
+    public List<Dwelling> DwellingsOwned
     {
         get
         {

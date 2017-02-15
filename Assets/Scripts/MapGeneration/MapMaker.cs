@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using OverworldObjects;
-using Buildings;
 using Filter;
 
 namespace MapGenerator
@@ -93,7 +92,7 @@ namespace MapGenerator
 
 		}
 
-        private void AddReaction(int x, int y, Buildings.OverworldBuilding building)
+        private void AddReaction(int x, int y, OverworldBuilding building)
         {
             building.makeReaction(x, y);
             reactions[x, y] = building.Reaction;
@@ -103,7 +102,7 @@ namespace MapGenerator
 		{
 			r.createEconomy(canWalk, new Economy(Economy.POOR));
 
-			foreach (Buildings.OverworldBuilding building in r.GetBuildings())
+			foreach (OverworldBuilding building in r.GetBuildings())
 			{
 				int x = (int)building.Origo.x;
 				int y = (int)building.Origo.y;

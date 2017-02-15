@@ -1,20 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using Town;
 using UnityEngine;
 
-namespace Buildings
+namespace OverworldObjects
 {
 
     public class Dwelling : OverworldBuilding{
 
-        Town.Town town;
+        Town town;
         Player owner;
         Unit unitType;
         int unitsPresent;
         int unitsPerWeek;
 
-        public Town.Town Town
+        public Town Town
         {
             get
             {
@@ -79,7 +78,7 @@ namespace Buildings
             }
         }
 
-        public Dwelling(Vector2 origo, int shape, int owner, int spriteID, Town.Town town, Unit unitType, int unitsPresent, int unitsPerWeek) : base(origo, shape, owner, spriteID)
+        public Dwelling(Vector2 origo, int shape, int owner, int spriteID, Town town, Unit unitType, int unitsPresent, int unitsPerWeek) : base(origo, shape, owner, spriteID)
         {
             Town = town;
             UnitType = UnitType;

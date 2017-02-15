@@ -1,113 +1,111 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using OverworldObjects;
 
-namespace Town
+/// <summary>
+/// Town class for the players towns. Creates the tree of builings, and holds 
+/// the purchase variable that is flipped every time you buy something, and for every new day.
+/// </summary>
+public class Town
 {
+    private bool hasBuiltThisRound;
+    private Building[] buildings;
+    private List<Dwelling> relatedDwellings;
+    private Hero stationedHero;
+    private Hero visitingHero;
+    private UnitTree unitTree;
+    int playerID;
+
     /// <summary>
-    /// Town class for the players towns. Creates the tree of builings, and holds 
-    /// the purchase variable that is flipped every time you buy something, and for every new day.
+    /// Constructor that builds the buildingtree with corresponding town according to townId variable
     /// </summary>
-    public class Town
+    /// <param name="townId">which town shall be built</param>
+    public Town(int townId, Building[] buildings, int playerID)
     {
-        private bool hasBuiltThisRound;
-        private Building[] buildings;
-        private List<Buildings.Dwelling> relatedDwellings;
-        private Hero stationedHero;
-        private Hero visitingHero;
-        private UnitTree unitTree;
-        Player player;
-
-        /// <summary>
-        /// Constructor that builds the buildingtree with corresponding town according to townId variable
-        /// </summary>
-        /// <param name="townId">which town shall be built</param>
-        public Town(int townId, Building[] buildings, Player player)
+        this.buildings = buildings;
+        unitTree = new UnitTree();
+        RelatedDwellings = new List<Dwelling>();
+        PlayerID = playerID;
+    }
+    public bool canBuild(Building b)
+    {
+        for (int i = 0; i < buildings.Length; i++)
         {
-            this.buildings = buildings;
-            unitTree = new UnitTree();
-            RelatedDwellings = new List<Buildings.Dwelling>();
-            Player = player;
+            if (b.GetRequirements()[i] && !buildings[i].IsBuilt())
+                return false;
         }
-        public bool canBuild(Building b)
-        {
-            for (int i = 0; i < buildings.Length; i++)
-            {
-                if (b.GetRequirements()[i] && !buildings[i].IsBuilt())
-                    return false;
-            }
-            return true;
-        }
+        return true;
+    }
 
-        public void Build(Building b)
+    public void Build(Building b)
+    {
+        b.SetBuilt(true);
+        hasBuiltThisRound = true;
+    }
+
+    public bool HasBuiltThisRound
+    {
+        get
         {
-            b.SetBuilt(true);
-            hasBuiltThisRound = true;
+            return hasBuiltThisRound;
         }
 
-        public bool HasBuiltThisRound
+        set
         {
-            get
-            {
-                return hasBuiltThisRound;
-            }
+            hasBuiltThisRound = value;
+        }
+    }
 
-            set
-            {
-                hasBuiltThisRound = value;
-            }
+    protected Hero StationedHero
+    {
+        get
+        {
+            return stationedHero;
         }
 
-        protected Hero StationedHero
+        set
         {
-            get
-            {
-                return stationedHero;
-            }
+            stationedHero = value;
+        }
+    }
 
-            set
-            {
-                stationedHero = value;
-            }
+    protected Hero VisitingHero
+    {
+        get
+        {
+            return visitingHero;
         }
 
-        protected Hero VisitingHero
+        set
         {
-            get
-            {
-                return visitingHero;
-            }
+            visitingHero = value;
+        }
+    }
 
-            set
-            {
-                visitingHero = value;
-            }
+    public int PlayerID
+    {
+        get
+        {
+            return playerID;
         }
 
-        public Player Player
+        set
         {
-            get
-            {
-                return player;
-            }
+            playerID = value;
+        }
+    }
 
-            set
-            {
-                player = value;
-            }
+    public List<Dwelling> RelatedDwellings
+    {
+        get
+        {
+            return relatedDwellings;
         }
 
-        public List<Buildings.Dwelling> RelatedDwellings
+        set
         {
-            get
-            {
-                return relatedDwellings;
-            }
-
-            set
-            {
-                relatedDwellings = value;
-            }
+            relatedDwellings = value;
         }
     }
 }
