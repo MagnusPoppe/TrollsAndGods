@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Governs what happens when two heroes meet.
+/// </summary>
 public class HeroMeetReact : Reaction {
 
     Hero hero;
@@ -25,6 +28,11 @@ public class HeroMeetReact : Reaction {
         Pos = pos;
     }
 
+    /// <summary>
+    /// If the heroes are friendly to each other, friendly meeting. Else fight.
+    /// </summary>
+    /// <param name="h">The hero that initiated the meeting</param>
+    /// <returns>Returns false if friendly meeting, else true</returns>
     public override bool React(Hero h)
     {
         if (hero.Player.Equals(h.Player))

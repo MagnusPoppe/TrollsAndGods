@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using OverworldObjects;
 
+/// <summary>
+/// governs what happens when you interact with a dwelling
+/// </summary>
 public class DwellingReact : Reaction {
 
     Dwelling dwelling;
@@ -26,6 +29,11 @@ public class DwellingReact : Reaction {
         }
     }
 
+    /// <summary>
+    /// If you don't own the dwelling, change owner. Hire units that are at dwelling.
+    /// </summary>
+    /// <param name="h">The hero interacting with the dwelling</param>
+    /// <returns>True if you do not own dwelling, else false.</returns>
     public override bool React(Hero h)
     {
         

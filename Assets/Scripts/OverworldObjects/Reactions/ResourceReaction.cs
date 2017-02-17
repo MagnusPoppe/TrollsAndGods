@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// governs what happens when interacting with a resource pickup
+/// </summary>
 public class ResourceReaction : Reaction
 {
 
@@ -42,6 +45,11 @@ public class ResourceReaction : Reaction
         Pos = pos;
     }
 
+    /// <summary>
+    /// Adds resource amount to player
+    /// </summary>
+    /// <param name="h">Hero interacting with resource</param>
+    /// <returns>returns true</returns>
     public override bool React(Hero h)
     {
         h.Player.Resources.adjustResource(resourceID, amount);

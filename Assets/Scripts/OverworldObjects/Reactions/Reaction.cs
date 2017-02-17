@@ -22,5 +22,10 @@ abstract public class Reaction {
         }
     }
 
+    /// <summary>
+    /// abstract method to handle what happens when you interact with object
+    /// </summary>
+    /// <param name="h">The hero that is interacting with the object</param>
+    /// <returns>returns true if graphic change, false if not</returns>
     abstract public bool React(Hero h);
 }

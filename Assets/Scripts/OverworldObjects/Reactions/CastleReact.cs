@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using OverworldObjects;
 
+/// <summary>
+/// Governs what happens when you interact with a castle/town
+/// </summary>
 public class CastleReact : Reaction {
 
     Castle castle;
@@ -26,6 +29,11 @@ public class CastleReact : Reaction {
         }
     }
 
+    /// <summary>
+    /// Hero either visits or attacks castle
+    /// </summary>
+    /// <param name="h">Hero interacting with castle</param>
+    /// <returns>returns false if visiting, true if attacking</returns>
     public override bool React(Hero h)
     {
         
@@ -41,13 +49,16 @@ public class CastleReact : Reaction {
         return true;
     }
 
+    /// <summary>
+    /// player clicked on a castle, opens town window if player owns it.
+    /// </summary>
+    /// <param name="player">Wich player clicked</param>
+    /// <returns>false, no graphical change</returns>
     public bool React(Player player)
     {
-        //todo check if player owns town
-        if (true)
+        if (player.Equals(castle.Player))
         {
             //todo open town window
-            return true;
         }
         return false;
     }

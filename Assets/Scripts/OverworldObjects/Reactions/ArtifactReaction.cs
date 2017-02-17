@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Governs what happens when you interact with an artifact pickup on the map
+/// </summary>
 public class ArtifactReaction : Reaction {
 
     Item artifact;
@@ -26,6 +29,11 @@ public class ArtifactReaction : Reaction {
         Pos = pos;
     }
 
+    /// <summary>
+    /// Adds artifact to hero inventory. Equips if room.
+    /// </summary>
+    /// <param name="h">Hero interacting with artifact</param>
+    /// <returns>returns true to signal graphical change</returns>
     public override bool React(Hero h) 
     {
         if (h.EquippedItems[artifact.SlotType] == null)

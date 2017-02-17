@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using OverworldObjects;
 
+/// <summary>
+/// Governs what happens when interacting with a resource generating building
+/// </summary>
 public class ResourceBuildingReaction : Reaction {
 
     ResourceBuilding resourceBuilding;
@@ -26,6 +29,11 @@ public class ResourceBuildingReaction : Reaction {
         }
     }
 
+    /// <summary>
+    /// Changes owner of building if you don't already own it
+    /// </summary>
+    /// <param name="h">The hero interacting with reaource building</param>
+    /// <returns>Returns true if owner changed, else false</returns>
     public override bool React(Hero h)
     {
         
