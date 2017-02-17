@@ -321,8 +321,9 @@ public class GameManager : MonoBehaviour
 	{
 		GameObject[,] objectsInBuildingLayer = new GameObject[width, height];
 		IngameObjectLibrary spriteLibrary = new IngameObjectLibrary();
-		// DRAWING THE MAP:
-		tiles = new GameObject[width, height];
+        
+        // DRAWING THE MAP:
+        tiles = new GameObject[width, height];
 		float iy = 0;
 		// Looping through all tile positions:
 		for (int y = 0; y < height; y++)
@@ -338,10 +339,10 @@ public class GameManager : MonoBehaviour
 				else
 					tiles[x, y].transform.position = new Vector2(x + 0.5f, iy / 2);
 
-				// Adding a sprite to the gameobject:
-				SpriteRenderer sr = tiles[x, y].AddComponent<SpriteRenderer>();
+                // Adding a sprite to the gameobject:
+                SpriteRenderer sr = tiles[x, y].AddComponent<SpriteRenderer>();
 
-				int spriteID = map[x, height - 1 - y];
+                int spriteID = map[x, height - 1 - y];
 
 
 				// If building
@@ -374,10 +375,22 @@ public class GameManager : MonoBehaviour
 					// TODO: Fjern castle fra verdi "2"
 					if (spriteID == 2)
 					{
-						// make "castle" into "building"
-						spriteID = 6;
-						sr.sortingLayerName = "Buildings";
-						sr.sprite = spriteLibrary.GetBuilding(spriteID);
+                        objectsInBuildingLayer[x, y] = new GameObject();
+                        objectsInBuildingLayer[x, y].name = "objectsInBuildingLayer (" + x + ", " + y + ")";
+                        if (y % 2 == 0)
+                            objectsInBuildingLayer[x, y].transform.position = new Vector2(x, iy / 2);
+                        else
+                            objectsInBuildingLayer[x, y].transform.position = new Vector2(x + 0.5f, iy / 2);
+
+                        // make "castle" into "building"
+                        SpriteRenderer oibl = objectsInBuildingLayer[x, y].AddComponent<SpriteRenderer>();
+
+                        sr.sortingLayerName = "Ground";
+                        sr.sprite = spriteLibrary.GetTile(4); // TODO: hardkdoet grass
+
+                        spriteID = 6;
+                        oibl.sortingLayerName = "Buildings";
+                        oibl.sprite = spriteLibrary.GetBuilding(spriteID);
 					}
 					else
 					{
@@ -402,5 +415,8 @@ public class GameManager : MonoBehaviour
 		
 	}
 
-	void placeBuilding
+	void placeBuilding()
+    {
+
+    }
 }

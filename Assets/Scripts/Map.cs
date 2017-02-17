@@ -42,8 +42,8 @@ namespace Overworld
 
         void Start()
 		{
-			width = widthXHeight;
-			height = widthXHeight;
+			//width = widthXHeight;
+			//height = widthXHeight;
 
 			mapmaker = new MapMaker(
 				width, height,	groundTiles.Length,				// Map Properites
