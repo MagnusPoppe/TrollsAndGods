@@ -48,17 +48,17 @@ public class GameManager : MonoBehaviour
     Date date;
 
     // Click listeners
+    const int CLICKSPEED = 20;
     bool prepareDoubleClick;
     int clickCount;
-    const int CLICKSPEED = 20;
-    private Vector2 savedClickedPos;
-    private Vector2 toPos;
+    Vector2 heroPos;
+    Vector2 savedClickedPos;
 
 
-    // Hero listeners and globals:
+    // Hero movement
     bool heroActive;
-    GameObject activeHeroObject;
     Hero activeHero;
+    GameObject activeHeroObject;
     GameObject pathDestYes;
     GameObject pathDestNo;
     GameObject pathYes;
@@ -96,6 +96,7 @@ public class GameManager : MonoBehaviour
             clickCount = 0;
             prepareDoubleClick = false;
         }
+        // Left click listener
         if (Input.GetMouseButtonDown(0))
         {
             // Fetch the point just clicked and adjust the position in the square to the corresponding isometric position
@@ -128,7 +129,7 @@ public class GameManager : MonoBehaviour
                     SetLastStep(true);
                 }
                 // Hero's own position is clicked
-                else if (savedClickedPos.Equals(posClicked))
+                else if (heroPos.Equals(posClicked))
                 {
                     // Todo, open hero menu
                 }
@@ -136,7 +137,7 @@ public class GameManager : MonoBehaviour
                 else if (canWalk[(int)posClicked.x, (int)posClicked.y] == MapMaker.CANWALK)
                 {
                     // Walk to pointer if marked square is clicked by enabling variables that triggers moveHero method on update
-                    if (pathMarked && posClicked.Equals(toPos))
+                    if (pathMarked && posClicked.Equals(savedClickedPos))
                     {
                         SetWalking(true);
                     }
@@ -147,6 +148,7 @@ public class GameManager : MonoBehaviour
                     }
                 }
             }
+            // activate hero that you clicked on (check after pathing test, to also allow you to walk to that hero)
             else if (reactions[x, y] != null && reactions[x, y].GetType().Name.Equals(typeof(HeroMeetReact)))
             {
                 HeroMeetReact heroClicked = (HeroMeetReact)reactions[x, y];
@@ -159,24 +161,26 @@ public class GameManager : MonoBehaviour
                 }
             }
 
-            // TODO else if(clickedOnControlledHero) activate gameobject hero that you clicked on
-
-            // TODO else if clicked on your town, open town layout UI
-
-            // else if(nextTurnClicked) TODO clicked on UI and "next round"
-            else if(false)
+            // TODO else if(GUInextTurnClicked)
+            else if (false)
             {
+                date.incrementDay();
                 if (++whoseTurn > amountOfPlayers)
                     whoseTurn = 0;
                 activeHero = getPlayer(whoseTurn).Heroes[0];
+                // TODO getPlayer(whoseTurn).updateResources();
             }
         }
+        // TODO right mousebutton clicked
         else if (Input.GetMouseButtonDown(1))
         {
-            // TODO what happens when you right click things
+            if (IsWalking())
+            {
+                SetLastStep(true);
+            }
             Debug.Log("Rightclick");
         }
-        // Upon every update, active hero will be moved in a direction if walking is enabled
+        // Upon every update, activedhero will be moved in a direction if walking is enabled
         if (IsWalking())
         {
             Vector2 newPos = PrepareMovement();
@@ -191,9 +195,9 @@ public class GameManager : MonoBehaviour
                 if (IsLastStep())
                 {
                     // Set hero position when he stops walking to his isometric position
-                    savedClickedPos = HandyMethods.getIsoTilePos(activeHeroObject.transform.position);
-                    int x = (int)savedClickedPos.x;
-                    int y = (int)savedClickedPos.y;
+                    heroPos = HandyMethods.getIsoTilePos(activeHeroObject.transform.position);
+                    int x = (int)heroPos.x;
+                    int y = (int)heroPos.y;
                     SetWalking(false);
                     SetPathMarked(false);
                     RemoveMarkers(pathObjects);
@@ -234,7 +238,7 @@ public class GameManager : MonoBehaviour
             // Execute the movement
             activeHeroObject.transform.position = newPos;
         }
-        //Nothing is clicked and hero is not walking, change mouse hover
+        //Nothing is clicked and hero is not walking, listener for change mouse hover
         else
         {
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -276,11 +280,11 @@ public class GameManager : MonoBehaviour
         stepNumber = 0;
         SetPathMarked(true);
         SetLastStep(false);
-        toPos = pos;
+        savedClickedPos = pos;
         // Needs to clear existing objects if an earlier path was already made
         RemoveMarkers(pathObjects);
         // Call algorithm method that returns a list of Vector2 positions to the point, go through all objects
-        List<Vector2> positions = aStar.calculate(savedClickedPos, pos);
+        List<Vector2> positions = aStar.calculate(heroPos, pos);
         // Calculate how many steps the hero will move, if this path is chosen
         int i = activeHero.CurMovementSpeed = Math.Min(positions.Count, activeHero.MovementSpeed);
         // For each position, create a gameobject with an image and instantiate it, and add it to a gameobject list for later to be removed
