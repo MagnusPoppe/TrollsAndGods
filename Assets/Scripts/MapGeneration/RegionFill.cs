@@ -11,7 +11,7 @@ namespace MapGenerator
         int[,] map;
 		Region[] regions;
 		int regionindex;
-
+        public const int DEFAULT_LABEL_START = 3;
 		/// <summary>
 		/// Takes the voronoi generated map and fills in the regions based
 		/// on random colors.
@@ -29,8 +29,8 @@ namespace MapGenerator
 			regions = new Region[seeds.Length];
 			regionindex = 0;
 
-			int label = MapMaker.DIRT;
-			for (int i = 0; i < seeds.Length; i++)
+            int label = DEFAULT_LABEL_START;
+            for (int i = 0; i < seeds.Length; i++)
 			{
 				if (map[(int)seeds[i].x,(int)seeds[i].y] == 0) //UNMARKED
                 {
@@ -56,7 +56,7 @@ namespace MapGenerator
 			regions = new Region[castles.Length];
 			regionindex = 0;
 
-			int label = 3;
+			int label = DEFAULT_LABEL_START;
 			for (int i = 0; i < castles.Length; i++)
 			{
 				FloodFill(castles[i].GetPosition(), label++);
@@ -112,7 +112,7 @@ namespace MapGenerator
 				if (x >= 0 && x < width && y >= 0 && y < height)
 				{
 					// Checking if  ground or castle
-					if (map[x, y] == MapMaker.GROUND || map[x, y] == MapMaker.CASTLE)
+					if (map[x, y] == MapMaker.GROUND || map[x, y] == MapMaker.REGION_CENTER)
 					{
 						// Labeling:
 						map[x, y] = label;

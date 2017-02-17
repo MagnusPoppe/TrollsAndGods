@@ -14,7 +14,7 @@ namespace MapGenerator
 		Economy economy;
 
 		TileRating[] coordinateValue;
-		Vector2[] coordinates;
+		List<Vector2> coordinates;
 		Castle castle;
 
 		/// <summary>
@@ -26,30 +26,22 @@ namespace MapGenerator
 		public Region( List<Vector2> coordinateList, Vector2 regionCenter )
 		{
             castle = new UnknownCastle(regionCenter, null); // TODO: Set player dynamically 
-
-            coordinates = new Vector2[coordinateList.Count];
-			int i = 0;
-			foreach (Vector2 c in coordinateList)
-				coordinates[i++] = c;
-				
-			buildings = new List<OverworldBuilding>();
+            coordinates = coordinateList;
+            buildings = new List<OverworldBuilding>();
 		}
 
-		/// <summary>
-		/// Defines a region by a set of coordinates and its center position.
-		/// Initializes a new instance of the <see cref="T:MapGenerator.Region"/> class.
-		/// </summary>
-		/// <param name="area">Area.</param>
-		/// <param name="regionCenter">Castle position.</param>
-		public Region( Vector2[] area, Vector2 regionCenter)
-		{
-			castle = new UnknownCastle(regionCenter , null);
-			coordinates = area;
-		}
+        public List<Vector2> GetCoordinates()
+        {
+            return coordinates;
+        }
 
-		public Vector2[] GetCoordinates()
+		public Vector2[] GetCoordinatesArray()
 		{
-			return coordinates;
+            int i = 0;
+            Vector2[] temp = new Vector2[coordinates.Count];
+            foreach (Vector2 c in coordinates)
+                coordinates[i++] = c;
+            return temp;
 		}
 
 		/// <summary>
@@ -58,7 +50,7 @@ namespace MapGenerator
 		/// <returns>The area.</returns>
 		public int GetArea()
 		{
-			return coordinates.Length;
+			return coordinates.Count;
 		}
 
 		/// <summary>
@@ -109,21 +101,51 @@ namespace MapGenerator
 		{
 			foreach (Vector2 v in coordinates)
 			{
-				if ( map[(int)v.x, (int)v.y] >= MapMaker.DIRT
-				   || map[(int)v.x, (int)v.y] == MapMaker.GROUND)
+				if ( map[(int)v.x, (int)v.y] >= RegionFill.DEFAULT_LABEL_START
+                   || map[(int)v.x, (int)v.y] == MapMaker.GROUND)
 					map[(int)v.x, (int)v.y] = MapMaker.GROUND;
 			}
 			return map;
-		}
+		} 
 
-		/// <summary>
-		/// Sets all ground tiles to a given type of tile.
-		/// Definition of groundtile is found in MapMaker.GROUND
-		/// </summary>
-		/// <returns>The region ground tile type.</returns>
-		/// <param name="groundTile">Ground tile.</param>
-		/// <param name="map">Map.</param>
-		public int[,] SetRegionGroundTileType(int groundTile, int[,] map)
+        public int[,] createEnvironment(int[,] map) 
+        {
+            foreach(Vector2 v in coordinates)
+            {
+                int x = (int)v.x;
+                int y = (int)v.y;
+                if (map[x, y] == MapMaker.GROUND) map[x, y] = castle.GetEnvironment();
+            }
+
+            return map;
+        }
+
+        public bool isPointInRegion(Vector2 point)
+        {
+            foreach (Vector2 p in coordinates)
+            {
+                if (p.x == point.x && p.y == point.y)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public void AddToRegion(Vector2 pkt)
+        {
+            coordinates.Add(pkt);
+        }
+
+
+        /// <summary>
+        /// Sets all ground tiles to a given type of tile.
+        /// Definition of groundtile is found in MapMaker.GROUND
+        /// </summary>
+        /// <returns>The region ground tile type.</returns>
+        /// <param name="groundTile">Ground tile.</param>
+        /// <param name="map">Map.</param>
+        public int[,] SetRegionGroundTileType(int groundTile, int[,] map)
 		{
 			foreach (Vector2 v in coordinates)
 			{
@@ -198,27 +220,22 @@ namespace MapGenerator
 		/// <param name="map">Map.</param>
 		public void FillRegionWithWater(int[,] map)
 		{
-			for (int i = 0; i < coordinates.Length; i++)
+			foreach( Vector2 pkt in coordinates)
 			{
-				int x = (int)coordinates[i].x;
-				int y = (int)coordinates[i].y;
+				int x = (int)pkt.x;
+				int y = (int)pkt.y;
 
 				if (map[x, y] == MapMaker.GROUND)
 				{
-					map[x, y] = MapMaker.WATER;
+					map[x, y] = MapMaker.WATER_SPRITEID;
 				}
-				else if (map[x, y] == MapMaker.CASTLE)
+				else if (map[x, y] == MapMaker.REGION_CENTER)
 				{
-					map[x, y] = MapMaker.WATER;
+					map[x, y] = MapMaker.WATER_SPRITEID;
 				}
-				else if (map[x, y] == MapMaker.BUILDING)
+				else if (map[x, y] == MapMaker.WALL)
 				{
-					map[x, y] = MapMaker.WATER;
-				}
-
-				else if (map[x, y] == MapMaker.WOODS)
-				{
-					map[x, y] = MapMaker.GROUND;
+					map[x, y] = MapMaker.GRASS_SPRITEID;
 				}
 			}
 		}

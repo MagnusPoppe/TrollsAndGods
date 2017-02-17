@@ -8,7 +8,8 @@ namespace OverworldObjects
 	{
         private int shapeType;
         private Player player;
-        private int spriteID;
+        private int localSpriteID;
+        private IngameObjectLibrary.Category spriteCategory;
         private Reaction reaction;
 
         public int ShapeType
@@ -37,16 +38,16 @@ namespace OverworldObjects
             }
         }
 
-        public int SpriteID
+        public int LocalSpriteID
         {
             get
             {
-                return spriteID;
+                return localSpriteID;
             }
 
             set
             {
-                spriteID = value;
+                localSpriteID = value;
             }
         }
 
@@ -63,19 +64,34 @@ namespace OverworldObjects
             }
         }
 
-        public OverworldBuilding(int shape, Player owner, int spriteID)
+        public IngameObjectLibrary.Category SpriteCategory
+        {
+            get
+            {
+                return spriteCategory;
+            }
+
+            set
+            {
+                spriteCategory = value;
+            }
+        }
+
+        public OverworldBuilding(int shape, Player owner, int spriteID, IngameObjectLibrary.Category spriteCategory)
 			: base()
 		{
 			ShapeType = shape;
 			Player = owner;
-			SpriteID = spriteID;
+			LocalSpriteID = spriteID;
+            SpriteCategory = spriteCategory;
 		}
-        public OverworldBuilding(Vector2 origo, int shape, Player owner, int spriteID)
+        public OverworldBuilding(Vector2 origo, int shape, Player owner, int spriteID, IngameObjectLibrary.Category spriteCategory)
             : base(origo)
         {
             ShapeType = shape;
             Player = owner;
-            SpriteID = spriteID;
+            LocalSpriteID = spriteID;
+            SpriteCategory = spriteCategory;
         }
 
         public void FlipCanWalk( int[,] canWalk )
@@ -98,7 +114,12 @@ namespace OverworldObjects
 			}
             canWalk[x,y] = MapGenerator.MapMaker.TRIGGER;
         }
-        
+
+        public int GetSpriteID()
+        {
+            return LocalSpriteID + IngameObjectLibrary.GetOffset(SpriteCategory);
+        }
+
         public virtual void makeReaction(int x,int y)
         {
             //implemented in subclasses

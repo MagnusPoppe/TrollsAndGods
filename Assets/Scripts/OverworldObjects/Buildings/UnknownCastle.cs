@@ -6,19 +6,19 @@ namespace OverworldObjects
 {
     class UnknownCastle : Castle
     {
-
         const int shape = Shapes.QUAD02x2;
-        const int spriteID = MapGenerator.MapMaker.CASTLE;
-        const int environmentTileType = MapGenerator.MapMaker.GROUND;
+        const int environmentTileType = MapGenerator.MapMaker.GRASS_SPRITEID;
+        private const int LOCAL_SPRITE_ID = 0;
+        const IngameObjectLibrary.Category SPRITE_CATEGORY = IngameObjectLibrary.Category.Castle;
 
         public UnknownCastle(Vector2 origo, Player owner ) 
-            : base(origo, shape, owner, spriteID, environmentTileType)
+            : base(origo, shape, owner, LOCAL_SPRITE_ID, SPRITE_CATEGORY, environmentTileType)
         {
 			EnvironmentTileType = MapGenerator.MapMaker.GROUND;
         }
 
         public UnknownCastle( Player owner ) 
-            : base( shape, owner, spriteID)
+            : base( shape, owner, LOCAL_SPRITE_ID, SPRITE_CATEGORY)
         {
         }
     }

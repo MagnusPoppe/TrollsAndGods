@@ -35,42 +35,78 @@ public class IngameObjectLibrary
  //   const int NORTHWEST_EDGE = 7;
 
 
-    // Variabler for Sprites av typen Tile
-    // TILE_START er første spriteID for en Tile 
-    // som blir regnet fra spriteID i global system til 0 i sitt eget system
-    // TOTAL_TILE_COUNT er totalt antall Tile sprites
-	Sprite[] tiles;					
-	const int TILE_START = 3;
-	const int TOTAL_TILE_COUNT = 3;
+    // ground
+	Sprite[] ground;					
+	const int GROUND_START = 3;
+	const int TOTAL_GROUND_COUNT = 3;
 
-    // Variabler for Sprites av typen Tile
-    // BUILDING_OVERWORLD_START er første spriteID for en Bygning
-    // som blir regnet fra spriteID i global system til 0 i sitt eget system
-    // TOTAL_BUILDING_OVERWORLD_COUNT er totalt antall Tile sprites
+    // overworld buildings TODO: gjør mindre generell
     Sprite[] buildings_overworld;
-    const int BUILDING_OVERWORLD_START = TILE_START + TOTAL_TILE_COUNT;
-	const int TOTAL_BUILDING_OVERWORLD_COUNT = 2;
+    const int BUILDING_OVERWORLD_START = GROUND_START + TOTAL_GROUND_COUNT;
+	const int TOTAL_BUILDING_OVERWORLD_COUNT = 1;
 
+    // heroes
     Sprite[] heroes;
     const int HEROES_START = BUILDING_OVERWORLD_START + TOTAL_BUILDING_OVERWORLD_COUNT;
     const int TOTAL_HEROES_COUNT = 1;
 
+    // castles
+    Sprite[] castles;
+    const int CASTLES_START = HEROES_START + TOTAL_HEROES_COUNT;
+    const int TOTAL_CASTLES_COUNT = 1;
 
-	Sprite[] buildings_town;
+
+    Sprite[] buildings_town;
 				
     // Initialiserer alle sprites når et objekt blir laget
     public IngameObjectLibrary()
     {
-		tiles = InitializeTiles();
+		ground = InitializeTiles();
 		buildings_overworld = InitializeBuildings();
         heroes = InitializeHeroes();
 	}
 
-    // Initialiserer alles tile Sprites, nye legges inn manuekt
+    public enum Category
+    {
+        Ground, ResourceBuilding, Dwelling, Heroes, Castle
+    }
+
+    public static int GetOffset( Category category )
+    {
+        if (category == Category.Ground)
+            return GROUND_START;
+
+        else if (category == Category.ResourceBuilding)
+            return BUILDING_OVERWORLD_START;
+
+        else if (category == Category.Dwelling)
+            return BUILDING_OVERWORLD_START;
+
+        else if (category == Category.Heroes)
+            return HEROES_START;
+
+        else // CASTLE
+            return BUILDING_OVERWORLD_START;
+    }
+
+    public Category GetCategory(int spriteID)
+    {
+        if (spriteID < BUILDING_OVERWORLD_START)
+        {
+            return Category.Ground;
+        }
+        else if (spriteID < HEROES_START)
+        {
+            return Category.ResourceBuilding;
+        }
+        else return Category.Castle;
+    }
+
+    // Initialiserer alles tile Sprites, nye legges inn manuelt
 	private Sprite[] InitializeTiles()
 	{
-		Sprite[] sprites = new Sprite[TOTAL_TILE_COUNT];
-		String path = "Sprites/Tiles/";
+		Sprite[] sprites = new Sprite[TOTAL_GROUND_COUNT];
+		String path = "Sprites/Ground/";
         sprites[0] = UnityEngine.Resources.Load<Sprite>(path + "Water/Water");
         sprites[1] = UnityEngine.Resources.Load<Sprite>(path + "Grass/Grass");
 		sprites[2] = UnityEngine.Resources.Load<Sprite>(path + "Placeholder/Forest");
@@ -83,8 +119,7 @@ public class IngameObjectLibrary
     {
         Sprite[] sprites = new Sprite[TOTAL_BUILDING_OVERWORLD_COUNT];
         String path = "Sprites/Buildings/";
-        sprites[0] = UnityEngine.Resources.Load<Sprite>(path + "Castle/Castle");
-        sprites[1] = UnityEngine.Resources.Load<Sprite>(path + "Resource/Ore Smelters Camp");
+        sprites[0] = UnityEngine.Resources.Load<Sprite>(path + "Resource/Ore Smelters Camp");
         return sprites;
     }
 
@@ -95,14 +130,22 @@ public class IngameObjectLibrary
         sprites[0] = UnityEngine.Resources.Load<Sprite>(path + "hero1");
         sprites[0] = UnityEngine.Resources.Load<Sprite>(path + "hero2");
 
-
         return sprites;
     } 
 
-    // Regner fra global spriteID til lokal spriteID
-    public Sprite GetTile(int spriteID)
+    private Sprite[] InitializeCastles()
     {
-        return tiles[spriteID - TILE_START];
+        Sprite[] sprites = new Sprite[TOTAL_CASTLES_COUNT];
+        String path = "Sprites/Buildings/Castle/";
+        sprites[0] = UnityEngine.Resources.Load<Sprite>(path + "Castle");
+
+        return sprites;
+    }
+
+    // Regner fra global spriteID til lokal spriteID
+    public Sprite GetGround(int spriteID)
+    {
+        return ground[spriteID - GROUND_START];
     }
 
     // Regner fra global spriteID til lokal spriteID
@@ -110,5 +153,10 @@ public class IngameObjectLibrary
 	{
 		return buildings_overworld[spriteID-BUILDING_OVERWORLD_START];
 	}
+
+    public Sprite GetCastle(int spriteID)
+    {
+        return castles[spriteID - CASTLES_START];
+    }
 }
  

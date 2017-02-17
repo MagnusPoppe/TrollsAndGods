@@ -121,7 +121,7 @@ namespace Overworld
 
                         // Sets ground sprite based on castle 
                         sr.sortingLayerName = "Ground";
-                        sr.sprite = spriteLibrary.GetTile(4); // Hardkodet gress, bytt til getcasle environment
+                        sr.sprite = spriteLibrary.GetGround(4); // Hardkodet gress, bytt til getcasle environment
                     }
 
                     //else if (spriteID == MapMaker.CASTLE)
@@ -171,7 +171,7 @@ namespace Overworld
 
                             sr.sortingLayerName = "Ground";
                             //sr.sprite = groundTiles[spriteID];            // gammel metode
-                            sr.sprite = spriteLibrary.GetTile(spriteID);    // ny metode
+                            sr.sprite = spriteLibrary.GetGround(spriteID);    // ny metode
                         }
 					}
 
