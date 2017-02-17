@@ -7,41 +7,28 @@ using UnityEngine;
 /// </summary>
 public class UnitReaction : Reaction {
 
-    Unit unit;
-    int amount;
+    UnitTree units;
 
-    public UnitReaction(Unit unit, int amount, Vector2 pos)
+    public UnitReaction(UnitTree units, Vector2 pos)
     {
-        Unit = unit;
-        Amount = amount;
+        Units = units;
         Pos = pos;
     }
 
-    public Unit Unit
+    public UnitTree Units
     {
         get
         {
-            return unit;
+            return units;
         }
 
         set
         {
-            unit = value;
+            units = value;
         }
     }
 
-    public int Amount
-    {
-        get
-        {
-            return amount;
-        }
 
-        set
-        {
-            amount = value;
-        }
-    }
 
     /// <summary>
     /// unit either flees, joins hero or fights.
