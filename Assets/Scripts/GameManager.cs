@@ -4,17 +4,52 @@ using System;
 using Overworld;
 using MapGenerator;
 
-public class GameManager : MonoBehaviour {
+public class GameManager : MonoBehaviour 
+{
 
-    Map m;
-    int[,] canWalk;
+	public MapMaker mapmaker;
+	public int widthXHeight = 128;
+	int width, height;
+
+	// Unity map objects
+	public const float XRESOLUTION = 2598;
+	public const float YRESOLUTION = 1299;
+	public const float YOFFSET = YRESOLUTION / XRESOLUTION;
+
+	public string seed = "Angelica";
+	[Range(0, 100)]
+	public int fillpercentWalkable = 57;
+
+	// VORONOI varables:
+	[Range(0, 50)]
+	public int sites = 8;
+	[Range(1, 20)]
+	public int relaxIterations = 3;
+	[Range(0, 20)]
+	public int smoothIterations = 5;
+
+
+
+	public Sprite[] groundTiles;
+
+
+
+	// Map Globals:
+	int[,] canWalk;
+	[Range(0, 20)] int buildingCount;
+	Reaction[,] reactions;
+	AStarAlgo aStar;
+	GameObject[,] tiles;
+
+
+	// GameManager
     public int amountOfPlayers;
     Player[] players;
     int whoseTurn;
     Date date;
-    Reaction[,] reactions;
-    AStarAlgo aStar;
 
+
+	// Hero listeners and globals:
     bool heroActive;
     GameObject activeHeroObject;
     Hero activeHero;
@@ -31,13 +66,16 @@ public class GameManager : MonoBehaviour {
     bool walking;
     bool lastStep;
 
+
     // Use this for initialization
     void Start ()
     {
+		// CREATING THE MAP USING MAPMAKER
+		GenerateMap();
+
+
         activeHeroObject = new GameObject(); // TODO set player1's starthero to activeHero
-        NewTestHero(); // TEST active hero
-        m = new Map();
-        canWalk = m.mapmaker.GetCanWalkMap();
+        
         players = new Player[amountOfPlayers];
         whoseTurn = 0;
         date = new Date();
@@ -46,15 +84,6 @@ public class GameManager : MonoBehaviour {
         aStar = new AStarAlgo(canWalk, m.GetWidthOfMap(), m.GetHeightOfMap(), false);
     }
 
-    void NewTestHero()
-    {
-        activeHeroObject.transform.position = new Vector2(5, 5);
-        Sprite sp = UnityEngine.Resources.Load<Sprite>("Sprites/Buildings/Castle");
-        SpriteRenderer spr = activeHeroObject.AddComponent<SpriteRenderer>();
-        spr.sprite = sp;
-        Instantiate(activeHeroObject);
-    }
-	
 	// Update is called once per frame
 	void Update ()
     {
@@ -241,5 +270,29 @@ public class GameManager : MonoBehaviour {
         return players[index];
     }
 
+	/// <summary>
+	/// Generates the map. This replaces the "map.cs" file.
+	/// </summary>
+	private void GenerateMap()
+	{
+		width = widthXHeight;
+		height = widthXHeight;
 
+		mapmaker = new MapMaker(
+			width, height, groundTiles.Length,              // Map Properites
+			seed, fillpercentWalkable, smoothIterations,    // BinaryMap Properities
+			sites, relaxIterations,                         // Voronoi Properties
+			buildingCount
+		);
+
+		//DrawMap(mapmaker.GetMap());
+
+		// SETTING GLOBALS:
+		Region[] regions = mapmaker.GetRegions();
+		canWalk = mapmaker.GetCanWalkMap();
+
+
+		// Kaster mapmaker
+		mapmaker = null;
+	}
 }

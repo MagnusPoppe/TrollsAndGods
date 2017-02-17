@@ -2,12 +2,11 @@
 using UnityEngine;
 using MapGenerator;
 using OverworldObjects;
-using System.Collections.Generic;
 
 namespace Overworld
 {
     
-    public class Map : MonoBehaviour
+	public class Map : MonoBehaviour
 	{
         public MapMaker mapmaker;
 		public int widthXHeight = 128;
@@ -34,12 +33,12 @@ namespace Overworld
 
 		public Sprite[] groundTiles;
 
-        public GameObject[] heroPrefabs;
+        //public GameObject[] heroPrefabs;
 
-        void Awake()
-        {
-            heroPrefabs = UnityEngine.Resources.LoadAll<GameObject>("Heroes");
-        }
+        //void Awake()
+        //{
+        //    heroPrefabs = UnityEngine.Resources.LoadAll<GameObject>("Heroes");
+        //}
 
         void Start()
 		{
@@ -64,14 +63,14 @@ namespace Overworld
 
 		}
 
-		void SpawnHero(int[,] map, Castle castle)
-		{
-			Vector2 castlePos = castle.GetPosition();
-			Vector2 heroPos = new Vector2((int)castlePos.x + 1, (int)castlePos.y/2 - 2);
-			GameObject hero = heroPrefabs[UnityEngine.Random.Range(0, 2)];
-            hero.transform.position = heroPos;
-            Instantiate(hero);
-        }
+		//void SpawnHero(int[,] map, Castle castle)
+		//{
+		//	Vector2 castlePos = castle.GetPosition();
+		//	Vector2 heroPos = new Vector2((int)castlePos.x + 1, (int)castlePos.y/2 - 2);
+		//	GameObject hero = heroPrefabs[UnityEngine.Random.Range(0, 2)];
+  //          hero.transform.position = heroPos;
+  //          GameObject.Instantiate(hero);
+  //      }
 
 		/// <summary>
 		/// Draws a given map.
@@ -175,15 +174,8 @@ namespace Overworld
                     }
 
 
-                    // Placing the tile on on the map within the board gameobject:
-                    tiles[x, y].transform.parent = this.transform;
-                    //iy += 0.576f;
-                    if (x == 5 && y == 5)
-                    {
-                        GameObject hero = heroPrefabs[UnityEngine.Random.Range(0, 2)];
-                        hero.transform.position = new Vector2(x + 0.5f, y / 2 + 0.5f);
-                        Instantiate(hero);
-                    }
+					// Placing the tile on on the map within the board gameobject:
+					tiles[x, y].transform.parent = this.transform;
                 }
                 iy += YOFFSET; // 0.57747603833865814696485623003195f;
             }
