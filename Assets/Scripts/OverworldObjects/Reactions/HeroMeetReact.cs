@@ -35,7 +35,7 @@ public class HeroMeetReact : Reaction {
     /// <returns>Returns false if friendly meeting, else true</returns>
     public override bool React(Hero h)
     {
-        if (hero.Player.Equals(h.Player))
+        if (hero.Player.equals(h.Player))
         {
             //TODO friendly meeting
             return false;

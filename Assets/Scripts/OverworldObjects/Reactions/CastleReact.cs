@@ -56,7 +56,7 @@ public class CastleReact : Reaction {
     /// <returns>false, no graphical change</returns>
     public bool React(Player player)
     {
-        if (player.Equals(castle.Player))
+        if (player.equals(castle.Player))
         {
             //todo open town window
         }

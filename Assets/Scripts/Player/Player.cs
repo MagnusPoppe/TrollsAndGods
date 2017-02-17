@@ -32,6 +32,33 @@ public class Player
         DwellingsOwned = new List<Dwelling>();
     }
 
+    // override object.Equals
+    public bool equals(Player player)
+    {
+        //       
+        // See the full list of guidelines at
+        //   http://go.microsoft.com/fwlink/?LinkID=85237  
+        // and also the guidance for operator== at
+        //   http://go.microsoft.com/fwlink/?LinkId=85238
+        //
+
+        if (player == null || GetType() != player.GetType())
+        {
+            return false;
+        }
+
+        // TODO: write your implementation of Equals() here
+        return playerID == player.PlayerID;    
+    }
+
+    // override object.GetHashCode
+    public override int GetHashCode()
+    {
+        // TODO: write your implementation of GetHashCode() here
+        throw new System.NotImplementedException();
+        return base.GetHashCode();
+    }
+
     public Hero[] Heroes
     {
         get

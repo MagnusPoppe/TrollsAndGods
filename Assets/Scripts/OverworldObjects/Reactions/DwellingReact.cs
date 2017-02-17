@@ -37,7 +37,7 @@ public class DwellingReact : Reaction {
     public override bool React(Hero h)
     {
         
-        if (!dwelling.Owner.Equals(h.Player))
+        if (!dwelling.Owner.equals(h.Player))
         {
             if (dwelling.Owner != null) dwelling.Owner.DwellingsOwned.Remove(dwelling);
             dwelling.Owner = h.Player;
