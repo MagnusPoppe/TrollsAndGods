@@ -168,7 +168,7 @@ public class GameManager : MonoBehaviour
                 if (++whoseTurn > amountOfPlayers)
                     whoseTurn = 0;
                 activeHero = getPlayer(whoseTurn).Heroes[0];
-                // TODO getPlayer(whoseTurn).updateResources();
+                getPlayer(whoseTurn).GatherIncome();
             }
         }
         // TODO right mousebutton clicked
