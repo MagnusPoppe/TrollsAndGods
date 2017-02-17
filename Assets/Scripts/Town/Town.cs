@@ -54,7 +54,7 @@ public class Town
                 int extra = 0;
                 foreach (Dwelling d in relatedDwellings)
                 {
-                    if (d.UnitType.equals(b.ProducedUnit))
+                    if (d.UnitType.equals(b.ProducedUnit) && d.Owner.equals(owner))
                     {
                         extra += d.UnitsPerWeek;
                     }
