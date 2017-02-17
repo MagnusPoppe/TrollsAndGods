@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Unit	{
 
+    string name;
     Element element;
     int tier;
     int faction;
@@ -89,8 +90,22 @@ public class Unit	{
         }
     }
 
-    public Unit(Element element, int tier, int faction, UnitStats unitstats)
+    public string Name
     {
+        get
+        {
+            return name;
+        }
+
+        set
+        {
+            name = value;
+        }
+    }
+
+    public Unit(string name,Element element, int tier, int faction, UnitStats unitstats)
+    {
+        Name = name;
         Element = element;
         Tier = tier;
         Faction = faction;
@@ -111,5 +126,10 @@ public class Unit	{
             HaveNotRetaliated = false;
         }
         else return 0;
+    }
+
+    public bool equals(Unit u)
+    {
+        return name.Equals(u.Name);
     }
 }

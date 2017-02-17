@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Melee : Unit
 {
-    public Melee(Element element, int tier, int faction, UnitStats unitstats) : base(element, tier, faction, unitstats)
+    public Melee(string name, Element element, int tier, int faction, UnitStats unitstats) : base(name, element, tier, faction, unitstats)
     {
     }
 }

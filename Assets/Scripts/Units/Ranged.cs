@@ -33,9 +33,9 @@ public class Ranged : Unit
         }
     }
 
-    public Ranged(Element element, int tier, int faction, UnitStats unitstats,
+    public Ranged(string name, Element element, int tier, int faction, UnitStats unitstats,
         int ammo, bool meleePenalty
-        ) : base(element, tier, faction, unitstats)
+        ) : base(name, element, tier, faction, unitstats)
     {
         Ammo = ammo;
         IsRanged = true;
