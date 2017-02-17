@@ -64,6 +64,24 @@ public class Town
         }
     }
 
+    public void updateDwellingOwnerChange(Dwelling d)
+    {
+        foreach (Building b in buildings)
+        {
+            if (b.IsBuilt() && b.ProducesCreatures && b.ProducedUnit.equals(d.UnitType))
+            {
+                if (d.Owner.equals(owner))
+                {
+                    b.AmountOfCreatures += d.UnitsPresent;
+                }
+                else
+                {
+                    b.AmountOfCreatures -= d.UnitsPresent;
+                }
+            }
+        }
+    }
+
     public bool HasBuiltThisRound
     {
         get
