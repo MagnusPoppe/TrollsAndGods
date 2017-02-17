@@ -14,19 +14,20 @@ public class Town
     private List<Dwelling> relatedDwellings;
     private Hero stationedHero;
     private Hero visitingHero;
-    private UnitTree unitTree;
-    int playerID;
+    private UnitTree stationedUnits;
+    private UnitTree visitingUnits;
+    Player owner;
 
     /// <summary>
     /// Constructor that builds the buildingtree with corresponding town according to townId variable
     /// </summary>
     /// <param name="townId">which town shall be built</param>
-    public Town(int townId, Building[] buildings, int playerID)
+    public Town(int townId, Building[] buildings, Player owner)
     {
         this.buildings = buildings;
-        unitTree = new UnitTree();
+        StationedUnits = new UnitTree();
         RelatedDwellings = new List<Dwelling>();
-        PlayerID = playerID;
+        Owner = owner;
     }
     public bool canBuild(Building b)
     {
@@ -83,16 +84,16 @@ public class Town
         }
     }
 
-    public int PlayerID
+    public Player Owner
     {
         get
         {
-            return playerID;
+            return owner;
         }
 
         set
         {
-            playerID = value;
+            owner = value;
         }
     }
 
@@ -106,6 +107,32 @@ public class Town
         set
         {
             relatedDwellings = value;
+        }
+    }
+
+    public UnitTree VisitingUnits
+    {
+        get
+        {
+            return visitingUnits;
+        }
+
+        set
+        {
+            visitingUnits = value;
+        }
+    }
+
+    public UnitTree StationedUnits
+    {
+        get
+        {
+            return stationedUnits;
+        }
+
+        set
+        {
+            stationedUnits = value;
         }
     }
 }
