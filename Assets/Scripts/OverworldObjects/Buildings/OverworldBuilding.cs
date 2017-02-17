@@ -77,6 +77,7 @@ namespace OverworldObjects
             Player = owner;
             SpriteID = spriteID;
         }
+
         public void FlipCanWalk( int[,] canWalk )
 		{
 			int x = (int)Origo.x;

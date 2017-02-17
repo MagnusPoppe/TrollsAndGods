@@ -8,18 +8,19 @@ public class GameManager : MonoBehaviour
 {
 
 	public MapMaker mapmaker;
+
+
+
+
+
+
+	public Sprite[] groundTiles;
+
+
+	// ONLY SET FOR USE WITH UNITY EDITOR!
 	public int widthXHeight = 128;
-	int width, height;
-
-	// Unity map objects
-	public const float XRESOLUTION = 2598;
-	public const float YRESOLUTION = 1299;
-	public const float YOFFSET = YRESOLUTION / XRESOLUTION;
-
-	public string seed = "Angelica";
-	[Range(0, 100)]
-	public int fillpercentWalkable = 57;
-
+	[Range(0, 20)]
+	int buildingCount;
 	// VORONOI varables:
 	[Range(0, 50)]
 	public int sites = 8;
@@ -27,23 +28,23 @@ public class GameManager : MonoBehaviour
 	public int relaxIterations = 3;
 	[Range(0, 20)]
 	public int smoothIterations = 5;
-
-
-
-	public Sprite[] groundTiles;
-
-
+	public string seed = "Angelica";
+	[Range(0, 100)]
+	public int fillpercentWalkable = 57;
 
 	// Map Globals:
+	int width, height;
 	int[,] canWalk;
-	[Range(0, 20)] int buildingCount;
 	Reaction[,] reactions;
 	AStarAlgo aStar;
 	GameObject[,] tiles;
+	public const float XRESOLUTION = 2598;
+	public const float YRESOLUTION = 1299;
+	public const float YOFFSET = YRESOLUTION / XRESOLUTION;
 
 
 	// GameManager
-    public int amountOfPlayers;
+	public int amountOfPlayers;
     Player[] players;
     int whoseTurn;
     Date date;
@@ -73,7 +74,6 @@ public class GameManager : MonoBehaviour
 		// CREATING THE MAP USING MAPMAKER
 		GenerateMap();
 
-
         activeHeroObject = new GameObject(); // TODO set player1's starthero to activeHero
         
         players = new Player[amountOfPlayers];
@@ -81,7 +81,7 @@ public class GameManager : MonoBehaviour
         date = new Date();
         curPos = HandyMethods.getIsoTilePos(transform.position);
         pathObjects = new List<GameObject>();
-        aStar = new AStarAlgo(canWalk, m.GetWidthOfMap(), m.GetHeightOfMap(), false);
+		aStar = new AStarAlgo(canWalk, width, height, false);
     }
 
 	// Update is called once per frame
@@ -285,7 +285,24 @@ public class GameManager : MonoBehaviour
 			buildingCount
 		);
 
-		//DrawMap(mapmaker.GetMap());
+		GameObject board = new GameObject();
+		board.name = "Board";
+
+		GameObject pickups = new GameObject();
+		pickups.name = "Pickups";
+
+		GameObject buildings = new GameObject();
+		buildings.name = "Buildings";
+
+		GameObject mountains = new GameObject();
+		mountains.name = "Mountains";
+
+		GameObject forest = new GameObject();
+		forest.name = "Forest";
+			
+
+
+		DrawMap(mapmaker.GetMap(), board);
 
 		// SETTING GLOBALS:
 		Region[] regions = mapmaker.GetRegions();
@@ -295,4 +312,95 @@ public class GameManager : MonoBehaviour
 		// Kaster mapmaker
 		mapmaker = null;
 	}
+
+	/// <summary>
+	/// Draws a given map.
+	/// </summary>
+	/// <param name="map">Map.</param>
+	protected void DrawMap(int[,] map, GameObject board)
+	{
+		GameObject[,] objectsInBuildingLayer = new GameObject[width, height];
+		IngameObjectLibrary spriteLibrary = new IngameObjectLibrary();
+		// DRAWING THE MAP:
+		tiles = new GameObject[width, height];
+		float iy = 0;
+		// Looping through all tile positions:
+		for (int y = 0; y < height; y++)
+		{
+
+			for (int x = 0; x < width; x++)
+			{
+				// Creating a new game object to place on the board:
+				tiles[x, y] = new GameObject();
+				tiles[x, y].name = "Tile (" + x + ", " + y + ")";
+				if (y % 2 == 0)
+					tiles[x, y].transform.position = new Vector2(x, iy / 2);
+				else
+					tiles[x, y].transform.position = new Vector2(x + 0.5f, iy / 2);
+
+				// Adding a sprite to the gameobject:
+				SpriteRenderer sr = tiles[x, y].AddComponent<SpriteRenderer>();
+
+				int spriteID = map[x, height - 1 - y];
+
+
+				// If building
+				if (spriteID > 5) // TODO: MAKE CONSTANT!
+				{
+					objectsInBuildingLayer[x, y] = new GameObject();
+					objectsInBuildingLayer[x, y].name = "objectsInBuildingLayer (" + x + ", " + y + ")";
+					if (y % 2 == 0)
+						objectsInBuildingLayer[x, y].transform.position = new Vector2(x, iy / 2);
+					else
+						objectsInBuildingLayer[x, y].transform.position = new Vector2(x + 0.5f, iy / 2);
+
+					/// Sets building sprite
+					SpriteRenderer oibl = objectsInBuildingLayer[x, y].AddComponent<SpriteRenderer>();
+					oibl.sortingLayerName = "Buildings";
+					oibl.sprite = spriteLibrary.GetBuilding(spriteID);
+
+
+					// Sets ground sprite based on castle 
+					sr.sortingLayerName = "Ground";
+					sr.sprite = spriteLibrary.GetTile(4); // Hardkodet gress, bytt til getcasle environment
+				}
+
+				// TODO: Fjern statiske values
+				//else if (spriteID >= 0)
+				//else if (spriteID >= spriteLibrary.GetTileStart())
+				//else if (spriteID >= 0 && spriteID <= 5) 
+				if (spriteID >= 0 && spriteID <= 5)
+				{
+					// TODO: Fjern castle fra verdi "2"
+					if (spriteID == 2)
+					{
+						// make "castle" into "building"
+						spriteID = 6;
+						sr.sortingLayerName = "Buildings";
+						sr.sprite = spriteLibrary.GetBuilding(spriteID);
+					}
+					else
+					{
+						// if "ground" or "wall", make "dirt"
+						if (spriteID == 0 || spriteID == 1)
+							spriteID = 4;
+
+						sr.sortingLayerName = "Ground";
+						sr.sprite = spriteLibrary.GetTile(spriteID);    // ny metode
+					}
+				}
+
+				// Placing the tile on on the map within the board gameobject:
+				tiles[x, y].transform.parent = board.transform;
+			}
+			iy += YOFFSET; // 0.57747603833865814696485623003195f;
+		}
+	}
+
+	void placeGround()
+	{
+		
+	}
+
+	void placeBuilding
 }

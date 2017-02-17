@@ -73,7 +73,7 @@ public class IngameObjectLibrary
         return sprites;
 	}
 
-    // Initialiserer alles building overworld Sprites, nye legges inn manuekt
+    // Initialiserer alles building overworld Sprites, nye legges inn manuelt
     private Sprite[] InitializeBuildings()
     {
         Sprite[] sprites = new Sprite[TOTAL_BUILDING_OVERWORLD_COUNT];

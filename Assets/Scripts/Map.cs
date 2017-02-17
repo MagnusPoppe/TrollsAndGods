@@ -9,7 +9,7 @@ namespace Overworld
 	public class Map : MonoBehaviour
 	{
         public MapMaker mapmaker;
-		public int widthXHeight = 128;
+
 		int width, height;
 
         // Unity map objects
