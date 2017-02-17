@@ -44,7 +44,7 @@ public class ResourceReaction : Reaction
 
     public override bool React(Hero h)
     {
-        //h.Player.Resources.adjustResource(resourceID, amount); // TODO objektreferanse
+        h.Player.Resources.adjustResource(resourceID, amount);
 
         return true;
     }

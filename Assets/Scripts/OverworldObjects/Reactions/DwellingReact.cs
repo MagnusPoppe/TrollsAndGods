@@ -28,15 +28,17 @@ public class DwellingReact : Reaction {
 
     public override bool React(Hero h)
     {
-        /*
-        if (dwelling.Owner != h.PlayerID)
+        
+        if (!dwelling.Owner.Equals(h.Player))
         {
-            if (dwelling.Owner != null) GameManager.get.DwellingsOwned.Remove(dwelling);
-            dwelling.Owner = h.PlayerID;
+            if (dwelling.Owner != null) dwelling.Owner.DwellingsOwned.Remove(dwelling);
+            dwelling.Owner = h.Player;
             h.Player.DwellingsOwned.Add(dwelling);
+            //todo inital hiring of units
+            return true;
         }
-        */
+        
         // todo hire units
-        return true;
+        return false;
     }
 }

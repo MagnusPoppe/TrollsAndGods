@@ -8,7 +8,7 @@ namespace OverworldObjects
     public class Dwelling : OverworldBuilding{
 
         Town town;
-        Player player;
+        Player owner;
         Unit unitType;
         int unitsPresent;
         int unitsPerWeek;
@@ -65,16 +65,16 @@ namespace OverworldObjects
             }
         }
 
-        public Player Player
+        public Player Owner
         {
             get
             {
-                return player;
+                return owner;
             }
 
             set
             {
-                player = value;
+                owner = value;
             }
         }
 

@@ -28,7 +28,7 @@ public class CastleReact : Reaction {
 
     public override bool React(Hero h)
     {
-        //todo check if owner matches heroes owner
+        
         if (castle.Player.Equals(h.Player))
         {
             //Todo visit town
