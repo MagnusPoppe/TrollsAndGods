@@ -40,11 +40,22 @@ public class UnitTree
         unitAmount[amount2] = tmpAmount;
     }
 
+    /// <summary>
+    /// Changes amount of units at position
+    /// </summary>
+    /// <param name="amount">the amount to add or remove</param>
+    /// <param name="pos">The position of the unit</param>
     public void changeAmount(int amount, int pos)
     {
         unitAmount[pos] += amount;
     }
 
+    /// <summary>
+    /// Sets unit at position
+    /// </summary>
+    /// <param name="unit">What unit</param>
+    /// <param name="amount">How many</param>
+    /// <param name="pos">It's position</param>
     public void setUnit(Unit unit, int amount, int pos)
     {
         units[pos] = unit;
