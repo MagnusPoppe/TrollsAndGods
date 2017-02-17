@@ -26,9 +26,8 @@ namespace MapGenerator
 		public const int  WATER 					= 3;
 		public const int  DIRT						= 4;
 		public const int  WOODS 					= 5;
-		public const int  BUILDING 					= 6;
+	    public const int  BUILDING 					= 6;
 		public const int GRASS_WATER = 7;
-		public const int GRASS_TO_WATER_DIRECTION_END = 15;
 		public const bool KEEP_VORONOI_REGION_LINES = false;
 
 		// CANWALK 
