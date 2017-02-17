@@ -40,6 +40,11 @@ public class UnitTree
         unitAmount[amount2] = tmpAmount;
     }
 
+    public void changeAmount(int amount, int pos)
+    {
+        unitAmount[pos] += amount;
+    }
+
     public void setUnit(Unit unit, int amount, int pos)
     {
         units[pos] = unit;
