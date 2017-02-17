@@ -51,6 +51,10 @@ public class IngameObjectLibrary
     const int BUILDING_OVERWORLD_START = TILE_START + TOTAL_TILE_COUNT;
 	const int TOTAL_BUILDING_OVERWORLD_COUNT = 2;
 
+    Sprite[] heroes;
+    const int HEROES_START = BUILDING_OVERWORLD_START + TOTAL_BUILDING_OVERWORLD_COUNT;
+    const int TOTAL_HEROES_COUNT = 1;
+
 
 	Sprite[] buildings_town;
 				
@@ -59,6 +63,7 @@ public class IngameObjectLibrary
     {
 		tiles = InitializeTiles();
 		buildings_overworld = InitializeBuildings();
+        heroes = InitializeHeroes();
 	}
 
     // Initialiserer alles tile Sprites, nye legges inn manuekt
@@ -82,6 +87,17 @@ public class IngameObjectLibrary
         sprites[1] = UnityEngine.Resources.Load<Sprite>(path + "Resource/Ore Smelters Camp");
         return sprites;
     }
+
+    private Sprite[] InitializeHeroes()
+    {
+        Sprite[] sprites = new Sprite[TOTAL_HEROES_COUNT];
+        String path = "Sprites/Heroes";
+        sprites[0] = UnityEngine.Resources.Load<Sprite>(path + "hero1");
+        sprites[0] = UnityEngine.Resources.Load<Sprite>(path + "hero2");
+
+
+        return sprites;
+    } 
 
     // Regner fra global spriteID til lokal spriteID
     public Sprite GetTile(int spriteID)
