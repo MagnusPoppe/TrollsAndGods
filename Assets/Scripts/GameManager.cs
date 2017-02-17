@@ -12,8 +12,6 @@ public class GameManager : MonoBehaviour
 
 
 
-
-
 	public Sprite[] groundTiles;
 
 
@@ -49,8 +47,15 @@ public class GameManager : MonoBehaviour
     int whoseTurn;
     Date date;
 
+    // Click listeners
+    bool prepareDoubleClick;
+    int clickCount;
+    const int CLICKSPEED = 20;
+    private Vector2 savedClickedPos;
+    private Vector2 toPos;
 
-	// Hero listeners and globals:
+
+    // Hero listeners and globals:
     bool heroActive;
     GameObject activeHeroObject;
     Hero activeHero;
@@ -59,8 +64,6 @@ public class GameManager : MonoBehaviour
     GameObject pathYes;
     GameObject pathNo;
     List<GameObject> pathObjects;
-    private Vector2 curPos;
-    private Vector2 toPos;
     bool pathMarked;
     int stepNumber;
     float animationSpeed;
@@ -71,15 +74,15 @@ public class GameManager : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
-		// CREATING THE MAP USING MAPMAKER
-		GenerateMap();
-
-        activeHeroObject = new GameObject(); // TODO set player1's starthero to activeHero
-        
+        // CREATING THE MAP USING MAPMAKER
+        GenerateMap();
+        reactions = new Reaction[widthXHeight, widthXHeight];
         players = new Player[amountOfPlayers];
+        activeHeroObject = new GameObject(); // TODO set player1's starthero to activeHero
         whoseTurn = 0;
+        clickCount = 0;
         date = new Date();
-        curPos = HandyMethods.getIsoTilePos(transform.position);
+        //savedClickedPos = HandyMethods.getIsoTilePos(transform.position);
         pathObjects = new List<GameObject>();
 		aStar = new AStarAlgo(canWalk, width, height, false);
     }
@@ -87,42 +90,81 @@ public class GameManager : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-		if (Input.GetMouseButtonDown(0))
+        // if you have clicked once on a castle of possession, give a window of frames to click it again to open castle menu
+        if(prepareDoubleClick && ++clickCount == CLICKSPEED)
+        {
+            clickCount = 0;
+            prepareDoubleClick = false;
+        }
+        if (Input.GetMouseButtonDown(0))
         {
             // Fetch the point just clicked and adjust the position in the square to the corresponding isometric position
-            Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            pos = HandyMethods.getIsoTilePos(pos);
-            if (heroActive)
+            Vector2 posClicked = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            posClicked = HandyMethods.getIsoTilePos(posClicked);
+            int x = (int)posClicked.x;
+            int y = (int)posClicked.y;
+
+            // Owners castle is clicked
+            if (reactions[x, y] != null && reactions[x, y].GetType().Name.Equals(typeof(CastleReact)))
+            {
+                if (prepareDoubleClick)
+                {
+                    CastleReact castleClicked = (CastleReact)reactions[x, y];
+                    if (players[whoseTurn].equals(castleClicked.Castle.Player))
+                    {
+                        // TODO when click on your own castle
+                        Debug.Log("Leftclicked your own castle");
+                        heroActive = false;
+                    }
+                }
+                else
+                    prepareDoubleClick = true;
+            }
+            // Hero is active, either try to make a path to pointed destination, or activate walking towards there.
+            else if (heroActive && activeHero.Player.equals(players[whoseTurn]))
             {
                 if (IsWalking())
                 {
                     SetLastStep(true);
                 }
                 // Hero's own position is clicked
-                else if (curPos.Equals(pos))
+                else if (savedClickedPos.Equals(posClicked))
                 {
                     // Todo, open hero menu
                 }
                 // If an open square is clicked
-                else if (canWalk[(int)pos.x, (int)pos.y] == MapMaker.CANWALK)
+                else if (canWalk[(int)posClicked.x, (int)posClicked.y] == MapMaker.CANWALK)
                 {
                     // Walk to pointer if marked square is clicked by enabling variables that triggers moveHero method on update
-                    if (pathMarked && pos.Equals(toPos))
+                    if (pathMarked && posClicked.Equals(toPos))
                     {
                         SetWalking(true);
                     }
                     // Activate clicked path
                     else
                     {
-                        pathObjects = MarkPath(pos);
+                        pathObjects = MarkPath(posClicked);
                     }
                 }
             }
+            else if (reactions[x, y] != null && reactions[x, y].GetType().Name.Equals(typeof(HeroMeetReact)))
+            {
+                HeroMeetReact heroClicked = (HeroMeetReact)reactions[x, y];
+                if (players[whoseTurn].equals(heroClicked.Hero.Player))
+                {
+                    // TODO when click on your own hero
+                    Debug.Log("Leftclicked your own hero");
+                    heroActive = true;
+                    activeHero = heroClicked.Hero;
+                }
+            }
+
             // TODO else if(clickedOnControlledHero) activate gameobject hero that you clicked on
 
             // TODO else if clicked on your town, open town layout UI
 
             // else if(nextTurnClicked) TODO clicked on UI and "next round"
+            else if(false)
             {
                 if (++whoseTurn > amountOfPlayers)
                     whoseTurn = 0;
@@ -132,6 +174,7 @@ public class GameManager : MonoBehaviour
         else if (Input.GetMouseButtonDown(1))
         {
             // TODO what happens when you right click things
+            Debug.Log("Rightclick");
         }
         // Upon every update, active hero will be moved in a direction if walking is enabled
         if (IsWalking())
@@ -148,19 +191,78 @@ public class GameManager : MonoBehaviour
                 if (IsLastStep())
                 {
                     // Set hero position when he stops walking to his isometric position
-                    curPos = HandyMethods.getIsoTilePos(activeHeroObject.transform.position);
+                    savedClickedPos = HandyMethods.getIsoTilePos(activeHeroObject.transform.position);
+                    int x = (int)savedClickedPos.x;
+                    int y = (int)savedClickedPos.y;
                     SetWalking(false);
                     SetPathMarked(false);
                     RemoveMarkers(pathObjects);
                     // objectcollision, when final destination is reached
-                    if (canWalk[(int)curPos.x, (int)curPos.y] == 2)
+                    if (canWalk[x, y] == 2)
                     {
-                        // todo - reaction
+                        if(reactions[x, y].React(activeHero))
+                        {
+                            if(reactions[x, y].GetType().Name.Equals(typeof(HeroMeetReact)))
+                            {
+                                // TODO if battle, remove hero that is now set to null
+                            }
+                            else if(reactions[x, y].GetType().Name.Equals(typeof(UnitReaction)))
+                            {
+                                // TODO remove either hero or unit
+                            }
+                            else if (reactions[x, y].GetType().Name.Equals(typeof(ResourceReaction)))
+                            {
+                                // TODO remove picked up resource
+                            }
+                            else if (reactions[x, y].GetType().Name.Equals(typeof(ArtifactReaction)))
+                            {
+                                // TODO remove picked up artifact
+                            }
+                            else if (reactions[x, y].GetType().Name.Equals(typeof(CastleReact)))
+                            {
+                                // TODO town window has been opened, or enemy town was attacked
+                            }
+                            else if (reactions[x, y].GetType().Name.Equals(typeof(DwellingReact)))
+                            {
+                                // TODO dweeling has been captured
+                            }
+                        }
                     }
+                    // TODO when hero moves, set origin tile's canWalk 0 or 2 whether theres an reaction there. Also set destination tile's canWalk to 2
                 }
             }
             // Execute the movement
             activeHeroObject.transform.position = newPos;
+        }
+        //Nothing is clicked and hero is not walking, change mouse hover
+        else
+        {
+            Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            mousePos = HandyMethods.getIsoTilePos(mousePos);
+            int x = (int)mousePos.x;
+            int y = (int)mousePos.y;
+            if (reactions[x, y] != null)
+            {
+                if(reactions[x, y].GetType().Name.Equals(typeof(CastleReact)))
+                {
+                    CastleReact cr = (CastleReact)reactions[x, y];
+                    if (players[whoseTurn].equals(cr.Castle.Player))
+                    {
+                        Debug.Log(x + " - " + y + " CastleReact Dummy");
+                        // TODO when you hover over your own castle, change mouse pointer
+                    }
+                }
+                else if(reactions[x, y].GetType().Name.Equals(typeof(HeroMeetReact)))
+                {
+                    Debug.Log(x + " - " + y + " HeroMeetReact Dummy");
+                    // TODO when you hover over an hero, change mouse pointer
+                }
+                else if(reactions[x, y].GetType().Name.Equals(typeof(UnitReaction)))
+                {
+                    Debug.Log(x + " - " + y + " UnitReaction Dummy");
+                    // TODO when you hover over an neutral unit, change mouse pointer
+                }
+            }
         }
     }
 
@@ -178,7 +280,7 @@ public class GameManager : MonoBehaviour
         // Needs to clear existing objects if an earlier path was already made
         RemoveMarkers(pathObjects);
         // Call algorithm method that returns a list of Vector2 positions to the point, go through all objects
-        List<Vector2> positions = aStar.calculate(curPos, pos);
+        List<Vector2> positions = aStar.calculate(savedClickedPos, pos);
         // Calculate how many steps the hero will move, if this path is chosen
         int i = activeHero.CurMovementSpeed = Math.Min(positions.Count, activeHero.MovementSpeed);
         // For each position, create a gameobject with an image and instantiate it, and add it to a gameobject list for later to be removed
