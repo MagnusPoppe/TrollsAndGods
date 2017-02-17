@@ -100,21 +100,29 @@ namespace Overworld
                     // Adding a sprite to the gameobject:
                     SpriteRenderer sr = tiles[x, y].AddComponent<SpriteRenderer>();
 
-					int spriteID = map[x, height - 1 - y];
-                    //if (spriteID >= 15) // TODO: MAKE CONSTANT!
-                    //{
-                    //	objectsInBuildingLayer[x, y] = new GameObject();
-                    //	objectsInBuildingLayer[x, y].name = "objectsInBuildingLayer (" + x + ", " + y + ")";
-                    //	if (y % 2 == 0)
-                    //		objectsInBuildingLayer[x, y].transform.position = new Vector2(x, iy / 2);
-                    //	else
-                    //		objectsInBuildingLayer[x, y].transform.position = new Vector2(x + 0.5f, iy / 2);
+                    int spriteID = map[x, height - 1 - y];
 
-                    //	SpriteRenderer oibl = objectsInBuildingLayer[x, y].AddComponent<SpriteRenderer>();
-                    //  oibl.sprite = groundTiles[spriteID];
-                    //	oibl.sortingLayerName = "Buildings";
-                    //	sr.sprite = groundTiles[0]; // TODO: HARDKODET GRESS UNDER BYGNINGER.
-                    //}
+
+                    // If building
+                    if (spriteID > 5) // TODO: MAKE CONSTANT!
+                    {
+                        objectsInBuildingLayer[x, y] = new GameObject();
+                        objectsInBuildingLayer[x, y].name = "objectsInBuildingLayer (" + x + ", " + y + ")";
+                        if (y % 2 == 0)
+                            objectsInBuildingLayer[x, y].transform.position = new Vector2(x, iy / 2);
+                        else
+                            objectsInBuildingLayer[x, y].transform.position = new Vector2(x + 0.5f, iy / 2);
+
+                        /// Sets building sprite
+                        SpriteRenderer oibl = objectsInBuildingLayer[x, y].AddComponent<SpriteRenderer>();
+                        oibl.sortingLayerName = "Buildings";
+                        oibl.sprite = spriteLibrary.GetBuilding(spriteID);
+
+
+                        // Sets ground sprite based on castle 
+                        sr.sortingLayerName = "Ground";
+                        sr.sprite = spriteLibrary.GetTile(4); // Hardkodet gress, bytt til getcasle environment
+                    }
 
                     //else if (spriteID == MapMaker.CASTLE)
                     //{
@@ -158,7 +166,7 @@ namespace Overworld
                         else
                         {
                             // if "ground" or "wall", make "dirt"
-                            if (spriteID >= 0 && spriteID <= 1)
+                            if (spriteID == 0 || spriteID == 1)
                                 spriteID = 4;
 
                             sr.sortingLayerName = "Ground";
@@ -166,13 +174,6 @@ namespace Overworld
                             sr.sprite = spriteLibrary.GetTile(spriteID);    // ny metode
                         }
 					}
-                    // if building
-                    else if (spriteID > 5)
-                    {
-                        sr.sortingLayerName = "Buildings";
-                        sr.sprite = spriteLibrary.GetBuilding(spriteID);
-                    }
-
 
 					// Placing the tile on on the map within the board gameobject:
 					tiles[x, y].transform.parent = this.transform;
