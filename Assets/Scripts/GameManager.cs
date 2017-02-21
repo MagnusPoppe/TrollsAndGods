@@ -1,48 +1,49 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections.Generic;
+using System.Collections;
 using System;
 using Overworld;
 using MapGenerator;
 
-public class GameManager : MonoBehaviour 
+public class GameManager : MonoBehaviour
 {
 
-	public MapMaker mapmaker;
+    public MapMaker mapmaker;
+
+    public Sprite[] groundTiles;
+
+    public CameraMovement cameraMovement;
 
 
+    // ONLY SET FOR USE WITH UNITY EDITOR!
+    public int widthXHeight = 128;
+    [Range(0, 20)]
+    int buildingCount;
+    // VORONOI varables:
+    [Range(0, 50)]
+    public int sites = 8;
+    [Range(1, 20)]
+    public int relaxIterations = 3;
+    [Range(0, 20)]
+    public int smoothIterations = 5;
+    public string seed = "Angelica";
+    [Range(0, 100)]
+    public int fillpercentWalkable = 57;
+
+    // Map Globals:
+    int width, height;
+    int[,] canWalk;
+    Reaction[,] reactions;
+    AStarAlgo aStar;
+    GameObject[,] tiles;
+    public const float XRESOLUTION = 2598;
+    public const float YRESOLUTION = 1299;
+    public const float YOFFSET = YRESOLUTION / XRESOLUTION;
 
 
-	public Sprite[] groundTiles;
-
-
-	// ONLY SET FOR USE WITH UNITY EDITOR!
-	public int widthXHeight = 128;
-	[Range(0, 20)]
-	int buildingCount;
-	// VORONOI varables:
-	[Range(0, 50)]
-	public int sites = 8;
-	[Range(1, 20)]
-	public int relaxIterations = 3;
-	[Range(0, 20)]
-	public int smoothIterations = 5;
-	public string seed = "Angelica";
-	[Range(0, 100)]
-	public int fillpercentWalkable = 57;
-
-	// Map Globals:
-	int width, height;
-	int[,] canWalk;
-	Reaction[,] reactions;
-	AStarAlgo aStar;
-	GameObject[,] tiles;
-	public const float XRESOLUTION = 2598;
-	public const float YRESOLUTION = 1299;
-	public const float YOFFSET = YRESOLUTION / XRESOLUTION;
-
-
-	// GameManager
-	public int amountOfPlayers;
+    // GameManager
+    public int amountOfPlayers;
     Player[] players;
     int whoseTurn;
     Date date;
@@ -73,11 +74,16 @@ public class GameManager : MonoBehaviour
     GameObject go;
     bool overWorld;
 
+    Text[] resourceText;
+    string[] resourceTextPosition = new string[] { "TextGold", "TextWood", "TextOre", "TextCrystal", "TextGem" };
+
+
     // Use this for initialization
     void Start ()
     {
         // CREATING THE MAP USING MAPMAKER
         GenerateMap();
+        cameraMovement = GetComponent<CameraMovement>();
         reactions = new Reaction[widthXHeight, widthXHeight];
         players = new Player[amountOfPlayers];
         activeHeroObject = new GameObject(); // TODO set player1's starthero to activeHero
@@ -90,6 +96,14 @@ public class GameManager : MonoBehaviour
         go = GameObject.Find("Town");
         go.SetActive(false);
         overWorld = true;
+
+        resourceText = new Text[5];
+        for (int i = 0; i < resourceText.Length; i++)
+        {
+            GameObject a = GameObject.Find(resourceTextPosition[i]);
+            resourceText[i] = a.GetComponent<Text>();
+            resourceText[i].text = i + ""; // TODO currentPlayer.getResource(i);
+        }
     }
 
 	// Update is called once per frame
@@ -169,14 +183,7 @@ public class GameManager : MonoBehaviour
                 }
 
                 // TODO else if(GUInextTurnClicked)
-                else if (false)
-                {
-                    date.incrementDay();
-                    if (++whoseTurn > amountOfPlayers)
-                        whoseTurn = 0;
-                    activeHero = getPlayer(whoseTurn).Heroes[0];
-                    getPlayer(whoseTurn).GatherIncome();
-                }
+                //else if (false)
             }
             // TODO right mousebutton clicked
             else if (Input.GetMouseButtonDown(1))
@@ -534,6 +541,9 @@ public class GameManager : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Called by UI click on town
+    /// </summary>
     public void enterTown()
     {
 
@@ -542,11 +552,25 @@ public class GameManager : MonoBehaviour
         {
             go.SetActive(false);
             overWorld = true;
+            cameraMovement.enabled = true;
         }
         else
         {
             go.SetActive(true);
             overWorld = false;
+            cameraMovement.enabled = false;
         }
+    }
+
+    /// <summary>
+    /// Called by next turn UI button
+    /// </summary>
+    public void nextTurn()
+    {
+        date.incrementDay();
+        if (++whoseTurn > amountOfPlayers)
+            whoseTurn = 0;
+        //activeHero = getPlayer(whoseTurn).Heroes[0]; // TODO UNCOMMENT
+        //getPlayer(whoseTurn).GatherIncome(); // TODO UNCOMMENT
     }
 }
