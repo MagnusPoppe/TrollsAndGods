@@ -5,43 +5,43 @@ using UnityEngine;
 public class Date {
 
     int day;
+    int week;
     int month;
-    int year;
 
-    public Date(int day, int month, int year)
+    public Date(int day, int week, int month)
     {
         Day = day;
+        Week = week;
         Month = month;
-        Year = year;
     }
 
     public Date()
     {
         Day = 1;
+        Week = 1;
         Month = 1;
-        Year = 0;
     }
 
     public string incrementDay()
     {
         Day++;
-        if (Day > 30)
+        if (Day > 7)
         {
             Day = 1;
-            Month++;
-            if (Month > 12)
+            Week++;
+            if (Week > 4)
             {
-                Month = 1;
-                Year++;
+                Month++;
+                Week = 1;
             }
         }
 
-        return toString();
+        return ToString();
     }
 
-    public string toString()
+    public override string ToString()
     {
-        return "Day: " + Day + " Month: " + Month + "Year: " + Year;
+        return "Day: " + Day + ", Week: " + Week + ", Month: " + Month;
     }
 
     public int Day
@@ -57,6 +57,19 @@ public class Date {
         }
     }
 
+    public int Week
+    {
+        get
+        {
+            return week;
+        }
+
+        set
+        {
+            week = value;
+        }
+    }
+
     public int Month
     {
         get
@@ -67,19 +80,6 @@ public class Date {
         set
         {
             month = value;
-        }
-    }
-
-    public int Year
-    {
-        get
-        {
-            return year;
-        }
-
-        set
-        {
-            year = value;
         }
     }
 }
