@@ -348,7 +348,7 @@ public class GameManager : MonoBehaviour
                     buildingLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetDwelling(spriteID), buildings);
                 }
 
-                // If resouce buildings
+                // If resource buildings
                 else if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.ResourceBuildings)
                 {
                     buildingLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetResourceBuilding(spriteID), buildings);

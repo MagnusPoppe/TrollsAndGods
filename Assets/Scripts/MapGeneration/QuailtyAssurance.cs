@@ -11,7 +11,7 @@ namespace MapGenerator
 			
 		}
 
-		public bool TestPathsBetweenBuildings(Region region, int[,] canWalk)
+		public bool TestPathsBetweenBuildings(LandRegion region, int[,] canWalk)
 		{
 			AStarAlgo aStar = new AStarAlgo(canWalk, canWalk.GetLength(0), canWalk.GetLength(1), false);
 
@@ -28,7 +28,7 @@ namespace MapGenerator
 			return true;
 		}
 
-		public bool TestPathsBetweenRegions(Region[] allRegions, int[,] canWalk)
+		public bool TestPathsBetweenRegions(LandRegion[] allRegions, int[,] canWalk)
 		{
 			AStarAlgo aStar = new AStarAlgo(canWalk, canWalk.GetLength(0), canWalk.GetLength(1), false);
 

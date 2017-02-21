@@ -52,9 +52,8 @@ namespace MapGenerator
 		{
 			foreach (Region r in regions)
 			{
-				Vector2 center = r.GetCastle().GetPosition();
-				int x = (int)center.x;
-				int y = (int)center.y;
+				int x = r.getX();
+				int y = r.getY();
 
 				thisMap[x - 1, y] 		= MapMaker.GROUND;
 				thisMap[x + 1, y] 		= MapMaker.GROUND;

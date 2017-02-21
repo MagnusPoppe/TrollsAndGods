@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using OverworldObjects;
 using Filter;
+using System.Collections.Generic;
 
 namespace MapGenerator
 {
@@ -31,10 +32,16 @@ namespace MapGenerator
         public const int LAVA_SPRITEID =    IngameObjectLibrary.GROUND_START + 3;
         public const int SNOW_SPRITEID =    IngameObjectLibrary.GROUND_START + 4;
 
-        public const int FOREST_SPRITEID = IngameObjectLibrary.ENVIRONMENT_START + 0; // TODO
+        public const int FOREST_SPRITEID = IngameObjectLibrary.ENVIRONMENT_START + 0;
+        public const int MOUNTAIN1_SPRITEID = IngameObjectLibrary.ENVIRONMENT_START + 1;
+        public const int MOUNTAIN2_SPRITEID = IngameObjectLibrary.ENVIRONMENT_START + 2;
+        public const int MOUNTAIN3_SPRITEID = IngameObjectLibrary.ENVIRONMENT_START + 3;
+        public const int MOUNTAIN4_SPRITEID = IngameObjectLibrary.ENVIRONMENT_START + 4;
+        public const int MOUNTAIN5_SPRITEID = IngameObjectLibrary.ENVIRONMENT_START + 5;
 
-		// CANWALK 
-		public const int CANNOTWALK = 0;
+
+        // CANWALK 
+        public const int CANNOTWALK = 0;
 		public const int CANWALK 	= 1;
 		public const int TRIGGER 	= 2;
 
@@ -68,8 +75,6 @@ namespace MapGenerator
 				spritecount   // Used in castle creation
 			);
 
-            printmap(map);
-
             // PLACE TREES IN OCCUPIED AREAS:
             replaceWalls();
             //CreateTransitions();
@@ -80,9 +85,15 @@ namespace MapGenerator
 
             int i = 0;
 			foreach (Region r in regions)
-			{
-                //map = r.createEnvironment(map);
-				InitBuildings(r);
+            {
+                if (r.GetType().Equals(typeof(LandRegion)))
+                {
+                    LandRegion lr = (LandRegion)r;
+                    lr.SetRegionGroundTileType(lr.GetCastle().EnvironmentTileType, map);
+
+                    map[r.getX(), r.getY()] = lr.GetCastle().GetSpriteID();
+                    InitBuildings(lr);
+                }
 			}
 
             QuailtyAssurance quality = new QuailtyAssurance();
@@ -106,6 +117,7 @@ namespace MapGenerator
         /// <summary>
         /// Replaces walls with mountains/forests/unwalkables
         /// </summary>
+        // TODO: Include mountains
         private void replaceWalls()
         {
             for (int y = 0; y < height; y++)
@@ -124,7 +136,7 @@ namespace MapGenerator
             reactions[x, y] = building.Reaction;
         }
 
-		private void InitBuildings(Region r)
+		private void InitBuildings(LandRegion r)
 		{
 			r.createEconomy(canWalk, new Economy(Economy.POOR));
 
@@ -133,18 +145,6 @@ namespace MapGenerator
 				int x = (int)building.Origo.x;
 				int y = (int)building.Origo.y;
 				map[x, y] = building.LocalSpriteID;
-			}
-		}
-
-		private void FillRandomRegionsWithWater(int[,] map)
-		{
-			System.Random prng = new System.Random(seed.GetHashCode());
-
-			for (int i = 0; i < regionCenterPoints.Length/2; i++)
-			{
-				// Pesuedo random number generator:
-				int r = prng.Next(0, regionCenterPoints.Length);
-    			regions[r].FillRegionWithWater(map);
 			}
 		}
 
@@ -261,11 +261,39 @@ namespace MapGenerator
 			RegionFill r = new RegionFill(voronoiMap, regionCenterPoints);
 			int[,] generatedMap = r.GetMap();
 			regions = r.GetRegions();
-            
+
+           List<Region> regionBySize = new List<Region>();
+
             foreach (Region region in regions)
 			{
+                regionBySize.Add(region);
 				region.ResetRegionGroundTileType(generatedMap);
 			}
+
+            regionBySize.Sort();
+            int waterRegionCount = (int) (regions.Length * 0.20);
+            for (int i = 0; i < regions.Length; i++)
+            {
+                if( i <= waterRegionCount )
+                    regionBySize[i] = new WaterRegion(
+                        regionBySize[i].GetCoordinates(), 
+                        regionBySize[i].RegionCenter
+                    );
+                else
+                    regionBySize[i] = new LandRegion(
+                        regionBySize[i].GetCoordinates(), 
+                        regionBySize[i].RegionCenter
+                    );
+
+                for (int j = 0; j < regions.Length; j++)
+                {
+                    if (regionBySize[i].Equals(regions[j]))
+                    {
+                        regions[j] = regionBySize[i]; break;
+                    }
+                }
+            }
+
 
             connectLostPointsToRegions(voronoiMap);
 
@@ -276,13 +304,21 @@ namespace MapGenerator
 			// Combining binary map and zone-devided maps:
 			generatedMap = CombineMaps(binaryMap, generatedMap);
 
-            // Fills random amount of regions with water
-            FillRandomRegionsWithWater(generatedMap);
             // Setting the enviroment for each region:
             foreach (Region region in regions)
 			{
-				region.SetRegionGroundTileType(region.GetCastle().EnvironmentTileType, generatedMap);
-			}
+                if (region.GetType().Equals(typeof(LandRegion)))
+                {
+                    LandRegion lr = (LandRegion)region;
+                    lr.SetRegionGroundTileType(lr.GetCastle().EnvironmentTileType, generatedMap);
+
+                }
+                else if (region.GetType().Equals(typeof(WaterRegion)))
+                {
+                    WaterRegion wr = (WaterRegion)region;
+                    wr.FillRegionWithWater(generatedMap);
+                }
+            }
 
 			return generatedMap;
 		}
@@ -310,14 +346,15 @@ namespace MapGenerator
                             {
                                 prevPos = new Vector2(x, y);
                                 inRegion = true;
-                                prev = r;
+                                if (!typeof(WaterRegion).Equals(r.GetType()))
+                                    prev = r;
                                 break;
                             }
                         }
                         if (!inRegion)
                         {
                             prev.AddToRegion(new Vector2(x, y));
-                            map[x, y] = map[(int) prevPos.x, (int) prevPos.y];
+                            map[x, y] = MapMaker.FOREST_SPRITEID; // map[(int) prevPos.x, (int) prevPos.y];
                         }
                         inRegion = false;
                     }
@@ -405,14 +442,6 @@ namespace MapGenerator
 						combinedMap[x, y] = binary[x, y];
                 }
             }
-
-			foreach (Region r in regions)
-			{
-                int x = (int)r.GetCastle().GetPosition().x;
-                int y = (int)r.GetCastle().GetPosition().y;
-
-                combinedMap[x,y] = r.GetCastle().GetSpriteID();
-			}
 
             return combinedMap;
         }

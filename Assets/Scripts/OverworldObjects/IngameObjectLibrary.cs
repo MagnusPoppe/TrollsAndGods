@@ -88,13 +88,18 @@ public class IngameObjectLibrary
     // environments (skog, mountains, etc)
     Sprite[] environment;
     public const int ENVIRONMENT_START = GROUND_START + GROUND_COUNT;
-    public const int ENVIRONMENT_COUNT = 1;
+    public const int ENVIRONMENT_COUNT = 6;
 
     private Sprite[] InitializeEnvironments()
     {
         Sprite[] sprites = new Sprite[ENVIRONMENT_COUNT];
         String path = "Sprites/Environment/";
         sprites[0] = UnityEngine.Resources.Load<Sprite>(path + "Placeholder/Forest");
+        sprites[1] = UnityEngine.Resources.Load<Sprite>(path + "Mountains/Mountain 1");
+        sprites[2] = UnityEngine.Resources.Load<Sprite>(path + "Mountains/Mountain 2");
+        sprites[3] = UnityEngine.Resources.Load<Sprite>(path + "Mountains/Mountain 3");
+        sprites[4] = UnityEngine.Resources.Load<Sprite>(path + "Mountains/Mountain 4");
+        sprites[5] = UnityEngine.Resources.Load<Sprite>(path + "Mountains/Mountain 5");
 
         return sprites;
     }
