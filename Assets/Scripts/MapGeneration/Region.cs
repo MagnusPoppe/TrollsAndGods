@@ -8,7 +8,6 @@ namespace MapGenerator
 {
 	public class Region
 	{
-		Block woodMine;
 		List<OverworldBuilding> buildings;
 
 		Economy economy;
@@ -101,8 +100,7 @@ namespace MapGenerator
 		{
 			foreach (Vector2 v in coordinates)
 			{
-				if ( map[(int)v.x, (int)v.y] >= RegionFill.DEFAULT_LABEL_START
-                   || map[(int)v.x, (int)v.y] == MapMaker.GROUND)
+				if ( map[(int)v.x, (int)v.y] >= RegionFill.DEFAULT_LABEL_START)
 					map[(int)v.x, (int)v.y] = MapMaker.GROUND;
 			}
 			return map;
@@ -114,9 +112,12 @@ namespace MapGenerator
             {
                 int x = (int)v.x;
                 int y = (int)v.y;
-                if (map[x, y] == MapMaker.GROUND) map[x, y] = castle.GetEnvironment();
+                if (map[x, y] == MapMaker.GROUND)
+                {
+                    map[x, y] = castle.GetEnvironment();
+                }
+                    
             }
-
             return map;
         }
 
@@ -220,6 +221,7 @@ namespace MapGenerator
 		/// <param name="map">Map.</param>
 		public void FillRegionWithWater(int[,] map)
 		{
+            map[(int)castle.GetPosition().x, (int)castle.GetPosition().y] = MapMaker.GROUND;
 			foreach( Vector2 pkt in coordinates)
 			{
 				int x = (int)pkt.x;
@@ -228,6 +230,7 @@ namespace MapGenerator
 				if (map[x, y] == MapMaker.GROUND)
 				{
 					map[x, y] = MapMaker.WATER_SPRITEID;
+     
 				}
 				else if (map[x, y] == MapMaker.REGION_CENTER)
 				{
@@ -239,15 +242,5 @@ namespace MapGenerator
 				}
 			}
 		}
-
-		/// <summary>
-		/// Gets the wood mine.
-		/// </summary>
-		/// <returns>The wood mine.</returns>
-		public Block GetWoodMine()
-		{
-			return woodMine;
-		}
-
 	}
 }

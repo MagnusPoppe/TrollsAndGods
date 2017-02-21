@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System;
-using Overworld;
 using MapGenerator;
 
 public class GameManager : MonoBehaviour 
@@ -308,11 +307,8 @@ public class GameManager : MonoBehaviour
             GameObject ground = new GameObject();
             ground.name = "Ground";
 
-            GameObject mountains = new GameObject();
-            mountains.name = "Mountains";
-
-            GameObject forest = new GameObject();
-            forest.name = "Forests";
+            GameObject environment = new GameObject();
+            environment.name = "Environment";
 
             GameObject buildings = new GameObject();
             buildings.name = "Buildings";
@@ -341,10 +337,21 @@ public class GameManager : MonoBehaviour
                     groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetGround(spriteID), ground);
                 }
 
-                // If building
-                else if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.ResourceBuilding)
+                else if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.Environment)
                 {
-                    buildingLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetBuilding(spriteID), buildings);
+                    buildingLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetEnvironment(spriteID), environment);
+                }
+
+                // If dwelling
+                else if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.Dwellings)
+                {
+                    buildingLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetDwelling(spriteID), buildings);
+                }
+
+                // If resouce buildings
+                else if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.ResourceBuildings)
+                {
+                    buildingLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetResourceBuilding(spriteID), buildings);
                 }
 
                 // If castle
@@ -352,43 +359,6 @@ public class GameManager : MonoBehaviour
                 {
                     buildingLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetCastle(spriteID), buildings);
                 }
-
-
-
-				//// TODO: Fjern statiske values
-				//if (spriteID >= 0 && spriteID <= 5)
-				//{
-				//	// TODO: Fjern castle fra verdi "2"
-				//	if (spriteID == 2)
-				//	{
-    //                    buildingLayer[x, y] = new GameObject();
-    //                    buildingLayer[x, y].name = "objectsInBuildingLayer (" + x + ", " + y + ")";
-    //                    if (y % 2 == 0)
-    //                        buildingLayer[x, y].transform.position = new Vector2(x, isometricOffset / 2);
-    //                    else
-    //                        buildingLayer[x, y].transform.position = new Vector2(x + 0.5f, isometricOffset / 2);
-
-    //                    // make "castle" into "building"
-    //                    SpriteRenderer oibl = buildingLayer[x, y].AddComponent<SpriteRenderer>();
-
-    //                    sr.sortingLayerName = "Ground";
-    //                    sr.sprite = libs.GetGround(4); // TODO: hardkdoet grass
-
-    //                    spriteID = 6;
-    //                    oibl.sortingLayerName = "Buildings";
-    //                    oibl.sprite = libs.GetBuilding(spriteID);
-				//	}
-				//	else
-				//	{
-				//		// if "ground" or "wall", make "dirt"
-				//		if (spriteID == 0 || spriteID == 1)
-				//			spriteID = 4;
-
-				//		sr.sortingLayerName = "Ground";
-				//		sr.sprite = libs.GetGround(spriteID);    // ny metode
-				//	}
-				//}
-
 			}
 			isometricOffset += YOFFSET; // 0.57747603833865814696485623003195f;
 		}

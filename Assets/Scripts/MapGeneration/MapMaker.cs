@@ -25,13 +25,13 @@ namespace MapGenerator
 		public const int  REGION_CENTER 			= 2;
 		public const bool KEEP_VORONOI_REGION_LINES = false;
 
-        public const int GRASS_SPRITEID = 3;
-        public const int WATER_SPRITEID = 4;
-        public const int DIRT_SPRITEID = 5;
-        public const int LAVA_SPRITEID = 6;
-        public const int SNOW_SPRITEID = 7;
+        public const int GRASS_SPRITEID =   IngameObjectLibrary.GROUND_START + 0;
+        public const int WATER_SPRITEID =   IngameObjectLibrary.GROUND_START + 1;
+        public const int DIRT_SPRITEID =    IngameObjectLibrary.GROUND_START + 2;
+        public const int LAVA_SPRITEID =    IngameObjectLibrary.GROUND_START + 3;
+        public const int SNOW_SPRITEID =    IngameObjectLibrary.GROUND_START + 4;
 
-        public const int FOREST_SPRITEID = 8;
+        public const int FOREST_SPRITEID = IngameObjectLibrary.ENVIRONMENT_START + 0; // TODO
 
 		// CANWALK 
 		public const int CANNOTWALK = 0;
@@ -68,27 +68,24 @@ namespace MapGenerator
 				spritecount   // Used in castle creation
 			);
 
-            // Fills random amount of regions with water
-            FillRandomRegionsWithWater();
+            printmap(map);
 
             // PLACE TREES IN OCCUPIED AREAS:
             replaceWalls();
+            //CreateTransitions();
 
-			//CreateTransitions();
-
-			canWalk = CreateWalkableArea();
+            canWalk = CreateWalkableArea();
 
             reactions = new Reaction[width, height];
 
+            int i = 0;
 			foreach (Region r in regions)
 			{
-                r.createEnvironment(map);
+                //map = r.createEnvironment(map);
 				InitBuildings(r);
 			}
 
-			QuailtyAssurance quality = new QuailtyAssurance();
-
-            printmap(map);
+            QuailtyAssurance quality = new QuailtyAssurance();
 		}
 
         private void printmap(int[,] map)
@@ -104,7 +101,8 @@ namespace MapGenerator
             }
             Debug.Log(msg);
         }
-        
+
+
         /// <summary>
         /// Replaces walls with mountains/forests/unwalkables
         /// </summary>
@@ -138,7 +136,7 @@ namespace MapGenerator
 			}
 		}
 
-		private void FillRandomRegionsWithWater()
+		private void FillRandomRegionsWithWater(int[,] map)
 		{
 			System.Random prng = new System.Random(seed.GetHashCode());
 
@@ -278,8 +276,10 @@ namespace MapGenerator
 			// Combining binary map and zone-devided maps:
 			generatedMap = CombineMaps(binaryMap, generatedMap);
 
-			// Setting the enviroment for each region:
-			foreach (Region region in regions)
+            // Fills random amount of regions with water
+            FillRandomRegionsWithWater(generatedMap);
+            // Setting the enviroment for each region:
+            foreach (Region region in regions)
 			{
 				region.SetRegionGroundTileType(region.GetCastle().EnvironmentTileType, generatedMap);
 			}
@@ -287,12 +287,17 @@ namespace MapGenerator
 			return generatedMap;
 		}
 
+        /// <summary>
+        /// Connects regionless tiles to the nearest region
+        /// </summary>
+        /// <param name="map"></param>
         public void connectLostPointsToRegions(int[,] map)
         {
 
             bool inRegion = false;
 
             Region prev = regions[0];
+            Vector2 prevPos = Vector2.zero;
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
@@ -303,6 +308,7 @@ namespace MapGenerator
                         {
                             if (r.isPointInRegion(new Vector2(x, y)))
                             {
+                                prevPos = new Vector2(x, y);
                                 inRegion = true;
                                 prev = r;
                                 break;
@@ -311,6 +317,7 @@ namespace MapGenerator
                         if (!inRegion)
                         {
                             prev.AddToRegion(new Vector2(x, y));
+                            map[x, y] = map[(int) prevPos.x, (int) prevPos.y];
                         }
                         inRegion = false;
                     }

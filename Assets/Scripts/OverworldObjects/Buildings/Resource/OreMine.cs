@@ -8,7 +8,7 @@ namespace OverworldObjects
 	{
 		const int SHAPE = Shapes.CUBE01;
         private const int LOCAL_SPRITE_ID = 0;
-        const IngameObjectLibrary.Category SPRITE_CATEGORY = IngameObjectLibrary.Category.ResourceBuilding;
+        const IngameObjectLibrary.Category SPRITE_CATEGORY = IngameObjectLibrary.Category.ResourceBuildings;
         const Resources.type RESOURCE_ID = Resources.type.ORE;
         
 		const int MINIMUM_PREFERED_DISTANCE_FROM_TOWN = 10;

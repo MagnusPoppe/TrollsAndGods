@@ -14,7 +14,7 @@ namespace OverworldObjects
         public UnknownCastle(Vector2 origo, Player owner ) 
             : base(origo, shape, owner, LOCAL_SPRITE_ID, SPRITE_CATEGORY, environmentTileType)
         {
-			EnvironmentTileType = MapGenerator.MapMaker.GROUND;
+			EnvironmentTileType = MapGenerator.MapMaker.GRASS_SPRITEID;
         }
 
         public UnknownCastle( Player owner ) 
