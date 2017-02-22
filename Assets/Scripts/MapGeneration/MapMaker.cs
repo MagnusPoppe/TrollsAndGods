@@ -15,7 +15,6 @@ namespace MapGenerator
 		Region[] regions;
 		int[,] map;
 		int[,] canWalk;
-        Reaction[,] reactions;
 
         // Overworld objects
         Vector2[] regionCenterPoints;
@@ -81,8 +80,6 @@ namespace MapGenerator
 
             canWalk = CreateWalkableArea();
 
-            reactions = new Reaction[width, height];
-
             int i = 0;
 			foreach (Region r in regions)
             {
@@ -97,6 +94,8 @@ namespace MapGenerator
 			}
 
             QuailtyAssurance quality = new QuailtyAssurance();
+
+
 		}
 
         private void printmap(int[,] map)
@@ -128,12 +127,6 @@ namespace MapGenerator
                         map[x, y] = FOREST_SPRITEID;
                 }
             }
-        }
-
-        private void AddReaction(int x, int y, OverworldBuilding building)
-        {
-            building.makeReaction(x, y);
-            reactions[x, y] = building.Reaction;
         }
 
 		private void InitBuildings(LandRegion r)

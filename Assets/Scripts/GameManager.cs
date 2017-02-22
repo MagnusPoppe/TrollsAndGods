@@ -95,6 +95,17 @@ public class GameManager : MonoBehaviour
         GenerateMap();
         reactions = new Reaction[widthXHeight, widthXHeight];
 
+        // Add reactions to buildings in regions
+
+        foreach(Region r in regions)
+        {
+            if (r.GetType().Equals(typeof(LandRegion)))
+            {
+                LandRegion lr = (LandRegion)r;
+                lr.makeReactions(reactions);
+            }
+        }
+
         // CREATING THE MAP USING MAPMAKER
 
         cameraMovement = GetComponent<CameraMovement>();
@@ -254,7 +265,8 @@ public class GameManager : MonoBehaviour
                                 }
                                 else if (reactions[x, y].GetType().Name.Equals(typeof(CastleReact)))
                                 {
-                                    // TODO town window has been opened, or enemy town was attacked
+                                    // TODO enemy town was attacked
+
                                 }
                                 else if (reactions[x, y].GetType().Name.Equals(typeof(DwellingReact)))
                                 {
@@ -421,8 +433,10 @@ public class GameManager : MonoBehaviour
 			sites, relaxIterations,                         // Voronoi Properties
 			buildingCount
 		);
-       
-		DrawMap(mapmaker.GetMap());
+
+        int[,] map = mapmaker.GetMap();
+
+		DrawMap(map);
 
 		// SETTING GLOBALS:
 		regions = mapmaker.GetRegions();

@@ -139,6 +139,16 @@ namespace MapGenerator
             }
         }
 
+        public Reaction[,] makeReactions(Reaction[,] reaction)
+        {
+            foreach(OverworldBuilding b in buildings)
+            {
+                reaction[(int)b.Origo.x, (int)b.Origo.y] = b.makeReaction();
+            }
+            // TODO same with pickups
+            return reaction;
+        }
+
 
     }
 }

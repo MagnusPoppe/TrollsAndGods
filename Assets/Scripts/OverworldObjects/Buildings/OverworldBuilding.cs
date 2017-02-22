@@ -120,9 +120,10 @@ namespace OverworldObjects
             return LocalSpriteID + IngameObjectLibrary.GetOffset(SpriteCategory);
         }
 
-        public virtual void makeReaction(int x,int y)
+        public virtual Reaction makeReaction()
         {
             //implemented in subclasses
+            return null;
         } 
 	}
 }

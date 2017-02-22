@@ -59,9 +59,10 @@ namespace OverworldObjects
             ResourceID = resourceID;
         }
 
-        public override void makeReaction(int x, int y)
+        public override Reaction makeReaction()
         {
-            Reaction = new ResourceBuildingReaction(this, new Vector2(x, y));
+            Reaction = new ResourceBuildingReaction(this, Origo);
+            return Reaction;
         }
     }
 }
