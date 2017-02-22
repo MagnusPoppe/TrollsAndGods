@@ -2,111 +2,54 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
-public class Building
+namespace TownView
 {
-    protected const int TOWNSIZE = 15;
-    protected string name;
-    protected bool isBuilt;
-    protected bool[] requirements;
-    private bool producesCreatures;
-    private Unit producedUnit;
-    private int amountOfCreatures;
-    private int creaturesPerWeek;
-    protected Resources cost;
-    protected SpriteRenderer spr;
 
-    public bool ProducesCreatures
+
+    public class Building
     {
-        get
+
+        protected string name;
+        private bool built;
+        protected bool[] requirements;
+        protected Resources cost;
+        private Vector2 placement;
+
+        protected bool Built
         {
-            return producesCreatures;
+            get
+            {
+                return built;
+            }
+
+            set
+            {
+                built = value;
+            }
         }
 
-        set
+        protected Vector2 Placement
         {
-            producesCreatures = value;
-        }
-    }
+            get
+            {
+                return placement;
+            }
 
-    public Unit ProducedUnit
-    {
-        get
-        {
-            return producedUnit;
-        }
-
-        set
-        {
-            producedUnit = value;
-        }
-    }
-
-    public int AmountOfCreatures
-    {
-        get
-        {
-            return amountOfCreatures;
+            set
+            {
+                placement = value;
+            }
         }
 
-        set
+        public void Build()
         {
-            amountOfCreatures = value;
-        }
-    }
-
-    public int CreaturesPerWeek
-    {
-        get
-        {
-            return creaturesPerWeek;
+            // TODO: implementer metoden med cost
+            Built = true;
         }
 
-        set
+        public Building(string name, bool[] requirements, Resources cost)
         {
-            creaturesPerWeek = value;
+
         }
-    }
-
-    public Building()
-    {
-        requirements = new bool[TOWNSIZE];
-        isBuilt = false;
-        ProducesCreatures = false;
-    }
-
-    public bool IsBuilt()
-    {
-        return isBuilt;
-    }
-
-    public void populate(int extra)
-    {
-        AmountOfCreatures += CreaturesPerWeek + extra;
-    }
-
-    public void SetBuilt(bool isBuilt)
-    {
-        this.isBuilt = isBuilt;
-    }
-
-    public bool[] GetRequirements()
-    {
-        return requirements;
-    }
-
-    public Resources GetCost()
-    {
-        return cost;
-    }
-
-    public string GetName()
-    {
-        return name;
-    }
-
-    public SpriteRenderer GetSpriteRenderer()
-    {
-        return spr;
     }
 }

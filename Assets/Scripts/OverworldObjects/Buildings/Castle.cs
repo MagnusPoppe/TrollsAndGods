@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using TownView;
 
 namespace OverworldObjects
 {
@@ -7,17 +8,20 @@ namespace OverworldObjects
 	{
 		int environmentTileType;
 		string name;
+        Town town;
 
         public Castle(Vector2 origo, int shape, Player owner, int spriteID, IngameObjectLibrary.Category spriteCategory, int environmentTileType)
             : base(origo, shape, owner, spriteID, spriteCategory)
         {
             Name = "unnamed";
             EnvironmentTileType = environmentTileType;
+            Town = town;
         }
         public Castle( int shape, Player owner, int spriteID, IngameObjectLibrary.Category spriteCategory)
                 : base( shape, owner, spriteID, spriteCategory)
         {
             this.Name = "unnamed";
+            Town = town;
         }
 
         public int EnvironmentTileType
@@ -43,6 +47,19 @@ namespace OverworldObjects
             set
             {
                 name = value;
+            }
+        }
+
+        public Town Town
+        {
+            get
+            {
+                return town;
+            }
+
+            set
+            {
+                town = value;
             }
         }
 
