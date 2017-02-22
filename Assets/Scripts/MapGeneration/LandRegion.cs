@@ -14,6 +14,7 @@ namespace MapGenerator
 
         TileRating[] coordinateValue;
         Castle castle;
+        Hero hero;
 
         /// <summary>
         /// Defines a region by a set of coordinates and its center position.
@@ -21,10 +22,17 @@ namespace MapGenerator
         /// </summary>
         /// <param name="coordinateList">Coordinate list.</param>
         /// <param name="regionCenter">Castle position.</param>
-        public LandRegion(List<Vector2> coordinateList, Vector2 regionCenter) 
+        public LandRegion(List<Vector2> coordinateList, Vector2 regionCenter, Player player) 
             :base(coordinateList, regionCenter)
         {
-            castle = new UnknownCastle(regionCenter, null); // TODO: Set player dynamically 
+            castle = new UnknownCastle(regionCenter, player); // TODO: Set player dynamically 
+            if(castle.Player != null)
+            {
+                // Add hero below castle
+                Vector2 heroOrigo = new Vector2((int)castle.Origo.x, (int)castle.Origo.y);
+                hero = new TestHero(player, heroOrigo);
+                hero.Player.addHero(hero);
+            }
             coordinates = coordinateList;
             buildings = new List<OverworldBuilding>();
         }
@@ -37,6 +45,16 @@ namespace MapGenerator
         public Castle GetCastle()
         {
             return castle;
+        }
+
+
+        /// <summary>
+        /// Gets the hero belonging to the castle.
+        /// </summary>
+        /// <returns>The hero.</returns>
+        public Hero GetHero()
+        {
+            return hero;
         }
 
         /// <summary>
@@ -145,7 +163,7 @@ namespace MapGenerator
             {
                 reaction[(int)b.Origo.x, (int)b.Origo.y] = b.makeReaction();
             }
-            // TODO same with pickups
+            // TODO same with pickups AND heroes
             return reaction;
         }
 

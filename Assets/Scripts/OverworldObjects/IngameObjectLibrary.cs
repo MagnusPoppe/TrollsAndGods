@@ -60,6 +60,10 @@ public class IngameObjectLibrary
         {
             return Category.ResourceBuildings;
         }
+        else if(spriteID < CASTLES_START)
+        {
+            return Category.Heroes;
+        }
         else if (spriteID <= CASTLES_START + CASTLES_COUNT)
         {
             return Category.Castle;
@@ -139,9 +143,9 @@ public class IngameObjectLibrary
     private Sprite[] InitializeHeroes()
     {
         Sprite[] sprites = new Sprite[HEROES_COUNT];
-        String path = "Sprites/Heroes";
+        String path = "Sprites/Heroes/";
         sprites[0] = UnityEngine.Resources.Load<Sprite>(path + "hero1");
-        sprites[0] = UnityEngine.Resources.Load<Sprite>(path + "hero2");
+        sprites[1] = UnityEngine.Resources.Load<Sprite>(path + "hero2");
 
         return sprites;
     }
@@ -186,6 +190,11 @@ public class IngameObjectLibrary
     public Sprite GetCastle(int spriteID)
     {
         return castles[spriteID - CASTLES_START];
+    }
+
+    public Sprite GetHero(int spriteID)
+    {
+        return heroes[spriteID - HEROES_START];
     }
 }
  
