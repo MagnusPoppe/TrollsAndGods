@@ -51,8 +51,8 @@ namespace OverworldObjects
             }
         }
 
-        public ResourceBuilding(int shape, Player owner, int spriteID, Resources.type resourceID, int minDistFromTown, int maxDistFromTown)
-            : base(shape, owner, spriteID)
+        public ResourceBuilding(int shape, Player owner, int spriteID, IngameObjectLibrary.Category spriteCategory, Resources.type resourceID, int minDistFromTown, int maxDistFromTown)
+            : base(shape, owner, spriteID, spriteCategory)
         {
             MinDistFromTown = minDistFromTown;
             MaxDistFromTown = maxDistFromTown;

@@ -7,16 +7,19 @@ namespace OverworldObjects
 	public class OreMine : ResourceBuilding
 	{
 		const int SHAPE = Shapes.CUBE01;
-		const int SPRITE_ID = 7; // TODO: hardkode?
-        const Resources.type RESOURCE_ID = Resources.type.WOOD;
-
+        private const int LOCAL_SPRITE_ID = 0;
+        const IngameObjectLibrary.Category SPRITE_CATEGORY = IngameObjectLibrary.Category.ResourceBuildings;
+        const Resources.type RESOURCE_ID = Resources.type.ORE;
+        
 		const int MINIMUM_PREFERED_DISTANCE_FROM_TOWN = 10;
 		const int MAXIMUM_PREFERED_DISTANCE_FROM_TOWN = 15;
 
 		public OreMine(Player owner) 
-		: base(SHAPE, owner, SPRITE_ID, RESOURCE_ID, MINIMUM_PREFERED_DISTANCE_FROM_TOWN, MAXIMUM_PREFERED_DISTANCE_FROM_TOWN)
+		: base(SHAPE, owner, LOCAL_SPRITE_ID, SPRITE_CATEGORY, RESOURCE_ID, MINIMUM_PREFERED_DISTANCE_FROM_TOWN, MAXIMUM_PREFERED_DISTANCE_FROM_TOWN)
 		{
 			
 		}
+
+
 	}
 }

@@ -8,14 +8,14 @@ namespace OverworldObjects
 		int environmentTileType;
 		string name;
 
-        public Castle(Vector2 origo, int shape, Player owner, int spriteID, int environmentTileType)
-            : base(origo, shape, owner, spriteID)
+        public Castle(Vector2 origo, int shape, Player owner, int spriteID, IngameObjectLibrary.Category spriteCategory, int environmentTileType)
+            : base(origo, shape, owner, spriteID, spriteCategory)
         {
             Name = "unnamed";
             EnvironmentTileType = environmentTileType;
         }
-        public Castle( int shape, Player owner, int spriteID)
-                : base( shape, owner, spriteID)
+        public Castle( int shape, Player owner, int spriteID, IngameObjectLibrary.Category spriteCategory)
+                : base( shape, owner, spriteID, spriteCategory)
         {
             this.Name = "unnamed";
         }

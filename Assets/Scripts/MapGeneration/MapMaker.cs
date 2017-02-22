@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using OverworldObjects;
 using Filter;
+using System.Collections.Generic;
 
 namespace MapGenerator
 {
@@ -17,21 +18,30 @@ namespace MapGenerator
         Reaction[,] reactions;
 
         // Overworld objects
-        Castle[] castles;
+        Vector2[] regionCenterPoints;
 
 		// Constants
 		public const int  GROUND 					= 0;
 		public const int  WALL 						= 1;
-		public const int  CASTLE 					= 2;
-		public const int  WATER 					= 3;
-		public const int  DIRT						= 4;
-		public const int  WOODS 					= 5;
-	    public const int  BUILDING 					= 6;
-		public const int GRASS_WATER = 7;
+		public const int  REGION_CENTER 			= 2;
 		public const bool KEEP_VORONOI_REGION_LINES = false;
 
-		// CANWALK 
-		public const int CANNOTWALK = 0;
+        public const int GRASS_SPRITEID =   IngameObjectLibrary.GROUND_START + 0;
+        public const int WATER_SPRITEID =   IngameObjectLibrary.GROUND_START + 1;
+        public const int DIRT_SPRITEID =    IngameObjectLibrary.GROUND_START + 2;
+        public const int LAVA_SPRITEID =    IngameObjectLibrary.GROUND_START + 3;
+        public const int SNOW_SPRITEID =    IngameObjectLibrary.GROUND_START + 4;
+
+        public const int FOREST_SPRITEID = IngameObjectLibrary.ENVIRONMENT_START + 0;
+        public const int MOUNTAIN1_SPRITEID = IngameObjectLibrary.ENVIRONMENT_START + 1;
+        public const int MOUNTAIN2_SPRITEID = IngameObjectLibrary.ENVIRONMENT_START + 2;
+        public const int MOUNTAIN3_SPRITEID = IngameObjectLibrary.ENVIRONMENT_START + 3;
+        public const int MOUNTAIN4_SPRITEID = IngameObjectLibrary.ENVIRONMENT_START + 4;
+        public const int MOUNTAIN5_SPRITEID = IngameObjectLibrary.ENVIRONMENT_START + 5;
+
+
+        // CANWALK 
+        public const int CANNOTWALK = 0;
 		public const int CANWALK 	= 1;
 		public const int TRIGGER 	= 2;
 
@@ -65,31 +75,60 @@ namespace MapGenerator
 				spritecount   // Used in castle creation
 			);
 
-			// PLACE TREES IN OCCUPIED AREAS:
-			for (int y = 0; y < height; y++)
-			{
-				for (int x = 0; x < width; x++)
-				{
-					if (map[x, y] == WALL)
-						map[x, y] = WOODS;
-				}
-			}
-			FillRandomRegionsWithWater();
+            // PLACE TREES IN OCCUPIED AREAS:
+            replaceWalls();
+            //CreateTransitions();
 
-			//CreateTransitions();
-
-			canWalk = CreateWalkableArea();
+            canWalk = CreateWalkableArea();
 
             reactions = new Reaction[width, height];
 
+            int i = 0;
 			foreach (Region r in regions)
-			{ 
-				InitBuildings(r);
+            {
+                if (r.GetType().Equals(typeof(LandRegion)))
+                {
+                    LandRegion lr = (LandRegion)r;
+                    lr.SetRegionGroundTileType(lr.GetCastle().EnvironmentTileType, map);
+
+                    map[r.getX(), r.getY()] = lr.GetCastle().GetSpriteID();
+                    InitBuildings(lr);
+                }
 			}
 
-			QuailtyAssurance quality = new QuailtyAssurance();
-
+            QuailtyAssurance quality = new QuailtyAssurance();
 		}
+
+        private void printmap(int[,] map)
+        {
+            string msg = "";
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    msg += map[x, y] +" "; 
+                }
+                msg += "\n";
+            }
+            Debug.Log(msg);
+        }
+
+
+        /// <summary>
+        /// Replaces walls with mountains/forests/unwalkables
+        /// </summary>
+        // TODO: Include mountains
+        private void replaceWalls()
+        {
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    if (map[x, y] == WALL)
+                        map[x, y] = FOREST_SPRITEID;
+                }
+            }
+        }
 
         private void AddReaction(int x, int y, OverworldBuilding building)
         {
@@ -97,7 +136,7 @@ namespace MapGenerator
             reactions[x, y] = building.Reaction;
         }
 
-		private void InitBuildings(Region r)
+		private void InitBuildings(LandRegion r)
 		{
 			r.createEconomy(canWalk, new Economy(Economy.POOR));
 
@@ -105,19 +144,7 @@ namespace MapGenerator
 			{
 				int x = (int)building.Origo.x;
 				int y = (int)building.Origo.y;
-				map[x, y] = building.SpriteID;
-			}
-		}
-
-		private void FillRandomRegionsWithWater()
-		{
-			System.Random prng = new System.Random(seed.GetHashCode());
-
-			for (int i = 0; i < castles.Length/2; i++)
-			{
-				// Pesuedo random number generator:
-				int r = prng.Next(0, castles.Length);
-    			regions[r].FillRegionWithWater(map);
+				map[x, y] = building.LocalSpriteID;
 			}
 		}
 
@@ -132,7 +159,7 @@ namespace MapGenerator
 					if (direction >= 0)
 					{ 
 						Debug.Log("Direction " + direction + " found for (" + x + "," + y + ")");
-						map[x, y] = GRASS_WATER + direction;
+						map[x, y] = 0 + direction; //TODO: erstatt med ingamelib transition coast
 					}
 				}
 			}
@@ -178,12 +205,12 @@ namespace MapGenerator
 
 					if (filter[fx, fy] == 1) // HER SKAL DET VÆRE VANN
 					{
-						if (map[x + (fx - range), y + (fy - range)] != WATER)
+						if (map[x + (fx - range), y + (fy - range)] != WATER_SPRITEID)
 							return false;
 					}
 					else
 					{
-						if (map[x + (fx - range), y + (fy - range)] == WATER)
+						if (map[x + (fx - range), y + (fy - range)] == WATER_SPRITEID)
 							return false;
 					}
 
@@ -231,41 +258,120 @@ namespace MapGenerator
 			int[,] voronoiMap = voronoi.GetMap();
 
 			// Converting zones to regions:
-			RegionFill r = new RegionFill(voronoiMap, castles);
+			RegionFill r = new RegionFill(voronoiMap, regionCenterPoints);
 			int[,] generatedMap = r.GetMap();
 			regions = r.GetRegions();
 
-			foreach (Region region in regions)
+           List<Region> regionBySize = new List<Region>();
+
+            foreach (Region region in regions)
 			{
+                regionBySize.Add(region);
 				region.ResetRegionGroundTileType(generatedMap);
 			}
 
-			// Creating randomness through procedural map generation.:
-			BinaryMap binary = new BinaryMap(width,height,smooth,seed,fill,regions);
+            regionBySize.Sort();
+            int waterRegionCount = (int) (regions.Length * 0.20);
+            for (int i = 0; i < regions.Length; i++)
+            {
+                if( i <= waterRegionCount )
+                    regionBySize[i] = new WaterRegion(
+                        regionBySize[i].GetCoordinates(), 
+                        regionBySize[i].RegionCenter
+                    );
+                else
+                    regionBySize[i] = new LandRegion(
+                        regionBySize[i].GetCoordinates(), 
+                        regionBySize[i].RegionCenter
+                    );
+
+                for (int j = 0; j < regions.Length; j++)
+                {
+                    if (regionBySize[i].Equals(regions[j]))
+                    {
+                        regions[j] = regionBySize[i]; break;
+                    }
+                }
+            }
+
+
+            connectLostPointsToRegions(voronoiMap);
+
+            // Creating randomness through procedural map generation.:
+            BinaryMap binary = new BinaryMap(width,height,smooth,seed,fill,regions);
 			int[,] binaryMap = binary.getMap();
 
 			// Combining binary map and zone-devided maps:
 			generatedMap = CombineMaps(binaryMap, generatedMap);
 
-			// Setting the enviroment for each region:
-			foreach (Region region in regions)
+            // Setting the enviroment for each region:
+            foreach (Region region in regions)
 			{
-				region.SetRegionGroundTileType(region.GetCastle().EnvironmentTileType, generatedMap);
-			}
+                if (region.GetType().Equals(typeof(LandRegion)))
+                {
+                    LandRegion lr = (LandRegion)region;
+                    lr.SetRegionGroundTileType(lr.GetCastle().EnvironmentTileType, generatedMap);
+
+                }
+                else if (region.GetType().Equals(typeof(WaterRegion)))
+                {
+                    WaterRegion wr = (WaterRegion)region;
+                    wr.FillRegionWithWater(generatedMap);
+                }
+            }
 
 			return generatedMap;
 		}
 
+        /// <summary>
+        /// Connects regionless tiles to the nearest region
+        /// </summary>
+        /// <param name="map"></param>
+        public void connectLostPointsToRegions(int[,] map)
+        {
+
+            bool inRegion = false;
+
+            Region prev = regions[0];
+            Vector2 prevPos = Vector2.zero;
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    if (map[x, y] == MapMaker.WALL)
+                    {
+                        foreach (Region r in regions)
+                        {
+                            if (r.isPointInRegion(new Vector2(x, y)))
+                            {
+                                prevPos = new Vector2(x, y);
+                                inRegion = true;
+                                if (!typeof(WaterRegion).Equals(r.GetType()))
+                                    prev = r;
+                                break;
+                            }
+                        }
+                        if (!inRegion)
+                        {
+                            prev.AddToRegion(new Vector2(x, y));
+                            map[x, y] = MapMaker.FOREST_SPRITEID; // map[(int) prevPos.x, (int) prevPos.y];
+                        }
+                        inRegion = false;
+                    }
+                }
+            }
+        }
 
 
-		/// <summary>
-		/// Sets up the voronoi map + the castles/towns
-		/// </summary>
-		/// <returns>Already ran voronoi map.</returns>
-		/// <param name="sites">Number of Sites/town.</param>
-		/// <param name="relaxItr">Number of Relax itrations.</param>
-		/// <param name="totalSprites">Total sprites.</param>
-		private VoronoiGenerator VoronoiSiteSetup(int sites, int relaxItr, int totalSprites)
+
+        /// <summary>
+        /// Sets up the voronoi map + the castles/towns
+        /// </summary>
+        /// <returns>Already ran voronoi map.</returns>
+        /// <param name="sites">Number of Sites/town.</param>
+        /// <param name="relaxItr">Number of Relax itrations.</param>
+        /// <param name="totalSprites">Total sprites.</param>
+        private VoronoiGenerator VoronoiSiteSetup(int sites, int relaxItr, int totalSprites)
 		{
 			// DEFINING CASTLE POSITIONS ON THE MAP:
 			Vector2[] sitelist = CreateRandomPoints(sites); // TODO: Place castles smart.
@@ -274,14 +380,7 @@ namespace MapGenerator
 			VoronoiGenerator voronoi = new VoronoiGenerator(width, height, sitelist, relaxItr);
 
 			// Getting new positions after relaxing:
-			sitelist = voronoi.GetNewSites();
-
-			castles = new Castle[sites];
-
-			for (int i = 0; i < castles.Length; i++)
-			{
-                castles[i] = new UnknownCastle(sitelist[i], null);
-			}
+			regionCenterPoints = voronoi.GetNewSites();
 
 			return voronoi;
 		}
@@ -336,18 +435,13 @@ namespace MapGenerator
 					else
 						combinedMap[x, y] = binary[x, y];
 					
-					else if (voronoi[x, y] == CASTLE)
+					else if (voronoi[x, y] == REGION_CENTER)
 						combinedMap[x, y] = WALL;
 					
 					else
 						combinedMap[x, y] = binary[x, y];
                 }
             }
-
-			foreach (Castle site in castles)
-			{
-				combinedMap[(int)site.GetPosition().x, (int)site.GetPosition().y] = CASTLE;
-			}
 
             return combinedMap;
         }
