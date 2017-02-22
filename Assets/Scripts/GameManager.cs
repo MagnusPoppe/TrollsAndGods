@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Collections;
 using System;
+using TownView;
 using MapGenerator;
 
 public class GameManager : MonoBehaviour
@@ -77,6 +78,8 @@ public class GameManager : MonoBehaviour
     bool walking;
     bool lastStep;
 
+    // Town
+    GameObject[] buildingsInActiveTown;
     GameObject townWindow;
     bool overWorld;
 
@@ -208,7 +211,10 @@ public class GameManager : MonoBehaviour
                 {
                     SetLastStep(true);
                 }
-                enterTown();
+
+                UnknownTown t = new UnknownTown(new Player(0,0));
+                t.Buildings[0].Build();
+                EnterTown(t);
             }
             // Upon every update, activedhero will be moved in a direction if walking is enabled
             if (IsWalking())
@@ -349,12 +355,7 @@ public class GameManager : MonoBehaviour
         return pathObjects;
     }
 
-    public void ChangeTownSprite()
-    {
-        Debug.Log(libs.GetTown(IngameObjectLibrary.TOWNS_START + 0).ToString());
-        SpriteRenderer sr = townWindow.GetComponent<SpriteRenderer>();
-        sr.sprite = libs.GetTown(IngameObjectLibrary.TOWNS_START + 0); //TODO: hardkodet
-    }
+
 
     /// <summary>
     /// Creates a position with animationspeed and returns it
@@ -550,7 +551,7 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Called by UI click on town
     /// </summary>
-    public void enterTown()
+    public void EnterTown(Town town)
     {
 
         
@@ -562,10 +563,57 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            ChangeTownSprite();
+            DrawTown(town);
             townWindow.SetActive(true);
             overWorld = false;
             cameraMovement.enabled = false;
+        }
+    }
+
+    /// <summary>
+    /// Draws the town view
+    /// </summary>
+    /// <param name="town"></param>
+    public void DrawTown(Town town)
+    {
+        // Sets up the town view background
+        SpriteRenderer sr = townWindow.GetComponent<SpriteRenderer>();
+        sr.sprite = libs.GetTown(town.GetSpriteID());
+        sr.sortingLayerName = "TownWindow";
+
+        Debug.Log(town.Buildings.Length);
+        buildingsInActiveTown = new GameObject[town.Buildings.Length];
+
+        // loads in the town buildings
+        for (int i = 0; i < town.Buildings.Length; i++)
+        {
+            if (town.Buildings[i].Built)
+            {
+                Vector2 placement = new Vector2(
+                    townWindow.transform.position.x + town.Buildings[i].Placement.x,
+                    townWindow.transform.position.y + town.Buildings[i].Placement.y
+                );
+
+                buildingsInActiveTown[i] = new GameObject();
+                buildingsInActiveTown[i].name = town.Buildings[i].Name;
+                buildingsInActiveTown[i].transform.position = placement;
+                buildingsInActiveTown[i].transform.localScale = new Vector3(town.Buildings[i].Scale, town.Buildings[i].Scale, 1);
+                buildingsInActiveTown[i].transform.parent = townWindow.transform;
+
+                SpriteRenderer buildingSr = buildingsInActiveTown[i].AddComponent<SpriteRenderer>();
+                buildingSr.sprite = libs.GetTown(town.Buildings[i].GetSpriteID());
+                buildingSr.sortingLayerName = "TownBuildings";
+            }
+        }
+
+    }
+
+    public void DestroyBuildingsInTown()
+    {
+        foreach (GameObject building in buildingsInActiveTown)
+        {
+            if (building != null)
+                Destroy(building);
         }
     }
 

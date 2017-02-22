@@ -6,29 +6,26 @@ namespace TownView
 {
 
 
-    public class Building
+    public class Building : SpriteSystem
     {
 
-        protected string name;
+        private float scale;
+        private string name;
         private bool built;
         protected bool[] requirements;
         protected Resources cost;
         private Vector2 placement;
+        private const IngameObjectLibrary.Category CATEGORY = IngameObjectLibrary.Category.Town; // TODO: ny kategori for town buildings
 
-        protected bool Built
+        public bool Built
         {
             get
             {
                 return built;
             }
-
-            set
-            {
-                built = value;
-            }
         }
 
-        protected Vector2 Placement
+        public Vector2 Placement
         {
             get
             {
@@ -41,15 +38,44 @@ namespace TownView
             }
         }
 
+        public string Name
+        {
+            get
+            {
+                return name;
+            }
+
+            set
+            {
+                name = value;
+            }
+        }
+
+        public float Scale
+        {
+            get
+            {
+                return scale;
+            }
+            set
+            {
+                scale = value;
+            }
+        }
+
         public void Build()
         {
             // TODO: implementer metoden med cost
-            Built = true;
+            built = true;
         }
 
-        public Building(string name, bool[] requirements, Resources cost)
+        public Building(string name, bool[] requirements, Resources cost, int localID, float scale) :base(localID, CATEGORY)
         {
-
+            Name = name;
+            this.requirements = requirements;
+            Placement = placement;
+            Scale = scale;
+            this.cost = cost;
         }
     }
 }

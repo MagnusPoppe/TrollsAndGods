@@ -79,7 +79,7 @@ namespace MapGenerator
             replaceWalls();
             //CreateTransitions();
 
-            canWalk = CreateWalkableArea();
+            //canWalk = CreateWalkableArea();
 
             reactions = new Reaction[width, height];
 
@@ -144,7 +144,8 @@ namespace MapGenerator
 			{
 				int x = (int)building.Origo.x;
 				int y = (int)building.Origo.y;
-				map[x, y] = building.LocalSpriteID;
+
+				map[x, y] = building.GetSpriteID();
 			}
 		}
 
@@ -271,7 +272,7 @@ namespace MapGenerator
 			}
 
             regionBySize.Sort();
-            int waterRegionCount = (int) (regions.Length * 0.20);
+            int waterRegionCount = (int) (regions.Length * 0.20); // TODO: hardkodet 20%
             for (int i = 0; i < regions.Length; i++)
             {
                 if( i <= waterRegionCount )
@@ -303,6 +304,7 @@ namespace MapGenerator
 
 			// Combining binary map and zone-devided maps:
 			generatedMap = CombineMaps(binaryMap, generatedMap);
+            canWalk = CreateWalkableArea(generatedMap);
 
             // Setting the enviroment for each region:
             foreach (Region region in regions)
