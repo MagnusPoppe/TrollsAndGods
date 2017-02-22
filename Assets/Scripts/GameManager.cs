@@ -74,6 +74,7 @@ public class GameManager : MonoBehaviour
     GameObject go;
     bool overWorld;
 
+    Text dateText;
     Text[] resourceText;
     string[] resourceTextPosition = new string[] { "TextGold", "TextWood", "TextOre", "TextCrystal", "TextGem" };
 
@@ -97,11 +98,13 @@ public class GameManager : MonoBehaviour
         go.SetActive(false);
         overWorld = true;
 
+        GameObject textObject = GameObject.Find("TextDate");
+        dateText = textObject.GetComponent<Text>();
         resourceText = new Text[5];
         for (int i = 0; i < resourceText.Length; i++)
         {
-            GameObject a = GameObject.Find(resourceTextPosition[i]);
-            resourceText[i] = a.GetComponent<Text>();
+            textObject = GameObject.Find(resourceTextPosition[i]);
+            resourceText[i] = textObject.GetComponent<Text>();
             resourceText[i].text = i + ""; // TODO currentPlayer.getResource(i);
         }
     }
@@ -567,9 +570,11 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void nextTurn()
     {
-        date.incrementDay();
         if (++whoseTurn > amountOfPlayers)
+        {
             whoseTurn = 0;
+            dateText.text = date.incrementDay();
+        }
         //activeHero = getPlayer(whoseTurn).Heroes[0]; // TODO UNCOMMENT
         //getPlayer(whoseTurn).GatherIncome(); // TODO UNCOMMENT
     }
