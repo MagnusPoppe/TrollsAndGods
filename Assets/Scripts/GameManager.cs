@@ -275,7 +275,7 @@ public class GameManager : MonoBehaviour
                 mousePos = HandyMethods.getIsoTilePos(mousePos);
                 int x = (int)mousePos.x;
                 int y = (int)mousePos.y;
-                if (reactions[x, y] != null)
+                if (x >= 0 && x < width && y >= 0 && y < height && reactions[x, y] != null)
                 {
                     if (reactions[x, y].GetType().Name.Equals(typeof(CastleReact)))
                     {
