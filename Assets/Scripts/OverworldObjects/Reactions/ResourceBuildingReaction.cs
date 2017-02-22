@@ -9,11 +9,13 @@ using OverworldObjects;
 public class ResourceBuildingReaction : Reaction {
 
     ResourceBuilding resourceBuilding;
+    HeroMeetReact heroReact;
 
     public ResourceBuildingReaction(ResourceBuilding resourceBuilding, Vector2 pos)
     {
         ResourceBuilding = resourceBuilding;
         Pos = pos;
+        HeroReact = null;
     }
 
     public ResourceBuilding ResourceBuilding
@@ -26,6 +28,19 @@ public class ResourceBuildingReaction : Reaction {
         set
         {
             resourceBuilding = value;
+        }
+    }
+
+    public HeroMeetReact HeroReact
+    {
+        get
+        {
+            return heroReact;
+        }
+
+        set
+        {
+            heroReact = value;
         }
     }
 

@@ -45,6 +45,43 @@ public class Town
         hasBuiltThisRound = true;
     }
 
+    public void updateAvailableCreatures()
+    {
+        foreach (Building b in buildings)
+        {
+            if (b.IsBuilt() && b.ProducesCreatures)
+            {
+                int extra = 0;
+                foreach (Dwelling d in relatedDwellings)
+                {
+                    if (d.UnitType.equals(b.ProducedUnit) && d.Owner.equals(owner))
+                    {
+                        extra += d.UnitsPerWeek;
+                    }
+                }
+                b.populate(extra);
+            }
+        }
+    }
+
+    public void updateDwellingOwnerChange(Dwelling d)
+    {
+        foreach (Building b in buildings)
+        {
+            if (b.IsBuilt() && b.ProducesCreatures && b.ProducedUnit.equals(d.UnitType))
+            {
+                if (d.Owner.equals(owner))
+                {
+                    b.AmountOfCreatures += d.UnitsPresent;
+                }
+                else
+                {
+                    b.AmountOfCreatures -= d.UnitsPresent;
+                }
+            }
+        }
+    }
+
     public bool HasBuiltThisRound
     {
         get

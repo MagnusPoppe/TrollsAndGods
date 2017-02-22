@@ -23,6 +23,20 @@ public class HandyMethods
         else return new Vector2(x, (y + 0.25f) * 2 * 2);
     }
 
+    static public Vector2 getGraphicPos(Vector2 pos)
+    {
+        Vector2 modified;
+        if (pos.y % 2 == 0)
+        {
+            modified = new Vector2(pos.x, pos.y / 2 / 2);
+        }
+        else
+        {
+            modified = new Vector2(pos.x + 0.5f, pos.y / 2 / 2);
+        }
+        return modified;
+    }
+
     static public float determineSideOfLine(Vector2 start, Vector2 end, Vector2 point)
     {
         return (point.x - start.x) * (end.y - start.y) - (point.y - start.y) * (end.x - start.x);
