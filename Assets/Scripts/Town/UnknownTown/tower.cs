@@ -17,7 +17,7 @@ namespace TownView
         const bool[] requirements = null;
         const float px = 0.99f;
         const float  py = 2.68f;
-        const float scale = 2f;
+
         const int LOCAL_SPRITEID = 1;
         
         
@@ -31,10 +31,9 @@ namespace TownView
 
 
         // This needs no indata since it knows its values.
-        public Tower() : base(name, requirements, new Resources(GOLD_COST, WOOD_COST, ORE_COST, CRYSTAL_COST, GEM_COST), LOCAL_SPRITEID, scale)
+        public Tower() : base(name, requirements, new Resources(GOLD_COST, WOOD_COST, ORE_COST, CRYSTAL_COST, GEM_COST), LOCAL_SPRITEID)
         {
             Placement = new Vector2(px, py);
-            Scale = scale;
         }
     }
 }

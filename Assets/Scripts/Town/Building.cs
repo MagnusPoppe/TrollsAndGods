@@ -8,8 +8,6 @@ namespace TownView
 
     public class Building : SpriteSystem
     {
-
-        private float scale;
         private string name;
         private bool built;
         protected bool[] requirements;
@@ -50,31 +48,18 @@ namespace TownView
                 name = value;
             }
         }
-
-        public float Scale
-        {
-            get
-            {
-                return scale;
-            }
-            set
-            {
-                scale = value;
-            }
-        }
-
+        
         public void Build()
         {
             // TODO: implementer metoden med cost
             built = true;
         }
 
-        public Building(string name, bool[] requirements, Resources cost, int localID, float scale) :base(localID, CATEGORY)
+        public Building(string name, bool[] requirements, Resources cost, int localID) :base(localID, CATEGORY)
         {
             Name = name;
             this.requirements = requirements;
             Placement = placement;
-            Scale = scale;
             this.cost = cost;
         }
     }

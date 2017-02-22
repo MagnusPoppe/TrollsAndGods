@@ -126,7 +126,8 @@ public class IngameObjectLibrary
     {
         Sprite[] sprites = new Sprite[ENVIRONMENT_COUNT];
         String path = "Sprites/Environment/";
-        sprites[0] = UnityEngine.Resources.Load<Sprite>(path + "Placeholder/Forest");
+        //sprites[0] = UnityEngine.Resources.Load<Sprite>(path + "Placeholder/Forest");
+        sprites[0] = UnityEngine.Resources.Load<Sprite>(path + "Forests/Forest 1");
         sprites[1] = UnityEngine.Resources.Load<Sprite>(path + "Mountains/Mountain 1");
         sprites[2] = UnityEngine.Resources.Load<Sprite>(path + "Mountains/Mountain 2");
         sprites[3] = UnityEngine.Resources.Load<Sprite>(path + "Mountains/Mountain 3");

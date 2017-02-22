@@ -451,8 +451,11 @@ public class GameManager : MonoBehaviour
             GameObject ground = new GameObject();
             ground.name = "Ground";
 
-            GameObject environment = new GameObject();
-            environment.name = "Environment";
+            GameObject mountains = new GameObject();
+            mountains.name = "Mountains";
+
+            GameObject forests = new GameObject();
+            forests.name = "Forest";
 
             GameObject buildings = new GameObject();
             buildings.name = "Buildings";
@@ -483,25 +486,30 @@ public class GameManager : MonoBehaviour
 
                 else if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.Environment)
                 {
-                    buildingLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetEnvironment(spriteID), environment);
+                    buildingLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetEnvironment(spriteID), mountains);
+                    groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetGround(MapMaker.GRASS_SPRITEID), ground); //TODO:temp
+
                 }
 
                 // If dwelling
                 else if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.Dwellings)
                 {
                     buildingLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetDwelling(spriteID), buildings);
+                    groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetGround(MapMaker.GRASS_SPRITEID), ground); //TODO:temp
                 }
 
                 // If resource buildings
                 else if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.ResourceBuildings)
                 {
                     buildingLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetResourceBuilding(spriteID), buildings);
+                    groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetGround(MapMaker.GRASS_SPRITEID), ground); //TODO:temp
                 }
 
                 // If castle
                 else if(libs.GetCategory(spriteID) == IngameObjectLibrary.Category.Castle)
                 {
                     buildingLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetCastle(spriteID), buildings);
+                    groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetGround(MapMaker.GRASS_SPRITEID), ground); //TODO:temp
                 }
 			}
 			isometricOffset += YOFFSET; // 0.57747603833865814696485623003195f;
@@ -581,25 +589,32 @@ public class GameManager : MonoBehaviour
         sr.sprite = libs.GetTown(town.GetSpriteID());
         sr.sortingLayerName = "TownWindow";
 
-        Debug.Log(town.Buildings.Length);
+        // Creates a GameObject array for the new building
         buildingsInActiveTown = new GameObject[town.Buildings.Length];
 
         // loads in the town buildings
         for (int i = 0; i < town.Buildings.Length; i++)
         {
+
+            // If the building is built, draw it 
             if (town.Buildings[i].Built)
             {
+
+                // Gets parent X,Y and uses offset coords to draw in place
                 Vector2 placement = new Vector2(
                     townWindow.transform.position.x + town.Buildings[i].Placement.x,
                     townWindow.transform.position.y + town.Buildings[i].Placement.y
                 );
 
+                // Creates a game object for the building, gives it a name and places and scales it properly
                 buildingsInActiveTown[i] = new GameObject();
                 buildingsInActiveTown[i].name = town.Buildings[i].Name;
                 buildingsInActiveTown[i].transform.position = placement;
-                buildingsInActiveTown[i].transform.localScale = new Vector3(town.Buildings[i].Scale, town.Buildings[i].Scale, 1);
                 buildingsInActiveTown[i].transform.parent = townWindow.transform;
 
+                // TODO: Add collider to buildings
+
+                // Adds a sprite rendered to display the building
                 SpriteRenderer buildingSr = buildingsInActiveTown[i].AddComponent<SpriteRenderer>();
                 buildingSr.sprite = libs.GetTown(town.Buildings[i].GetSpriteID());
                 buildingSr.sortingLayerName = "TownBuildings";
