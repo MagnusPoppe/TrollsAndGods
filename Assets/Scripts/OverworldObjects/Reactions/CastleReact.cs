@@ -9,11 +9,13 @@ using OverworldObjects;
 public class CastleReact : Reaction {
 
     Castle castle;
+    HeroMeetReact heroReact;
 
     public CastleReact(Castle castle, Vector2 pos)
     {
         Castle = castle;
         Pos = pos;
+        HeroReact = null;
     }
 
     public Castle Castle
@@ -26,6 +28,19 @@ public class CastleReact : Reaction {
         set
         {
             castle = value;
+        }
+    }
+
+    public HeroMeetReact HeroReact
+    {
+        get
+        {
+            return heroReact;
+        }
+
+        set
+        {
+            heroReact = value;
         }
     }
 

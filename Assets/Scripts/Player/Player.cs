@@ -30,6 +30,15 @@ public class Player
         PlayerID = playerID;
         FogOfWar = new bool[32, 32]; // todo, link to map objects x y size
         DwellingsOwned = new List<Dwelling>();
+        ResourceBuildings = new List<ResourceBuilding>();
+    }
+
+    public void GatherIncome()
+    {
+        foreach (ResourceBuilding rb in ResourceBuildings)
+        {
+            Resources.adjustResource(rb.ResourceID, 1);
+        }
     }
 
     // override object.Equals

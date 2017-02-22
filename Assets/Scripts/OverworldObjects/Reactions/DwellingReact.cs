@@ -9,11 +9,13 @@ using OverworldObjects;
 public class DwellingReact : Reaction {
 
     Dwelling dwelling;
+    HeroMeetReact heroReact;
 
     public DwellingReact(Dwelling dwelling, Vector2 pos)
     {
         Dwelling = dwelling;
         Pos = pos;
+        HeroReact = null;
     }
 
     public Dwelling Dwelling
@@ -26,6 +28,19 @@ public class DwellingReact : Reaction {
         set
         {
             dwelling = value;
+        }
+    }
+
+    public HeroMeetReact HeroReact
+    {
+        get
+        {
+            return heroReact;
+        }
+
+        set
+        {
+            heroReact = value;
         }
     }
 
@@ -42,6 +57,7 @@ public class DwellingReact : Reaction {
             if (dwelling.Owner != null) dwelling.Owner.DwellingsOwned.Remove(dwelling);
             dwelling.Owner = h.Player;
             h.Player.DwellingsOwned.Add(dwelling);
+            dwelling.Town.updateDwellingOwnerChange(dwelling);
             //todo inital hiring of units
             return true;
         }
