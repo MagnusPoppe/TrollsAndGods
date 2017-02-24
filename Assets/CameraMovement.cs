@@ -1,7 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
+/// <summary>
+/// Camera script
+/// </summary>
 public class CameraMovement : MonoBehaviour
 {
     const float OFFSET = 0.5f;
@@ -15,9 +19,9 @@ public class CameraMovement : MonoBehaviour
     Camera cam;
     void Start ()
     {
-        GameManager a = GetComponent<GameManager>();
-        width = a.widthXHeight;
-        height = a.widthXHeight/2/2;
+        GameManager gm = GetComponent<GameManager>();
+        width = gm.WIDTH;
+        height = gm.HEIGHT/2/2;
 
         cam = GetComponent<Camera>();
         cameraHeight = (2f * cam.orthographicSize);
@@ -27,6 +31,10 @@ public class CameraMovement : MonoBehaviour
         cameraWidth /= 2;
     }
 	
+    /// <summary>
+    /// Moves camera in a direction if W A S D is pressed, or if pointer is near the edge of the game, but 
+    /// within the boundaries of the map.
+    /// </summary>
 	void Update ()
     {
         if (transform.position.y < height-cameraHeight-CUTY && ((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) || Input.mousePosition.y > Screen.height - FRAMEOFFSET))
@@ -49,5 +57,26 @@ public class CameraMovement : MonoBehaviour
             transform.position = new Vector3(transform.position.x + OFFSET, transform.position.y, transform.position.z);
             if (transform.position.x > width - cameraWidth -CUTX) transform.position = new Vector3(width - cameraWidth - CUTX, transform.position.y, transform.position.z);
         }
+    }
+
+    /// <summary>
+    /// Puts the camera at the parameter position, but within the boundaries of the map
+    /// </summary>
+    /// <param name="position">paramter position</param>
+    public void centerCamera(Vector2 position)
+    {
+        float x = limitX(position.x);
+        float y = limitY(position.y);
+        transform.position = new Vector3(x, y, transform.position.z);
+    }
+
+    private float limitX(float x)
+    {
+        return x = Math.Min(Math.Max(x, cameraWidth), width - cameraWidth - CUTX);
+    }
+
+    private float limitY(float y)
+    {
+        return Math.Min(Math.Max(y, cameraHeight), height - cameraHeight - CUTY);
     }
 }

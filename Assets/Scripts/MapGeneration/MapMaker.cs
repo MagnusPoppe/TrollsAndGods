@@ -79,25 +79,23 @@ namespace MapGenerator
             // PLACE TREES IN OCCUPIED AREAS:
             replaceWalls();
             //CreateTransitions();
-
-            Reaction[,] reactions = new Reaction[width, height];
+            
+            /*
             int i = 0;
-			  foreach (Region r in regions)
+            foreach (Region r in regions)
             {
                 if (r.GetType().Equals(typeof(LandRegion)))
                 {
                     LandRegion lr = (LandRegion)r;
-                    lr.SetRegionGroundTileType(lr.GetCastle().EnvironmentTileType, map); 
+                    lr.SetRegionGroundTileType(lr.GetCastle().EnvironmentTileType, map);
 
-                    
+
                     map[r.getX(), r.getY()] = lr.GetCastle().GetSpriteID();
-                    //if (lr.GetCastle().Player != null)
-                    //    lr.PlaceHero(lr.GetCastle().Player, map);
                     InitBuildings(lr);
                 }
-			}
+            }*/
 
-            QuailtyAssurance quality = new QuailtyAssurance();
+        QuailtyAssurance quality = new QuailtyAssurance();
 
 			printmap(canWalk);
 		}
@@ -115,7 +113,6 @@ namespace MapGenerator
             }
             Debug.Log(msg);
         }
-
 
         /// <summary>
         /// Replaces walls with mountains/forests/unwalkables
@@ -346,13 +343,20 @@ namespace MapGenerator
             int i = 0;
             foreach(Region region in regions)
             {
-                if (region.GetType().Equals(typeof(LandRegion)) && i+1 < players.Length)
+                if (region.GetType().Equals(typeof(LandRegion)))
                 {
-                    players[i] = new Player(i, 0);
                     LandRegion lr = (LandRegion)region;
-                    lr.PlaceCastle(new UnknownCastle(players[i]), map, canWalk);
-                    lr.PlaceHero(players[i], map, canWalk);
-                    i++;
+                    // Place a castle at every landregion
+                    lr.PlaceCastle(new UnknownCastle(null), map, canWalk);
+                    if (i < players.Length)
+                    {
+                        // Create a player, set the castles owner as that player.
+                        // Also place a corresponding hero.
+                        players[i] = new Player(i, 0);
+                        lr.GetCastle().Player = players[i];
+                        lr.PlaceHero(players[i], map, canWalk);
+                        i++;
+                    }
                 }
             }
         }
@@ -499,7 +503,6 @@ namespace MapGenerator
 
             return points;
         }
-
-    }   
+    }
 }
     
