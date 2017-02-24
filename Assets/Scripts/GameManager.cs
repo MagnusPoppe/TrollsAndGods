@@ -16,7 +16,9 @@ public class GameManager : MonoBehaviour
     public CameraMovement cameraMovement;
 
 
-    // ONLY SET FOR USE WITH UNITY EDITOR!
+	// ONLY SET FOR USE WITH UNITY EDITOR!
+	public bool CanWalkDebugMode = false;
+
     public int widthXHeight = 64;
     [Range(0, 20)]
     int buildingCount;
@@ -475,12 +477,19 @@ public class GameManager : MonoBehaviour
 
         int[,] map = mapmaker.GetMap();
 
-		DrawMap(map);
-
 		// SETTING GLOBALS:
 		regions = mapmaker.GetRegions();
 		canWalk = mapmaker.GetCanWalkMap();
 
+		if (CanWalkDebugMode)
+		{
+			DrawDebugMap(map, canWalk);
+		}
+		else
+		{
+			DrawMap(map);
+		}
+			
 
 		// Kaster mapmaker
 		mapmaker = null;
@@ -517,6 +526,7 @@ public class GameManager : MonoBehaviour
         // DRAWING THE MAP:
         groundLayer = new GameObject[width, height];
 		float isometricOffset = 0;
+
 		// Looping through all tile positions:
 		for (int y = 0; y < height; y++)
 		{
@@ -524,54 +534,150 @@ public class GameManager : MonoBehaviour
 			for (int x = 0; x < width; x++)
 			{
                 // gets tile value
-                int spriteID = map[x, height - 1 - y];
-
                 
-                // If ground
-                if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.Ground)
-                {
-                    groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetGround(spriteID), ground);
-                }
+				//int spriteID = map[x, height - 1 - y];
+				int spriteID = map[x, y];
+				// TODO: CURRENT: Denne er snudd
 
-                else if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.Environment)
-                {
-                    buildingLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetEnvironment(spriteID), mountains);
-                    groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetGround(MapMaker.GRASS_SPRITEID), ground); //TODO:temp
+				// If ground
+				if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.Ground)
+				{
+					groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetGround(spriteID), ground);
+				}
 
-                }
+				else if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.Environment)
+				{
+					buildingLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetEnvironment(spriteID), mountains);
+					groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetGround(MapMaker.GRASS_SPRITEID), ground); //TODO:temp
+				}
 
-                // If dwelling
-                else if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.Dwellings)
-                {
-                    buildingLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetDwelling(spriteID), buildings);
-                    groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetGround(MapMaker.GRASS_SPRITEID), ground); //TODO:temp
-                }
+				// If dwelling
+				else if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.Dwellings)
+				{
+					Debug.Log("ResourceBuilding: @(" + x + "," + y + ")");
 
-                // If resource buildings
-                else if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.ResourceBuildings)
-                {
-                    buildingLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetResourceBuilding(spriteID), buildings);
-                    groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetGround(MapMaker.GRASS_SPRITEID), ground); //TODO:temp
-                }
+					buildingLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetDwelling(spriteID), buildings);
+					groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetGround(MapMaker.GRASS_SPRITEID), ground); //TODO:temp
+				}
 
-                // If hero
-                else if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.Heroes)
-                {
-                    heroLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetHero(spriteID), heroes);
-                    groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetGround(IngameObjectLibrary.GROUND_START), ground);
-                }
+				// If resource buildings
+				else if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.ResourceBuildings)
+				{
+					Debug.Log("ResourceBuilding: @(" + x + "," + y + ")");
+					buildingLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetResourceBuilding(spriteID), buildings);
+					groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetGround(MapMaker.GRASS_SPRITEID), ground); //TODO:temp
+				}
 
-                // If castle
-                else if(libs.GetCategory(spriteID) == IngameObjectLibrary.Category.Castle)
-                {
-                    buildingLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetCastle(spriteID), buildings);
-                    groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetGround(MapMaker.GRASS_SPRITEID), ground); //TODO:temp
-                }
+				// If hero
+				else if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.Heroes)
+				{
+					heroLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetHero(spriteID), heroes);
+					groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetGround(IngameObjectLibrary.GROUND_START), ground);
+				}
 
+				// If castle
+				else if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.Castle)
+				{
+					buildingLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetCastle(spriteID), buildings);
+					groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetGround(MapMaker.GRASS_SPRITEID), ground); //TODO:temp
+				}
+
+				// If debug mode:
+				else if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.Debug)
+				{
+					groundLayer[x,y] = placeSprite(x, y, isometricOffset, libs.GetDebugSprite(map[x,y]), ground);
+				}
                 
             }
 			isometricOffset += YOFFSET; // 0.57747603833865814696485623003195f;
 		}
+	}
+
+	void DrawDebugMap(int[,] map, int[,] canWalk)
+	{
+		GameObject DebugTiles = new GameObject();
+		DebugTiles.name = "Debug";
+
+        GameObject mountains = new GameObject();
+		mountains.name = "Mountains";
+
+		GameObject forests = new GameObject();
+		forests.name = "Forest";
+
+		GameObject buildings = new GameObject();
+		buildings.name = "Buildings";
+
+		GameObject pickups = new GameObject();
+		pickups.name = "Pickups";
+
+		GameObject heroes = new GameObject();
+		heroes.name = "Heroes";
+
+		buildingLayer = new GameObject[width, height];
+		heroLayer = new GameObject[width, height];
+
+		// DRAWING THE MAP:
+		groundLayer = new GameObject[width, height];
+		float isometricOffset = 0;
+
+		// Looping through all tile positions:
+		for (int y = 0; y < height; y++)
+		{
+
+			for (int x = 0; x < width; x++)
+			{
+				// gets tile value
+
+				//int spriteID = map[x, height - 1 - y];
+				int spriteID = map[x, y];
+				// TODO: CURRENT: Denne er snudd
+
+				if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.Environment)
+				{
+					groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetDebugSprite(canWalk[x, y]), DebugTiles); //TODO:temp
+				}
+
+				// If dwelling
+				else if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.Dwellings)
+				{
+					Debug.Log("ResourceBuilding: @(" + x + "," + y + ")");
+
+					buildingLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetDwelling(spriteID), buildings);
+					groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetDebugSprite(canWalk[x,y]), DebugTiles); //TODO:temp
+				}
+
+				// If resource buildings
+				else if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.ResourceBuildings)
+				{
+					Debug.Log("ResourceBuilding: @(" + x + "," + y + ")");
+					buildingLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetResourceBuilding(spriteID), buildings);
+					groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetDebugSprite(canWalk[x, y]), DebugTiles); //TODO:temp
+				}
+
+				// If hero
+				else if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.Heroes)
+				{
+					heroLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetHero(spriteID), heroes);
+					groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetDebugSprite(canWalk[x, y]), DebugTiles); //TODO:temp
+				}
+
+				// If castle
+				else if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.Castle)
+				{
+					buildingLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetCastle(spriteID), buildings);
+					groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetDebugSprite(canWalk[x, y]), DebugTiles); //TODO:temp
+				}
+
+				// If debug mode:
+				else if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.Ground)
+				{
+					groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetDebugSprite(canWalk[x, y]), DebugTiles);
+				}
+
+			}
+			isometricOffset += YOFFSET; // 0.57747603833865814696485623003195f;
+		}
+
 	}
 
     /// <summary>

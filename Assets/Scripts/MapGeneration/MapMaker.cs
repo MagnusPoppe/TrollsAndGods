@@ -100,7 +100,7 @@ namespace MapGenerator
 
             QuailtyAssurance quality = new QuailtyAssurance();
 
-
+			printmap(canWalk);
 		}
 
         private void printmap(int[,] map)
