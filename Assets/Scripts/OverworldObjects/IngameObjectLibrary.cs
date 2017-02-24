@@ -292,5 +292,10 @@ public class IngameObjectLibrary
     {
         return heroes[spriteID - HEROES_START];
     }
+
+    public Sprite GetTown(int spriteID)
+    {
+        return towns[spriteID - TOWNS_START];
+    }
 }
  

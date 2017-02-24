@@ -83,11 +83,6 @@ namespace OverworldObjects
             canWalk[x,y] = MapGenerator.MapMaker.TRIGGER;
         }
 
-        public int GetSpriteID()
-        {
-            return LocalSpriteID + IngameObjectLibrary.GetOffset(SpriteCategory);
-        }
-
         public virtual Reaction makeReaction()
         {
             //implemented in subclasses
