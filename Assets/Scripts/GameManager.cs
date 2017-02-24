@@ -62,7 +62,6 @@ public class GameManager : MonoBehaviour
     const int CLICKSPEED = 20;
     bool prepareDoubleClick;
     int clickCount;
-    Vector2 heroPos;
     Vector2 savedClickedPos;
 
 
@@ -81,6 +80,7 @@ public class GameManager : MonoBehaviour
     float animationSpeed;
     bool walking;
     bool lastStep;
+    int tilesWalking;
 
     // Town
     GameObject[] buildingsInActiveTown;
@@ -130,8 +130,8 @@ public class GameManager : MonoBehaviour
         // Set active Hero
         heroActive = true;
         activeHero = getPlayer(0).Heroes[0];
-        heroPos = activeHero.Position;
-        //activeHeroObject = heroLayer[(int)heroPos.x, height+1-(int)heroPos.y];
+        //Debug.Log(heroPos);
+        activeHeroObject = heroLayer[(int)activeHero.Position.x, (int)activeHero.Position.y];
         // Initialize turn based and date
         whoseTurn = 0;
         clickCount = 0;
@@ -201,7 +201,7 @@ public class GameManager : MonoBehaviour
                         SetLastStep(true);
                     }
                     // Hero's own position is clicked
-                    else if (heroPos.Equals(posClicked))
+                    else if (activeHero.Position.Equals(posClicked))
                     {
                         // Todo, open hero menu
                     }
@@ -209,7 +209,7 @@ public class GameManager : MonoBehaviour
                     else if (canWalk[(int)posClicked.x, (int)posClicked.y] == MapMaker.CANWALK)
                     {
                         // Walk to pointer if marked square is clicked by enabling variables that triggers moveHero method on update
-                        if (pathMarked && posClicked.Equals(savedClickedPos))
+                        if (pathMarked && posClicked.Equals(savedClickedPos) && activeHero.CurMovementSpeed > 0)
                         {
                             SetWalking(true);
                         }
@@ -257,7 +257,6 @@ public class GameManager : MonoBehaviour
             if (IsWalking())
             {
                 Vector2 newPos = PrepareMovement();
-
                 // If hero has reached a new tile, increment so that he walks towards the next one, reset time animation, and destroy tile object
                 if (activeHeroObject.transform.position.Equals(pathObjects[stepNumber].transform.position))
                 {
@@ -268,9 +267,10 @@ public class GameManager : MonoBehaviour
                     if (IsLastStep())
                     {
                         // Set hero position when he stops walking to his isometric position
-                        heroPos = HandyMethods.getIsoTilePos(activeHeroObject.transform.position);
-                        int x = (int)heroPos.x;
-                        int y = (int)heroPos.y;
+                        activeHero.Position = HandyMethods.getIsoTilePos(activeHeroObject.transform.position);
+                        activeHero.CurMovementSpeed = activeHero.MovementSpeed - stepNumber;
+                        int x = (int)activeHero.Position.x;
+                        int y = (int)activeHero.Position.y;
                         SetWalking(false);
                         SetPathMarked(false);
                         RemoveMarkers(pathObjects);
@@ -347,7 +347,7 @@ public class GameManager : MonoBehaviour
 
     /// <summary>
     /// Prepares movement variables, 
-    /// ¨Åcreates a list of positions and creates and returns a list of gameobjects
+    /// Creates a list of positions and creates and returns a list of gameobjects
     /// </summary>
     /// <param name="pos">Destination tile position</param>
     /// <returns>List of instantiated marker objects</returns>
@@ -360,11 +360,10 @@ public class GameManager : MonoBehaviour
         // Needs to clear existing objects if an earlier path was already made
         RemoveMarkers(pathObjects);
         // Call algorithm method that returns a list of Vector2 positions to the point, go through all objects
-        List<Vector2> positions = aStar.calculate(heroPos, pos);
+        List<Vector2> positions = aStar.calculate(activeHero.Position, pos);
         // Calculate how many steps the hero will move, if this path is chosen
-        int i = activeHero.CurMovementSpeed = Math.Min(positions.Count, activeHero.MovementSpeed);
+        int i = tilesWalking = Math.Min(positions.Count, activeHero.CurMovementSpeed);
         // For each position, create a gameobject with an image and instantiate it, and add it to a gameobject list for later to be removed
-
         foreach (Vector2 no in positions)
         {
             // Create a cloned gameobject of the prefab corresponding to what the marker shall look like
@@ -391,7 +390,7 @@ public class GameManager : MonoBehaviour
             {
                 modified = new Vector2(no.x + 0.5f, no.y / 2 / 2);
             }
-            // set the cloned position to the vector2 object, instantiate it and add it to the list of gameobjects, pathList
+            // set the cloned position to the vector2 object and add it to the list of gameobjects, pathList
             pathMarker.transform.position = modified;
             pathObjects.Add(pathMarker);
         }
@@ -406,9 +405,13 @@ public class GameManager : MonoBehaviour
     /// <returns>Position the hero shall be moved to</returns>
     public Vector2 PrepareMovement()
     {
-        // Add animation, transform hero position
-        animationSpeed += Time.deltaTime;
-        return Vector2.Lerp(transform.position, pathObjects[stepNumber].transform.position, animationSpeed);
+        if(pathObjects != null && stepNumber < pathObjects.Count)
+        {
+            // Add animation, transform hero position
+            animationSpeed += Time.deltaTime;
+            return Vector2.Lerp(activeHeroObject.transform.position, pathObjects[stepNumber].transform.position, animationSpeed);
+        }
+        return activeHeroObject.transform.position;
     }
 
     /// <summary>
@@ -422,11 +425,12 @@ public class GameManager : MonoBehaviour
             Destroy(go);
         }
         li.Clear();
+        li = new List<GameObject>();
     }
 
     public bool IsLastStep()
     {
-        return stepNumber == activeHero.CurMovementSpeed || lastStep;
+        return stepNumber == activeHero.CurMovementSpeed || stepNumber == tilesWalking || lastStep;
     }
 
     public void SetLastStep(bool w)
@@ -480,6 +484,10 @@ public class GameManager : MonoBehaviour
 		// SETTING GLOBALS:
 		regions = mapmaker.GetRegions();
 		canWalk = mapmaker.GetCanWalkMap();
+
+        // SETTING PLAYERS AND CASTLES:
+
+        mapmaker.initializePlayers(map, canWalk, players);
 
 		if (CanWalkDebugMode)
 		{
@@ -804,13 +812,24 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void nextTurn()
     {
-        if (++whoseTurn > amountOfPlayers)
+        if(!IsWalking())
         {
-            whoseTurn = 0;
-            dateText.text = date.incrementDay();
+            foreach (Hero hero in players[whoseTurn].Heroes)
+            {
+                if (hero != null)
+                    hero.CurMovementSpeed = hero.MovementSpeed;
+            }
+            if (++whoseTurn > amountOfPlayers)
+            {
+                whoseTurn = 0;
+                dateText.text = date.incrementDay();
+            }
+            RemoveMarkers(pathObjects);
+            activeHero = getPlayer(whoseTurn).Heroes[0];
+            activeHeroObject = heroLayer[(int)activeHero.Position.x, (int)activeHero.Position.y];
+            getPlayer(whoseTurn).GatherIncome();
         }
-        //activeHero = getPlayer(whoseTurn).Heroes[0]; // TODO UNCOMMENT
-        //getPlayer(whoseTurn).GatherIncome(); // TODO UNCOMMENT
+
     }
 
     private Vector2 RealLogicalPostition(Vector2 position)
