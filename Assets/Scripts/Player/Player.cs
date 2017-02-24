@@ -11,6 +11,7 @@ public class Player
 {
     private Resources resources;
     private Hero[] heroes;
+    private int nextEmptyHero;
     private List<Town> towns;
     private int playerID;
     private bool[,] fogOfWar;
@@ -32,6 +33,7 @@ public class Player
         FogOfWar = new bool[32, 32]; // todo, link to map objects x y size
         DwellingsOwned = new List<Dwelling>();
         ResourceBuildings = new List<ResourceBuilding>();
+        nextEmptyHero = 0;
     }
 
     public void GatherIncome()
@@ -158,5 +160,35 @@ public class Player
         {
             dwellingsOwned = value;
         }
+    }
+
+    public bool addHero(Hero h)
+    {
+        if(nextEmptyHero < MAXHEROES)
+        {
+            heroes[nextEmptyHero++] = h;
+            return true;
+        }
+        return false;
+    }
+
+    public bool removeHero(int pos)
+    {
+        if (heroes[pos] != null)
+        {
+            heroes[pos] = null;
+            nextEmptyHero--;
+
+            // fill empty space in herotable
+            for(int i=pos+1; i<MAXHEROES-1; i++)
+            {
+                heroes[i] = heroes[i + 1];
+                // at last increment, clear last position in table
+                if (i == MAXHEROES - 1)
+                    heroes[MAXHEROES] = null;
+            }
+            return true;
+        }
+        return false;
     }
 }

@@ -98,9 +98,9 @@ namespace OverworldObjects
             unitsPresent += unitsPerWeek * more;
         }
 
-        public override void makeReaction(int x, int y)
+        public override Reaction makeReaction()
         {
-            Reaction = new DwellingReact(this, new Vector2(x, y));
+            return Reaction = new DwellingReact(this, Origo);
         }
     }
 }

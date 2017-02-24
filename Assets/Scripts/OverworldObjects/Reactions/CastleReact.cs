@@ -10,12 +10,15 @@ public class CastleReact : Reaction {
 
     Castle castle;
     HeroMeetReact heroReact;
+    GameManager gm;
 
     public CastleReact(Castle castle, Vector2 pos)
     {
         Castle = castle;
         Pos = pos;
         HeroReact = null;
+        GameObject go = GameObject.Find("Main Camera");
+        gm = go.GetComponent<GameManager>();
     }
 
     public Castle Castle
@@ -54,7 +57,7 @@ public class CastleReact : Reaction {
         
         if (castle.Player.Equals(h.Player))
         {
-            //Todo visit town
+            gm.enterTown();
             return false;
         }
         else
@@ -73,7 +76,7 @@ public class CastleReact : Reaction {
     {
         if (player.equals(castle.Player))
         {
-            //todo open town window
+            gm.enterTown();
         }
         return false;
     }

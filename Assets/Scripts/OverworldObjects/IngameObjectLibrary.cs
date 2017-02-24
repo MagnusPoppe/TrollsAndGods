@@ -82,7 +82,11 @@ public class IngameObjectLibrary
         {
             return Category.ResourceBuildings;
         }
-        else if (spriteID < CASTLES_START)
+        else if(spriteID < CASTLES_START)
+        {
+            return Category.Heroes;
+        }
+        else if (spriteID <= CASTLES_START + CASTLES_COUNT)
         {
             return Category.Castle;
         }
@@ -183,9 +187,9 @@ public class IngameObjectLibrary
     private Sprite[] InitializeHeroes()
     {
         Sprite[] sprites = new Sprite[HEROES_COUNT];
-        String path = "Sprites/Heroes";
+        String path = "Sprites/Heroes/";
         sprites[0] = UnityEngine.Resources.Load<Sprite>(path + "hero1");
-        sprites[0] = UnityEngine.Resources.Load<Sprite>(path + "hero2");
+        sprites[1] = UnityEngine.Resources.Load<Sprite>(path + "hero2");
 
         return sprites;
     }
@@ -284,14 +288,9 @@ public class IngameObjectLibrary
         return castles[spriteID - CASTLES_START];
     }
 
-    /// <summary>
-    /// Gjør global spriteID til lokal spriteID for town tiles
-    /// </summary>
-    /// <param name="spriteID">Global spriteID</param>
-    /// <returns>Lokal spriteID</returns>
-    public Sprite GetTown(int spriteID)
+    public Sprite GetHero(int spriteID)
     {
-        return towns[spriteID - TOWNS_START];
+        return heroes[spriteID - HEROES_START];
     }
 }
  

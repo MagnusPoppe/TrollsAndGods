@@ -14,22 +14,23 @@ public class Hero
     private Unit[] units;
     private List<Item> items;
     private Item[] equippedItems;
-    private GameObject self;
     private int movementSpeed;
     private int curMovementSpeed;
+    private Vector2 position;
+    private int localSpriteID;
+    private const IngameObjectLibrary.Category SPRITECATEGORY = IngameObjectLibrary.Category.Heroes;
 
     /// <summary>
     /// Constructor that prepares unit, items, and equippeditems list for the hero
     /// </summary>
     /// <param name="color">id of which player gets the hero</param>
-    public Hero(Player player, GameObject self, int movementSpeed)
+    public Hero(Player player, Vector2 position)
     {
-        Self = self;
         Player = player;
         Units = new Unit[7];
         Items = new List<Item>();
         EquippedItems = new Item[7];
-        CurMovementSpeed = MovementSpeed = movementSpeed;
+        Position = position;
     }
 
     public Sprite GetPortrait()
@@ -114,19 +115,6 @@ public class Hero
         }
     }
 
-    public GameObject Self
-    {
-        get
-        {
-            return self;
-        }
-
-        set
-        {
-            self = value;
-        }
-    }
-
     public int MovementSpeed
     {
         get
@@ -151,5 +139,36 @@ public class Hero
         {
             curMovementSpeed = value;
         }
+    }
+
+    public Vector2 Position
+    {
+        get
+        {
+            return position;
+        }
+
+        set
+        {
+            position = value;
+        }
+    }
+
+    public int LocalSpriteID
+    {
+        get
+        {
+            return localSpriteID;
+        }
+
+        set
+        {
+            localSpriteID = value;
+        }
+    }
+
+    public int GetSpriteID()
+    {
+        return LocalSpriteID + IngameObjectLibrary.GetOffset(SPRITECATEGORY);
     }
 }
