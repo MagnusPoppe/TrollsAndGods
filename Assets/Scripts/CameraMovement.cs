@@ -15,7 +15,7 @@ public class CameraMovement : MonoBehaviour
     Camera cam;
     void Start ()
     {
-        GameManager a = GetComponent<GameManager>();
+        GameManager a = GameObject.Find("GameManager").GetComponent<GameManager>();
         width = a.widthXHeight;
         height = a.widthXHeight/2/2;
 
