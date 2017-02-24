@@ -29,12 +29,21 @@ namespace MapGenerator
             if(castle.Player != null)
             {
                 // Add hero below castle
-                Vector2 heroOrigo = new Vector2((int)castle.Origo.x, (int)castle.Origo.y);
+                Vector2 heroOrigo = new Vector2((int)castle.Origo.x, (int)castle.Origo.y+2);
                 hero = new TestHero(player, heroOrigo);
                 hero.Player.addHero(hero);
             }
             coordinates = coordinateList;
             buildings = new List<OverworldBuilding>();
+        }
+
+        public void PlaceHero(Vector2 position, Player player, int[,] map)
+        {
+            
+            hero = new TestHero(player, position);
+        
+            hero.Player.addHero(hero);
+            map[(int)position.x, (int)position.y] = hero.GetSpriteID();
         }
 
        

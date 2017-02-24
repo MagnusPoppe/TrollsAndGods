@@ -125,19 +125,8 @@ public class GameManager : MonoBehaviour
         // Set active Hero
         heroActive = true;
         activeHero = getPlayer(0).Heroes[0];
-        Debug.Log(activeHero.Position.ToString() + "ACTIVEHEROPOS");
         heroPos = activeHero.Position;
-        activeHeroObject = heroLayer[(int)heroPos.y, (int)heroPos.x];
-        foreach(GameObject go in heroLayer)
-        {
-            if(go != null)
-                Debug.Log(go.transform.position.x + " " + go.transform.position.y);
-        }
-        for(int i=0; i<heroLayer.GetLength(0); i++)
-            for(int j=0; j<heroLayer.GetLength(1); j++)
-                if(heroLayer[i,j] != null)
-                    Debug.Log(i + " " + j + " GAMEOBJECT POS");
-        //Debug.Log(activeHeroObject.transform.position.x + " " + activeHeroObject.transform.position.y);
+        //activeHeroObject = heroLayer[(int)heroPos.x, height+1-(int)heroPos.y];
         // Initialize turn based and date
         whoseTurn = 0;
         clickCount = 0;
@@ -634,5 +623,10 @@ public class GameManager : MonoBehaviour
         }
         //activeHero = getPlayer(whoseTurn).Heroes[0]; // TODO UNCOMMENT
         //getPlayer(whoseTurn).GatherIncome(); // TODO UNCOMMENT
+    }
+
+    private Vector2 RealLogicalPostition(Vector2 position)
+    {
+        return new Vector2(position.x, height + 1 - position.y);
     }
 }

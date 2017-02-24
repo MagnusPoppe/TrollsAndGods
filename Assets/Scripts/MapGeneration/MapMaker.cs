@@ -91,8 +91,8 @@ namespace MapGenerator
                     lr.SetRegionGroundTileType(lr.GetCastle().EnvironmentTileType, map);
 
                     map[r.getX(), r.getY()] = lr.GetCastle().GetSpriteID();
-                    if(lr.GetHero() != null)
-                        map[r.getX(), r.getY() + 2] = lr.GetHero().GetSpriteID();
+                    if (lr.GetCastle().Player != null)
+                        lr.PlaceHero(lr.GetCastle().GetPosition(), lr.GetCastle().Player, map);
                     InitBuildings(lr);
                 }
 			}
