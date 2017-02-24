@@ -80,7 +80,7 @@ namespace MapGenerator
             replaceWalls();
             //CreateTransitions();
 
-            reactions = new Reaction[width, height];
+            Reaction[,] reactions = new Reaction[width, height];
             canWalk = CreateWalkableArea(initialMap);
 
             int i = 0;

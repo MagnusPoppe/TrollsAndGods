@@ -183,7 +183,7 @@ public class GameManager : MonoBehaviour
                         if (players[whoseTurn].equals(castleClicked.Castle.Player))
                         {
                             // TODO when click on your own castle
-                            enterTown();
+                            //EnterTown();
                             Debug.Log("Leftclicked your own castle");
                             heroActive = false;
                         }
@@ -672,7 +672,7 @@ public class GameManager : MonoBehaviour
                 // TODO: Add collider to buildings
                 BoxCollider2D collider = buildingsInActiveTown[i].AddComponent<BoxCollider2D>();
                 collider.isTrigger = true;
-                buildingsInActiveTown[i].AddComponent<TownBuildingTrigger>();
+                //buildingsInActiveTown[i].AddComponent<TownBuildingTrigger>();
 
 
                 // Adds a sprite rendered to display the building
