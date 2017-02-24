@@ -11,7 +11,7 @@ namespace TownView
     /// Town class for the players towns. Creates the tree of builings, and holds 
     /// the purchase variable that is flipped every time you buy something, and for every new day.
     /// </summary>
-    public class Town
+    public class Town : SpriteSystem
     {
         private bool hasBuiltThisRound;
         private Building[] buildings;
@@ -22,11 +22,12 @@ namespace TownView
         private UnitTree visitingUnits;
         Player owner;
 
+        const IngameObjectLibrary.Category category = IngameObjectLibrary.Category.Town;
         /// <summary>
         /// Constructor that builds the buildingtree with corresponding town according to townId variable
         /// </summary>
         /// <param name="townId">which town shall be built</param>
-        public Town(Player owner)
+        public Town(Player owner, int localSpriteID) :base(localSpriteID, category )
         {
             StationedUnits = new UnitTree();
             RelatedDwellings = new List<Dwelling>();

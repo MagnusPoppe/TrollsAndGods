@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace OverworldObjects
 {
-	public class OverworldInteractable
+	public class OverworldInteractable : SpriteSystem
 	{
         private Vector2 origo;
 
@@ -20,13 +20,13 @@ namespace OverworldObjects
             }
         }
 
-        public OverworldInteractable( Vector2 origo )
+        public OverworldInteractable( Vector2 origo, IngameObjectLibrary.Category category, int localSpriteID ) : base(localSpriteID, category)
 		{
 			Origo = origo;
 		}
 
-		public OverworldInteractable()
-		{
+		public OverworldInteractable(IngameObjectLibrary.Category category, int localSpriteID) : base(localSpriteID, category)
+        {
 			
 		}
 	}

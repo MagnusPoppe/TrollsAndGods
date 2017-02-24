@@ -80,10 +80,11 @@ namespace MapGenerator
             replaceWalls();
             //CreateTransitions();
 
+            reactions = new Reaction[width, height];
             canWalk = CreateWalkableArea(initialMap);
 
             int i = 0;
-			foreach (Region r in regions)
+			  foreach (Region r in regions)
             {
                 if (r.GetType().Equals(typeof(LandRegion)))
                 {
@@ -268,9 +269,11 @@ namespace MapGenerator
 			}
 
             regionBySize.Sort();
+      
             int waterRegionCount = (int) (regions.Length * 0.20);
             int playerID = 0;
-            for (int i = 0; i < regions.Length; i++)
+
+        for (int i = 0; i < regions.Length; i++)
             {
                 if (i <= waterRegionCount)
                     regionBySize[i] = new WaterRegion(
@@ -310,6 +313,7 @@ namespace MapGenerator
 
 			// Combining binary map and zone-devided maps:
 			generatedMap = CombineMaps(binaryMap, generatedMap);
+            canWalk = CreateWalkableArea(generatedMap);
 
            initialMap = new int[width, height];
             for (int y = 0; y < height; y++)

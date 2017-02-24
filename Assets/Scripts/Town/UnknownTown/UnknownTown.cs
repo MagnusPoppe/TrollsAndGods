@@ -18,7 +18,7 @@ namespace TownView
         /// Default constructor:
         /// </summary>
         /// <param name="owner">Player that owns the building:</param>
-        public UnknownTown(Player owner) :base(owner)
+        public UnknownTown(Player owner) :base(owner, spriteID)
         {
             Buildings = InitializeTownBuildings();
         }

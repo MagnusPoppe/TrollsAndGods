@@ -8,8 +8,6 @@ namespace OverworldObjects
 	{
         private int shapeType;
         private Player player;
-        private int localSpriteID;
-        private IngameObjectLibrary.Category spriteCategory;
         private Reaction reaction;
 
         public int ShapeType
@@ -38,19 +36,6 @@ namespace OverworldObjects
             }
         }
 
-        public int LocalSpriteID
-        {
-            get
-            {
-                return localSpriteID;
-            }
-
-            set
-            {
-                localSpriteID = value;
-            }
-        }
-
         public Reaction Reaction
         {
             get
@@ -63,35 +48,18 @@ namespace OverworldObjects
                 reaction = value;
             }
         }
-
-        public IngameObjectLibrary.Category SpriteCategory
-        {
-            get
-            {
-                return spriteCategory;
-            }
-
-            set
-            {
-                spriteCategory = value;
-            }
-        }
-
+        
         public OverworldBuilding(int shape, Player owner, int spriteID, IngameObjectLibrary.Category spriteCategory)
-			: base()
+			: base(spriteCategory, spriteID)
 		{
 			ShapeType = shape;
 			Player = owner;
-			LocalSpriteID = spriteID;
-            SpriteCategory = spriteCategory;
 		}
         public OverworldBuilding(Vector2 origo, int shape, Player owner, int spriteID, IngameObjectLibrary.Category spriteCategory)
-            : base(origo)
+            : base(origo, spriteCategory, spriteID)
         {
             ShapeType = shape;
             Player = owner;
-            LocalSpriteID = spriteID;
-            SpriteCategory = spriteCategory;
         }
 
         public void FlipCanWalk( int[,] canWalk )

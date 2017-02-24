@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Collections;
 using System;
+using TownView;
 using MapGenerator;
 
 public class GameManager : MonoBehaviour
@@ -79,6 +80,8 @@ public class GameManager : MonoBehaviour
     bool walking;
     bool lastStep;
 
+    // Town
+    GameObject[] buildingsInActiveTown;
     GameObject townWindow;
     bool overWorld;
     Text dateText;
@@ -134,15 +137,10 @@ public class GameManager : MonoBehaviour
         
         //savedClickedPos = HandyMethods.getIsoTilePos(transform.position);
         pathObjects = new List<GameObject>();
-<<<<<<< HEAD
-		aStar = new AStarAlgo(canWalk, width, height, false);
-        go = GameObject.Find("Town");
-        go.SetActive(false);
-=======
+
 		    aStar = new AStarAlgo(canWalk, width, height, false);
         townWindow = GameObject.Find("Town");
         townWindow.SetActive(false);
->>>>>>> master
         overWorld = true;
 
         GameObject textObject = GameObject.Find("TextDate");
@@ -243,6 +241,15 @@ public class GameManager : MonoBehaviour
                 {
                     SetLastStep(true);
                 }
+                // TODO: temp town creation
+                VikingTown t = new VikingTown(new Player(0,0));
+
+                for (int i = 0; i < t.Buildings.Length; i++)
+                {
+                    t.Buildings[i].Build();
+                }
+
+                EnterTown(t);
             }
             // Upon every update, activedhero will be moved in a direction if walking is enabled
             if (IsWalking())
@@ -337,7 +344,8 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Prepares movement variables, creates a list of positions and creates and returns a list of gameobjects
+    /// Prepares movement variables, 
+    /// ¨Åcreates a list of positions and creates and returns a list of gameobjects
     /// </summary>
     /// <param name="pos">Destination tile position</param>
     /// <returns>List of instantiated marker objects</returns>
@@ -388,12 +396,7 @@ public class GameManager : MonoBehaviour
         return pathObjects;
     }
 
-    public void ChangeTownSprite()
-    {
-        Debug.Log(libs.GetTown(IngameObjectLibrary.TOWNS_START + 0).ToString());
-        SpriteRenderer sr = townWindow.GetComponent<SpriteRenderer>();
-        sr.sprite = libs.GetTown(IngameObjectLibrary.TOWNS_START + 0); //TODO: hardkodet
-    }
+
 
     /// <summary>
     /// Creates a position with animationspeed and returns it
@@ -493,8 +496,11 @@ public class GameManager : MonoBehaviour
             GameObject ground = new GameObject();
             ground.name = "Ground";
 
-            GameObject environment = new GameObject();
-            environment.name = "Environment";
+            GameObject mountains = new GameObject();
+            mountains.name = "Mountains";
+
+            GameObject forests = new GameObject();
+            forests.name = "Forest";
 
             GameObject buildings = new GameObject();
             buildings.name = "Buildings";
@@ -529,19 +535,23 @@ public class GameManager : MonoBehaviour
 
                 else if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.Environment)
                 {
-                    buildingLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetEnvironment(spriteID), environment);
+                    buildingLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetEnvironment(spriteID), mountains);
+                    groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetGround(MapMaker.GRASS_SPRITEID), ground); //TODO:temp
+
                 }
 
                 // If dwelling
                 else if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.Dwellings)
                 {
                     buildingLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetDwelling(spriteID), buildings);
+                    groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetGround(MapMaker.GRASS_SPRITEID), ground); //TODO:temp
                 }
 
                 // If resource buildings
                 else if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.ResourceBuildings)
                 {
                     buildingLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetResourceBuilding(spriteID), buildings);
+                    groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetGround(MapMaker.GRASS_SPRITEID), ground); //TODO:temp
                 }
 
                 // If hero
@@ -555,6 +565,7 @@ public class GameManager : MonoBehaviour
                 else if(libs.GetCategory(spriteID) == IngameObjectLibrary.Category.Castle)
                 {
                     buildingLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetCastle(spriteID), buildings);
+                    groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetGround(MapMaker.GRASS_SPRITEID), ground); //TODO:temp
                 }
 
                 
@@ -606,22 +617,78 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Called by UI click on town
     /// </summary>
-    public void enterTown()
+    public void EnterTown(Town town)
     {
-
-        
         if (townWindow.activeSelf)
         {
             townWindow.SetActive(false);
             overWorld = true;
             cameraMovement.enabled = true;
+            DestroyBuildingsInTown();
         }
         else
         {
-            ChangeTownSprite();
+            DrawTown(town);
             townWindow.SetActive(true);
             overWorld = false;
             cameraMovement.enabled = false;
+        }
+    }
+
+    /// <summary>
+    /// Draws the town view
+    /// </summary>
+    /// <param name="town"></param>
+    public void DrawTown(Town town)
+    {
+        // Sets up the town view background
+        SpriteRenderer sr = townWindow.GetComponent<SpriteRenderer>();
+        sr.sprite = libs.GetTown(town.GetSpriteID());
+        sr.sortingLayerName = "TownWindow";
+
+        // Creates a GameObject array for the new building
+        buildingsInActiveTown = new GameObject[town.Buildings.Length];
+
+        // loads in the town buildings
+        for (int i = 0; i < town.Buildings.Length; i++)
+        {
+
+            // If the building is built, draw it 
+            if (town.Buildings[i].Built)
+            {
+
+                // Gets parent X,Y and uses offset coords to draw in place
+                Vector2 placement = new Vector2(
+                    townWindow.transform.position.x + town.Buildings[i].Placement.x,
+                    townWindow.transform.position.y + town.Buildings[i].Placement.y
+                );
+
+                // Creates a game object for the building, gives it a name and places and scales it properly
+                buildingsInActiveTown[i] = new GameObject();
+                buildingsInActiveTown[i].name = town.Buildings[i].Name;
+                buildingsInActiveTown[i].transform.position = placement;
+                buildingsInActiveTown[i].transform.parent = townWindow.transform;
+
+                // TODO: Add collider to buildings
+                BoxCollider2D collider = buildingsInActiveTown[i].AddComponent<BoxCollider2D>();
+                collider.isTrigger = true;
+                //collider.
+
+                // Adds a sprite rendered to display the building
+                SpriteRenderer buildingSr = buildingsInActiveTown[i].AddComponent<SpriteRenderer>();
+                buildingSr.sprite = libs.GetTown(town.Buildings[i].GetSpriteID());
+                buildingSr.sortingLayerName = "TownBuildings";
+            }
+        }
+
+    }
+
+    public void DestroyBuildingsInTown()
+    {
+        foreach (GameObject building in buildingsInActiveTown)
+        {
+            if (building != null)
+                Destroy(building);
         }
     }
 

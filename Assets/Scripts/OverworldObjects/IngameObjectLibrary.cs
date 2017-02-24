@@ -130,7 +130,8 @@ public class IngameObjectLibrary
     {
         Sprite[] sprites = new Sprite[ENVIRONMENT_COUNT];
         String path = "Sprites/Environment/";
-        sprites[0] = UnityEngine.Resources.Load<Sprite>(path + "Placeholder/Forest");
+        //sprites[0] = UnityEngine.Resources.Load<Sprite>(path + "Placeholder/Forest");
+        sprites[0] = UnityEngine.Resources.Load<Sprite>(path + "Forests/Forest 1");
         sprites[1] = UnityEngine.Resources.Load<Sprite>(path + "Mountains/Mountain 1");
         sprites[2] = UnityEngine.Resources.Load<Sprite>(path + "Mountains/Mountain 2");
         sprites[3] = UnityEngine.Resources.Load<Sprite>(path + "Mountains/Mountain 3");
@@ -214,7 +215,7 @@ public class IngameObjectLibrary
     // towns-variabler. towns[] holder alle sprites, TOWNS_START er global startverdi for towns sprites, TOWNS_COUNT er antall towns sprites
     Sprite[] towns;
     public const int TOWNS_START = CASTLES_START + CASTLES_COUNT;
-    public const int TOWNS_COUNT = 2;
+    public const int TOWNS_COUNT = 6;
 
     /// <summary>
     /// Initialiserer et array for å holde på alle towns sprites
@@ -222,10 +223,16 @@ public class IngameObjectLibrary
     /// <returns>Array med towns sprites</returns>
     private Sprite[] InitializeTowns()
     {
-        Sprite[] sprites = new Sprite[HEROES_COUNT];
+        Sprite[] sprites = new Sprite[TOWNS_COUNT];
         String path = "Sprites/Buildings/Towns/";
-        sprites[0] = UnityEngine.Resources.Load<Sprite>(path + "castle_town/castle_town_without_tower");
-        sprites[1] = UnityEngine.Resources.Load<Sprite>(path + "castle_town/castle_town_tower");
+
+        // Viking town sprites
+        sprites[0] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Background Viking Town");
+        sprites[1] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Dragon Tower");
+        sprites[2] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Pallisade");
+        sprites[3] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Temple");
+        sprites[4] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Town Hall");
+        sprites[5] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Troll Cave");
 
         return sprites;
     }
