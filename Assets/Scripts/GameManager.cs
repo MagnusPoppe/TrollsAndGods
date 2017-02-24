@@ -622,7 +622,8 @@ public class GameManager : MonoBehaviour
                 // TODO: Add collider to buildings
                 BoxCollider2D collider = buildingsInActiveTown[i].AddComponent<BoxCollider2D>();
                 collider.isTrigger = true;
-                //collider.
+                buildingsInActiveTown[i].AddComponent<TownBuildingTrigger>();
+
 
                 // Adds a sprite rendered to display the building
                 SpriteRenderer buildingSr = buildingsInActiveTown[i].AddComponent<SpriteRenderer>();
