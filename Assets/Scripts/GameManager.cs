@@ -212,8 +212,15 @@ public class GameManager : MonoBehaviour
                     SetLastStep(true);
                 }
 
-                UnknownTown t = new UnknownTown(new Player(0,0));
-                t.Buildings[0].Build();
+
+                // TODO: temp town creation
+                VikingTown t = new VikingTown(new Player(0,0));
+
+                for (int i = 0; i < t.Buildings.Length; i++)
+                {
+                    t.Buildings[i].Build();
+                }
+
                 EnterTown(t);
             }
             // Upon every update, activedhero will be moved in a direction if walking is enabled
@@ -308,7 +315,8 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Prepares movement variables, creates a list of positions and creates and returns a list of gameobjects
+    /// Prepares movement variables, 
+    /// ¨Åcreates a list of positions and creates and returns a list of gameobjects
     /// </summary>
     /// <param name="pos">Destination tile position</param>
     /// <returns>List of instantiated marker objects</returns>
@@ -561,13 +569,12 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void EnterTown(Town town)
     {
-
-        
         if (townWindow.activeSelf)
         {
             townWindow.SetActive(false);
             overWorld = true;
             cameraMovement.enabled = true;
+            DestroyBuildingsInTown();
         }
         else
         {
@@ -613,6 +620,9 @@ public class GameManager : MonoBehaviour
                 buildingsInActiveTown[i].transform.parent = townWindow.transform;
 
                 // TODO: Add collider to buildings
+                BoxCollider2D collider = buildingsInActiveTown[i].AddComponent<BoxCollider2D>();
+                collider.isTrigger = true;
+                //collider.
 
                 // Adds a sprite rendered to display the building
                 SpriteRenderer buildingSr = buildingsInActiveTown[i].AddComponent<SpriteRenderer>();
