@@ -83,9 +83,9 @@ namespace OverworldObjects
 			return "Castle " + Name+ " at " +Origo.ToString();
 		}
 
-        public override void makeReaction(int x, int y)
+        public override Reaction makeReaction()
         {
-            Reaction = new CastleReact(this, new Vector2(x, y));
+            return Reaction = new CastleReact(this, Origo);
         }
 	}
 }

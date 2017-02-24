@@ -15,7 +15,7 @@ namespace MapGenerator
 		Region[] regions;
 		int[,] map;
 		int[,] canWalk;
-        Reaction[,] reactions;
+        int[,] initialMap;
 
         // Overworld objects
         Vector2[] regionCenterPoints;
@@ -57,7 +57,7 @@ namespace MapGenerator
 		/// <param name="sites">number of sites/towns.</param>
 		/// <param name="relax">Relax iterations used with Lloyds relaxation.</param>
 		/// <param name="spritecount">Number of total available sprites.</param>
-		public MapMaker(
+		public MapMaker(Player[] players, 
 			int width, int height,
 			int spritecount, string seed, 
 			int fill, int smooth, 
@@ -72,19 +72,19 @@ namespace MapGenerator
 			this.map = GenerateMap(
 				sites, relax, // Used for Voronoi algorithm
 				fill, smooth, // Used for Binary map generation algorithm
-				spritecount   // Used in castle creation
+				spritecount, players   // Used in castle creation
+
 			);
 
             // PLACE TREES IN OCCUPIED AREAS:
             replaceWalls();
             //CreateTransitions();
 
-            //canWalk = CreateWalkableArea();
-
             reactions = new Reaction[width, height];
+            canWalk = CreateWalkableArea(initialMap);
 
             int i = 0;
-			foreach (Region r in regions)
+			  foreach (Region r in regions)
             {
                 if (r.GetType().Equals(typeof(LandRegion)))
                 {
@@ -92,11 +92,15 @@ namespace MapGenerator
                     lr.SetRegionGroundTileType(lr.GetCastle().EnvironmentTileType, map);
 
                     map[r.getX(), r.getY()] = lr.GetCastle().GetSpriteID();
+                    if (lr.GetCastle().Player != null)
+                        lr.PlaceHero(lr.GetCastle().GetPosition(), lr.GetCastle().Player, map);
                     InitBuildings(lr);
                 }
 			}
 
             QuailtyAssurance quality = new QuailtyAssurance();
+
+
 		}
 
         private void printmap(int[,] map)
@@ -130,12 +134,6 @@ namespace MapGenerator
             }
         }
 
-        private void AddReaction(int x, int y, OverworldBuilding building)
-        {
-            building.makeReaction(x, y);
-            reactions[x, y] = building.Reaction;
-        }
-
 		private void InitBuildings(LandRegion r)
 		{
 			r.createEconomy(canWalk, new Economy(Economy.POOR));
@@ -144,7 +142,6 @@ namespace MapGenerator
 			{
 				int x = (int)building.Origo.x;
 				int y = (int)building.Origo.y;
-
 				map[x, y] = building.GetSpriteID();
 			}
 		}
@@ -252,7 +249,7 @@ namespace MapGenerator
 		/// controller for the mapgenerator namespace.
 		/// </summary>
 		/// <returns>The newly generated map.</returns>
-		private int[,] GenerateMap(int sites, int relaxItr, int fill, int smooth,int totalSprites)
+		private int[,] GenerateMap(int sites, int relaxItr, int fill, int smooth,int totalSprites, Player[] players)
 		{ 
 			// Using Voronoi Algorithm to make zones.
 			VoronoiGenerator voronoi = VoronoiSiteSetup(sites, relaxItr, totalSprites);
@@ -272,19 +269,31 @@ namespace MapGenerator
 			}
 
             regionBySize.Sort();
-            int waterRegionCount = (int) (regions.Length * 0.20); // TODO: hardkodet 20%
-            for (int i = 0; i < regions.Length; i++)
+      
+            int waterRegionCount = (int) (regions.Length * 0.20);
+            int playerID = 0;
+
+        for (int i = 0; i < regions.Length; i++)
             {
-                if( i <= waterRegionCount )
+                if (i <= waterRegionCount)
                     regionBySize[i] = new WaterRegion(
-                        regionBySize[i].GetCoordinates(), 
+                        regionBySize[i].GetCoordinates(),
                         regionBySize[i].RegionCenter
                     );
                 else
+                {
+                    Player player = null;
+                    if (playerID < players.Length)
+                    {
+                        players[playerID] = player = new Player(playerID, 0);
+                        playerID++;
+                    }
+
                     regionBySize[i] = new LandRegion(
-                        regionBySize[i].GetCoordinates(), 
-                        regionBySize[i].RegionCenter
+                        regionBySize[i].GetCoordinates(),
+                        regionBySize[i].RegionCenter, player
                     );
+                }
 
                 for (int j = 0; j < regions.Length; j++)
                 {
@@ -306,6 +315,14 @@ namespace MapGenerator
 			generatedMap = CombineMaps(binaryMap, generatedMap);
             canWalk = CreateWalkableArea(generatedMap);
 
+           initialMap = new int[width, height];
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    initialMap[x, y] = generatedMap[x, y];
+                }
+            }
             // Setting the enviroment for each region:
             foreach (Region region in regions)
 			{

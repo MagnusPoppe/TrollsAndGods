@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
 
 
     // ONLY SET FOR USE WITH UNITY EDITOR!
-    public int widthXHeight = 128;
+    public int widthXHeight = 64;
     [Range(0, 20)]
     int buildingCount;
     // VORONOI varables:
@@ -39,7 +39,7 @@ public class GameManager : MonoBehaviour
     public const float XRESOLUTION = 2598;
     public const float YRESOLUTION = 1299;
     public const float YOFFSET = YRESOLUTION / XRESOLUTION;
-    
+
     // Generated from mapmaker class:
     Region[] regions;
     int[,] canWalk;
@@ -48,9 +48,10 @@ public class GameManager : MonoBehaviour
     // Graphical elements
     GameObject[,] groundLayer;
     GameObject[,] buildingLayer;
+    GameObject[,] heroLayer;
 
     // GameManager
-    public int amountOfPlayers;
+    int amountOfPlayers;
     Player[] players;
     int whoseTurn;
     Date date;
@@ -67,10 +68,11 @@ public class GameManager : MonoBehaviour
     bool heroActive;
     Hero activeHero;
     GameObject activeHeroObject;
-    GameObject pathDestYes;
-    GameObject pathDestNo;
-    GameObject pathYes;
-    GameObject pathNo;
+    Sprite pathDestYes;
+    Sprite pathDestNo;
+    Sprite pathYes;
+    Sprite pathNo;
+    GameObject parentToMarkers;
     List<GameObject> pathObjects;
     bool pathMarked;
     int stepNumber;
@@ -82,7 +84,6 @@ public class GameManager : MonoBehaviour
     GameObject[] buildingsInActiveTown;
     GameObject townWindow;
     bool overWorld;
-
     Text dateText;
     Text[] resourceText;
     string[] resourceTextPosition = new string[] { "TextGold", "TextWood", "TextOre", "TextCrystal", "TextGem" };
@@ -91,24 +92,52 @@ public class GameManager : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
+        parentToMarkers = new GameObject();
+        parentToMarkers.name = "Path";
+        width = height = widthXHeight;
         // Initialize sprite library
         libs = new IngameObjectLibrary();
 
         // CREATING THE MAP USING MAPMAKER
+        amountOfPlayers = 5;
+        players = new Player[amountOfPlayers];
         GenerateMap();
         reactions = new Reaction[widthXHeight, widthXHeight];
+
+        pathDestYes = UnityEngine.Resources.Load<Sprite>("Sprites/Pointers/pointerDestYes");
+        pathDestNo = UnityEngine.Resources.Load<Sprite>("Sprites/Pointers/pointerDestNo");
+        pathYes = UnityEngine.Resources.Load<Sprite>("Sprites/Pointers/pointerPathYes");
+        pathNo = UnityEngine.Resources.Load<Sprite>("Sprites/Pointers/pointerPathNo");
+
+        // Add reactions to buildings in regions
+
+        foreach (Region r in regions)
+        {
+            if (r.GetType().Equals(typeof(LandRegion)))
+            {
+                LandRegion lr = (LandRegion)r;
+                lr.makeReactions(reactions);
+            }
+        }
 
         // CREATING THE MAP USING MAPMAKER
 
         cameraMovement = GetComponent<CameraMovement>();
-        players = new Player[amountOfPlayers];
-        activeHeroObject = new GameObject(); // TODO set player1's starthero to activeHero
+
+
+        // Set active Hero
+        heroActive = true;
+        activeHero = getPlayer(0).Heroes[0];
+        heroPos = activeHero.Position;
+        //activeHeroObject = heroLayer[(int)heroPos.x, height+1-(int)heroPos.y];
+        // Initialize turn based and date
         whoseTurn = 0;
         clickCount = 0;
         date = new Date();
         
         //savedClickedPos = HandyMethods.getIsoTilePos(transform.position);
         pathObjects = new List<GameObject>();
+
 		    aStar = new AStarAlgo(canWalk, width, height, false);
         townWindow = GameObject.Find("Town");
         townWindow.SetActive(false);
@@ -154,6 +183,7 @@ public class GameManager : MonoBehaviour
                         if (players[whoseTurn].equals(castleClicked.Castle.Player))
                         {
                             // TODO when click on your own castle
+                            enterTown();
                             Debug.Log("Leftclicked your own castle");
                             heroActive = false;
                         }
@@ -211,8 +241,6 @@ public class GameManager : MonoBehaviour
                 {
                     SetLastStep(true);
                 }
-
-
                 // TODO: temp town creation
                 VikingTown t = new VikingTown(new Player(0,0));
 
@@ -267,7 +295,8 @@ public class GameManager : MonoBehaviour
                                 }
                                 else if (reactions[x, y].GetType().Name.Equals(typeof(CastleReact)))
                                 {
-                                    // TODO town window has been opened, or enemy town was attacked
+                                    // TODO enemy town was attacked
+
                                 }
                                 else if (reactions[x, y].GetType().Name.Equals(typeof(DwellingReact)))
                                 {
@@ -333,18 +362,23 @@ public class GameManager : MonoBehaviour
         // Calculate how many steps the hero will move, if this path is chosen
         int i = activeHero.CurMovementSpeed = Math.Min(positions.Count, activeHero.MovementSpeed);
         // For each position, create a gameobject with an image and instantiate it, and add it to a gameobject list for later to be removed
+
         foreach (Vector2 no in positions)
         {
             // Create a cloned gameobject of the prefab corresponding to what the marker shall look like
-            GameObject pathMarker;
+            GameObject pathMarker = new GameObject();
+            pathMarker.name = parentToMarkers.name + "(" + no.x + ", " + no.y + ")";
+            pathMarker.transform.parent = parentToMarkers.transform;
+            SpriteRenderer sr = pathMarker.AddComponent<SpriteRenderer>();
+            sr.sortingLayerName = "Markers";
             if (pos.Equals(no) && i > 0)
-                pathMarker = pathDestYes;
+                sr.sprite = pathDestYes;
             else if (pos.Equals(no))
-                pathMarker = pathDestNo;
+                sr.sprite = pathDestNo;
             else if (i > 0)
-                pathMarker = pathYes;
+                sr.sprite = pathYes;
             else
-                pathMarker = pathNo;
+                sr.sprite = pathNo;
             i--;
             Vector2 modified;
             if (no.y % 2 == 0)
@@ -357,7 +391,6 @@ public class GameManager : MonoBehaviour
             }
             // set the cloned position to the vector2 object, instantiate it and add it to the list of gameobjects, pathList
             pathMarker.transform.position = modified;
-            pathMarker = Instantiate(pathMarker);
             pathObjects.Add(pathMarker);
         }
         return pathObjects;
@@ -383,7 +416,9 @@ public class GameManager : MonoBehaviour
     public void RemoveMarkers(List<GameObject> li)
     {
         foreach (GameObject go in li)
+        {
             Destroy(go);
+        }
         li.Clear();
     }
 
@@ -432,13 +467,15 @@ public class GameManager : MonoBehaviour
 		height = widthXHeight;
 
 		mapmaker = new MapMaker(
-			width, height, 40,              // Map Properites TODO: fjern parameter 40/length 
+            players, width, height, 40,                     // Map Properites TODO: fjern parameter 40/length 
 			seed, fillpercentWalkable, smoothIterations,    // BinaryMap Properities
 			sites, relaxIterations,                         // Voronoi Properties
 			buildingCount
 		);
-       
-		DrawMap(mapmaker.GetMap());
+
+        int[,] map = mapmaker.GetMap();
+
+		DrawMap(map);
 
 		// SETTING GLOBALS:
 		regions = mapmaker.GetRegions();
@@ -471,7 +508,11 @@ public class GameManager : MonoBehaviour
             GameObject pickups = new GameObject();
             pickups.name = "Pickups";
 
+            GameObject heroes = new GameObject();
+            heroes.name = "Heroes";
+
         buildingLayer = new GameObject[width, height];
+        heroLayer = new GameObject[width, height];
 
         // DRAWING THE MAP:
         groundLayer = new GameObject[width, height];
@@ -513,13 +554,22 @@ public class GameManager : MonoBehaviour
                     groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetGround(MapMaker.GRASS_SPRITEID), ground); //TODO:temp
                 }
 
+                // If hero
+                else if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.Heroes)
+                {
+                    heroLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetHero(spriteID), heroes);
+                    groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetGround(IngameObjectLibrary.GROUND_START), ground);
+                }
+
                 // If castle
                 else if(libs.GetCategory(spriteID) == IngameObjectLibrary.Category.Castle)
                 {
                     buildingLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetCastle(spriteID), buildings);
                     groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetGround(MapMaker.GRASS_SPRITEID), ground); //TODO:temp
                 }
-			}
+
+                
+            }
 			isometricOffset += YOFFSET; // 0.57747603833865814696485623003195f;
 		}
 	}
@@ -654,5 +704,10 @@ public class GameManager : MonoBehaviour
         }
         //activeHero = getPlayer(whoseTurn).Heroes[0]; // TODO UNCOMMENT
         //getPlayer(whoseTurn).GatherIncome(); // TODO UNCOMMENT
+    }
+
+    private Vector2 RealLogicalPostition(Vector2 position)
+    {
+        return new Vector2(position.x, height + 1 - position.y);
     }
 }
