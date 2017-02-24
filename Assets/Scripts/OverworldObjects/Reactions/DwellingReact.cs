@@ -57,7 +57,7 @@ public class DwellingReact : Reaction {
             if (dwelling.Owner != null) dwelling.Owner.DwellingsOwned.Remove(dwelling);
             dwelling.Owner = h.Player;
             h.Player.DwellingsOwned.Add(dwelling);
-            dwelling.Town.updateDwellingOwnerChange(dwelling);
+            //dwelling.Town.updateDwellingOwnerChange(dwelling);
             //todo inital hiring of units
             return true;
         }

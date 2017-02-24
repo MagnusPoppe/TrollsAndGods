@@ -79,7 +79,7 @@ public class GameManager : MonoBehaviour
     bool walking;
     bool lastStep;
 
-    GameObject go;
+    GameObject townWindow;
     bool overWorld;
     Text dateText;
     Text[] resourceText;
@@ -134,9 +134,15 @@ public class GameManager : MonoBehaviour
         
         //savedClickedPos = HandyMethods.getIsoTilePos(transform.position);
         pathObjects = new List<GameObject>();
+<<<<<<< HEAD
 		aStar = new AStarAlgo(canWalk, width, height, false);
         go = GameObject.Find("Town");
         go.SetActive(false);
+=======
+		    aStar = new AStarAlgo(canWalk, width, height, false);
+        townWindow = GameObject.Find("Town");
+        townWindow.SetActive(false);
+>>>>>>> master
         overWorld = true;
 
         GameObject textObject = GameObject.Find("TextDate");
@@ -382,6 +388,13 @@ public class GameManager : MonoBehaviour
         return pathObjects;
     }
 
+    public void ChangeTownSprite()
+    {
+        Debug.Log(libs.GetTown(IngameObjectLibrary.TOWNS_START + 0).ToString());
+        SpriteRenderer sr = townWindow.GetComponent<SpriteRenderer>();
+        sr.sprite = libs.GetTown(IngameObjectLibrary.TOWNS_START + 0); //TODO: hardkodet
+    }
+
     /// <summary>
     /// Creates a position with animationspeed and returns it
     /// </summary>
@@ -596,16 +609,17 @@ public class GameManager : MonoBehaviour
     public void enterTown()
     {
 
-
-        if (go.activeSelf)
+        
+        if (townWindow.activeSelf)
         {
-            go.SetActive(false);
+            townWindow.SetActive(false);
             overWorld = true;
             cameraMovement.enabled = true;
         }
         else
         {
-            go.SetActive(true);
+            ChangeTownSprite();
+            townWindow.SetActive(true);
             overWorld = false;
             cameraMovement.enabled = false;
         }
