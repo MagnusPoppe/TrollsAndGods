@@ -589,7 +589,6 @@ public class GameManager : MonoBehaviour
 				// If dwelling
 				else if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.Dwellings)
 				{
-
 					buildingLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetDwelling(spriteID), buildings);
 					groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetGround(MapMaker.GRASS_SPRITEID), ground); //TODO:temp
 				}
@@ -678,8 +677,6 @@ public class GameManager : MonoBehaviour
 				// If dwelling
 				else if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.Dwellings)
 				{
-					Debug.Log("ResourceBuilding: @(" + x + "," + y + ")");
-
 					buildingLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetDwelling(spriteID), buildings);
 					groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetDebugSprite(canWalk[x,y]), DebugTiles); //TODO:temp
 				}
@@ -687,7 +684,6 @@ public class GameManager : MonoBehaviour
 				// If resource buildings
 				else if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.ResourceBuildings)
 				{
-					Debug.Log("ResourceBuilding: @(" + x + "," + y + ")");
 					buildingLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetResourceBuilding(spriteID), buildings);
 					groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetDebugSprite(canWalk[x, y]), DebugTiles); //TODO:temp
 				}
@@ -812,20 +808,11 @@ public class GameManager : MonoBehaviour
                 );
 
                 // Creates a game object for the building, gives it a name and places and scales it properly
-                buildingsInActiveTown[i] = new GameObject();
-                buildingsInActiveTown[i].name = town.Buildings[i].Name;
+                string prefabPath = "Prefabs/" + town.Buildings[i].Name;
+                buildingsInActiveTown[i] = Instantiate(UnityEngine.Resources.Load<GameObject>(prefabPath));
                 buildingsInActiveTown[i].transform.position = placement;
                 buildingsInActiveTown[i].transform.localScale = new Vector3(scaleFactor, scaleFactor, 1);
-                buildingsInActiveTown[i].transform.parent = townWindow.transform;
 
-
-                // TODO: Add collider to buildings
-
-
-                // Adds a sprite rendered to display the building
-                SpriteRenderer buildingSr = buildingsInActiveTown[i].AddComponent<SpriteRenderer>();
-                buildingSr.sprite = libs.GetTown(town.Buildings[i].GetSpriteID());
-                buildingSr.sortingLayerName = "TownBuildings";
             }
         }
 
