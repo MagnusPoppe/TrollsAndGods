@@ -39,20 +39,6 @@ public class Resources
         resourceTab = new int[] { goldCost, woodCost, oreCost, crystalCost, gemCost };
     }
 
-    /// <summary>
-    /// Method that checks if parameter values is lower or equal to the objects resource values
-    /// </summary>
-    /// <param name="gold">gold</param>
-    /// <param name="wood">wood</param>
-    /// <param name="ore">ore</param>
-    /// <param name="crystal">crystal</param>
-    /// <param name="gem">gem</param>
-    /// <returns>true if there is enough resources</returns>
-    public bool CanPay(int gold, int wood, int ore, int crystal, int gem)
-    {
-        return this.resourceTab[0] >= gold && this.resourceTab[1] >= wood && this.resourceTab[2] >= ore && this.resourceTab[3] >= crystal && this.resourceTab[4] >= gem;
-    }
-
     public int GetResource(type i)
     {
         return resourceTab[(int)i];
