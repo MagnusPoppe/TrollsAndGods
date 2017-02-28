@@ -17,6 +17,7 @@ public class IngameObjectLibrary
         heroes = InitializeHeroes();
         castles = InitializeCastles();
         towns = InitializeTowns();
+        ui = InitializeUI();
 	}
 
     /// <summary>
@@ -24,7 +25,7 @@ public class IngameObjectLibrary
     /// </summary>
     public enum Category
     {
-        Debug, Ground, Environment, Dwellings, ResourceBuildings, Heroes, Castle, Town, NOT_FOUND
+        Debug, Ground, Environment, Dwellings, ResourceBuildings, Heroes, Castle, Town, UI, NOT_FOUND
     }
 
     /// <summary>
@@ -34,32 +35,35 @@ public class IngameObjectLibrary
     /// <returns>Returnerer startverdien for en kategori av sprites</returns>
     public static int GetOffset( Category category )
     {
-		if (category == Category.Ground)
-			return GROUND_START;
+        if (category == Category.Ground)
+            return GROUND_START;
 
-		else if (category == Category.Environment)
-			return ENVIRONMENT_START;
+        else if (category == Category.Environment)
+            return ENVIRONMENT_START;
 
-		else if (category == Category.ResourceBuildings)
-			return DWELLINGS_START;
+        else if (category == Category.ResourceBuildings)
+            return DWELLINGS_START;
 
-		else if (category == Category.Dwellings)
-			return DWELLINGS_START;
+        else if (category == Category.Dwellings)
+            return DWELLINGS_START;
 
-		else if (category == Category.Heroes)
-			return HEROES_START;
+        else if (category == Category.Heroes)
+            return HEROES_START;
 
-		else if (category == Category.Castle)
-			return CASTLES_START;
+        else if (category == Category.Castle)
+            return CASTLES_START;
 
-		else if (category == Category.Town)
-			return TOWNS_START;
+        else if (category == Category.Town)
+            return TOWNS_START;
 
-		else if (category == Category.Debug)
-			return DEBUG_SPRITES_START;
+        else if (category == Category.UI)
+            return UI_START;
 
-		else // fant ingenting
-			return -1;
+        else if (category == Category.Debug)
+            return DEBUG_SPRITES_START;
+
+        else // fant ingenting
+            return -1;
     }
 
     /// <summary>
@@ -69,12 +73,12 @@ public class IngameObjectLibrary
     /// <returns>Enum category</returns>
     public Category GetCategory(int spriteID)
     {
-		if (spriteID < GROUND_START) // TODO: TA VEKK.
-		{
-			return Category.Debug;
-		}
+        if (spriteID < GROUND_START) // TODO: TA VEKK.
+        {
+            return Category.Debug;
+        }
         // Antar at alle innverdier er større enn 2
-		else if (spriteID < ENVIRONMENT_START && spriteID >= GROUND_START)
+        else if (spriteID < ENVIRONMENT_START && spriteID >= GROUND_START)
         {
             return Category.Ground;
         }
@@ -90,7 +94,7 @@ public class IngameObjectLibrary
         {
             return Category.ResourceBuildings;
         }
-        else if(spriteID < CASTLES_START)
+        else if (spriteID < CASTLES_START)
         {
             return Category.Heroes;
         }
@@ -98,9 +102,15 @@ public class IngameObjectLibrary
         {
             return Category.Castle;
         }
-        else if (spriteID <= TOWNS_START + TOWNS_COUNT)
+        else if (spriteID <= UI_START)
+        {
             return Category.Town;
-		
+        }
+        else if (spriteID <= UI_START + UI_COUNT)
+        {
+            return Category.UI;
+        }
+
         // TODO: Debugger
         else Debug.Log("Error with spriteID= " + spriteID);
         return Category.NOT_FOUND;
@@ -278,6 +288,26 @@ public class IngameObjectLibrary
         return sprites;
     }
 
+    // UI-variabler. UI[] holder alle sprites, UI_START er global startverdi for towns sprites, UI_COUNT er antall towns sprites
+    Sprite[] ui;
+    public const int UI_START = TOWNS_START + TOWNS_COUNT;
+    public const int UI_COUNT = 1;
+
+    /// <summary>
+    /// Initialiserer et array for å holde på alle ui sprites
+    /// </summary>
+    /// <returns>Array med towns sprites</returns>
+    private Sprite[] InitializeUI()
+    {
+        Sprite[] sprites = new Sprite[TOWNS_COUNT];
+        String path = "Sprites/UI/";
+
+        // Viking town sprites
+        sprites[0] = UnityEngine.Resources.Load<Sprite>(path + "card_template");
+
+        return sprites;
+    }
+
     /// <summary>
     /// Gjør global spriteID til lokal spriteID for ground tiles
     /// </summary>
@@ -338,7 +368,12 @@ public class IngameObjectLibrary
         return towns[spriteID - TOWNS_START];
     }
 
-	public Sprite GetDebugSprite(int spriteID)
+    public Sprite GetUI(int spriteID)
+    {
+        return towns[spriteID - UI_START];
+    }
+
+    public Sprite GetDebugSprite(int spriteID)
 	{
 		return debug[spriteID];
 	}
