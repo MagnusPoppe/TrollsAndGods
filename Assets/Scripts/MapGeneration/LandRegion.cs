@@ -159,6 +159,7 @@ namespace MapGenerator
 
                             // Plasserer bygning.
                             buildings.Add(building);
+							break;
                         }
                         // TODO: CANT PLACE.
                     }
