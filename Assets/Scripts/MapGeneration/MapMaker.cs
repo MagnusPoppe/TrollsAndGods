@@ -110,7 +110,7 @@ namespace MapGenerator
                     map[r.getX(), r.getY()] = lr.GetCastle().GetSpriteID();
                     InitBuildings(lr);
                 }
-            }*/
+            }
 
         QuailtyAssurance quality = new QuailtyAssurance();
 

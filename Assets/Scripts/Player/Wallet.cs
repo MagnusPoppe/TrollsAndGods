@@ -48,15 +48,11 @@ public class Wallet : Resources
     {
         if (CanPay(cost))
         {
-            resourceTab[(int)type.GOLD] -= cost.GetResource((int)type.GOLD);
-            resourceTab[(int)type.WOOD] -= cost.GetResource((int)type.WOOD);
-            resourceTab[(int)type.ORE] -= cost.GetResource((int)type.ORE);
-            resourceTab[(int)type.CRYSTAL] -= cost.GetResource((int)type.CRYSTAL);
-            resourceTab[(int)type.GEM] -= cost.GetResource((int)type.GEM);
-        }
-        else
-        {
-            return null;
+            resourceTab[(int)type.GOLD] -= cost.GetResource(type.GOLD);
+            resourceTab[(int)type.WOOD] -= cost.GetResource(type.WOOD);
+            resourceTab[(int)type.ORE] -= cost.GetResource(type.ORE);
+            resourceTab[(int)type.CRYSTAL] -= cost.GetResource(type.CRYSTAL);
+            resourceTab[(int)type.GEM] -= cost.GetResource(type.GEM);
         }
     }
 }
