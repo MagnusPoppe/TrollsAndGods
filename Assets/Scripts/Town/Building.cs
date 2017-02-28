@@ -62,5 +62,10 @@ namespace TownView
             Placement = placement;
             this.cost = cost;
         }
+
+        public void OpenBuildingWindow()
+        {
+
+        }
     }
 }

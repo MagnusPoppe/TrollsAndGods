@@ -13,7 +13,7 @@ namespace TownView
     public class TrollCave : Building
     {
         // Required values for building:
-        const string name = "TrollCave";
+        const string name = "Troll Cave";
         const bool[] requirements = null;
         const int LOCAL_SPRITEID = 5;
 
