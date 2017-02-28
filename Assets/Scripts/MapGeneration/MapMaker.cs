@@ -95,6 +95,7 @@ namespace MapGenerator
             replaceWalls();
             CreateTransitions();
 
+            /*
             Reaction[,] reactions = new Reaction[width, height];
             canWalk = CreateWalkableArea(initialMap);
 
@@ -111,6 +112,7 @@ namespace MapGenerator
                     InitBuildings(lr);
                 }
             }
+            */
 
         QuailtyAssurance quality = new QuailtyAssurance();
 

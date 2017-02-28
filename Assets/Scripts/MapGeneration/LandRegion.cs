@@ -25,14 +25,14 @@ namespace MapGenerator
         public LandRegion(List<Vector2> coordinateList, Vector2 regionCenter) 
             :base(coordinateList, regionCenter)
         {
-            castle = new UnknownCastle(RegionCenter, null);
+            castle = new UnknownCastle(regionCenter, null);
             coordinates = coordinateList;
             buildings = new List<OverworldBuilding>();
         }
         
         public void PlaceHero(Player player, int[,] map, int[,] canWalk)
         {
-            Vector2 heroPos = new Vector2(RegionCenter.x, RegionCenter.y - 2);
+            Vector2 heroPos = new Vector2((int)RegionCenter.x, (int)RegionCenter.y - 2);
             hero = new TestHero(player, heroPos);
             player.addHero(hero);
             canWalk[(int)heroPos.x, (int)heroPos.y] = 2;
