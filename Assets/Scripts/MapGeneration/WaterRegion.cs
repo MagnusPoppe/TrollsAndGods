@@ -19,7 +19,7 @@ namespace MapGenerator
         /// not walkable area turns into land (regular ground).
         /// </summary>
         /// <param name="map">Map.</param>
-        public void FillRegionWithWater(int[,] map)
+        public void FillRegionWithWater(int[,] map, int[,] canWalk)
         {
             map[(int)RegionCenter.x, (int)RegionCenter.y] = MapMaker.GROUND;
             foreach (Vector2 pkt in coordinates)
@@ -30,14 +30,16 @@ namespace MapGenerator
                 if (map[x, y] == MapMaker.GROUND)
                 {
                     map[x, y] = MapMaker.WATER_SPRITEID;
-
+                    canWalk[x, y] = MapMaker.CANNOTWALK;
                 }
                 else if (map[x, y] == MapMaker.REGION_CENTER)
                 {
                     map[x, y] = MapMaker.WATER_SPRITEID;
+                    canWalk[x, y] = MapMaker.CANNOTWALK;
                 }
                 else if (map[x, y] == MapMaker.WALL)
                 {
+                    canWalk[x, y] = MapMaker.CANWALK;
                     map[x, y] = MapMaker.GRASS_SPRITEID;
                 }
             }
