@@ -20,7 +20,8 @@ public class GameManager : MonoBehaviour
 	// ONLY SET FOR USE WITH UNITY EDITOR!
 	public bool CanWalkDebugMode = false;
 
-    public int widthXHeight = 64;
+    public int WIDTH = 64;
+    public int HEIGHT = 64;
     [Range(0, 20)]
     int buildingCount;
     // VORONOI varables:
@@ -63,7 +64,6 @@ public class GameManager : MonoBehaviour
     const int CLICKSPEED = 20;
     bool prepareDoubleClick;
     int clickCount;
-    Vector2 heroPos;
     Vector2 savedClickedPos;
 
 
@@ -82,6 +82,7 @@ public class GameManager : MonoBehaviour
     float animationSpeed;
     bool walking;
     bool lastStep;
+    int tilesWalking;
 
     // Town
     GameObject[] buildingsInActiveTown;
@@ -97,15 +98,17 @@ public class GameManager : MonoBehaviour
     {
         parentToMarkers = new GameObject();
         parentToMarkers.name = "Path";
-        width = height = widthXHeight;
+        width = WIDTH;
+        height = HEIGHT;
         // Initialize sprite library
         libs = new IngameObjectLibrary();
 
         // CREATING THE MAP USING MAPMAKER
         amountOfPlayers = 5;
         players = new Player[amountOfPlayers];
+        // CREATING THE MAP USING MAPMAKER
         GenerateMap();
-        reactions = new Reaction[widthXHeight, widthXHeight];
+        reactions = new Reaction[width, height];
 
         pathDestYes = UnityEngine.Resources.Load<Sprite>("Sprites/Pointers/pointerDestYes");
         pathDestNo = UnityEngine.Resources.Load<Sprite>("Sprites/Pointers/pointerDestNo");
@@ -113,17 +116,27 @@ public class GameManager : MonoBehaviour
         pathNo = UnityEngine.Resources.Load<Sprite>("Sprites/Pointers/pointerPathNo");
 
         // Add reactions to buildings in regions
-
         foreach (Region r in regions)
         {
             if (r.GetType().Equals(typeof(LandRegion)))
             {
                 LandRegion lr = (LandRegion)r;
                 lr.makeReactions(reactions);
+
+                // Add reactions to castles and heroes
+                if (lr.GetCastle() != null)
+                    reactions[(int)lr.GetCastle().GetPosition().x, (int)lr.GetCastle().GetPosition().y] = new CastleReact(lr.GetCastle(), lr.GetCastle().GetPosition());
+                if (lr.GetHero() != null)
+                    reactions[(int)lr.GetHero().Position.x, (int)lr.GetCastle().Origo.y] = new HeroMeetReact(lr.GetHero(), lr.GetHero().Position);
             }
         }
 
-        // CREATING THE MAP USING MAPMAKER
+        // DEBUG reactions
+        foreach(Reaction r in reactions)
+        {
+            if(r != null)
+                Debug.Log(r.Pos.ToString() + r.GetType().ToString());
+        }
 
         // Creating the camera game object and variables
         GameObject tempCameraObject = GameObject.Find("Main Camera");
@@ -134,9 +147,12 @@ public class GameManager : MonoBehaviour
         // Set active Hero
         heroActive = true;
         activeHero = getPlayer(0).Heroes[0];
-        heroPos = activeHero.Position;
-        //activeHeroObject = heroLayer[(int)heroPos.x, height+1-(int)heroPos.y];
-        // Initialize turn based and date
+        activeHeroObject = heroLayer[(int)activeHero.Position.x, (int)activeHero.Position.y];
+
+        // Initialize camera and center camera position to the first players first hero
+        cameraMovement = GetComponent<CameraMovement>();
+        cameraMovement.centerCamera(activeHeroObject.transform.position);
+        // Initialize turn based variables and date
         whoseTurn = 0;
         clickCount = 0;
         date = new Date();
@@ -177,6 +193,7 @@ public class GameManager : MonoBehaviour
                 // Fetch the point just clicked and adjust the position in the square to the corresponding isometric position
                 Vector2 posClicked = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 posClicked = HandyMethods.getIsoTilePos(posClicked);
+
                 int x = (int)posClicked.x;
                 int y = (int)posClicked.y;
 
@@ -205,15 +222,16 @@ public class GameManager : MonoBehaviour
                         SetLastStep(true);
                     }
                     // Hero's own position is clicked
-                    else if (heroPos.Equals(posClicked))
+                    else if (activeHero.Position.Equals(posClicked))
                     {
+                        Debug.Log("Clicked on activated hero");
                         // Todo, open hero menu
                     }
                     // If an open square is clicked
-                    else if (canWalk[(int)posClicked.x, (int)posClicked.y] == MapMaker.CANWALK)
+                    else if (canWalk[(int)posClicked.x, (int)posClicked.y] != MapMaker.CANNOTWALK)
                     {
                         // Walk to pointer if marked square is clicked by enabling variables that triggers moveHero method on update
-                        if (pathMarked && posClicked.Equals(savedClickedPos))
+                        if (pathMarked && posClicked.Equals(savedClickedPos) && activeHero.CurMovementSpeed > 0)
                         {
                             SetWalking(true);
                         }
@@ -259,7 +277,6 @@ public class GameManager : MonoBehaviour
             if (IsWalking())
             {
                 Vector2 newPos = PrepareMovement();
-
                 // If hero has reached a new tile, increment so that he walks towards the next one, reset time animation, and destroy tile object
                 if (activeHeroObject.transform.position.Equals(pathObjects[stepNumber].transform.position))
                 {
@@ -269,15 +286,22 @@ public class GameManager : MonoBehaviour
                     // Stop the movement when amount of tiles moved has reached the limit, or walking is disabled
                     if (IsLastStep())
                     {
+                        // Clear the previous table reference to current gameobject
+                        heroLayer[(int)activeHero.Position.x, (int)activeHero.Position.y] = null;
                         // Set hero position when he stops walking to his isometric position
-                        heroPos = HandyMethods.getIsoTilePos(activeHeroObject.transform.position);
-                        int x = (int)heroPos.x;
-                        int y = (int)heroPos.y;
+                        activeHero.Position = HandyMethods.getIsoTilePos(activeHeroObject.transform.position);
+                        // Also move the gameobject's position in the heroLayer table
+                        heroLayer[(int)activeHero.Position.x, (int)activeHero.Position.y] = activeHeroObject;
+                        activeHero.CurMovementSpeed = activeHero.MovementSpeed - stepNumber;
+                        // TODO Also move the reaction ?
+
+                        int x = (int)activeHero.Position.x;
+                        int y = (int)activeHero.Position.y;
                         SetWalking(false);
                         SetPathMarked(false);
                         RemoveMarkers(pathObjects);
                         // objectcollision, when final destination is reached
-                        if (canWalk[x, y] == 2)
+                        if (canWalk[x, y] == MapMaker.TRIGGER)
                         {
                             if (reactions[x, y].React(activeHero))
                             {
@@ -300,7 +324,6 @@ public class GameManager : MonoBehaviour
                                 else if (reactions[x, y].GetType().Name.Equals(typeof(CastleReact)))
                                 {
                                     // TODO enemy town was attacked
-
                                 }
                                 else if (reactions[x, y].GetType().Name.Equals(typeof(DwellingReact)))
                                 {
@@ -313,6 +336,7 @@ public class GameManager : MonoBehaviour
                 }
                 // Execute the movement
                 activeHeroObject.transform.position = newPos;
+                cameraMovement.centerCamera(newPos);
             }
             //Nothing is clicked and hero is not walking, listener for change mouse hover
             else
@@ -349,7 +373,7 @@ public class GameManager : MonoBehaviour
 
     /// <summary>
     /// Prepares movement variables, 
-    /// ¨Åcreates a list of positions and creates and returns a list of gameobjects
+    /// Creates a list of positions and creates and returns a list of gameobjects
     /// </summary>
     /// <param name="pos">Destination tile position</param>
     /// <returns>List of instantiated marker objects</returns>
@@ -362,11 +386,10 @@ public class GameManager : MonoBehaviour
         // Needs to clear existing objects if an earlier path was already made
         RemoveMarkers(pathObjects);
         // Call algorithm method that returns a list of Vector2 positions to the point, go through all objects
-        List<Vector2> positions = aStar.calculate(heroPos, pos);
+        List<Vector2> positions = aStar.calculate(activeHero.Position, pos);
         // Calculate how many steps the hero will move, if this path is chosen
-        int i = activeHero.CurMovementSpeed = Math.Min(positions.Count, activeHero.MovementSpeed);
+        int i = tilesWalking = Math.Min(positions.Count, activeHero.CurMovementSpeed);
         // For each position, create a gameobject with an image and instantiate it, and add it to a gameobject list for later to be removed
-
         foreach (Vector2 no in positions)
         {
             // Create a cloned gameobject of the prefab corresponding to what the marker shall look like
@@ -393,7 +416,7 @@ public class GameManager : MonoBehaviour
             {
                 modified = new Vector2(no.x + 0.5f, no.y / 2 / 2);
             }
-            // set the cloned position to the vector2 object, instantiate it and add it to the list of gameobjects, pathList
+            // set the cloned position to the vector2 object and add it to the list of gameobjects, pathList
             pathMarker.transform.position = modified;
             pathObjects.Add(pathMarker);
         }
@@ -406,9 +429,13 @@ public class GameManager : MonoBehaviour
     /// <returns>Position the hero shall be moved to</returns>
     public Vector2 PrepareMovement()
     {
-        // Add animation, transform hero position
-        animationSpeed += Time.deltaTime;
-        return Vector2.Lerp(transform.position, pathObjects[stepNumber].transform.position, animationSpeed);
+        if(pathObjects != null && stepNumber < pathObjects.Count)
+        {
+            // Add animation, transform hero position
+            animationSpeed += Time.deltaTime;
+            return Vector2.Lerp(activeHeroObject.transform.position, pathObjects[stepNumber].transform.position, animationSpeed);
+        }
+        return activeHeroObject.transform.position;
     }
 
     /// <summary>
@@ -422,11 +449,12 @@ public class GameManager : MonoBehaviour
             Destroy(go);
         }
         li.Clear();
+        li = new List<GameObject>();
     }
 
     public bool IsLastStep()
     {
-        return stepNumber == activeHero.CurMovementSpeed || lastStep;
+        return stepNumber == activeHero.CurMovementSpeed || stepNumber == tilesWalking || lastStep;
     }
 
     public void SetLastStep(bool w)
@@ -465,8 +493,6 @@ public class GameManager : MonoBehaviour
 	/// </summary>
 	private void GenerateMap()
 	{
-		width = widthXHeight;
-		height = widthXHeight;
 
 		mapmaker = new MapMaker(
             players, width, height, 40,                     // Map Properites TODO: fjern parameter 40/length 
@@ -481,7 +507,11 @@ public class GameManager : MonoBehaviour
 		regions = mapmaker.GetRegions();
 		canWalk = mapmaker.GetCanWalkMap();
 
-		if (CanWalkDebugMode)
+        // SETTING UP REGIONS WITH PLAYERS, CASTLE AND HERO:
+        mapmaker.initializePlayers(map, canWalk, players);
+
+
+        if (CanWalkDebugMode)
 		{
 			DrawDebugMap(map, canWalk);
 		}
@@ -489,10 +519,9 @@ public class GameManager : MonoBehaviour
 		{
 			DrawMap(map);
 		}
-			
 
-		// Kaster mapmaker
-		mapmaker = null;
+        // Kaster mapmaker
+        mapmaker = null;
 	}
 
 	/// <summary>
@@ -534,10 +563,7 @@ public class GameManager : MonoBehaviour
 			for (int x = 0; x < width; x++)
 			{
                 // gets tile value
-                
-				//int spriteID = map[x, height - 1 - y];
 				int spriteID = map[x, y];
-				// TODO: CURRENT: Denne er snudd
 
 				// If ground
 				if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.Ground)
@@ -587,7 +613,7 @@ public class GameManager : MonoBehaviour
 				}
                 
             }
-			isometricOffset += YOFFSET; // 0.57747603833865814696485623003195f;
+			isometricOffset += YOFFSET;
 		}
 	}
 
@@ -678,7 +704,7 @@ public class GameManager : MonoBehaviour
 				}
 
 			}
-			isometricOffset += YOFFSET; // 0.57747603833865814696485623003195f;
+			isometricOffset += YOFFSET;
 		}
 
 	}
@@ -810,13 +836,35 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void nextTurn()
     {
-        if (++whoseTurn > amountOfPlayers)
+        // Stop ongoing movement
+        if(IsWalking())
         {
-            whoseTurn = 0;
-            dateText.text = date.incrementDay();
+            SetLastStep(true);
         }
-        //activeHero = getPlayer(whoseTurn).Heroes[0]; // TODO UNCOMMENT
-        //getPlayer(whoseTurn).GatherIncome(); // TODO UNCOMMENT
+        else
+        {
+            // Increment turn, reset turn integer when last player has finished, and increment date
+            if (++whoseTurn >= amountOfPlayers)
+            {
+                whoseTurn = 0;
+                dateText.text = date.incrementDay();
+            }
+            // Refresh movementspeed for the upcoming players heroes
+            foreach (Hero hero in players[whoseTurn].Heroes)
+            {
+                if (hero != null)
+                    hero.CurMovementSpeed = hero.MovementSpeed;
+            }
+            // Remove all path markers on the map
+            RemoveMarkers(pathObjects);
+            // Set active hero and active hero object to the upcoming players first hero
+            activeHero = getPlayer(whoseTurn).Heroes[0];
+            activeHeroObject = heroLayer[(int)activeHero.Position.x, (int)activeHero.Position.y];
+            // Center camera to the upcoming players first hero
+            cameraMovement.centerCamera(HandyMethods.getGraphicPos(activeHero.Position));
+            // Gathert income for the upcoming player
+            getPlayer(whoseTurn).GatherIncome();
+        }
     }
 
 }

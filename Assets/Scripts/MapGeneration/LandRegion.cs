@@ -22,31 +22,31 @@ namespace MapGenerator
         /// </summary>
         /// <param name="coordinateList">Coordinate list.</param>
         /// <param name="regionCenter">Castle position.</param>
-        public LandRegion(List<Vector2> coordinateList, Vector2 regionCenter, Player player) 
+        public LandRegion(List<Vector2> coordinateList, Vector2 regionCenter) 
             :base(coordinateList, regionCenter)
         {
-            castle = new UnknownCastle(regionCenter, player); // TODO: Set player dynamically 
-            if(castle.Player != null)
-            {
-                // Add hero below castle
-                Vector2 heroOrigo = new Vector2((int)castle.Origo.x, (int)castle.Origo.y+2);
-                hero = new TestHero(player, heroOrigo);
-                hero.Player.addHero(hero);
-            }
+            castle = new UnknownCastle(RegionCenter, null);
             coordinates = coordinateList;
             buildings = new List<OverworldBuilding>();
         }
-
-        public void PlaceHero(Vector2 position, Player player, int[,] map)
-        {
-            
-            hero = new TestHero(player, position);
         
-            hero.Player.addHero(hero);
-            map[(int)position.x, (int)position.y] = hero.GetSpriteID();
+        public void PlaceHero(Player player, int[,] map, int[,] canWalk)
+        {
+            Vector2 heroPos = new Vector2(RegionCenter.x, RegionCenter.y - 2);
+            hero = new TestHero(player, heroPos);
+            player.addHero(hero);
+            canWalk[(int)heroPos.x, (int)heroPos.y] = 2;
+            map[(int)heroPos.x, (int)heroPos.y] = hero.GetSpriteID();
         }
 
-       
+        public void PlaceCastle(Castle castle, int[,] map, int[,] canWalk)
+        {
+            this.castle = castle;
+            canWalk[(int)RegionCenter.x, (int)RegionCenter.y] = 2;
+            map[(int)RegionCenter.x, (int)RegionCenter.y] = castle.GetSpriteID();
+        }
+
+
         /// <summary>
         /// Gets the castle belonging to the region.
         /// </summary>
