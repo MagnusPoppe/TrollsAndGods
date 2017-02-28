@@ -77,7 +77,7 @@ namespace OverworldObjects
 					int dyy = y + Shapes.dy[fy];
 
 					if (shape[fx,fy] == 1)
-						canWalk[dxx,dyy] = MapGenerator.MapMaker.CANWALK;
+						canWalk[dxx,dyy] = MapGenerator.MapMaker.CANNOTWALK;
 				}
 			}
             canWalk[x,y] = MapGenerator.MapMaker.TRIGGER;
