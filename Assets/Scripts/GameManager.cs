@@ -677,7 +677,9 @@ public class GameManager : MonoBehaviour
                 buildingsInActiveTown[i].transform.parent = townWindow.transform;
 
 
-                // TODO: Add collider to buildings
+                // TODO: bruk prefab for bygning med prekonstruert PolygonCollider2D
+                PolygonCollider2D collider = buildingsInActiveTown[i].AddComponent<PolygonCollider2D>();
+                collider.isTrigger = true;
 
 
                 // Adds a sprite rendered to display the building
