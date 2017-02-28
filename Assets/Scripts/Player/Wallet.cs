@@ -26,6 +26,11 @@ public class Wallet : Resources
             && this.resourceTab[4] >= gem;
     }
 
+    /// <summary>
+    /// Method that checks if parameter values is lower or equal to the objects resource values
+    /// </summary>
+    /// <returns><c>true</c> if this instance can pay the specified cost; otherwise, <c>false</c>.</returns>
+    /// <param name="cost">Cost.</param>
     public bool CanPay(Cost cost)
     {
         return this.resourceTab[(int)type.GOLD]     >= cost.GetResource(type.GOLD)
@@ -35,6 +40,10 @@ public class Wallet : Resources
             && this.resourceTab[(int)type.GEM]      >= cost.GetResource(type.GEM);
     }
 
+    /// <summary>
+    /// Pays the specified cost.
+    /// </summary>
+    /// <param name="cost">Cost.</param>
     public void Pay(Cost cost)
     {
         if (CanPay(cost))
