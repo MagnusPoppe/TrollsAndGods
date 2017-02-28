@@ -69,7 +69,7 @@ public class GameManager : MonoBehaviour
 
     // Hero movement
     bool heroActive;
-    Hero activeHero;
+    public Hero activeHero;
     GameObject activeHeroObject;
     Sprite pathDestYes;
     Sprite pathDestNo;
@@ -148,10 +148,7 @@ public class GameManager : MonoBehaviour
         heroActive = true;
         activeHero = getPlayer(0).Heroes[0];
         activeHeroObject = heroLayer[(int)activeHero.Position.x, (int)activeHero.Position.y];
-
-        // Initialize camera and center camera position to the first players first hero
-        cameraMovement = GetComponent<CameraMovement>();
-        cameraMovement.centerCamera(activeHeroObject.transform.position);
+        
         // Initialize turn based variables and date
         whoseTurn = 0;
         clickCount = 0;
@@ -159,12 +156,12 @@ public class GameManager : MonoBehaviour
         
         //savedClickedPos = HandyMethods.getIsoTilePos(transform.position);
         pathObjects = new List<GameObject>();
-
-		    aStar = new AStarAlgo(canWalk, width, height, false);
+        aStar = new AStarAlgo(canWalk, width, height, false);
         townWindow = GameObject.Find("Town");
         townWindow.SetActive(false);
         overWorld = true;
 
+        /*
         GameObject textObject = GameObject.Find("TextDate");
         dateText = textObject.GetComponent<Text>();
         resourceText = new Text[5];
@@ -174,6 +171,7 @@ public class GameManager : MonoBehaviour
             resourceText[i] = textObject.GetComponent<Text>();
             resourceText[i].text = i + ""; // TODO currentPlayer.getResource(i);
         }
+        */
     }
 
 	// Update is called once per frame

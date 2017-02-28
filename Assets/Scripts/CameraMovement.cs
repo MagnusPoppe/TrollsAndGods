@@ -19,7 +19,7 @@ public class CameraMovement : MonoBehaviour
     Camera cam;
     void Start ()
     {
-        GameManager gm = GetComponent<GameManager>();
+        GameManager gm = GameObject.Find("GameManager").GetComponent<GameManager>();
         width = gm.WIDTH;
         height = gm.HEIGHT/2/2;
 
@@ -29,6 +29,9 @@ public class CameraMovement : MonoBehaviour
 
         cameraHeight /= 2;
         cameraWidth /= 2;
+
+        // At start, center camera at player1's first hero
+        centerCamera(HandyMethods.getGraphicPos(gm.activeHero.Position));
     }
 	
     /// <summary>
