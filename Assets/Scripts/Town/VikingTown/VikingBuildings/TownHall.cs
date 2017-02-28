@@ -17,6 +17,9 @@ namespace TownView
         const bool[] requirements = null;
         const int LOCAL_SPRITEID = 4;
 
+        // Window ID for UI
+        const int WINDOW_TYPE = 0;
+
 
         // Resources cost: 
         const int GOLD_COST = 0;

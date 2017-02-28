@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TownView;
 
-public class BuildingOnClick : MonoBehaviour {
+public class DwellingOnClick : MonoBehaviour {
 
     Building building;
 

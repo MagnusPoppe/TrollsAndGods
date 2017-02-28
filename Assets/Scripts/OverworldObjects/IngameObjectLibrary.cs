@@ -299,7 +299,7 @@ public class IngameObjectLibrary
     /// <returns>Array med towns sprites</returns>
     private Sprite[] InitializeUI()
     {
-        Sprite[] sprites = new Sprite[TOWNS_COUNT];
+        Sprite[] sprites = new Sprite[UI_COUNT];
         String path = "Sprites/UI/";
 
         // Viking town sprites

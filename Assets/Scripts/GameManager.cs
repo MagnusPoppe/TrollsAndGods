@@ -137,8 +137,8 @@ public class GameManager : MonoBehaviour
         // DEBUG reactions
         foreach(Reaction r in reactions)
         {
-            if(r != null)
-                Debug.Log(r.Pos.ToString() + r.GetType().ToString());
+            //if(r != null)
+                //Debug.Log(r.Pos.ToString() + r.GetType().ToString());
         }
 
         // Creating the camera game object and variables
@@ -781,7 +781,6 @@ public class GameManager : MonoBehaviour
     /// <param name="town"></param>
     public void DrawTown(Town town)
     {
-
         float scaleFactor = 0.45f; //TODO: regn ut fra skjerm
 
         // Sets up the town view background
@@ -812,6 +811,9 @@ public class GameManager : MonoBehaviour
                 buildingsInActiveTown[i] = Instantiate(UnityEngine.Resources.Load<GameObject>(prefabPath));
                 buildingsInActiveTown[i].transform.position = placement;
                 buildingsInActiveTown[i].transform.localScale = new Vector3(scaleFactor, scaleFactor, 1);
+
+                // CONNECTING GAMEOBJECT WITH BUILDING OBJECT: 
+                buildingsInActiveTown[i].GetComponent<BuildingOnClick>().Building = town.Buildings[i];
 
             }
         }

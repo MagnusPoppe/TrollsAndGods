@@ -1,12 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UI;
+using System;
 
 namespace TownView
 {
 
 
-    public class Building : SpriteSystem
+    public class Building : SpriteSystem, Window
     {
         private string name;
         private bool built;
@@ -14,6 +16,8 @@ namespace TownView
         protected Resources cost;
         private Vector2 placement;
         private const IngameObjectLibrary.Category CATEGORY = IngameObjectLibrary.Category.Town; // TODO: ny kategori for town buildings
+
+
 
         public bool Built
         {
@@ -55,6 +59,11 @@ namespace TownView
             built = true;
         }
 
+        public int UIType()
+        {
+            throw new NotImplementedException();
+        }
+
         public Building(string name, bool[] requirements, Resources cost, int localID) :base(localID, CATEGORY)
         {
             Name = name;
@@ -63,9 +72,6 @@ namespace TownView
             this.cost = cost;
         }
 
-        public void OpenBuildingWindow()
-        {
 
-        }
     }
 }
