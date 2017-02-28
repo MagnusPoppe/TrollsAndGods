@@ -13,8 +13,9 @@ public class GameManager : MonoBehaviour
 
     public Sprite[] groundTiles;
 
+    // Loads in camera variables
+    Camera mainCamera;
     CameraMovement cameraMovement;
-
 
 	// ONLY SET FOR USE WITH UNITY EDITOR!
 	public bool CanWalkDebugMode = false;
@@ -136,6 +137,12 @@ public class GameManager : MonoBehaviour
             if(r != null)
                 Debug.Log(r.Pos.ToString() + r.GetType().ToString());
         }
+
+        // Creating the camera game object and variables
+        GameObject tempCameraObject = GameObject.Find("Main Camera");
+        mainCamera = tempCameraObject.GetComponent<Camera>();
+        cameraMovement = tempCameraObject.GetComponent<CameraMovement>();
+        
 
         // Set active Hero
         heroActive = true;
@@ -260,12 +267,10 @@ public class GameManager : MonoBehaviour
                 }
                 // TODO: temp town creation
                 VikingTown t = new VikingTown(new Player(0,0));
-
                 for (int i = 0; i < t.Buildings.Length; i++)
                 {
                     t.Buildings[i].Build();
                 }
-
                 EnterTown(t);
             }
             // Upon every update, activedhero will be moved in a direction if walking is enabled
@@ -417,8 +422,6 @@ public class GameManager : MonoBehaviour
         }
         return pathObjects;
     }
-
-
 
     /// <summary>
     /// Creates a position with animationspeed and returns it
@@ -577,7 +580,6 @@ public class GameManager : MonoBehaviour
 				// If dwelling
 				else if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.Dwellings)
 				{
-					Debug.Log("ResourceBuilding: @(" + x + "," + y + ")");
 
 					buildingLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetDwelling(spriteID), buildings);
 					groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetGround(MapMaker.GRASS_SPRITEID), ground); //TODO:temp
@@ -586,7 +588,6 @@ public class GameManager : MonoBehaviour
 				// If resource buildings
 				else if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.ResourceBuildings)
 				{
-					Debug.Log("ResourceBuilding: @(" + x + "," + y + ")");
 					buildingLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetResourceBuilding(spriteID), buildings);
 					groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetGround(MapMaker.GRASS_SPRITEID), ground); //TODO:temp
 				}
@@ -616,6 +617,11 @@ public class GameManager : MonoBehaviour
 		}
 	}
 
+	/// <summary>
+	/// Draws the debug map.
+	/// </summary>
+	/// <param name="map">Map.</param>
+	/// <param name="canWalk">Can walk.</param>
 	void DrawDebugMap(int[,] map, int[,] canWalk)
 	{
 		GameObject DebugTiles = new GameObject();
@@ -770,9 +776,13 @@ public class GameManager : MonoBehaviour
     /// <param name="town"></param>
     public void DrawTown(Town town)
     {
+
+        float scaleFactor = 0.45f; //TODO: regn ut fra skjerm
+
         // Sets up the town view background
         SpriteRenderer sr = townWindow.GetComponent<SpriteRenderer>();
         sr.sprite = libs.GetTown(town.GetSpriteID());
+        townWindow.transform.localScale = new Vector3(scaleFactor, scaleFactor, 1);
         sr.sortingLayerName = "TownWindow";
 
         // Creates a GameObject array for the new building
@@ -796,12 +806,11 @@ public class GameManager : MonoBehaviour
                 buildingsInActiveTown[i] = new GameObject();
                 buildingsInActiveTown[i].name = town.Buildings[i].Name;
                 buildingsInActiveTown[i].transform.position = placement;
+                buildingsInActiveTown[i].transform.localScale = new Vector3(scaleFactor, scaleFactor, 1);
                 buildingsInActiveTown[i].transform.parent = townWindow.transform;
 
+
                 // TODO: Add collider to buildings
-                BoxCollider2D collider = buildingsInActiveTown[i].AddComponent<BoxCollider2D>();
-                collider.isTrigger = true;
-                //buildingsInActiveTown[i].AddComponent<TownBuildingTrigger>();
 
 
                 // Adds a sprite rendered to display the building
@@ -857,4 +866,5 @@ public class GameManager : MonoBehaviour
             getPlayer(whoseTurn).GatherIncome();
         }
     }
+
 }
