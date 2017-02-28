@@ -26,12 +26,27 @@ namespace MapGenerator
 		public const int  REGION_CENTER 			= 2;
 		public const bool KEEP_VORONOI_REGION_LINES = false;
 
+		// Base sprites
         public const int GRASS_SPRITEID =   IngameObjectLibrary.GROUND_START + 0;
         public const int WATER_SPRITEID =   IngameObjectLibrary.GROUND_START + 1;
-        public const int DIRT_SPRITEID =    IngameObjectLibrary.GROUND_START + 2;
-        public const int LAVA_SPRITEID =    IngameObjectLibrary.GROUND_START + 3;
-        public const int SNOW_SPRITEID =    IngameObjectLibrary.GROUND_START + 4;
 
+		// WATER->Grass Transition sprites:
+		public const int GRASS_WATER_NORTH = IngameObjectLibrary.GROUND_START + 2;
+		public const int GRASS_WATER_EAST = IngameObjectLibrary.GROUND_START + 3;
+		public const int GRASS_WATER_SOUTH = IngameObjectLibrary.GROUND_START + 4;
+		public const int GRASS_WATER_WEST = IngameObjectLibrary.GROUND_START + 5;
+
+		public const int GRASS_WATER_NORTH_EAST_IN = IngameObjectLibrary.GROUND_START + 6;
+		public const int GRASS_WATER_SOUTH_EAST_IN = IngameObjectLibrary.GROUND_START + 7;
+		public const int GRASS_WATER_SOUTH_WEST_IN = IngameObjectLibrary.GROUND_START + 8;
+		public const int GRASS_WATER_NORTH_WEST_IN = IngameObjectLibrary.GROUND_START + 9;
+
+		public const int GRASS_WATER_NORTH_EAST_OUT = IngameObjectLibrary.GROUND_START + 10;
+		public const int GRASS_WATER_SOUTH_EAST_OUT = IngameObjectLibrary.GROUND_START + 11;
+		public const int GRASS_WATER_SOUTH_WEST_OUT = IngameObjectLibrary.GROUND_START + 12;
+		public const int GRASS_WATER_NORTH_WEST_OUT = IngameObjectLibrary.GROUND_START + 13;
+
+		// Environment sprites:
         public const int FOREST_SPRITEID = IngameObjectLibrary.ENVIRONMENT_START + 0;
         public const int MOUNTAIN1_SPRITEID = IngameObjectLibrary.ENVIRONMENT_START + 1;
         public const int MOUNTAIN2_SPRITEID = IngameObjectLibrary.ENVIRONMENT_START + 2;
@@ -78,7 +93,7 @@ namespace MapGenerator
 
             // PLACE TREES IN OCCUPIED AREAS:
             replaceWalls();
-            //CreateTransitions();
+            CreateTransitions();
 
             Reaction[,] reactions = new Reaction[width, height];
             canWalk = CreateWalkableArea(initialMap);
@@ -156,8 +171,7 @@ namespace MapGenerator
 
 					if (direction >= 0)
 					{ 
-						Debug.Log("Direction " + direction + " found for (" + x + "," + y + ")");
-						map[x, y] = 0 + direction; //TODO: erstatt med ingamelib transition coast
+						map[x, y] = 0 + direction;
 					}
 				}
 			}
@@ -166,54 +180,59 @@ namespace MapGenerator
 		private int FindDirection(int x, int y)
 		{
 			if (Transition(CompassF.NORTH, x, y))
-				return (int)CompassF.Directions.north;
+				return (int)GRASS_WATER_NORTH;
 
 			//else if (Transition(CompassF.NORTH_EAST, x, y))
-			//	return (int)CompassF.Directions.northEast;
+			//	return (int)GRASS_WATER_NORTH_EAST_OUT;
 
 			//else if (Transition(CompassF.EAST, x, y))
-			//	return (int)CompassF.Directions.east;
+			//	return (int)GRASS_WATER_EAST;
 
 			//else if (Transition(CompassF.SOUTH_EAST, x, y))
-			//	return (int)CompassF.Directions.southEast;
+			//	return (int)GRASS_WATER_SOUTH_EAST_OUT;
 
 			//else if (Transition(CompassF.SOUTH, x, y))
-			//	return (int)CompassF.Directions.south;
+			//	return (int)GRASS_WATER_SOUTH;
 
 			//else if (Transition(CompassF.SOUTH_WEST, x, y))
-			//	return (int)CompassF.Directions.southWest;
+			//	return (int)GRASS_WATER_SOUTH_WEST_OUT;
 
 			//else if (Transition(CompassF.WEST, x, y))
-			//	return (int)CompassF.Directions.west;
+			//	return (int)GRASS_WATER_WEST;
 
 			//else if (Transition(CompassF.NORTH_WEST, x, y))
-			//	return (int)CompassF.Directions.northWest;
+			//	return (int)GRASS_WATER_NORTH_WEST_OUT;
 			
 			return -1; // AREA IS HOMOGENUS
 		}
 
-		private bool Transition(int[,] filter, int x, int y)
+		private bool Transition(int[,] filter, int realX, int realY)
 		{
 			int range = filter.GetLength(0) / 2;
 
-			for (int fy = 0; fy < filter.GetLength(0); fy++)
+			string debugOutput = "FOR ("+realX+", "+realY+"):\n";
+
+			for (int y = 0; y < filter.GetLength(0); y++)
 			{
-				for (int fx = 0; fx < filter.GetLength(0); fx++)
+				for (int x = 0; x < filter.GetLength(1); x++)
 				{
+					int fx = realX + (x - range);
+					int fy = realY + (y - range);
 
-					if (filter[fx, fy] == 1) // HER SKAL DET VÆRE VANN
+					if (filter[x, y] == 1 && map[fx, fy] != WATER_SPRITEID) // THESE SHOULD BE WATER
 					{
-						if (map[x + (fx - range), y + (fy - range)] != WATER_SPRITEID)
-							return false;
-					}
-					else
-					{
-						if (map[x + (fx - range), y + (fy - range)] == WATER_SPRITEID)
-							return false;
+						return false;
 					}
 
+					if (filter[x, y] == 0 && map[fx, fy] == WATER_SPRITEID)
+					{
+						return false;
+					}
+					debugOutput += "("+x+","+y+") = "+ (filter[x, y] == 1 && map[fx, fy] == WATER_SPRITEID) + ",   ";
 				}
+				debugOutput += "\n";
 			}
+			Debug.Log(debugOutput);
 			return true;
 		}
 
@@ -380,8 +399,6 @@ namespace MapGenerator
                 }
             }
         }
-
-
 
         /// <summary>
         /// Sets up the voronoi map + the castles/towns

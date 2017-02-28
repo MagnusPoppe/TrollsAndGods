@@ -400,8 +400,6 @@ public class GameManager : MonoBehaviour
         return pathObjects;
     }
 
-
-
     /// <summary>
     /// Creates a position with animationspeed and returns it
     /// </summary>
@@ -556,7 +554,6 @@ public class GameManager : MonoBehaviour
 				// If dwelling
 				else if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.Dwellings)
 				{
-					Debug.Log("ResourceBuilding: @(" + x + "," + y + ")");
 
 					buildingLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetDwelling(spriteID), buildings);
 					groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetGround(MapMaker.GRASS_SPRITEID), ground); //TODO:temp
@@ -565,7 +562,6 @@ public class GameManager : MonoBehaviour
 				// If resource buildings
 				else if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.ResourceBuildings)
 				{
-					Debug.Log("ResourceBuilding: @(" + x + "," + y + ")");
 					buildingLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetResourceBuilding(spriteID), buildings);
 					groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetGround(MapMaker.GRASS_SPRITEID), ground); //TODO:temp
 				}
@@ -595,6 +591,11 @@ public class GameManager : MonoBehaviour
 		}
 	}
 
+	/// <summary>
+	/// Draws the debug map.
+	/// </summary>
+	/// <param name="map">Map.</param>
+	/// <param name="canWalk">Can walk.</param>
 	void DrawDebugMap(int[,] map, int[,] canWalk)
 	{
 		GameObject DebugTiles = new GameObject();
@@ -818,8 +819,4 @@ public class GameManager : MonoBehaviour
         //getPlayer(whoseTurn).GatherIncome(); // TODO UNCOMMENT
     }
 
-    private Vector2 RealLogicalPostition(Vector2 position)
-    {
-        return new Vector2(position.x, height + 1 - position.y);
-    }
 }

@@ -15,42 +15,42 @@ namespace Filter
 			northWest
 		};
 
-		public static int[,] NORTH = {
+		public static int[,] SOUTH = {
 			{1,1,1},
 			{0,0,0},
 			{0,0,0}
 		};
-		public static int[,] NORTH_EAST = {
+		public static int[,] SOUTH_WEST = {
 			{0,1,1},
 			{0,0,1},
 			{0,0,0}
 		};
-		public static int[,] EAST = {
+		public static int[,] WEST = {
 			{0,0,1},
 			{0,0,1},
 			{0,0,1}
 		};
-		public static int[,] SOUTH_EAST = {
+		public static int[,] NORTH_WEST = {
 			{0,0,0},
 			{0,0,1},
 			{0,1,1}
 		};
-		public static int[,] SOUTH = {
+		public static int[,] NORTH = {
 			{0,0,0},
 			{0,0,0},
 			{1,1,1}
 		};
-		public static int[,] SOUTH_WEST = {
+		public static int[,] NORTH_EAST = {
 			{0,0,0},
 			{1,0,0},
 			{1,1,0}
 		};
-		public static int[,] WEST = {
+		public static int[,] EAST = {
 			{1,0,0},
 			{1,0,0},
 			{1,0,0}
 		};
-		public static int[,] NORTH_WEST = {
+		public static int[,] SOUTH_EAST = {
 			{1,1,0},
 			{1,0,0},
 			{0,0,0}

@@ -128,7 +128,7 @@ public class IngameObjectLibrary
     // Ground-variabler. ground[] holder alle sprites, GROUND_START er global startverdi for ground sprites, GROUND_COUNT er antall ground sprites
     Sprite[] ground;
     public const int GROUND_START = 3;
-    public const int GROUND_COUNT = 2;
+    public const int GROUND_COUNT = 14;
 
     /// <summary>
     /// Initialiserer et array for å holde på alle ground sprites
@@ -141,7 +141,21 @@ public class IngameObjectLibrary
         sprites[0] = UnityEngine.Resources.Load<Sprite>(path + "Grass/Grass");
         sprites[1] = UnityEngine.Resources.Load<Sprite>(path + "Water/Water"); 
 
-        return sprites;
+		// WATER-> GRASS TRANSITIONS:
+		sprites[2] = UnityEngine.Resources.Load<Sprite>(path + "Grass-Water/north");
+		sprites[3] = UnityEngine.Resources.Load<Sprite>(path + "Grass-Water/east");
+		sprites[4] = UnityEngine.Resources.Load<Sprite>(path + "Grass-Water/south");
+		sprites[5] = UnityEngine.Resources.Load<Sprite>(path + "Grass-Water/west");
+		sprites[6] = UnityEngine.Resources.Load<Sprite>(path + "Grass-Water/northeast-in");
+		sprites[7] = UnityEngine.Resources.Load<Sprite>(path + "Grass-Water/southeast-in");
+		sprites[8] = UnityEngine.Resources.Load<Sprite>(path + "Grass-Water/southwest-in");
+		sprites[9] = UnityEngine.Resources.Load<Sprite>(path + "Grass-Water/northwest-in");
+		sprites[10] = UnityEngine.Resources.Load<Sprite>(path + "Grass-Water/northeast-out");
+		sprites[11] = UnityEngine.Resources.Load<Sprite>(path + "Grass-Water/southeast-out");
+		sprites[12] = UnityEngine.Resources.Load<Sprite>(path + "Grass-Water/southwest-out");
+		sprites[13] = UnityEngine.Resources.Load<Sprite>(path + "Grass-Water/northwest-out");
+
+		return sprites;
 	}
 
     // Environment-variabler. environment[] holder alle sprites, ENVIRONMENT_START er global startverdi for environment sprites, ENVIRONMENT_COUNT er antall environment sprites
@@ -271,7 +285,6 @@ public class IngameObjectLibrary
     /// <returns>Lokal spriteID</returns>
     public Sprite GetGround(int spriteID)
     {
-        //Debug.Log("id=" + spriteID+", local=" + (spriteID - GROUND_START));
         return ground[spriteID - GROUND_START];
     }
 
