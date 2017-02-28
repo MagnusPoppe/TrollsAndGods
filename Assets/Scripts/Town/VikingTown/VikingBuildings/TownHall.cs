@@ -13,7 +13,7 @@ namespace TownView
     public class TownHall : Building
     {
         // Required values for building:
-        const string name = "TownHall";
+        const string name = "Town Hall";
         const bool[] requirements = null;
         const int LOCAL_SPRITEID = 4;
 
