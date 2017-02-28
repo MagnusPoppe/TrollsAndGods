@@ -69,7 +69,7 @@ public class GameManager : MonoBehaviour
 
     // Hero movement
     bool heroActive;
-    Hero activeHero;
+    public Hero activeHero;
     GameObject activeHeroObject;
     Sprite pathDestYes;
     Sprite pathDestNo;
@@ -88,6 +88,9 @@ public class GameManager : MonoBehaviour
     GameObject[] buildingsInActiveTown;
     GameObject townWindow;
     bool overWorld;
+
+    // UI
+    Button nextRoundBtn;
     Text dateText;
     Text[] resourceText;
     string[] resourceTextPosition = new string[] { "TextGold", "TextWood", "TextOre", "TextCrystal", "TextGem" };
@@ -148,10 +151,7 @@ public class GameManager : MonoBehaviour
         heroActive = true;
         activeHero = getPlayer(0).Heroes[0];
         activeHeroObject = heroLayer[(int)activeHero.Position.x, (int)activeHero.Position.y];
-
-        // Initialize camera and center camera position to the first players first hero
-        cameraMovement = GetComponent<CameraMovement>();
-        cameraMovement.centerCamera(activeHeroObject.transform.position);
+        
         // Initialize turn based variables and date
         whoseTurn = 0;
         clickCount = 0;
@@ -159,21 +159,12 @@ public class GameManager : MonoBehaviour
         
         //savedClickedPos = HandyMethods.getIsoTilePos(transform.position);
         pathObjects = new List<GameObject>();
-
-		    aStar = new AStarAlgo(canWalk, width, height, false);
+        aStar = new AStarAlgo(canWalk, width, height, false);
         townWindow = GameObject.Find("Town");
         townWindow.SetActive(false);
         overWorld = true;
+        GenerateUI();
 
-        GameObject textObject = GameObject.Find("TextDate");
-        dateText = textObject.GetComponent<Text>();
-        resourceText = new Text[5];
-        for (int i = 0; i < resourceText.Length; i++)
-        {
-            textObject = GameObject.Find(resourceTextPosition[i]);
-            resourceText[i] = textObject.GetComponent<Text>();
-            resourceText[i].text = i + ""; // TODO currentPlayer.getResource(i);
-        }
     }
 
 	// Update is called once per frame
@@ -196,7 +187,6 @@ public class GameManager : MonoBehaviour
 
                 int x = (int)posClicked.x;
                 int y = (int)posClicked.y;
-
                 // Owners castle is clicked
                 if (reactions[x, y] != null && reactions[x, y].GetType().Name.Equals(typeof(CastleReact)))
                 {
@@ -292,7 +282,7 @@ public class GameManager : MonoBehaviour
                         activeHero.Position = HandyMethods.getIsoTilePos(activeHeroObject.transform.position);
                         // Also move the gameobject's position in the heroLayer table
                         heroLayer[(int)activeHero.Position.x, (int)activeHero.Position.y] = activeHeroObject;
-                        activeHero.CurMovementSpeed = activeHero.MovementSpeed - stepNumber;
+                        activeHero.CurMovementSpeed -= stepNumber;
                         // TODO Also move the reaction ?
 
                         int x = (int)activeHero.Position.x;
@@ -523,6 +513,25 @@ public class GameManager : MonoBehaviour
         // Kaster mapmaker
         mapmaker = null;
 	}
+
+    private void GenerateUI()
+    {
+        GameObject UI = GameObject.Find("Canvas");
+        nextRoundBtn = UI.GetComponentInChildren<Button>();
+        //GameObject nextRoundUI = GameObject.Find("Canvas/Button");
+        //nextRoundBtn = nextRoundBtn.GetComponent<Button>();
+        nextRoundBtn.onClick.AddListener(nextTurn);
+
+        GameObject textObject = GameObject.Find("TextDate");
+        dateText = textObject.GetComponent<Text>();
+        resourceText = new Text[5];
+        for (int i = 0; i < resourceText.Length; i++)
+        {
+            textObject = GameObject.Find(resourceTextPosition[i]);
+            resourceText[i] = textObject.GetComponent<Text>();
+            resourceText[i].text = i + ""; // TODO currentPlayer.getResource(i);
+        }
+    }
 
 	/// <summary>
 	/// Draws a given map using the IngameObjectLibrary sprites.
