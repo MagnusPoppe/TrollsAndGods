@@ -17,7 +17,7 @@ public class CastleReact : Reaction {
         Castle = castle;
         Pos = pos;
         HeroReact = null;
-        GameObject go = GameObject.Find("Main Camera");
+        GameObject go = GameObject.Find("GameManager");
         gm = go.GetComponent<GameManager>();
     }
 
