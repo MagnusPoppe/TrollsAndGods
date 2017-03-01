@@ -78,6 +78,7 @@ public class AStarAlgo {
         s.calculateH(goal, hex);
         s.calculateF();
         s.inOpenSet = true;
+        s.SetCameFrom(s);
         openSet.Add(s);
 
         // Starts loop that continues until openset is empty or a path has been found
@@ -134,7 +135,7 @@ public class AStarAlgo {
             }
 
             // If openSet contains goal node, generate path by backtracking and break loop.
-            if (openSet.Contains(nodes[(int)goal.x, (int)goal.y]))
+            if (nodes[(int)goal.x, (int)goal.y].inOpenSet)
             {
                 nodes[(int)goal.x, (int)goal.y].backTrack(path);
                 break;
@@ -250,7 +251,7 @@ public class AStarAlgo {
     /// it's gScore(the cost to walk to this node), hScore(the estimated cost to reach the goal, ignoring obstacles)
     /// and it's f wich is g+h. f is refferred to as pathCost in other commentraries.
     /// </summary>
-    public class Node
+    public class Node : IComparable<Node>
     {
         Node cameFrom;
         Point pos;
@@ -321,6 +322,8 @@ public class AStarAlgo {
             }
         }
 
+
+
         // Returns true if this.pos equals n.pos
         public bool equals(Node n)
         {
@@ -368,6 +371,11 @@ public class AStarAlgo {
         public void SetF(int f)
         {
             this.f = f;
+        }
+
+        public int CompareTo(Node n)
+        {
+            return f-n.f;
         }
     }
 
