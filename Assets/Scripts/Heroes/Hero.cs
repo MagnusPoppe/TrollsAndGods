@@ -19,6 +19,7 @@ public class Hero
     private Vector2 position;
     private int localSpriteID;
     private const IngameObjectLibrary.Category SPRITECATEGORY = IngameObjectLibrary.Category.Heroes;
+    private List<Vector2> path;
 
     /// <summary>
     /// Constructor that prepares unit, items, and equippeditems list for the hero
@@ -164,6 +165,19 @@ public class Hero
         set
         {
             localSpriteID = value;
+        }
+    }
+
+    public List<Vector2> Path
+    {
+        get
+        {
+            return path;
+        }
+
+        set
+        {
+            path = value;
         }
     }
 

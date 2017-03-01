@@ -78,7 +78,6 @@ public class GameManager : MonoBehaviour
     Sprite pathNo;
     GameObject parentToMarkers;
     List<GameObject> pathObjects;
-    List<Vector2> path;
     bool pathMarked;
     int stepNumber;
     float animationSpeed;
@@ -323,8 +322,8 @@ public class GameManager : MonoBehaviour
                                 {
                                     // Reached allied hero, walk back one step
                                     Vector2 stepBack = fromPosition;
-                                    if (path.Count > 1)
-                                        stepBack = path[path.Count - 2];
+                                    if (activeHero.Path.Count > 1)
+                                        stepBack = activeHero.Path[activeHero.Path.Count - 2];
                                     activeHero.Position = stepBack;
                                     newPos = HandyMethods.getGraphicPos(stepBack);
                                 }
@@ -393,40 +392,8 @@ public class GameManager : MonoBehaviour
         // Needs to clear existing objects if an earlier path was already made
         RemoveMarkers(pathObjects);
         // Call algorithm method that returns a list of Vector2 positions to the point, go through all objects
-        path = aStar.calculate(activeHero.Position, pos);
-        // Calculate how many steps the hero will move, if this path is chosen
-        int i = tilesWalking = Math.Min(path.Count, activeHero.CurMovementSpeed);
-        // For each position, create a gameobject with an image and instantiate it, and add it to a gameobject list for later to be removed
-        foreach (Vector2 no in path)
-        {
-            // Create a cloned gameobject of the prefab corresponding to what the marker shall look like
-            GameObject pathMarker = new GameObject();
-            pathMarker.name = parentToMarkers.name + "(" + no.x + ", " + no.y + ")";
-            pathMarker.transform.parent = parentToMarkers.transform;
-            SpriteRenderer sr = pathMarker.AddComponent<SpriteRenderer>();
-            sr.sortingLayerName = "Markers";
-            if (pos.Equals(no) && i > 0)
-                sr.sprite = pathDestYes;
-            else if (pos.Equals(no))
-                sr.sprite = pathDestNo;
-            else if (i > 0)
-                sr.sprite = pathYes;
-            else
-                sr.sprite = pathNo;
-            i--;
-            Vector2 modified;
-            if (no.y % 2 == 0)
-            {
-                modified = new Vector2(no.x, no.y / 2 / 2);
-            }
-            else
-            {
-                modified = new Vector2(no.x + 0.5f, no.y / 2 / 2);
-            }
-            // set the cloned position to the vector2 object and add it to the list of gameobjects, pathList
-            pathMarker.transform.position = modified;
-            pathObjects.Add(pathMarker);
-        }
+        activeHero.Path = aStar.calculate(activeHero.Position, pos);
+        DrawPath(activeHero.Path, pos);
         return pathObjects;
     }
 
@@ -457,6 +424,44 @@ public class GameManager : MonoBehaviour
         }
         li.Clear();
         li = new List<GameObject>();
+    }
+
+    public void DrawPath(List<Vector2> path, Vector2 pos)
+    {
+        // Calculate how many steps the hero will move, if this path is chosen
+        int i = tilesWalking = Math.Min(activeHero.Path.Count, activeHero.CurMovementSpeed);
+        // For each position, create a gameobject with an image and instantiate it, and add it to a gameobject list for later to be removed
+        
+        foreach (Vector2 no in path)
+        {
+            // Create a cloned gameobject of the prefab corresponding to what the marker shall look like
+            GameObject pathMarker = new GameObject();
+            pathMarker.name = parentToMarkers.name + "(" + no.x + ", " + no.y + ")";
+            pathMarker.transform.parent = parentToMarkers.transform;
+            SpriteRenderer sr = pathMarker.AddComponent<SpriteRenderer>();
+            sr.sortingLayerName = "Markers";
+            if (pos.Equals(no) && i > 0)
+                sr.sprite = pathDestYes;
+            else if (pos.Equals(no))
+                sr.sprite = pathDestNo;
+            else if (i > 0)
+                sr.sprite = pathYes;
+            else
+                sr.sprite = pathNo;
+            i--;
+            Vector2 modified;
+            if (no.y % 2 == 0)
+            {
+                modified = new Vector2(no.x, no.y / 2 / 2);
+            }
+            else
+            {
+                modified = new Vector2(no.x + 0.5f, no.y / 2 / 2);
+            }
+            // set the cloned position to the vector2 object and add it to the list of gameobjects, pathList
+            pathMarker.transform.position = modified;
+            pathObjects.Add(pathMarker);
+        }
     }
 
     public bool IsLastStep(int stepNumber)
@@ -866,12 +871,6 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            // Increment turn, reset turn integer when last player has finished, and increment date
-            if (++whoseTurn >= amountOfPlayers)
-            {
-                whoseTurn = 0;
-                dateText.text = date.incrementDay();
-            }
             // Refresh movementspeed for the upcoming players heroes
             foreach (Hero hero in players[whoseTurn].Heroes)
             {
@@ -881,12 +880,44 @@ public class GameManager : MonoBehaviour
             // Remove all path markers on the map
             RemoveMarkers(pathObjects);
             // Set active hero and active hero object to the upcoming players first hero
-            activeHero = getPlayer(whoseTurn).Heroes[0];
-            activeHeroObject = heroLayer[(int)activeHero.Position.x, (int)activeHero.Position.y];
-            // Center camera to the upcoming players first hero
-            cameraMovement.centerCamera(HandyMethods.getGraphicPos(activeHero.Position));
+
+            // On next turn, always set the next player as active player. But if next player 
+            // does not exist, keep incrementing till you find an exisiting player.
+            do
+            {
+                incrementTurn();
+            }
+            while (getPlayer(whoseTurn) == null);
+
+
+            if(getPlayer(whoseTurn).Heroes[0] != null)
+            {
+               activeHero = getPlayer(whoseTurn).Heroes[0];
+               activeHeroObject = heroLayer[(int)activeHero.Position.x, (int)activeHero.Position.y];
+               if (activeHero.Path != null)
+                    DrawPath(activeHero.Path, new Vector2(0, 0));
+               // Center camera to the upcoming players first hero
+               cameraMovement.centerCamera(HandyMethods.getGraphicPos(activeHero.Position));
+            }
+            else
+            {
+                activeHero = null;
+                activeHeroObject = null;
+                // Center camera to the upcoming players first castle
+                cameraMovement.centerCamera(HandyMethods.getGraphicPos(getPlayer(whoseTurn).Castle[0].GetPosition()));
+            }
             // Gathert income for the upcoming player
             getPlayer(whoseTurn).GatherIncome();
+        }
+    }
+
+    // Increment turn, reset turn integer when last player has finished, and increment date
+    private void incrementTurn()
+    {
+        if (++whoseTurn >= amountOfPlayers)
+        {
+            whoseTurn = 0;
+            dateText.text = date.incrementDay();
         }
     }
 

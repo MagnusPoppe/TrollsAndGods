@@ -376,6 +376,7 @@ namespace MapGenerator
                         // Also place a corresponding hero.
                         players[i] = new Player(i, 0);
                         lr.GetCastle().Player = players[i];
+                        players[i].Castle.Add(lr.GetCastle());
                         lr.PlaceHero(players[i], map, canWalk);
                         i++;
                     }
