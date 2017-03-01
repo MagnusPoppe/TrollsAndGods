@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Collections;
@@ -77,6 +78,7 @@ public class GameManager : MonoBehaviour
     Sprite pathNo;
     GameObject parentToMarkers;
     List<GameObject> pathObjects;
+    List<Vector2> path;
     bool pathMarked;
     int stepNumber;
     float animationSpeed;
@@ -94,6 +96,7 @@ public class GameManager : MonoBehaviour
     Text dateText;
     Text[] resourceText;
     string[] resourceTextPosition = new string[] { "TextGold", "TextWood", "TextOre", "TextCrystal", "TextGem" };
+    GameObject overWorldCanvas;
 
 
     // Use this for initialization
@@ -127,13 +130,16 @@ public class GameManager : MonoBehaviour
                 lr.makeReactions(reactions);
 
                 // Add reactions to castles and heroes
-                if (lr.GetCastle() != null)
+                /*if (lr.GetCastle() != null)
+                {
                     reactions[(int)lr.GetCastle().GetPosition().x, (int)lr.GetCastle().GetPosition().y] = new CastleReact(lr.GetCastle(), lr.GetCastle().GetPosition());
+                }*/
                 if (lr.GetHero() != null)
-                    reactions[(int)lr.GetHero().Position.x, (int)lr.GetCastle().Origo.y] = new HeroMeetReact(lr.GetHero(), lr.GetHero().Position);
+                    reactions[(int)lr.GetHero().Position.x, (int)lr.GetHero().Position.y] = new HeroMeetReact(lr.GetHero(), lr.GetHero().Position);
             }
         }
 
+<<<<<<< HEAD
         // DEBUG reactions
         foreach(Reaction r in reactions)
         {
@@ -141,6 +147,8 @@ public class GameManager : MonoBehaviour
                 //Debug.Log(r.Pos.ToString() + r.GetType().ToString());
         }
 
+=======
+>>>>>>> refs/remotes/origin/master
         // Creating the camera game object and variables
         GameObject tempCameraObject = GameObject.Find("Main Camera");
         mainCamera = tempCameraObject.GetComponent<Camera>();
@@ -170,7 +178,7 @@ public class GameManager : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        if (overWorld)
+        if (overWorld && !EventSystem.current.IsPointerOverGameObject())
         {
             // if you have clicked once on a castle of possession, give a window of frames to click it again to open castle menu
             if (prepareDoubleClick && ++clickCount == CLICKSPEED)
@@ -188,7 +196,7 @@ public class GameManager : MonoBehaviour
                 int x = (int)posClicked.x;
                 int y = (int)posClicked.y;
                 // Owners castle is clicked
-                if (reactions[x, y] != null && reactions[x, y].GetType().Name.Equals(typeof(CastleReact)))
+                if (reactions[x, y] != null && reactions[x, y].GetType().Equals(typeof(CastleReact)))
                 {
                     if (prepareDoubleClick)
                     {
@@ -196,7 +204,7 @@ public class GameManager : MonoBehaviour
                         if (players[whoseTurn].equals(castleClicked.Castle.Player))
                         {
                             // TODO when click on your own castle
-                            //EnterTown();
+                            castleClicked.React(getPlayer(whoseTurn));
                             Debug.Log("Leftclicked your own castle");
                             heroActive = false;
                         }
@@ -274,16 +282,12 @@ public class GameManager : MonoBehaviour
                     stepNumber++;
                     animationSpeed = 0f;
                     // Stop the movement when amount of tiles moved has reached the limit, or walking is disabled
-                    if (IsLastStep())
+                    if (IsLastStep(stepNumber))
                     {
-                        // Clear the previous table reference to current gameobject
-                        heroLayer[(int)activeHero.Position.x, (int)activeHero.Position.y] = null;
+                        Vector2 fromPosition = activeHero.Position;
                         // Set hero position when he stops walking to his isometric position
                         activeHero.Position = HandyMethods.getIsoTilePos(activeHeroObject.transform.position);
-                        // Also move the gameobject's position in the heroLayer table
-                        heroLayer[(int)activeHero.Position.x, (int)activeHero.Position.y] = activeHeroObject;
                         activeHero.CurMovementSpeed -= stepNumber;
-                        // TODO Also move the reaction ?
 
                         int x = (int)activeHero.Position.x;
                         int y = (int)activeHero.Position.y;
@@ -293,35 +297,59 @@ public class GameManager : MonoBehaviour
                         // objectcollision, when final destination is reached
                         if (canWalk[x, y] == MapMaker.TRIGGER)
                         {
+                            Debug.Log(activeHero.Position);
                             if (reactions[x, y].React(activeHero))
                             {
-                                if (reactions[x, y].GetType().Name.Equals(typeof(HeroMeetReact)))
+                                if (reactions[x, y].GetType().Equals(typeof(HeroMeetReact)))
                                 {
                                     // TODO if battle, remove hero that is now set to null
                                 }
-                                else if (reactions[x, y].GetType().Name.Equals(typeof(UnitReaction)))
+                                else if (reactions[x, y].GetType().Equals(typeof(UnitReaction)))
                                 {
                                     // TODO remove either hero or unit
                                 }
-                                else if (reactions[x, y].GetType().Name.Equals(typeof(ResourceReaction)))
+                                else if (reactions[x, y].GetType().Equals(typeof(ResourceReaction)))
                                 {
                                     // TODO remove picked up resource
                                 }
-                                else if (reactions[x, y].GetType().Name.Equals(typeof(ArtifactReaction)))
+                                else if (reactions[x, y].GetType().Equals(typeof(ArtifactReaction)))
                                 {
                                     // TODO remove picked up artifact
                                 }
-                                else if (reactions[x, y].GetType().Name.Equals(typeof(CastleReact)))
+                                else if (reactions[x, y].GetType().Equals(typeof(CastleReact)))
                                 {
-                                    // TODO enemy town was attacked
+
                                 }
-                                else if (reactions[x, y].GetType().Name.Equals(typeof(DwellingReact)))
+                                else if (reactions[x, y].GetType().Equals(typeof(DwellingReact)))
                                 {
                                     // TODO dweeling has been captured
                                 }
                             }
+                            else
+                            {
+                                if(reactions[x, y].GetType().Equals(typeof(HeroMeetReact)))
+                                {
+                                    // Reached allied hero, walk back one step
+                                    Vector2 stepBack = fromPosition;
+                                    if (path.Count > 1)
+                                        stepBack = path[path.Count - 2];
+                                    activeHero.Position = stepBack;
+                                    newPos = HandyMethods.getGraphicPos(stepBack);
+                                }
+                            }
                         }
-                        // TODO when hero moves, set origin tile's canWalk 0 or 2 whether theres an reaction there. Also set destination tile's canWalk to 2
+
+                        // Clear the previous table reference to current gameobject
+                        heroLayer[(int)activeHero.Position.x, (int)activeHero.Position.y] = null;
+                        // Also move the gameobject's position in the heroLayer table
+                        heroLayer[(int)activeHero.Position.x, (int)activeHero.Position.y] = activeHeroObject;
+                        // Set origin tile's canWalk 0 or 2 if no reaction there
+                        if (reactions[(int)fromPosition.x, (int)fromPosition.y] == null)
+                            canWalk[(int)fromPosition.x, (int)fromPosition.y] = MapMaker.CANWALK;
+                        // Set destination tile's canWalk to 2
+                        canWalk[(int)activeHero.Position.x, (int)activeHero.Position.y] = MapMaker.TRIGGER;
+                        // TODO also set reactions frompos and topos
+
                     }
                 }
                 // Execute the movement
@@ -337,23 +365,20 @@ public class GameManager : MonoBehaviour
                 int y = (int)mousePos.y;
                 if (x >= 0 && x < width && y >= 0 && y < height && reactions[x, y] != null)
                 {
-                    if (reactions[x, y].GetType().Name.Equals(typeof(CastleReact)))
+                    if (reactions[x, y].GetType().Equals(typeof(CastleReact)))
                     {
                         CastleReact cr = (CastleReact)reactions[x, y];
                         if (players[whoseTurn].equals(cr.Castle.Player))
                         {
-                            Debug.Log(x + " - " + y + " CastleReact Dummy");
                             // TODO when you hover over your own castle, change mouse pointer
                         }
                     }
-                    else if (reactions[x, y].GetType().Name.Equals(typeof(HeroMeetReact)))
+                    else if (reactions[x, y].GetType().Equals(typeof(HeroMeetReact)))
                     {
-                        Debug.Log(x + " - " + y + " HeroMeetReact Dummy");
                         // TODO when you hover over an hero, change mouse pointer
                     }
-                    else if (reactions[x, y].GetType().Name.Equals(typeof(UnitReaction)))
+                    else if (reactions[x, y].GetType().Equals(typeof(UnitReaction)))
                     {
-                        Debug.Log(x + " - " + y + " UnitReaction Dummy");
                         // TODO when you hover over an neutral unit, change mouse pointer
                     }
                 }
@@ -376,11 +401,11 @@ public class GameManager : MonoBehaviour
         // Needs to clear existing objects if an earlier path was already made
         RemoveMarkers(pathObjects);
         // Call algorithm method that returns a list of Vector2 positions to the point, go through all objects
-        List<Vector2> positions = aStar.calculate(activeHero.Position, pos);
+        path = aStar.calculate(activeHero.Position, pos);
         // Calculate how many steps the hero will move, if this path is chosen
-        int i = tilesWalking = Math.Min(positions.Count, activeHero.CurMovementSpeed);
+        int i = tilesWalking = Math.Min(path.Count, activeHero.CurMovementSpeed);
         // For each position, create a gameobject with an image and instantiate it, and add it to a gameobject list for later to be removed
-        foreach (Vector2 no in positions)
+        foreach (Vector2 no in path)
         {
             // Create a cloned gameobject of the prefab corresponding to what the marker shall look like
             GameObject pathMarker = new GameObject();
@@ -442,7 +467,7 @@ public class GameManager : MonoBehaviour
         li = new List<GameObject>();
     }
 
-    public bool IsLastStep()
+    public bool IsLastStep(int stepNumber)
     {
         return stepNumber == activeHero.CurMovementSpeed || stepNumber == tilesWalking || lastStep;
     }
@@ -513,14 +538,20 @@ public class GameManager : MonoBehaviour
         // Kaster mapmaker
         mapmaker = null;
 	}
-
+    
     private void GenerateUI()
     {
+        /*
         GameObject UI = GameObject.Find("Canvas");
         nextRoundBtn = UI.GetComponentInChildren<Button>();
         //GameObject nextRoundUI = GameObject.Find("Canvas/Button");
         //nextRoundBtn = nextRoundBtn.GetComponent<Button>();
         nextRoundBtn.onClick.AddListener(nextTurn);
+        */
+
+        overWorldCanvas = GameObject.Find("OverworldCanvas");
+        nextRoundBtn = overWorldCanvas.GetComponentInChildren<Button>();
+
 
         GameObject textObject = GameObject.Find("TextDate");
         dateText = textObject.GetComponent<Text>();
@@ -761,6 +792,7 @@ public class GameManager : MonoBehaviour
     {
         if (townWindow.activeSelf)
         {
+            overWorldCanvas.SetActive(true);
             townWindow.SetActive(false);
             overWorld = true;
             cameraMovement.enabled = true;
@@ -768,6 +800,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
+            overWorldCanvas.SetActive(false);
             DrawTown(town);
             townWindow.SetActive(true);
             overWorld = false;

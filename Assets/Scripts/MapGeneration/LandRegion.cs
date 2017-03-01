@@ -39,10 +39,9 @@ namespace MapGenerator
             map[(int)heroPos.x, (int)heroPos.y] = hero.GetSpriteID();
         }
 
-        public void PlaceCastle(Castle castle, int[,] map, int[,] canWalk)
+        public void PlaceCastle(int[,] map, int[,] canWalk)
         {
-            this.castle = castle;
-            canWalk[(int)RegionCenter.x, (int)RegionCenter.y] = 2;
+            castle.FlipCanWalk(canWalk);
             map[(int)RegionCenter.x, (int)RegionCenter.y] = castle.GetSpriteID();
         }
 
@@ -169,6 +168,7 @@ namespace MapGenerator
 
         public Reaction[,] makeReactions(Reaction[,] reaction)
         {
+            castle.flipReactions(reaction, hero);
             foreach(OverworldBuilding b in buildings)
             {
                 reaction[(int)b.Origo.x, (int)b.Origo.y] = b.makeReaction();

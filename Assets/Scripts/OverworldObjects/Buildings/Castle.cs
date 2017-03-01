@@ -87,5 +87,32 @@ namespace OverworldObjects
         {
             return Reaction = new CastleReact(this, Origo);
         }
-	}
+
+        public void flipReactions(Reaction[,] reactions, Hero hero)
+        {
+            int x = (int)Origo.x;
+            int y = (int)Origo.y;
+
+            int[,] shape = Shapes.GetShape(ShapeType);
+
+            for (int fy = 0; fy < shape.GetLength(0); fy++)
+            {
+                for (int fx = 0; fx < shape.GetLength(1); fx++)
+                {
+                    int dxx = x + Shapes.dx[fx];
+                    int dyy = y + Shapes.dy[fy];
+
+                    if (shape[fx, fy] == 1)
+                    {
+                        reactions[dxx, dyy] = new CastleReact(this, new Vector2(dxx, dyy));
+                    }
+                }
+            }
+            if(hero != null)
+            {
+                CastleReact react = (CastleReact)reactions[x, y];
+                react.HeroReact = new HeroMeetReact(hero, new Vector2(x, y));
+            }
+        }
+    }
 }

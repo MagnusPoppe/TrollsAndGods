@@ -80,7 +80,7 @@ public class AStarAlgo {
         while (openSet.Count != 0)
         {
             // Fetches node from openSet
-            Node cur = openSet[0];
+            Node cur = openSet[openSet.Count-1];
             int posX = (int)cur.Getpos().x;
             int posY = (int)cur.Getpos().y;
 
@@ -106,7 +106,7 @@ public class AStarAlgo {
                 // If not in openSet, add to openSet, set where it came from and calculate pathCost
                 if (!openSet.Contains(neighbour))
                 {
-                    openSet.Insert(0, neighbour);
+                    openSet.Add(neighbour);
                     neighbour.SetGScore(cur.GetGScore() + 1);
                     neighbour.calculateH(goal, hex);
                     neighbour.calculateF();
@@ -133,7 +133,7 @@ public class AStarAlgo {
             }
 
             // Sorts openSet by cost
-            openSet = openSet.OrderBy(Node => Node.GetF()).ToList();
+            openSet = openSet.OrderByDescending(Node => Node.GetF()).ToList();
         }
         
 

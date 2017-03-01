@@ -369,7 +369,7 @@ namespace MapGenerator
                 {
                     LandRegion lr = (LandRegion)region;
                     // Place a castle at every landregion
-                    lr.PlaceCastle(new UnknownCastle(null), map, canWalk);
+                    lr.PlaceCastle(map, canWalk);
                     if (i < players.Length)
                     {
                         // Create a player, set the castles owner as that player.

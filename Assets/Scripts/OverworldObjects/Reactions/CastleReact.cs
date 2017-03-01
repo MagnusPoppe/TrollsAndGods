@@ -57,7 +57,7 @@ public class CastleReact : Reaction {
         
         if (castle.Player.Equals(h.Player))
         {
-            //gm.EnterTown(); (( TODO: fix
+            gm.EnterTown(castle.Town);
             return false;
         }
         else
@@ -76,7 +76,7 @@ public class CastleReact : Reaction {
     {
         if (player.equals(castle.Player))
         {
-            //gm.EnterTown(); TODO: Fix
+            gm.EnterTown(castle.Town);
         }
         return false;
     }
