@@ -14,15 +14,15 @@ public class AStarAlgo {
     Node[,] nodes;
     int width, height;
     protected bool hex;
-    readonly Vector2[] evenIsometricDirections = {
-        new Vector2(-1,-1),new Vector2(0,-2),new Vector2(0,-1),
-        new Vector2(-1,0),                   new Vector2(1,0),
-        new Vector2(-1,1),new Vector2(0,2),new Vector2(0,1)
+    readonly Point[] evenIsometricDirections = {
+        new Point(-1,-1),new Point(0,-2),new Point(0,-1),
+        new Point(-1,0),                   new Point(1,0),
+        new Point(-1,1),new Point(0,2),new Point(0,1)
     };
-    readonly Vector2[] oddIsometricDirections = {
-        new Vector2(0,-1),new Vector2(0,-2),new Vector2(1,-1),
-        new Vector2(-1,0),                   new Vector2(1,0),
-        new Vector2(0,1),new Vector2(0,2),new Vector2(1,1)
+    readonly Point[] oddIsometricDirections = {
+        new Point(0,-1),new Point(0,-2),new Point(1,-1),
+        new Point(-1,0),                   new Point(1,0),
+        new Point(0,1),new Point(0,2),new Point(1,1)
     };
 
     /// <summary>
@@ -38,6 +38,17 @@ public class AStarAlgo {
         width = w;
         height = h;
         this.hex = hex;
+
+        // Generates 2d array of nodes matching the map in size
+        nodes = new Node[width, height];
+
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+                nodes[i, j] = new Node(new Point(i, j));
+            }
+        }
     }
 
     /// <summary>
@@ -62,26 +73,17 @@ public class AStarAlgo {
         // Contains nodes that are to be evaluvated
         List<Node> openSet = new List<Node>();
 
-        // Generates 2d array of nodes matching the map in size
-        nodes = new Node[width, height];
-
-        for (int i = 0; i < width; i++)
-        {
-            for (int j = 0; j < height; j++)
-            {
-                nodes[i, j] = new Node(new Point(i, j));
-            }
-        }
-
         // Creates start node at start position and adds to openSet
         Node s = nodes[(int)start.x, (int)start.y];
         s.calculateH(goal, hex);
         s.calculateF();
+        s.inOpenSet = true;
         openSet.Add(s);
 
         // Starts loop that continues until openset is empty or a path has been found
         while (openSet.Count != 0)
         {
+            
             // Fetches node from openSet
             Node cur = openSet[openSet.Count-1];
             int posX = (int)cur.Getpos().x;
@@ -90,6 +92,8 @@ public class AStarAlgo {
             // Removes node from openSet and adds to closedSet
             openSet.Remove(cur);
             closedSet.Add(cur);
+            cur.inOpenSet = false;
+            cur.evaluvated = true;
 
             // Fetches all walkable neighbor nodes
             Node[] neighbours;
@@ -103,17 +107,18 @@ public class AStarAlgo {
 
                 Node neighbour = neighbours[i];
                 // If already evaluvated, skip node
-                if (closedSet.Contains(neighbour))
+                if (neighbour.evaluvated)
                     continue;
 
                 // If not in openSet, add to openSet, set where it came from and calculate pathCost
-                if (!openSet.Contains(neighbour))
+                if (!neighbour.inOpenSet)
                 {
                     openSet.Add(neighbour);
                     neighbour.SetGScore(cur.GetGScore() + 1);
                     neighbour.calculateH(goal, hex);
                     neighbour.calculateF();
                     neighbour.SetCameFrom(cur);
+                    neighbour.inOpenSet = true;
                 }
                 // OpenSet contains node, then check if current path is better.
                 else
@@ -138,7 +143,16 @@ public class AStarAlgo {
             // Sorts openSet by cost
             openSet = openSet.OrderByDescending(Node => Node.GetF()).ToList();
         }
-        
+
+        // prepares nodes for new run
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+                nodes[i, j].inOpenSet = false;
+                nodes[i, j].evaluvated = false;
+            }
+        }
 
         // Returns path array that contains the shortest path
         return path;
@@ -159,7 +173,7 @@ public class AStarAlgo {
         // array for directions based on that
         if (posY % 2 == 0)
         {
-            foreach (Vector2 v in evenIsometricDirections)
+            foreach (Point v in evenIsometricDirections)
             {
                 if (posX + v.x >= 0 && posX + v.x < width
                     && posY + v.y >= 0 && posY + v.y < height
@@ -174,7 +188,7 @@ public class AStarAlgo {
         }
         else
         {
-            foreach (Vector2 v in oddIsometricDirections)
+            foreach (Point v in oddIsometricDirections)
             {
                 if (posX + v.x >= 0 && posX + v.x < width
                     && posY + v.y >= 0 && posY + v.y < height
@@ -241,12 +255,15 @@ public class AStarAlgo {
         Node cameFrom;
         Point pos;
         int gScore, hScore, f;
+        public bool evaluvated, inOpenSet;
 
         public Node(Point pos)
         {
             cameFrom = this;
             this.pos = pos;
             gScore = hScore = f = 0;
+            evaluvated = false;
+            inOpenSet = false;
         }
 
         // Calculates the estimated cost of moving to goal from this node, ignoring obstacles, as hScore
