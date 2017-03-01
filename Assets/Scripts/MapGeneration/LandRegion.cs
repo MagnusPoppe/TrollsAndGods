@@ -25,7 +25,8 @@ namespace MapGenerator
         public LandRegion(List<Vector2> coordinateList, Vector2 regionCenter) 
             :base(coordinateList, regionCenter)
         {
-            castle = new UnknownCastle(regionCenter, null);
+            // TODO: alt skal ikke være viking town
+            castle = new VikingCastle(regionCenter, null);
             coordinates = coordinateList;
             buildings = new List<OverworldBuilding>();
         }
@@ -53,6 +54,11 @@ namespace MapGenerator
         public Castle GetCastle()
         {
             return castle;
+        }
+
+        public void SetCastle(Castle castle)
+        {
+            this.castle = castle;
         }
 
 

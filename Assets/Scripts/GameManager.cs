@@ -139,16 +139,6 @@ public class GameManager : MonoBehaviour
             }
         }
 
-<<<<<<< HEAD
-        // DEBUG reactions
-        foreach(Reaction r in reactions)
-        {
-            //if(r != null)
-                //Debug.Log(r.Pos.ToString() + r.GetType().ToString());
-        }
-
-=======
->>>>>>> refs/remotes/origin/master
         // Creating the camera game object and variables
         GameObject tempCameraObject = GameObject.Find("Main Camera");
         mainCamera = tempCameraObject.GetComponent<Camera>();
@@ -256,21 +246,23 @@ public class GameManager : MonoBehaviour
                 // TODO else if(GUInextTurnClicked)
                 //else if (false)
             }
+
             // TODO right mousebutton clicked
-            else if (Input.GetMouseButtonDown(1))
-            {
-                if (IsWalking())
-                {
-                    SetLastStep(true);
-                }
-                // TODO: temp town creation
-                VikingTown t = new VikingTown(new Player(0,0));
-                for (int i = 0; i < t.Buildings.Length; i++)
-                {
-                    t.Buildings[i].Build();
-                }
-                EnterTown(t);
-            }
+            //else if (Input.GetMouseButtonDown(1))
+            //{
+            //    if (IsWalking())
+            //    {
+            //        SetLastStep(true);
+            //    }
+            //    // TODO: temp town creation
+            //    VikingTown t = new VikingTown(new Player(0,0));
+            //    for (int i = 0; i < t.Buildings.Length; i++)
+            //    {
+            //        t.Buildings[i].Build();
+            //    }
+            //    EnterTown(t);
+            //}
+
             // Upon every update, activedhero will be moved in a direction if walking is enabled
             if (IsWalking())
             {
