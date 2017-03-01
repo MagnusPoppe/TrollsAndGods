@@ -248,7 +248,7 @@ public class IngameObjectLibrary
     // castles-variabler. castles[] holder alle sprites, CASTLES_START er global startverdi for castles sprites, CASTLES_COUNT er antall castles sprites
     Sprite[] castles;
     public const int CASTLES_START = HEROES_START + HEROES_COUNT;
-    public const int CASTLES_COUNT = 1;
+    public const int CASTLES_COUNT = 2;
 
     /// <summary>
     /// Initialiserer et array for å holde på alle castles sprites
@@ -259,6 +259,7 @@ public class IngameObjectLibrary
         Sprite[] sprites = new Sprite[CASTLES_COUNT];
         String path = "Sprites/Buildings/Castle/";
         sprites[0] = UnityEngine.Resources.Load<Sprite>(path + "Castle");
+        sprites[1] = UnityEngine.Resources.Load<Sprite>(path + "viking_castle");
 
         return sprites;
     }

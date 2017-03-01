@@ -19,7 +19,7 @@ namespace Units
             this.Description = description;
             this.MinDamage = minDamage;
             this.MaxDamage = maxDamage;
-            this.DamageType = damageType;
+            this.damageType = damageType;
         }
 
         public string Name
@@ -74,7 +74,7 @@ namespace Units
             }
         }
 
-        public Element DamageType
+        public int DamageType
         {
             get
             {
