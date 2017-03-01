@@ -167,7 +167,7 @@ public class GameManager : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        if (overWorld && !EventSystem.current.IsPointerOverGameObject())
+        if (overWorld)
         {
             // if you have clicked once on a castle of possession, give a window of frames to click it again to open castle menu
             if (prepareDoubleClick && ++clickCount == CLICKSPEED)
@@ -176,7 +176,7 @@ public class GameManager : MonoBehaviour
                 prepareDoubleClick = false;
             }
             // Left click listener
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
             {
                 // Fetch the point just clicked and adjust the position in the square to the corresponding isometric position
                 Vector2 posClicked = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -391,8 +391,44 @@ public class GameManager : MonoBehaviour
         RemoveMarkers(pathObjects);
         // Call algorithm method that returns a list of Vector2 positions to the point, go through all objects
         activeHero.Path = aStar.calculate(activeHero.Position, pos);
-        DrawPath(activeHero.Path, pos);
+        DrawPath(activeHero.Path);
         return pathObjects;
+    }
+
+    /// <summary>
+    /// Graphically draw the path objects
+    /// </summary>
+    /// <param name="path">list of positions to draw the path</param>
+    public void DrawPath(List<Vector2> path)
+    {
+        // Calculate how many steps the hero will move, if this path is chosen
+        int count = tilesWalking = Math.Min(activeHero.Path.Count, activeHero.CurMovementSpeed);
+        // For each position, create a gameobject with an image and instantiate it, and add it to a gameobject list for later to be removed
+
+        for (int i = 0; i < activeHero.Path.Count; i++)
+        {
+            // Create a cloned gameobject of the prefab corresponding to what the marker shall look like
+            GameObject pathMarker = new GameObject();
+            pathMarker.name = parentToMarkers.name + "(" + path[i].x + ", " + path[i].y + ")";
+            pathMarker.transform.parent = parentToMarkers.transform;
+            SpriteRenderer sr = pathMarker.AddComponent<SpriteRenderer>();
+            sr.sortingLayerName = "Markers";
+            if (i + 1 == activeHero.Path.Count)
+            {
+                if (i + 1 == tilesWalking)
+                    sr.sprite = pathDestYes;
+                else
+                    sr.sprite = pathDestNo;
+            }
+            else if (count > 0)
+                sr.sprite = pathYes;
+            else
+                sr.sprite = pathNo;
+            count--;
+            // set the cloned position to the vector2 object and add it to the list of gameobjects, pathList
+            pathMarker.transform.position = HandyMethods.getGraphicPos(path[i]);
+            pathObjects.Add(pathMarker);
+        }
     }
 
     /// <summary>
@@ -422,44 +458,6 @@ public class GameManager : MonoBehaviour
         }
         li.Clear();
         li = new List<GameObject>();
-    }
-
-    public void DrawPath(List<Vector2> path, Vector2 pos)
-    {
-        // Calculate how many steps the hero will move, if this path is chosen
-        int i = tilesWalking = Math.Min(activeHero.Path.Count, activeHero.CurMovementSpeed);
-        // For each position, create a gameobject with an image and instantiate it, and add it to a gameobject list for later to be removed
-        
-        foreach (Vector2 no in path)
-        {
-            // Create a cloned gameobject of the prefab corresponding to what the marker shall look like
-            GameObject pathMarker = new GameObject();
-            pathMarker.name = parentToMarkers.name + "(" + no.x + ", " + no.y + ")";
-            pathMarker.transform.parent = parentToMarkers.transform;
-            SpriteRenderer sr = pathMarker.AddComponent<SpriteRenderer>();
-            sr.sortingLayerName = "Markers";
-            if (pos.Equals(no) && i > 0)
-                sr.sprite = pathDestYes;
-            else if (pos.Equals(no))
-                sr.sprite = pathDestNo;
-            else if (i > 0)
-                sr.sprite = pathYes;
-            else
-                sr.sprite = pathNo;
-            i--;
-            Vector2 modified;
-            if (no.y % 2 == 0)
-            {
-                modified = new Vector2(no.x, no.y / 2 / 2);
-            }
-            else
-            {
-                modified = new Vector2(no.x + 0.5f, no.y / 2 / 2);
-            }
-            // set the cloned position to the vector2 object and add it to the list of gameobjects, pathList
-            pathMarker.transform.position = modified;
-            pathObjects.Add(pathMarker);
-        }
     }
 
     public bool IsLastStep(int stepNumber)
@@ -891,7 +889,7 @@ public class GameManager : MonoBehaviour
                activeHero = getPlayer(whoseTurn).Heroes[0];
                activeHeroObject = heroLayer[(int)activeHero.Position.x, (int)activeHero.Position.y];
                if (activeHero.Path != null)
-                    DrawPath(activeHero.Path, new Vector2(0, 0));
+                    DrawPath(activeHero.Path);
                // Center camera to the upcoming players first hero
                cameraMovement.centerCamera(HandyMethods.getGraphicPos(activeHero.Position));
             }
