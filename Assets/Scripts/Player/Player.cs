@@ -12,7 +12,7 @@ public class Player
     private Resources resources;
     private Hero[] heroes;
     private int nextEmptyHero;
-    private List<Town> towns;
+    private List<Castle> castle;
     private int playerID;
     private bool[,] fogOfWar;
     private const int MAXHEROES = 8;
@@ -28,7 +28,7 @@ public class Player
     {
         Resources = new Resources(difficulty);
         Heroes = new Hero[MAXHEROES];
-        Towns = new List<Town>();
+        Castle = new List<Castle>();
         PlayerID = playerID;
         FogOfWar = new bool[32, 32]; // todo, link to map objects x y size
         DwellingsOwned = new List<Dwelling>();
@@ -84,16 +84,16 @@ public class Player
         }
     }
 
-    public List<Town> Towns
+    public List<Castle> Castle
     {
         get
         {
-            return towns;
+            return castle;
         }
 
         set
         {
-            towns = value;
+            castle = value;
         }
     }
 
