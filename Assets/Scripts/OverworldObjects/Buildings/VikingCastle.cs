@@ -7,7 +7,6 @@ namespace OverworldObjects
 {
 
     /// <summary>
-    /// PLACEHOLDER CLASS FOR AN INITIALIZEABLE CASTLE.
     /// This class can be used as a template for a given castle.
     /// </summary>
     class VikingCastle : Castle
@@ -34,6 +33,9 @@ namespace OverworldObjects
         {
             EnvironmentTileType = MapGenerator.MapMaker.GRASS_SPRITEID;
             Town = new VikingTown(owner);
+
+            // Builds Town Hall-type building that can build other buildings
+            Town.Buildings[0].Build();
         }
 
 
@@ -46,6 +48,9 @@ namespace OverworldObjects
             : base(shape, owner, LOCAL_SPRITE_ID, SPRITE_CATEGORY)
         {
             Town = new VikingTown(owner);
+
+            // Builds Town Hall-type building that can build other buildings
+            Town.Buildings[0].Build();
         }
     }
 }

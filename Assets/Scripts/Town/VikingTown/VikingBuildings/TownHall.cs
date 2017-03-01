@@ -15,7 +15,7 @@ namespace TownView
         // Required values for building:
         const string name = "Town Hall";
         const bool[] requirements = null;
-        const int LOCAL_SPRITEID = 4;
+        const int LOCAL_SPRITEID = 1;
 
         // Window ID for UI
         const int WINDOW_TYPE = 0;

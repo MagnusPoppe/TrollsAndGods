@@ -15,7 +15,7 @@ namespace TownView
         // Required values for building:
         const string name = "Dragon Tower";
         const bool[] requirements = null;
-        const int LOCAL_SPRITEID = 1;
+        const int LOCAL_SPRITEID = 4;
 
 
         // Resources cost: 

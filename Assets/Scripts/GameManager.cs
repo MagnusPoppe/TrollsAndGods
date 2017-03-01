@@ -246,22 +246,6 @@ public class GameManager : MonoBehaviour
                 //else if (false)
             }
 
-            // TODO right mousebutton clicked
-            //else if (Input.GetMouseButtonDown(1))
-            //{
-            //    if (IsWalking())
-            //    {
-            //        SetLastStep(true);
-            //    }
-            //    // TODO: temp town creation
-            //    VikingTown t = new VikingTown(new Player(0,0));
-            //    for (int i = 0; i < t.Buildings.Length; i++)
-            //    {
-            //        t.Buildings[i].Build();
-            //    }
-            //    EnterTown(t);
-            //}
-
             // Upon every update, activedhero will be moved in a direction if walking is enabled
             if (IsWalking())
             {
@@ -838,6 +822,7 @@ public class GameManager : MonoBehaviour
 
                 // Creates a game object for the building, gives it a name and places and scales it properly
                 string prefabPath = "Prefabs/" + town.Buildings[i].Name;
+                Debug.Log(prefabPath);
                 buildingsInActiveTown[i] = Instantiate(UnityEngine.Resources.Load<GameObject>(prefabPath));
                 buildingsInActiveTown[i].transform.position = placement;
                 buildingsInActiveTown[i].transform.localScale = new Vector3(scaleFactor, scaleFactor, 1);

@@ -280,10 +280,10 @@ public class IngameObjectLibrary
 
         // Viking town sprites
         sprites[0] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Background Viking Town");
-        sprites[1] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Dragon Tower");
+        sprites[1] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Town Hall");
         sprites[2] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Pallisade");
         sprites[3] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Temple");
-        sprites[4] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Town Hall");
+        sprites[4] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Dragon Tower");
         sprites[5] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Troll Cave");
 
         return sprites;

@@ -29,6 +29,6 @@ public class DwellingOnClick : MonoBehaviour {
 
     void OpenWindow(Building b)
     {
-        //b-
+
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using OverworldObjects;
+using TownView;
 
 namespace MapGenerator
 {
@@ -30,7 +31,7 @@ namespace MapGenerator
             coordinates = coordinateList;
             buildings = new List<OverworldBuilding>();
         }
-        
+
         public void PlaceHero(Player player, int[,] map, int[,] canWalk)
         {
             Vector2 heroPos = new Vector2((int)RegionCenter.x, (int)RegionCenter.y - 2);
