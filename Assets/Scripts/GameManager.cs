@@ -80,7 +80,7 @@ public class GameManager : MonoBehaviour
     List<GameObject> pathObjects;
     bool pathMarked;
     int stepNumber;
-    float animationSpeed;
+    public float animationSpeed = 0.05f;
     bool walking;
     bool lastStep;
     int tilesWalking;
@@ -260,6 +260,23 @@ public class GameManager : MonoBehaviour
                 }
                 EnterTown(t);
             }
+            // Center camera around first hero or castle
+            else if(Input.GetKeyDown(KeyCode.Space))
+            {
+                if(getPlayer(whoseTurn).Heroes[0] != null)
+                {
+                    cameraMovement.centerCamera(HandyMethods.getGraphicPos(activeHero.Position));
+                }
+                else
+                {
+                    cameraMovement.centerCamera(getPlayer(whoseTurn).Castle[0].GetPosition());
+                }
+            }
+            // Nextturn by enter
+            else if(Input.GetKeyDown(KeyCode.Return))
+            {
+                nextTurn();
+            }
             // Upon every update, activedhero will be moved in a direction if walking is enabled
             if (IsWalking())
             {
@@ -269,7 +286,6 @@ public class GameManager : MonoBehaviour
                 {
                     Destroy(pathObjects[stepNumber]);
                     stepNumber++;
-                    animationSpeed = 0f;
                     // Stop the movement when amount of tiles moved has reached the limit, or walking is disabled
                     if (IsLastStep(stepNumber))
                     {
@@ -450,8 +466,7 @@ public class GameManager : MonoBehaviour
         if(pathObjects != null && stepNumber < pathObjects.Count)
         {
             // Add animation, transform hero position
-            animationSpeed += Time.deltaTime;
-            return Vector2.Lerp(activeHeroObject.transform.position, pathObjects[stepNumber].transform.position, animationSpeed);
+            return Vector2.MoveTowards(activeHeroObject.transform.position, pathObjects[stepNumber].transform.position, animationSpeed);
         }
         return activeHeroObject.transform.position;
     }
