@@ -51,3 +51,4 @@ Assets/Scripts/Map.cs
 Assets/Resources/Heroes/hero2\.prefab
 
 Assets/Resources/Heroes/hero1\.prefab
+*.csproj

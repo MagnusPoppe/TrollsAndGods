@@ -44,12 +44,15 @@ public class AStarAlgo {
     /// This method calculates the shortest possible path from start to goal
     /// using the a* pathfinding algorithm, in a square grid
     /// </summary>
-    /// <param name="start">Start position</param>
-    /// <param name="goal">Goal position</param>
+    /// <param name="startPos">Start position</param>
+    /// <param name="goalPos">Goal position</param>
     /// <returns>A vector2 List containing the shortest path</returns>
-    public List<Vector2> calculate(Vector2 start, Vector2 goal)
+    public List<Vector2> calculate(Vector2 startPos, Vector2 goalPos)
     {
-        
+        Point start = new Point((int)startPos.x, (int)startPos.y);
+        Point goal = new Point((int)goalPos.x, (int)goalPos.y);
+
+
         // Return variable
         List<Vector2> path = new List<Vector2>();
 
@@ -66,7 +69,7 @@ public class AStarAlgo {
         {
             for (int j = 0; j < height; j++)
             {
-                nodes[i, j] = new Node(new Vector2(i, j));
+                nodes[i, j] = new Node(new Point(i, j));
             }
         }
 
@@ -148,7 +151,7 @@ public class AStarAlgo {
     /// <param name="posY">Current position for y</param>
     /// <param name="goal">goal to make it possible to walk to triggers</param>
     /// <returns>Array with neighbour nodes</returns>
-    private Node[] findNeighboursIso(int posX, int posY, Vector2 goal)
+    private Node[] findNeighboursIso(int posX, int posY, Point goal)
     {
         Node[] neighbours = new Node[8];
         int logPos = 0;
@@ -194,7 +197,7 @@ public class AStarAlgo {
     /// <param name="posY">Current position for y</param>
     /// <param name="goal">goal to make it possible to walk to triggers</param>
     /// <returns>Array with neighbour nodes</returns>
-    private Node[] findNeighboursHex(int posX, int posY, Vector2 goal)
+    private Node[] findNeighboursHex(int posX, int posY, Point goal)
     {
         Node[] neighbours = new Node[6];
         int logPos = 0;
@@ -236,10 +239,10 @@ public class AStarAlgo {
     public class Node
     {
         Node cameFrom;
-        Vector2 pos;
+        Point pos;
         int gScore, hScore, f;
 
-        public Node(Vector2 pos)
+        public Node(Point pos)
         {
             cameFrom = this;
             this.pos = pos;
@@ -247,7 +250,7 @@ public class AStarAlgo {
         }
 
         // Calculates the estimated cost of moving to goal from this node, ignoring obstacles, as hScore
-        public void calculateH(Vector2 goal, bool hex)
+        public void calculateH(Point goal, bool hex)
         {
             if (hex)
                 hScore = DistanceHex(pos, goal);
@@ -256,7 +259,7 @@ public class AStarAlgo {
         }
 
         // Transelates offset cordinates to cube cordinates
-        private Vector3 oddROffsetToCube(Vector2 pos)
+        private Vector3 oddROffsetToCube(Point pos)
         {
             int x = (int)(pos.x - ((pos.y - 1 * ((int)pos.y & 1)) / 2));
             int z = (int)pos.y;
@@ -265,7 +268,7 @@ public class AStarAlgo {
         }
 
         // returns distance to target in a offset grid, ignoring obstacles
-        private int DistanceHex(Vector2 a, Vector2 b)
+        private int DistanceHex(Point a, Point b)
         {
             Vector3 s = oddROffsetToCube(a);
             Vector3 g = oddROffsetToCube(b);
@@ -297,7 +300,7 @@ public class AStarAlgo {
             if (!cameFrom.Equals(this))
             {
                 cameFrom.backTrack(n);
-                n.Add(pos);
+                n.Add(new Vector2(pos.x,pos.y));
             }
         }
 
@@ -312,7 +315,7 @@ public class AStarAlgo {
             return cameFrom;
         }
 
-        public Vector2 Getpos()
+        public Point Getpos()
         {
             return pos;
         }
@@ -333,7 +336,7 @@ public class AStarAlgo {
         {
             cameFrom = cm;
         }
-        public void SetPos(Vector2 p)
+        public void SetPos(Point p)
         {
             pos = p;
         }
@@ -348,6 +351,17 @@ public class AStarAlgo {
         public void SetF(int f)
         {
             this.f = f;
+        }
+    }
+
+    public class Point
+    {
+        public int x,y;
+
+        public Point(int x, int y)
+        {
+            this.x = x;
+            this.y = y;
         }
     }
 }
