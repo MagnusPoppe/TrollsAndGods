@@ -78,6 +78,7 @@ public class AStarAlgo {
         s.calculateH(goal, hex);
         s.calculateF();
         s.inOpenSet = true;
+        s.SetCameFrom(s);
         openSet.Add(s);
 
         // Starts loop that continues until openset is empty or a path has been found
@@ -85,7 +86,7 @@ public class AStarAlgo {
         {
             
             // Fetches node from openSet
-            Node cur = openSet[openSet.Count-1];
+            Node cur = openSet[0];
             int posX = (int)cur.Getpos().x;
             int posY = (int)cur.Getpos().y;
 
@@ -113,12 +114,16 @@ public class AStarAlgo {
                 // If not in openSet, add to openSet, set where it came from and calculate pathCost
                 if (!neighbour.inOpenSet)
                 {
-                    openSet.Add(neighbour);
                     neighbour.SetGScore(cur.GetGScore() + 1);
                     neighbour.calculateH(goal, hex);
                     neighbour.calculateF();
                     neighbour.SetCameFrom(cur);
                     neighbour.inOpenSet = true;
+
+                    int index = Math.Abs(openSet.BinarySearch(neighbour));
+                    //Debug.Log(index + " " + neighbour.GetF() + " " + openSet.Count);
+                    if (index >= openSet.Count) openSet.Add(neighbour);
+                    else openSet.Insert(index, neighbour);
                 }
                 // OpenSet contains node, then check if current path is better.
                 else
@@ -134,14 +139,14 @@ public class AStarAlgo {
             }
 
             // If openSet contains goal node, generate path by backtracking and break loop.
-            if (openSet.Contains(nodes[(int)goal.x, (int)goal.y]))
+            if (nodes[(int)goal.x, (int)goal.y].inOpenSet)
             {
                 nodes[(int)goal.x, (int)goal.y].backTrack(path);
                 break;
             }
 
             // Sorts openSet by cost
-            openSet = openSet.OrderByDescending(Node => Node.GetF()).ToList();
+            //openSet = openSet.OrderByDescending(Node => Node.GetF()).ToList();
         }
 
         // prepares nodes for new run
@@ -233,7 +238,7 @@ public class AStarAlgo {
                     && posY + y - 1 >= 0 && posY + y - 1 < height
                     && (canWalk[posX + x - 1, posY + y - 1] == MapGenerator.MapMaker.CANWALK
                     || (canWalk[posX + x - 1, posY + y - 1] == MapGenerator.MapMaker.TRIGGER
-                    && posX + posX + x - 1 == goal.x && posY + y - 1 == goal.y)))
+                    && posX + x - 1 == goal.x && posY + y - 1 == goal.y)))
                 {
                     neighbours[logPos] = nodes[posX + x - 1, posY + y - 1];
                     logPos++;
@@ -250,7 +255,7 @@ public class AStarAlgo {
     /// it's gScore(the cost to walk to this node), hScore(the estimated cost to reach the goal, ignoring obstacles)
     /// and it's f wich is g+h. f is refferred to as pathCost in other commentraries.
     /// </summary>
-    public class Node
+    public class Node : IComparable<Node>
     {
         Node cameFrom;
         Point pos;
@@ -278,8 +283,8 @@ public class AStarAlgo {
         // Transelates offset cordinates to cube cordinates
         private Vector3 oddROffsetToCube(Point pos)
         {
-            int x = (int)(pos.x - ((pos.y - 1 * ((int)pos.y & 1)) / 2));
-            int z = (int)pos.y;
+            int x = (pos.x - ((pos.y - 1 * (pos.y & 1)) / 2));
+            int z = pos.y;
             int y = -x - z;
             return new Vector3(x, y, z);
         }
@@ -320,6 +325,8 @@ public class AStarAlgo {
                 n.Add(new Vector2(pos.x,pos.y));
             }
         }
+
+
 
         // Returns true if this.pos equals n.pos
         public bool equals(Node n)
@@ -368,6 +375,11 @@ public class AStarAlgo {
         public void SetF(int f)
         {
             this.f = f;
+        }
+
+        public int CompareTo(Node n)
+        {
+            return f-n.f;
         }
     }
 
