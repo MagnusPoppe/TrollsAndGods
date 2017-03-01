@@ -286,45 +286,55 @@ public class GameManager : MonoBehaviour
                         // objectcollision, when final destination is reached
                         if (canWalk[x, y] == MapMaker.TRIGGER)
                         {
+                            bool heroNotDead = true;
                             Debug.Log(activeHero.Position);
-                            if (reactions[x, y].React(activeHero))
+                            // If tile is threatened, perform the additional reaction before the main one
+                            if (reactions[x, y].HasPreReact(activeHero))
+                                heroNotDead = reactions[x, y].PreReact(activeHero);
+                            // Only perform the main reaction if the hero didn't die in previous reaction
+                            if (heroNotDead)
                             {
-                                if (reactions[x, y].GetType().Equals(typeof(HeroMeetReact)))
+                                bool react = reactions[x, y].React(activeHero);
+                                if (reactions[x,y].GetType().Equals(typeof(HeroMeetReact)) || (reactions[x, y].HeroMeetReact != null && reactions[x, y].HeroMeetReact.Hero.Player.Equals(activeHero.Player)))
                                 {
-                                    // TODO if battle, remove hero that is now set to null
-                                }
-                                else if (reactions[x, y].GetType().Equals(typeof(UnitReaction)))
-                                {
-                                    // TODO remove either hero or unit
-                                }
-                                else if (reactions[x, y].GetType().Equals(typeof(ResourceReaction)))
-                                {
-                                    // TODO remove picked up resource
-                                }
-                                else if (reactions[x, y].GetType().Equals(typeof(ArtifactReaction)))
-                                {
-                                    // TODO remove picked up artifact
-                                }
-                                else if (reactions[x, y].GetType().Equals(typeof(CastleReact)))
-                                {
-
-                                }
-                                else if (reactions[x, y].GetType().Equals(typeof(DwellingReact)))
-                                {
-                                    // TODO dweeling has been captured
-                                }
-                            }
-                            else
-                            {
-                                if(reactions[x, y].GetType().Equals(typeof(HeroMeetReact)))
-                                {
-                                    // Reached allied hero, walk back one step
                                     Vector2 stepBack = fromPosition;
                                     if (activeHero.Path.Count > 1)
                                         stepBack = activeHero.Path[activeHero.Path.Count - 2];
                                     activeHero.Position = stepBack;
                                     newPos = HandyMethods.getGraphicPos(stepBack);
                                 }
+                                else if (reactions[x, y].GetType().Equals(typeof(HeroMeetReact)))
+                                {
+                                    // TODO if battle, visually remove the hero that is now set to null (true when attacker won)
+                                }
+                                else if (reactions[x, y].GetType().Equals(typeof(UnitReaction)))
+                                {
+                                    // TODO visually remove either hero or unit (true when attacker won)
+                                }
+                                else if (reactions[x, y].GetType().Equals(typeof(ResourceReaction)))
+                                {
+                                    // TODO visually remove picked up resource
+                                }
+                                else if (reactions[x, y].GetType().Equals(typeof(ArtifactReaction)))
+                                {
+                                    // TODO visually remove picked up artifact
+                                }
+                                else if (reactions[x, y].GetType().Equals(typeof(CastleReact)))
+                                {
+                                    // TODO visually remove picked up artifact
+                                }
+                                else if (reactions[x, y].GetType().Equals(typeof(DwellingReact)))
+                                {
+                                    // TODO visually dweeling has been captured
+                                }
+                                else if (reactions[x, y].GetType().Equals(typeof(ResourceBuildingReaction)))
+                                {
+                                    // TODO visually resourceBuilding has been captured
+                                }
+                            }
+                            else
+                            {
+
                             }
                         }
 

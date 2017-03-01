@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -28,6 +29,24 @@ public class UnitReaction : Reaction {
         }
     }
 
+    /// <summary>
+    /// Units does not have additional reacts
+    /// </summary>
+    /// <returns>false</returns>
+    public override bool HasPreReact(Hero h)
+    {
+        return false;
+    }
+
+    /// <summary>
+    /// Units does not have additional reacts
+    /// </summary>
+    /// <returns>false</returns>
+    public override bool PreReact(Hero h)
+    {
+        return false;
+    }
+
 
 
     /// <summary>
@@ -38,6 +57,7 @@ public class UnitReaction : Reaction {
     public override bool React(Hero h)
     {
         // Todo flee, join or fight
+        // Returns true if hero remains. False if unit fleed, joined, or was defeated
         return true;
     }
 }
