@@ -86,7 +86,7 @@ public class AStarAlgo {
         {
             
             // Fetches node from openSet
-            Node cur = openSet[openSet.Count-1];
+            Node cur = openSet[0];
             int posX = (int)cur.Getpos().x;
             int posY = (int)cur.Getpos().y;
 
@@ -114,12 +114,16 @@ public class AStarAlgo {
                 // If not in openSet, add to openSet, set where it came from and calculate pathCost
                 if (!neighbour.inOpenSet)
                 {
-                    openSet.Add(neighbour);
                     neighbour.SetGScore(cur.GetGScore() + 1);
                     neighbour.calculateH(goal, hex);
                     neighbour.calculateF();
                     neighbour.SetCameFrom(cur);
                     neighbour.inOpenSet = true;
+
+                    int index = Math.Abs(openSet.BinarySearch(neighbour));
+                    //Debug.Log(index + " " + neighbour.GetF() + " " + openSet.Count);
+                    if (index >= openSet.Count) openSet.Add(neighbour);
+                    else openSet.Insert(index, neighbour);
                 }
                 // OpenSet contains node, then check if current path is better.
                 else
@@ -142,7 +146,7 @@ public class AStarAlgo {
             }
 
             // Sorts openSet by cost
-            openSet = openSet.OrderByDescending(Node => Node.GetF()).ToList();
+            //openSet = openSet.OrderByDescending(Node => Node.GetF()).ToList();
         }
 
         // prepares nodes for new run
@@ -234,7 +238,7 @@ public class AStarAlgo {
                     && posY + y - 1 >= 0 && posY + y - 1 < height
                     && (canWalk[posX + x - 1, posY + y - 1] == MapGenerator.MapMaker.CANWALK
                     || (canWalk[posX + x - 1, posY + y - 1] == MapGenerator.MapMaker.TRIGGER
-                    && posX + posX + x - 1 == goal.x && posY + y - 1 == goal.y)))
+                    && posX + x - 1 == goal.x && posY + y - 1 == goal.y)))
                 {
                     neighbours[logPos] = nodes[posX + x - 1, posY + y - 1];
                     logPos++;
@@ -279,8 +283,8 @@ public class AStarAlgo {
         // Transelates offset cordinates to cube cordinates
         private Vector3 oddROffsetToCube(Point pos)
         {
-            int x = (int)(pos.x - ((pos.y - 1 * ((int)pos.y & 1)) / 2));
-            int z = (int)pos.y;
+            int x = (pos.x - ((pos.y - 1 * (pos.y & 1)) / 2));
+            int z = pos.y;
             int y = -x - z;
             return new Vector3(x, y, z);
         }
