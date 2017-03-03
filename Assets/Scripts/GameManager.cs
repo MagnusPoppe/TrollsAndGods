@@ -314,7 +314,7 @@ public class GameManager : MonoBehaviour
                                 if (reactions[x,y].GetType().Equals(typeof(HeroMeetReact)) || (reactions[x, y].PreReaction != null && reactions[x, y].PreReaction.GetType().Equals(typeof(HeroMeetReact))))
                                 {
                                     HeroMeetReact hmr = (HeroMeetReact)reactions[x, y].PreReaction;
-                                    if (hmr.Hero.Player.equals(getPlayer(whoseTurn)))
+                                    if (hmr == null || hmr.Hero.Player.equals(getPlayer(whoseTurn)))
                                     {
                                         Vector2 stepBack = fromPosition;
                                         if (activeHero.Path.Count > 1)
