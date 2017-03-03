@@ -266,7 +266,7 @@ public class GameManager : MonoBehaviour
             {
                 if(getPlayer(whoseTurn).Heroes[0] != null)
                 {
-                    cameraMovement.centerCamera(HandyMethods.getGraphicPos(activeHero.Position));
+                    cameraMovement.centerCamera(HandyMethods.getGraphicPosForIso(activeHero.Position));
                 }
                 else
                 {
@@ -491,7 +491,7 @@ public class GameManager : MonoBehaviour
                 sr.sprite = pathNo;
             count--;
             // set the cloned position to the vector2 object and add it to the list of gameobjects, pathList
-            pathMarker.transform.position = HandyMethods.getGraphicPos(path[i]);
+            pathMarker.transform.position = HandyMethods.getGraphicPosForIso(path[i]);
             pathObjects.Add(pathMarker);
         }
     }
@@ -956,14 +956,14 @@ public class GameManager : MonoBehaviour
                if (activeHero.Path != null)
                     DrawPath(activeHero.Path);
                // Center camera to the upcoming players first hero
-               cameraMovement.centerCamera(HandyMethods.getGraphicPos(activeHero.Position));
+               cameraMovement.centerCamera(HandyMethods.getGraphicPosForIso(activeHero.Position));
             }
             else
             {
                 activeHero = null;
                 activeHeroObject = null;
                 // Center camera to the upcoming players first castle
-                cameraMovement.centerCamera(HandyMethods.getGraphicPos(getPlayer(whoseTurn).Castle[0].GetPosition()));
+                cameraMovement.centerCamera(HandyMethods.getGraphicPosForIso(getPlayer(whoseTurn).Castle[0].GetPosition()));
             }
             // Gathert income for the upcoming player
             getPlayer(whoseTurn).GatherIncome();
