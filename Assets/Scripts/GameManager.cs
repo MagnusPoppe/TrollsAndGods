@@ -84,6 +84,7 @@ public class GameManager : MonoBehaviour
     bool walking;
     bool lastStep;
     int tilesWalking;
+    bool newStep;
 
     // Town
     GameObject[] buildingsInActiveTown;
@@ -281,12 +282,33 @@ public class GameManager : MonoBehaviour
             if (IsWalking())
             {
                 Vector2 newPos = PrepareMovement();
-                // If hero has reached a new tile, increment so that he walks towards the next one, reset time animation, and destroy tile object
-                if (activeHeroObject.transform.position.Equals(pathObjects[stepNumber].transform.position))
+
+                bool stop = false;
+                // Test if next tile is occupied by allied hero, checked before movement to new tile is started
+                if (newStep)
                 {
-                    Destroy(pathObjects[stepNumber]);
-                    activeHero.Path.RemoveAt(0);
-                    stepNumber++;
+                    newStep = false;
+                    if (activeHero.Path.Count == 1)
+                    {
+                        int x = (int)activeHero.Path[0].x;
+                        int y = (int)activeHero.Path[0].y;
+                        if (reactions[x, y] != null && (reactions[x, y].GetType().Equals(typeof(HeroMeetReact)) || (reactions[x, y].PreReaction != null && reactions[x, y].PreReaction.GetType().Equals(typeof(HeroMeetReact)))))
+                        {
+                            HeroMeetReact hmr = (HeroMeetReact)reactions[x, y].PreReaction;
+                            // If the upcoming tile has a trigger with an allied hero in it, finish his movement
+                            if (hmr == null || hmr.Hero.Player.equals(getPlayer(whoseTurn)))
+                            {
+                                stop = true;
+                            }
+                        }
+                    }
+                }
+
+                // If hero has reached a new tile, increment so that he walks towards the next one, reset time animation, and destroy tile object
+                if (stop || activeHeroObject.transform.position.Equals(pathObjects[stepNumber].transform.position))
+                {
+                    Vector2 position = IncrementStep();
+
                     // Stop the movement when amount of tiles moved has reached the limit, or walking is disabled
                     if (IsLastStep(stepNumber))
                     {
@@ -303,27 +325,19 @@ public class GameManager : MonoBehaviour
                         if (canWalk[x, y] == MapMaker.TRIGGER)
                         {
                             bool heroNotDead = true;
-                            Debug.Log(activeHero.Position);
+                            
                             // If tile is threatened, perform the additional reaction before the main one
                             if (reactions[x, y].HasPreReact(activeHero))
+                            {
                                 heroNotDead = reactions[x, y].PreReact(activeHero);
+                                // Remove hero when false, opponent unit or hero when true
+                            }
                             // Only perform the main reaction if the hero didn't die in previous reaction
                             if (heroNotDead)
                             {
                                 bool react = reactions[x, y].React(activeHero);
-                                if (reactions[x,y].GetType().Equals(typeof(HeroMeetReact)) || (reactions[x, y].PreReaction != null && reactions[x, y].PreReaction.GetType().Equals(typeof(HeroMeetReact))))
-                                {
-                                    HeroMeetReact hmr = (HeroMeetReact)reactions[x, y].PreReaction;
-                                    if (hmr == null || hmr.Hero.Player.equals(getPlayer(whoseTurn)))
-                                    {
-                                        Vector2 stepBack = fromPosition;
-                                        if (activeHero.Path.Count > 1)
-                                            stepBack = activeHero.Path[activeHero.Path.Count - 2];
-                                        activeHero.Position = stepBack;
-                                        newPos = HandyMethods.getGraphicPos(stepBack);
-                                    }
-                                }
-                                else if (reactions[x, y].GetType().Equals(typeof(HeroMeetReact)))
+
+                                if (reactions[x, y].GetType().Equals(typeof(HeroMeetReact)))
                                 {
                                     // TODO if battle, visually remove the hero that is now set to null (true when attacker won)
                                 }
@@ -357,7 +371,7 @@ public class GameManager : MonoBehaviour
 
                             }
                         }
-
+                        /*
                         // Clear the previous table reference to current gameobject
                         heroLayer[(int)activeHero.Position.x, (int)activeHero.Position.y] = null;
                         // Also move the gameobject's position in the heroLayer table
@@ -368,12 +382,16 @@ public class GameManager : MonoBehaviour
                         // Set destination tile's canWalk to 2
                         canWalk[(int)activeHero.Position.x, (int)activeHero.Position.y] = MapMaker.TRIGGER;
                         // TODO also set reactions frompos and topos
+                        */
 
                     }
                 }
                 // Execute the movement
-                activeHeroObject.transform.position = newPos;
-                cameraMovement.centerCamera(newPos);
+                if(!stop)
+                {
+                    activeHeroObject.transform.position = newPos;
+                    cameraMovement.centerCamera(newPos);
+                }
             }
             //Nothing is clicked and hero is not walking, listener for change mouse hover
             else
@@ -394,7 +412,11 @@ public class GameManager : MonoBehaviour
                     }
                     else if (reactions[x, y].GetType().Equals(typeof(HeroMeetReact)))
                     {
-                        // TODO when you hover over an hero, change mouse pointer
+                        HeroMeetReact hmr = (HeroMeetReact)reactions[x, y];
+                        if (players[whoseTurn].equals(hmr.Hero.Player))
+                        {
+                            // TODO when you hover over an hero, change mouse pointer
+                        }
                     }
                     else if (reactions[x, y].GetType().Equals(typeof(UnitReaction)))
                     {
@@ -403,6 +425,19 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// Removes visual marker and the Vector2 in activehero's pathtable, and increments stepnumber.
+    /// </summary>
+    private Vector2 IncrementStep()
+    {
+        newStep = true;
+        Destroy(pathObjects[stepNumber]);
+        stepNumber++;
+        Vector2 position = activeHero.Path[0];
+        activeHero.Path.RemoveAt(0);
+        return position;
     }
 
     /// <summary>
