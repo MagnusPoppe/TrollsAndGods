@@ -9,6 +9,7 @@ using UnityEngine;
 public class ArtifactReaction : Reaction {
 
     Item artifact;
+    UnitReaction unitReact;
 
     public Item Artifact
     {
@@ -23,6 +24,19 @@ public class ArtifactReaction : Reaction {
         }
     }
 
+    public UnitReaction UnitReact
+    {
+        get
+        {
+            return unitReact;
+        }
+
+        set
+        {
+            unitReact = value;
+        }
+    }
+
     public ArtifactReaction(Item artifact, Vector2 pos)
     {
         Artifact = artifact;
@@ -30,10 +44,29 @@ public class ArtifactReaction : Reaction {
     }
 
     /// <summary>
+    /// Check's if there's a mob threatening the tile
+    /// </summary>
+    /// <returns>true if there's an reaction</returns>
+    public override bool HasPreReact(Hero h)
+    {
+        return UnitReact != null;
+    }
+
+    /// <summary>
+    /// If there's a mob threatening the tile, start their reaction
+    /// </summary>
+    /// <param name="h">Hero that initated the reaction</param>
+    /// <returns>true if that hero won</returns>
+    public override bool PreReact(Hero h)
+    {
+        return UnitReact.React(h);
+    }
+
+    /// <summary>
     /// Adds artifact to hero inventory. Equips if room.
     /// </summary>
     /// <param name="h">Hero interacting with artifact</param>
-    /// <returns>returns true to signal graphical change</returns>
+    /// <returns>returns true to signal graphical change, artifact always picked up</returns>
     public override bool React(Hero h) 
     {
         if (h.EquippedItems[artifact.SlotType] == null)
@@ -41,7 +74,7 @@ public class ArtifactReaction : Reaction {
             h.EquippedItems[artifact.SlotType] = artifact;
         }
         else h.Items.Add(artifact);
-
+        // Artifact picked up, returns true
         return true;
     }
 }

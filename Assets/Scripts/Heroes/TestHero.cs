@@ -13,6 +13,6 @@ class TestHero : Hero
         : base(player, position)
     {
         Name = "Testhero";
-        CurMovementSpeed = MovementSpeed = 35;
+        CurMovementSpeed = MovementSpeed = 12;
     }
 }

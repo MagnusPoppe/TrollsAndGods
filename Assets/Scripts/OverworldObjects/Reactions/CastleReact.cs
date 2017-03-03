@@ -9,14 +9,14 @@ using OverworldObjects;
 public class CastleReact : Reaction {
 
     Castle castle;
-    HeroMeetReact heroReact;
+    UnitReaction unitReact;
     GameManager gm;
 
     public CastleReact(Castle castle, Vector2 pos)
     {
         Castle = castle;
         Pos = pos;
-        HeroReact = null;
+        HeroMeetReact = null;
         GameObject go = GameObject.Find("GameManager");
         gm = go.GetComponent<GameManager>();
     }
@@ -34,17 +34,40 @@ public class CastleReact : Reaction {
         }
     }
 
-    public HeroMeetReact HeroReact
+    public UnitReaction UnitReact
     {
         get
         {
-            return heroReact;
+            return unitReact;
         }
 
         set
         {
-            heroReact = value;
+            unitReact = value;
         }
+    }
+    
+    /// <summary>
+    /// Check's if there's a mob or hero threatening the tile
+    /// </summary>
+    /// <returns>true if there's an reaction</returns>
+    public override bool HasPreReact(Hero h)
+    {
+        return (UnitReact != null || HeroMeetReact != null) && !h.Player.equals(HeroMeetReact.Hero.Player);
+    }
+
+    /// <summary>
+    /// If there's a mob or hero threatening the tile, start their reaction
+    /// </summary>
+    /// <param name="h">Hero that initated the reaction</param>
+    /// <returns>true if that hero won</returns>
+    public override bool PreReact(Hero h)
+    {
+        if (UnitReact != null)
+            return UnitReact.React(h);
+        else if (HeroMeetReact != null)
+            return HeroMeetReact.React(h);
+        return false;
     }
 
     /// <summary>
@@ -54,7 +77,6 @@ public class CastleReact : Reaction {
     /// <returns>returns false if visiting, true if attacking</returns>
     public override bool React(Hero h)
     {
-        
         if (castle.Player.Equals(h.Player))
         {
             gm.EnterTown(castle.Town);

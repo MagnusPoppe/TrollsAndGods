@@ -5,8 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <ProjectGuid>{1EFF0E82-4D54-5882-966D-F0653FF2113D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -47,123 +46,126 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\AStarAlgo.cs" />
-    <Compile Include="Assets\Scripts\Abilities\Ability.cs" />
-    <Compile Include="Assets\Scripts\Abilities\Active.cs" />
-    <Compile Include="Assets\Scripts\Abilities\Passive.cs" />
-    <Compile Include="Assets\Scripts\CameraMovement.cs" />
-    <Compile Include="Assets\Scripts\Date.cs" />
-    <Compile Include="Assets\Scripts\Elements\Air.cs" />
-    <Compile Include="Assets\Scripts\Elements\Bludgeoning.cs" />
-    <Compile Include="Assets\Scripts\Elements\Earth.cs" />
-    <Compile Include="Assets\Scripts\Elements\Element.cs" />
-    <Compile Include="Assets\Scripts\Elements\Fire.cs" />
-    <Compile Include="Assets\Scripts\Elements\Piercing.cs" />
-    <Compile Include="Assets\Scripts\Elements\Slash.cs" />
-    <Compile Include="Assets\Scripts\Elements\Water.cs" />
-    <Compile Include="Assets\Scripts\GameManager.cs" />
-    <Compile Include="Assets\Scripts\HandyMethods.cs" />
-    <Compile Include="Assets\Scripts\Heroes\Hero.cs" />
-    <Compile Include="Assets\Scripts\Heroes\TestHero.cs" />
-    <Compile Include="Assets\Scripts\MapGeneration\BinaryMap.cs" />
-    <Compile Include="Assets\Scripts\MapGeneration\Block.cs" />
-    <Compile Include="Assets\Scripts\MapGeneration\Economy.cs" />
-    <Compile Include="Assets\Scripts\MapGeneration\Filter\AverageFilter.cs" />
-    <Compile Include="Assets\Scripts\MapGeneration\Filter\CompassF.cs" />
-    <Compile Include="Assets\Scripts\MapGeneration\Filter\Filter.cs" />
-    <Compile Include="Assets\Scripts\MapGeneration\Filter\MedianFilter.cs" />
-    <Compile Include="Assets\Scripts\MapGeneration\LandRegion.cs" />
-    <Compile Include="Assets\Scripts\MapGeneration\MapMaker.cs" />
-    <Compile Include="Assets\Scripts\MapGeneration\QuailtyAssurance.cs" />
-    <Compile Include="Assets\Scripts\MapGeneration\Region.cs" />
-    <Compile Include="Assets\Scripts\MapGeneration\RegionFill.cs" />
-    <Compile Include="Assets\Scripts\MapGeneration\TileRating.cs" />
-    <Compile Include="Assets\Scripts\MapGeneration\VoronoiGenerator.cs" />
-    <Compile Include="Assets\Scripts\MapGeneration\WaterRegion.cs" />
-    <Compile Include="Assets\Scripts\OverworldObjects\Buildings\Castle.cs" />
-    <Compile Include="Assets\Scripts\OverworldObjects\Buildings\Dwelling.cs" />
-    <Compile Include="Assets\Scripts\OverworldObjects\Buildings\OverworldBuilding.cs" />
-    <Compile Include="Assets\Scripts\OverworldObjects\Buildings\Resource\OreMine.cs" />
-    <Compile Include="Assets\Scripts\OverworldObjects\Buildings\ResourceBuilding.cs" />
-    <Compile Include="Assets\Scripts\OverworldObjects\Buildings\UnknownCastle.cs" />
-    <Compile Include="Assets\Scripts\OverworldObjects\IngameObjectLibrary.cs" />
-    <Compile Include="Assets\Scripts\OverworldObjects\Item.cs" />
-    <Compile Include="Assets\Scripts\OverworldObjects\OverworldInteractable.cs" />
-    <Compile Include="Assets\Scripts\OverworldObjects\Reactions\ArtifactReaction.cs" />
-    <Compile Include="Assets\Scripts\OverworldObjects\Reactions\CastleReact.cs" />
-    <Compile Include="Assets\Scripts\OverworldObjects\Reactions\DwellingReact.cs" />
-    <Compile Include="Assets\Scripts\OverworldObjects\Reactions\HeroMeetReact.cs" />
-    <Compile Include="Assets\Scripts\OverworldObjects\Reactions\Reaction.cs" />
-    <Compile Include="Assets\Scripts\OverworldObjects\Reactions\ResourceBuildingReaction.cs" />
-    <Compile Include="Assets\Scripts\OverworldObjects\Reactions\ResourceReaction.cs" />
-    <Compile Include="Assets\Scripts\OverworldObjects\Reactions\UnitReaction.cs" />
-    <Compile Include="Assets\Scripts\OverworldObjects\Shapes.cs" />
-    <Compile Include="Assets\Scripts\OverworldObjects\UnitTree.cs" />
-    <Compile Include="Assets\Scripts\Player\Cost.cs" />
-    <Compile Include="Assets\Scripts\Player\Player.cs" />
-    <Compile Include="Assets\Scripts\Player\Resources.cs" />
-    <Compile Include="Assets\Scripts\Player\Wallet.cs" />
-    <Compile Include="Assets\Scripts\SpriteSystem.cs" />
-    <Compile Include="Assets\Scripts\Stats\BaseStats.cs" />
-    <Compile Include="Assets\Scripts\Stats\HeroStats.cs" />
-    <Compile Include="Assets\Scripts\Stats\UnitStats.cs" />
-    <Compile Include="Assets\Scripts\Town\Building.cs" />
-    <Compile Include="Assets\Scripts\Town\BuildingOnClick.cs" />
-    <Compile Include="Assets\Scripts\Town\Town.cs" />
-    <Compile Include="Assets\Scripts\Town\UnknownTown\Tower.cs" />
-    <Compile Include="Assets\Scripts\Town\UnknownTown\UnknownTown.cs" />
-    <Compile Include="Assets\Scripts\Town\VikingTown\VikingBuildings\DragonTower.cs" />
-    <Compile Include="Assets\Scripts\Town\VikingTown\VikingBuildings\Pallisade.cs" />
-    <Compile Include="Assets\Scripts\Town\VikingTown\VikingBuildings\Temple.cs" />
-    <Compile Include="Assets\Scripts\Town\VikingTown\VikingBuildings\TownHall.cs" />
-    <Compile Include="Assets\Scripts\Town\VikingTown\VikingBuildings\TrollCave.cs" />
-    <Compile Include="Assets\Scripts\Town\VikingTown\VikingTown.cs" />
-    <Compile Include="Assets\Scripts\UI\WindowTypes.cs" />
-    <Compile Include="Assets\Scripts\UI\UnitPlayingCard.cs" />
-    <Compile Include="Assets\Scripts\UI\Window.cs" />
-    <Compile Include="Assets\Scripts\Units\Melee.cs" />
-    <Compile Include="Assets\Scripts\Units\Move.cs" />
-    <Compile Include="Assets\Scripts\Units\Moves\BoulderThrow.cs" />
-    <Compile Include="Assets\Scripts\Units\Moves\TreeSwing.cs" />
-    <Compile Include="Assets\Scripts\Units\Ranged.cs" />
-    <Compile Include="Assets\Scripts\Units\StoneTroll.cs" />
-    <Compile Include="Assets\Scripts\Units\Unit.cs" />
-    <Compile Include="Assets\Scripts\libs\delunay\Delaunay\Edge.cs" />
-    <Compile Include="Assets\Scripts\libs\delunay\Delaunay\EdgeList.cs" />
-    <Compile Include="Assets\Scripts\libs\delunay\Delaunay\EdgeReorderer.cs" />
-    <Compile Include="Assets\Scripts\libs\delunay\Delaunay\Halfedge.cs" />
-    <Compile Include="Assets\Scripts\libs\delunay\Delaunay\HalfedgePriorityQueue.cs" />
-    <Compile Include="Assets\Scripts\libs\delunay\Delaunay\ICoord.cs" />
-    <Compile Include="Assets\Scripts\libs\delunay\Delaunay\LR.cs" />
-    <Compile Include="Assets\Scripts\libs\delunay\Delaunay\Site.cs" />
-    <Compile Include="Assets\Scripts\libs\delunay\Delaunay\SiteList.cs" />
-    <Compile Include="Assets\Scripts\libs\delunay\Delaunay\Triangle.cs" />
-    <Compile Include="Assets\Scripts\libs\delunay\Delaunay\Vertex.cs" />
-    <Compile Include="Assets\Scripts\libs\delunay\Delaunay\Voronoi.cs" />
-    <Compile Include="Assets\Scripts\libs\delunay\Geom\Circle.cs" />
-    <Compile Include="Assets\Scripts\libs\delunay\Geom\LineSegment.cs" />
-    <Compile Include="Assets\Scripts\libs\delunay\Geom\Polygon.cs" />
-    <Compile Include="Assets\Scripts\libs\delunay\Geom\Rectf.cs" />
-    <Compile Include="Assets\Scripts\libs\delunay\Geom\Vector2f.cs" />
-    <Compile Include="Assets\Scripts\libs\delunay\Geom\Winding.cs" />
-    <Reference Include="UnityEngine.UI">
-      <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.Networking">
-      <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.PlaymodeTestsRunner">
-      <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/PlaymodeTestsRunner/UnityEngine.PlaymodeTestsRunner.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.Analytics">
-      <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityAnalytics/UnityEngine.Analytics.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.HoloLens">
-      <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityHoloLens/RuntimeEditor/UnityEngine.HoloLens.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.VR">
-      <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityVR/RuntimeEditor/UnityEngine.VR.dll</HintPath>
-    </Reference>
+     <Compile Include="Assets\Scripts\AStarAlgo.cs" />
+     <Compile Include="Assets\Scripts\Abilities\Ability.cs" />
+     <Compile Include="Assets\Scripts\Abilities\Active.cs" />
+     <Compile Include="Assets\Scripts\Abilities\Passive.cs" />
+     <Compile Include="Assets\Scripts\CameraMovement.cs" />
+     <Compile Include="Assets\Scripts\Date.cs" />
+     <Compile Include="Assets\Scripts\Elements\Air.cs" />
+     <Compile Include="Assets\Scripts\Elements\Bludgeoning.cs" />
+     <Compile Include="Assets\Scripts\Elements\Earth.cs" />
+     <Compile Include="Assets\Scripts\Elements\Element.cs" />
+     <Compile Include="Assets\Scripts\Elements\Fire.cs" />
+     <Compile Include="Assets\Scripts\Elements\Piercing.cs" />
+     <Compile Include="Assets\Scripts\Elements\Slash.cs" />
+     <Compile Include="Assets\Scripts\Elements\Water.cs" />
+     <Compile Include="Assets\Scripts\GameManager.cs" />
+     <Compile Include="Assets\Scripts\HandyMethods.cs" />
+     <Compile Include="Assets\Scripts\Heroes\Hero.cs" />
+     <Compile Include="Assets\Scripts\Heroes\TestHero.cs" />
+     <Compile Include="Assets\Scripts\MapGeneration\BinaryMap.cs" />
+     <Compile Include="Assets\Scripts\MapGeneration\Block.cs" />
+     <Compile Include="Assets\Scripts\MapGeneration\Economy.cs" />
+     <Compile Include="Assets\Scripts\MapGeneration\Filter\AverageFilter.cs" />
+     <Compile Include="Assets\Scripts\MapGeneration\Filter\CompassF.cs" />
+     <Compile Include="Assets\Scripts\MapGeneration\Filter\Filter.cs" />
+     <Compile Include="Assets\Scripts\MapGeneration\Filter\MedianFilter.cs" />
+     <Compile Include="Assets\Scripts\MapGeneration\LandRegion.cs" />
+     <Compile Include="Assets\Scripts\MapGeneration\MapMaker.cs" />
+     <Compile Include="Assets\Scripts\MapGeneration\QuailtyAssurance.cs" />
+     <Compile Include="Assets\Scripts\MapGeneration\Region.cs" />
+     <Compile Include="Assets\Scripts\MapGeneration\RegionFill.cs" />
+     <Compile Include="Assets\Scripts\MapGeneration\TileRating.cs" />
+     <Compile Include="Assets\Scripts\MapGeneration\VoronoiGenerator.cs" />
+     <Compile Include="Assets\Scripts\MapGeneration\WaterRegion.cs" />
+     <Compile Include="Assets\Scripts\OverworldObjects\Buildings\Castle.cs" />
+     <Compile Include="Assets\Scripts\OverworldObjects\Buildings\Dwelling.cs" />
+     <Compile Include="Assets\Scripts\OverworldObjects\Buildings\OverworldBuilding.cs" />
+     <Compile Include="Assets\Scripts\OverworldObjects\Buildings\Resource\OreMine.cs" />
+     <Compile Include="Assets\Scripts\OverworldObjects\Buildings\ResourceBuilding.cs" />
+     <Compile Include="Assets\Scripts\OverworldObjects\Buildings\UnknownCastle.cs" />
+     <Compile Include="Assets\Scripts\OverworldObjects\Buildings\VikingCastle.cs" />
+     <Compile Include="Assets\Scripts\OverworldObjects\IngameObjectLibrary.cs" />
+     <Compile Include="Assets\Scripts\OverworldObjects\Item.cs" />
+     <Compile Include="Assets\Scripts\OverworldObjects\OverworldInteractable.cs" />
+     <Compile Include="Assets\Scripts\OverworldObjects\Reactions\ArtifactReaction.cs" />
+     <Compile Include="Assets\Scripts\OverworldObjects\Reactions\CastleReact.cs" />
+     <Compile Include="Assets\Scripts\OverworldObjects\Reactions\DwellingReact.cs" />
+     <Compile Include="Assets\Scripts\OverworldObjects\Reactions\HeroMeetReact.cs" />
+     <Compile Include="Assets\Scripts\OverworldObjects\Reactions\Reaction.cs" />
+     <Compile Include="Assets\Scripts\OverworldObjects\Reactions\ResourceBuildingReaction.cs" />
+     <Compile Include="Assets\Scripts\OverworldObjects\Reactions\ResourceReaction.cs" />
+     <Compile Include="Assets\Scripts\OverworldObjects\Reactions\UnitReaction.cs" />
+     <Compile Include="Assets\Scripts\OverworldObjects\Shapes.cs" />
+     <Compile Include="Assets\Scripts\OverworldObjects\UnitTree.cs" />
+     <Compile Include="Assets\Scripts\Player\Cost.cs" />
+     <Compile Include="Assets\Scripts\Player\Player.cs" />
+     <Compile Include="Assets\Scripts\Player\Resources.cs" />
+     <Compile Include="Assets\Scripts\Player\Wallet.cs" />
+     <Compile Include="Assets\Scripts\SpriteSystem.cs" />
+     <Compile Include="Assets\Scripts\Stats\BaseStats.cs" />
+     <Compile Include="Assets\Scripts\Stats\HeroStats.cs" />
+     <Compile Include="Assets\Scripts\Stats\UnitStats.cs" />
+     <Compile Include="Assets\Scripts\Town\Building.cs" />
+     <Compile Include="Assets\Scripts\Town\BuildingOnClick.cs" />
+     <Compile Include="Assets\Scripts\Town\DwellingOnClick.cs" />
+     <Compile Include="Assets\Scripts\Town\Town.cs" />
+     <Compile Include="Assets\Scripts\Town\UnknownTown\Tower.cs" />
+     <Compile Include="Assets\Scripts\Town\UnknownTown\UnknownTown.cs" />
+     <Compile Include="Assets\Scripts\Town\VikingTown\VikingBuildings\DragonTower.cs" />
+     <Compile Include="Assets\Scripts\Town\VikingTown\VikingBuildings\Pallisade.cs" />
+     <Compile Include="Assets\Scripts\Town\VikingTown\VikingBuildings\Temple.cs" />
+     <Compile Include="Assets\Scripts\Town\VikingTown\VikingBuildings\TownHall.cs" />
+     <Compile Include="Assets\Scripts\Town\VikingTown\VikingBuildings\TrollCave.cs" />
+     <Compile Include="Assets\Scripts\Town\VikingTown\VikingBuildings\TrollCaveOnClick.cs" />
+     <Compile Include="Assets\Scripts\Town\VikingTown\VikingTown.cs" />
+     <Compile Include="Assets\Scripts\UI\UnitPlayingCard.cs" />
+     <Compile Include="Assets\Scripts\UI\Window.cs" />
+     <Compile Include="Assets\Scripts\UI\WindowTypes.cs" />
+     <Compile Include="Assets\Scripts\Units\Melee.cs" />
+     <Compile Include="Assets\Scripts\Units\Move.cs" />
+     <Compile Include="Assets\Scripts\Units\Moves\BoulderThrow.cs" />
+     <Compile Include="Assets\Scripts\Units\Moves\TreeSwing.cs" />
+     <Compile Include="Assets\Scripts\Units\Ranged.cs" />
+     <Compile Include="Assets\Scripts\Units\StoneTroll.cs" />
+     <Compile Include="Assets\Scripts\Units\Unit.cs" />
+     <Compile Include="Assets\Scripts\libs\delunay\Delaunay\Edge.cs" />
+     <Compile Include="Assets\Scripts\libs\delunay\Delaunay\EdgeList.cs" />
+     <Compile Include="Assets\Scripts\libs\delunay\Delaunay\EdgeReorderer.cs" />
+     <Compile Include="Assets\Scripts\libs\delunay\Delaunay\Halfedge.cs" />
+     <Compile Include="Assets\Scripts\libs\delunay\Delaunay\HalfedgePriorityQueue.cs" />
+     <Compile Include="Assets\Scripts\libs\delunay\Delaunay\ICoord.cs" />
+     <Compile Include="Assets\Scripts\libs\delunay\Delaunay\LR.cs" />
+     <Compile Include="Assets\Scripts\libs\delunay\Delaunay\Site.cs" />
+     <Compile Include="Assets\Scripts\libs\delunay\Delaunay\SiteList.cs" />
+     <Compile Include="Assets\Scripts\libs\delunay\Delaunay\Triangle.cs" />
+     <Compile Include="Assets\Scripts\libs\delunay\Delaunay\Vertex.cs" />
+     <Compile Include="Assets\Scripts\libs\delunay\Delaunay\Voronoi.cs" />
+     <Compile Include="Assets\Scripts\libs\delunay\Geom\Circle.cs" />
+     <Compile Include="Assets\Scripts\libs\delunay\Geom\LineSegment.cs" />
+     <Compile Include="Assets\Scripts\libs\delunay\Geom\Polygon.cs" />
+     <Compile Include="Assets\Scripts\libs\delunay\Geom\Rectf.cs" />
+     <Compile Include="Assets\Scripts\libs\delunay\Geom\Vector2f.cs" />
+     <Compile Include="Assets\Scripts\libs\delunay\Geom\Winding.cs" />
+ <Reference Include="UnityEngine.UI">
+ <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEngine.Networking">
+ <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEngine.PlaymodeTestsRunner">
+ <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/PlaymodeTestsRunner/UnityEngine.PlaymodeTestsRunner.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEngine.Analytics">
+ <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityAnalytics/UnityEngine.Analytics.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEngine.HoloLens">
+ <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityHoloLens/RuntimeEditor/UnityEngine.HoloLens.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEngine.VR">
+ <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityVR/RuntimeEditor/UnityEngine.VR.dll</HintPath>
+ </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -173,4 +175,5 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  
 </Project>

@@ -80,7 +80,7 @@ public class GameManager : MonoBehaviour
     List<GameObject> pathObjects;
     bool pathMarked;
     int stepNumber;
-    float animationSpeed;
+    public float animationSpeed = 0.05f;
     bool walking;
     bool lastStep;
     int tilesWalking;
@@ -167,7 +167,7 @@ public class GameManager : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        if (overWorld && !EventSystem.current.IsPointerOverGameObject())
+        if (overWorld)
         {
             // if you have clicked once on a castle of possession, give a window of frames to click it again to open castle menu
             if (prepareDoubleClick && ++clickCount == CLICKSPEED)
@@ -176,7 +176,7 @@ public class GameManager : MonoBehaviour
                 prepareDoubleClick = false;
             }
             // Left click listener
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
             {
                 // Fetch the point just clicked and adjust the position in the square to the corresponding isometric position
                 Vector2 posClicked = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -245,7 +245,42 @@ public class GameManager : MonoBehaviour
                 // TODO else if(GUInextTurnClicked)
                 //else if (false)
             }
+<<<<<<< HEAD
 
+=======
+            // TODO right mousebutton clicked
+            else if (Input.GetMouseButtonDown(1))
+            {
+                if (IsWalking())
+                {
+                    SetLastStep(true);
+                }
+                // TODO: temp town creation
+                VikingTown t = new VikingTown(new Player(0,0));
+                for (int i = 0; i < t.Buildings.Length; i++)
+                {
+                    t.Buildings[i].Build();
+                }
+                EnterTown(t);
+            }
+            // Center camera around first hero or castle
+            else if(Input.GetKeyDown(KeyCode.Space))
+            {
+                if(getPlayer(whoseTurn).Heroes[0] != null)
+                {
+                    cameraMovement.centerCamera(HandyMethods.getGraphicPos(activeHero.Position));
+                }
+                else
+                {
+                    cameraMovement.centerCamera(getPlayer(whoseTurn).Castle[0].GetPosition());
+                }
+            }
+            // Nextturn by enter
+            else if(Input.GetKeyDown(KeyCode.Return))
+            {
+                nextTurn();
+            }
+>>>>>>> refs/remotes/origin/master
             // Upon every update, activedhero will be moved in a direction if walking is enabled
             if (IsWalking())
             {
@@ -255,7 +290,6 @@ public class GameManager : MonoBehaviour
                 {
                     Destroy(pathObjects[stepNumber]);
                     stepNumber++;
-                    animationSpeed = 0f;
                     // Stop the movement when amount of tiles moved has reached the limit, or walking is disabled
                     if (IsLastStep(stepNumber))
                     {
@@ -272,45 +306,55 @@ public class GameManager : MonoBehaviour
                         // objectcollision, when final destination is reached
                         if (canWalk[x, y] == MapMaker.TRIGGER)
                         {
+                            bool heroNotDead = true;
                             Debug.Log(activeHero.Position);
-                            if (reactions[x, y].React(activeHero))
+                            // If tile is threatened, perform the additional reaction before the main one
+                            if (reactions[x, y].HasPreReact(activeHero))
+                                heroNotDead = reactions[x, y].PreReact(activeHero);
+                            // Only perform the main reaction if the hero didn't die in previous reaction
+                            if (heroNotDead)
                             {
-                                if (reactions[x, y].GetType().Equals(typeof(HeroMeetReact)))
+                                bool react = reactions[x, y].React(activeHero);
+                                if (reactions[x,y].GetType().Equals(typeof(HeroMeetReact)) || (reactions[x, y].HeroMeetReact != null && reactions[x, y].HeroMeetReact.Hero.Player.Equals(activeHero.Player)))
                                 {
-                                    // TODO if battle, remove hero that is now set to null
-                                }
-                                else if (reactions[x, y].GetType().Equals(typeof(UnitReaction)))
-                                {
-                                    // TODO remove either hero or unit
-                                }
-                                else if (reactions[x, y].GetType().Equals(typeof(ResourceReaction)))
-                                {
-                                    // TODO remove picked up resource
-                                }
-                                else if (reactions[x, y].GetType().Equals(typeof(ArtifactReaction)))
-                                {
-                                    // TODO remove picked up artifact
-                                }
-                                else if (reactions[x, y].GetType().Equals(typeof(CastleReact)))
-                                {
-
-                                }
-                                else if (reactions[x, y].GetType().Equals(typeof(DwellingReact)))
-                                {
-                                    // TODO dweeling has been captured
-                                }
-                            }
-                            else
-                            {
-                                if(reactions[x, y].GetType().Equals(typeof(HeroMeetReact)))
-                                {
-                                    // Reached allied hero, walk back one step
                                     Vector2 stepBack = fromPosition;
                                     if (activeHero.Path.Count > 1)
                                         stepBack = activeHero.Path[activeHero.Path.Count - 2];
                                     activeHero.Position = stepBack;
                                     newPos = HandyMethods.getGraphicPos(stepBack);
                                 }
+                                else if (reactions[x, y].GetType().Equals(typeof(HeroMeetReact)))
+                                {
+                                    // TODO if battle, visually remove the hero that is now set to null (true when attacker won)
+                                }
+                                else if (reactions[x, y].GetType().Equals(typeof(UnitReaction)))
+                                {
+                                    // TODO visually remove either hero or unit (true when attacker won)
+                                }
+                                else if (reactions[x, y].GetType().Equals(typeof(ResourceReaction)))
+                                {
+                                    // TODO visually remove picked up resource
+                                }
+                                else if (reactions[x, y].GetType().Equals(typeof(ArtifactReaction)))
+                                {
+                                    // TODO visually remove picked up artifact
+                                }
+                                else if (reactions[x, y].GetType().Equals(typeof(CastleReact)))
+                                {
+                                    // TODO visually remove picked up artifact
+                                }
+                                else if (reactions[x, y].GetType().Equals(typeof(DwellingReact)))
+                                {
+                                    // TODO visually dweeling has been captured
+                                }
+                                else if (reactions[x, y].GetType().Equals(typeof(ResourceBuildingReaction)))
+                                {
+                                    // TODO visually resourceBuilding has been captured
+                                }
+                            }
+                            else
+                            {
+
                             }
                         }
 
@@ -377,8 +421,44 @@ public class GameManager : MonoBehaviour
         RemoveMarkers(pathObjects);
         // Call algorithm method that returns a list of Vector2 positions to the point, go through all objects
         activeHero.Path = aStar.calculate(activeHero.Position, pos);
-        DrawPath(activeHero.Path, pos);
+        DrawPath(activeHero.Path);
         return pathObjects;
+    }
+
+    /// <summary>
+    /// Graphically draw the path objects
+    /// </summary>
+    /// <param name="path">list of positions to draw the path</param>
+    public void DrawPath(List<Vector2> path)
+    {
+        // Calculate how many steps the hero will move, if this path is chosen
+        int count = tilesWalking = Math.Min(activeHero.Path.Count, activeHero.CurMovementSpeed);
+        // For each position, create a gameobject with an image and instantiate it, and add it to a gameobject list for later to be removed
+
+        for (int i = 0; i < activeHero.Path.Count; i++)
+        {
+            // Create a cloned gameobject of the prefab corresponding to what the marker shall look like
+            GameObject pathMarker = new GameObject();
+            pathMarker.name = parentToMarkers.name + "(" + path[i].x + ", " + path[i].y + ")";
+            pathMarker.transform.parent = parentToMarkers.transform;
+            SpriteRenderer sr = pathMarker.AddComponent<SpriteRenderer>();
+            sr.sortingLayerName = "Markers";
+            if (i + 1 == activeHero.Path.Count)
+            {
+                if (i + 1 == tilesWalking)
+                    sr.sprite = pathDestYes;
+                else
+                    sr.sprite = pathDestNo;
+            }
+            else if (count > 0)
+                sr.sprite = pathYes;
+            else
+                sr.sprite = pathNo;
+            count--;
+            // set the cloned position to the vector2 object and add it to the list of gameobjects, pathList
+            pathMarker.transform.position = HandyMethods.getGraphicPos(path[i]);
+            pathObjects.Add(pathMarker);
+        }
     }
 
     /// <summary>
@@ -390,8 +470,7 @@ public class GameManager : MonoBehaviour
         if(pathObjects != null && stepNumber < pathObjects.Count)
         {
             // Add animation, transform hero position
-            animationSpeed += Time.deltaTime;
-            return Vector2.Lerp(activeHeroObject.transform.position, pathObjects[stepNumber].transform.position, animationSpeed);
+            return Vector2.MoveTowards(activeHeroObject.transform.position, pathObjects[stepNumber].transform.position, animationSpeed);
         }
         return activeHeroObject.transform.position;
     }
@@ -408,44 +487,6 @@ public class GameManager : MonoBehaviour
         }
         li.Clear();
         li = new List<GameObject>();
-    }
-
-    public void DrawPath(List<Vector2> path, Vector2 pos)
-    {
-        // Calculate how many steps the hero will move, if this path is chosen
-        int i = tilesWalking = Math.Min(activeHero.Path.Count, activeHero.CurMovementSpeed);
-        // For each position, create a gameobject with an image and instantiate it, and add it to a gameobject list for later to be removed
-        
-        foreach (Vector2 no in path)
-        {
-            // Create a cloned gameobject of the prefab corresponding to what the marker shall look like
-            GameObject pathMarker = new GameObject();
-            pathMarker.name = parentToMarkers.name + "(" + no.x + ", " + no.y + ")";
-            pathMarker.transform.parent = parentToMarkers.transform;
-            SpriteRenderer sr = pathMarker.AddComponent<SpriteRenderer>();
-            sr.sortingLayerName = "Markers";
-            if (pos.Equals(no) && i > 0)
-                sr.sprite = pathDestYes;
-            else if (pos.Equals(no))
-                sr.sprite = pathDestNo;
-            else if (i > 0)
-                sr.sprite = pathYes;
-            else
-                sr.sprite = pathNo;
-            i--;
-            Vector2 modified;
-            if (no.y % 2 == 0)
-            {
-                modified = new Vector2(no.x, no.y / 2 / 2);
-            }
-            else
-            {
-                modified = new Vector2(no.x + 0.5f, no.y / 2 / 2);
-            }
-            // set the cloned position to the vector2 object and add it to the list of gameobjects, pathList
-            pathMarker.transform.position = modified;
-            pathObjects.Add(pathMarker);
-        }
     }
 
     public bool IsLastStep(int stepNumber)
@@ -880,7 +921,7 @@ public class GameManager : MonoBehaviour
                activeHero = getPlayer(whoseTurn).Heroes[0];
                activeHeroObject = heroLayer[(int)activeHero.Position.x, (int)activeHero.Position.y];
                if (activeHero.Path != null)
-                    DrawPath(activeHero.Path, new Vector2(0, 0));
+                    DrawPath(activeHero.Path);
                // Center camera to the upcoming players first hero
                cameraMovement.centerCamera(HandyMethods.getGraphicPos(activeHero.Position));
             }
