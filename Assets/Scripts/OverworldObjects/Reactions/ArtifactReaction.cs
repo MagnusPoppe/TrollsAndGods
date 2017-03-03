@@ -44,25 +44,6 @@ public class ArtifactReaction : Reaction {
     }
 
     /// <summary>
-    /// Check's if there's a mob threatening the tile
-    /// </summary>
-    /// <returns>true if there's an reaction</returns>
-    public override bool HasPreReact(Hero h)
-    {
-        return UnitReact != null;
-    }
-
-    /// <summary>
-    /// If there's a mob threatening the tile, start their reaction
-    /// </summary>
-    /// <param name="h">Hero that initated the reaction</param>
-    /// <returns>true if that hero won</returns>
-    public override bool PreReact(Hero h)
-    {
-        return UnitReact.React(h);
-    }
-
-    /// <summary>
     /// Adds artifact to hero inventory. Equips if room.
     /// </summary>
     /// <param name="h">Hero interacting with artifact</param>
