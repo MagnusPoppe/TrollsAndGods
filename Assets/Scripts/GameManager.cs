@@ -371,11 +371,13 @@ public class GameManager : MonoBehaviour
 
                             }
                         }
-                        /*
+                        
                         // Clear the previous table reference to current gameobject
-                        heroLayer[(int)activeHero.Position.x, (int)activeHero.Position.y] = null;
+                        heroLayer[(int)fromPosition.x, (int)fromPosition.y] = null;
                         // Also move the gameobject's position in the heroLayer table
                         heroLayer[(int)activeHero.Position.x, (int)activeHero.Position.y] = activeHeroObject;
+                        
+                        /*
                         // Set origin tile's canWalk 0 or 2 if no reaction there
                         if (reactions[(int)fromPosition.x, (int)fromPosition.y] == null)
                             canWalk[(int)fromPosition.x, (int)fromPosition.y] = MapMaker.CANWALK;
@@ -598,14 +600,6 @@ public class GameManager : MonoBehaviour
     
     private void GenerateUI()
     {
-        /*
-        GameObject UI = GameObject.Find("Canvas");
-        nextRoundBtn = UI.GetComponentInChildren<Button>();
-        //GameObject nextRoundUI = GameObject.Find("Canvas/Button");
-        //nextRoundBtn = nextRoundBtn.GetComponent<Button>();
-        nextRoundBtn.onClick.AddListener(nextTurn);
-        */
-
         overWorldCanvas = GameObject.Find("OverworldCanvas");
         nextRoundBtn = overWorldCanvas.GetComponentInChildren<Button>();
 
