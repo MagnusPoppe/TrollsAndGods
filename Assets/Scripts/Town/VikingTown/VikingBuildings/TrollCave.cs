@@ -79,9 +79,13 @@ namespace TownView
             throw new NotImplementedException();
         }
 
-        public int UIType()
+        /// <summary>
+        /// Override class to tell which card window this building uses
+        /// </summary>
+        /// <returns>Integer for which window type to display in the game</returns>
+        protected override int GetUIType()
         {
-            return UI.WindowTypes.BUILDING_PLAYING_CARD;
+            return UI.WindowTypes.DWELLING_PLAYING_CARD;
         }
     }
 }

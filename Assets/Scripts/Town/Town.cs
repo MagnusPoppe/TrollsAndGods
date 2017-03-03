@@ -36,6 +36,15 @@ namespace TownView
 
         }
 
+        // Builds all buildings in a given town
+        public void BuildAll(Town t)
+        {
+            for(int i = 0; i < t.buildings.Length; i++)
+            {
+                buildings[i].Build();
+            }
+        }
+
         public bool HasBuiltThisRound
         {
             get

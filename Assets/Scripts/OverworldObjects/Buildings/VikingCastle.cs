@@ -34,8 +34,11 @@ namespace OverworldObjects
             EnvironmentTileType = MapGenerator.MapMaker.GRASS_SPRITEID;
             Town = new VikingTown(owner);
 
+            // TODO: Fjern temp som bygger alle bygninger
+            Town.BuildAll(Town);
+
             // Builds Town Hall-type building that can build other buildings
-            Town.Buildings[0].Build();
+            //Town.Buildings[0].Build();
         }
 
 

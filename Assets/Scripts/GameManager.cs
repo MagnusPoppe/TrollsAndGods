@@ -38,7 +38,7 @@ public class GameManager : MonoBehaviour
 
     // Map Globals:
     int width, height;
-    IngameObjectLibrary libs;
+    static public IngameObjectLibrary libs;
     AStarAlgo aStar;
     GameObject[,] tiles;
     public const float XRESOLUTION = 2598;
@@ -80,7 +80,8 @@ public class GameManager : MonoBehaviour
     List<GameObject> pathObjects;
     bool pathMarked;
     int stepNumber;
-    public float animationSpeed = 0.05f;
+    [Range(0.01f, 1f)]
+    public float animationSpeed = 0.01f;
     bool walking;
     bool lastStep;
     int tilesWalking;
@@ -245,28 +246,11 @@ public class GameManager : MonoBehaviour
                 // TODO else if(GUInextTurnClicked)
                 //else if (false)
             }
-<<<<<<< HEAD
 
-=======
-            // TODO right mousebutton clicked
-            else if (Input.GetMouseButtonDown(1))
-            {
-                if (IsWalking())
-                {
-                    SetLastStep(true);
-                }
-                // TODO: temp town creation
-                VikingTown t = new VikingTown(new Player(0,0));
-                for (int i = 0; i < t.Buildings.Length; i++)
-                {
-                    t.Buildings[i].Build();
-                }
-                EnterTown(t);
-            }
             // Center camera around first hero or castle
-            else if(Input.GetKeyDown(KeyCode.Space))
+            else if (Input.GetKeyDown(KeyCode.Space))
             {
-                if(getPlayer(whoseTurn).Heroes[0] != null)
+                if (getPlayer(whoseTurn).Heroes[0] != null)
                 {
                     cameraMovement.centerCamera(HandyMethods.getGraphicPos(activeHero.Position));
                 }
@@ -276,11 +260,11 @@ public class GameManager : MonoBehaviour
                 }
             }
             // Nextturn by enter
-            else if(Input.GetKeyDown(KeyCode.Return))
+            else if (Input.GetKeyDown(KeyCode.Return))
             {
                 nextTurn();
             }
->>>>>>> refs/remotes/origin/master
+
             // Upon every update, activedhero will be moved in a direction if walking is enabled
             if (IsWalking())
             {
@@ -863,13 +847,14 @@ public class GameManager : MonoBehaviour
 
                 // Creates a game object for the building, gives it a name and places and scales it properly
                 string prefabPath = "Prefabs/" + town.Buildings[i].Name;
-                Debug.Log(prefabPath);
                 buildingsInActiveTown[i] = Instantiate(UnityEngine.Resources.Load<GameObject>(prefabPath));
                 buildingsInActiveTown[i].transform.position = placement;
                 buildingsInActiveTown[i].transform.localScale = new Vector3(scaleFactor, scaleFactor, 1);
 
                 // CONNECTING GAMEOBJECT WITH BUILDING OBJECT: 
+                Debug.Log(town.Buildings[i].ToString());
                 buildingsInActiveTown[i].GetComponent<BuildingOnClick>().Building = town.Buildings[i];
+                buildingsInActiveTown[i].GetComponent<BuildingOnClick>().BuildingObjects = buildingsInActiveTown;
 
             }
         }
