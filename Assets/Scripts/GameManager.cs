@@ -285,6 +285,7 @@ public class GameManager : MonoBehaviour
                 if (activeHeroObject.transform.position.Equals(pathObjects[stepNumber].transform.position))
                 {
                     Destroy(pathObjects[stepNumber]);
+                    activeHero.Path.RemoveAt(0);
                     stepNumber++;
                     // Stop the movement when amount of tiles moved has reached the limit, or walking is disabled
                     if (IsLastStep(stepNumber))
@@ -298,7 +299,6 @@ public class GameManager : MonoBehaviour
                         int y = (int)activeHero.Position.y;
                         SetWalking(false);
                         SetPathMarked(false);
-                        RemoveMarkers(pathObjects);
                         // objectcollision, when final destination is reached
                         if (canWalk[x, y] == MapMaker.TRIGGER)
                         {
@@ -898,6 +898,7 @@ public class GameManager : MonoBehaviour
             }
             // Remove all path markers on the map
             RemoveMarkers(pathObjects);
+
             // Set active hero and active hero object to the upcoming players first hero
 
             // On next turn, always set the next player as active player. But if next player 
