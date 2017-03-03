@@ -10,7 +10,6 @@ public class ResourceReaction : Reaction
 {
 
     Resources.type resourceID;
-    UnitReaction unitReact;
     int amount;
 
     public Resources.type ResourceID
@@ -39,43 +38,11 @@ public class ResourceReaction : Reaction
         }
     }
 
-    public UnitReaction UnitReact
-    {
-        get
-        {
-            return unitReact;
-        }
-
-        set
-        {
-            unitReact = value;
-        }
-    }
-
     public ResourceReaction(Resources.type resID, int amount, Vector2 pos)
     {
         ResourceID = resID;
         Amount = amount;
         Pos = pos;
-    }
-
-    /// <summary>
-    /// Check's if there's a mob threatening the tile
-    /// </summary>
-    /// <returns>true if there's an reaction</returns>
-    public override bool HasPreReact(Hero h)
-    {
-        return UnitReact != null;
-    }
-
-    /// <summary>
-    /// If there's a mob threatening the tile, start their reaction
-    /// </summary>
-    /// <param name="h">Hero that initated the reaction</param>
-    /// <returns>true if that hero won</returns>
-    public override bool PreReact(Hero h)
-    {
-        return UnitReact.React(h);
     }
 
     /// <summary>

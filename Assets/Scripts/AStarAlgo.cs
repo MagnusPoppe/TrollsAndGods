@@ -31,7 +31,7 @@ public class AStarAlgo {
     /// <param name="canWalk">2D int array with 1 where you can walk and 2 where triggers are</param>
     /// <param name="w">The width of the map</param>
     /// <param name="h">The height of the map</param>
-    /// <param name="hex">If the map is hex based or square based</param>
+    /// <param name="hex">If the map is hex based or Isometric based</param>
     public AStarAlgo(int[,] canWalk, int w, int h, bool hex)
     {
         this.canWalk = canWalk;
@@ -254,6 +254,7 @@ public class AStarAlgo {
     /// The node class contains it's position, a reference to the node you came from,
     /// it's gScore(the cost to walk to this node), hScore(the estimated cost to reach the goal, ignoring obstacles)
     /// and it's f wich is g+h. f is refferred to as pathCost in other commentraries.
+    /// Also contains booleans to check if node is evaluvated or in openSet list.
     /// </summary>
     public class Node : IComparable<Node>
     {
@@ -383,6 +384,9 @@ public class AStarAlgo {
         }
     }
 
+    /// <summary>
+    /// simple class to handle x,y coordinates.
+    /// </summary>
     public class Point
     {
         public int x,y;

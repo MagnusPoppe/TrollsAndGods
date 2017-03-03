@@ -44,29 +44,6 @@ public class ResourceBuildingReaction : Reaction {
     }
 
     /// <summary>
-    /// Check's if there's a mob or hero threatening the tile
-    /// </summary>
-    /// <returns>true if there's an reaction</returns>
-    public override bool HasPreReact(Hero h)
-    {
-        return (UnitReact != null || HeroMeetReact != null) && !h.Player.equals(HeroMeetReact.Hero.Player);
-    }
-
-    /// <summary>
-    /// If there's a mob or hero threatening the tile, start their reaction
-    /// </summary>
-    /// <param name="h">Hero that initated the reaction</param>
-    /// <returns>true if that hero won</returns>
-    public override bool PreReact(Hero h)
-    {
-        if (UnitReact != null)
-            return UnitReact.React(h);
-        else if (HeroMeetReact != null)
-            return HeroMeetReact.React(h);
-        return false;
-    }
-
-    /// <summary>
     /// Changes owner of building if you don't already own it
     /// </summary>
     /// <param name="h">The hero interacting with reaource building</param>
