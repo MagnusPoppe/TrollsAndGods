@@ -56,9 +56,9 @@ public class ExitButtonOnClick : MonoBehaviour  {
 
     }
 
+    // Destroys all the given game objects and returns to the town screen
     void OnMouseDown()
     {
-        Debug.Log("DestroyWindow");
         Destroy(cardWindow);
         Destroy(exitButton);
         for (int i = 0; i < BuildingObjects.Length; i++)
