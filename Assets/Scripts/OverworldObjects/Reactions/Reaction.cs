@@ -8,7 +8,7 @@ using UnityEngine;
 abstract public class Reaction {
 
     Vector2 pos;
-    HeroMeetReact heroMeetReact;
+    Reaction preReaction;
 
     public Vector2 Pos
     {
@@ -23,16 +23,16 @@ abstract public class Reaction {
         }
     }
 
-    public HeroMeetReact HeroMeetReact
+    public Reaction PreReaction
     {
         get
         {
-            return heroMeetReact;
+            return preReaction;
         }
 
         set
         {
-            heroMeetReact = value;
+            preReaction = value;
         }
     }
 
@@ -40,8 +40,10 @@ abstract public class Reaction {
     /// Initiates the additional unit or hero reaction
     /// </summary>
     /// <param name="h">Hero that triggers it</param>
-    /// <returns></returns>
-    abstract public bool PreReact(Hero h);
+    /// <returns>result of preReacts react</returns>
+    public bool PreReact(Hero h) {
+        return (preReaction.React(h));
+    }
 
     /// <summary>
     /// abstract method to handle what happens when you interact with object
@@ -54,6 +56,9 @@ abstract public class Reaction {
     /// Checks if there's a reaction that needs to trigger before the normal reaction
     /// </summary>
     /// <returns>true if there is an additional reaction there</returns>
-    abstract public bool HasPreReact(Hero h);
+    public bool HasPreReact(Hero h)
+    {
+        return (preReaction != null);
+    }
 
 }
