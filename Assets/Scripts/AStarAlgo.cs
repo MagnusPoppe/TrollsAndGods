@@ -15,14 +15,18 @@ public class AStarAlgo {
     int width, height;
     protected bool hex;
     readonly Point[] evenIsometricDirections = {
-        new Point(-1,-1),new Point(0,-2),new Point(0,-1),
-        new Point(-1,0),                   new Point(1,0),
-        new Point(-1,1),new Point(0,2),new Point(0,1)
+                        new Point(0,2),
+        new Point(-1,0),                 new Point(1,0),
+                        new Point(0,-2),
+        new Point(-1,1)                ,new Point(0,1),
+        new Point(-1,-1)                ,new Point(0,-1)
     };
     readonly Point[] oddIsometricDirections = {
-        new Point(0,-1),new Point(0,-2),new Point(1,-1),
-        new Point(-1,0),                   new Point(1,0),
-        new Point(0,1),new Point(0,2),new Point(1,1)
+                        new Point(0,2),
+        new Point(-1,0),                 new Point(1,0),
+                        new Point(0,-2),
+        new Point(0,1)                 ,new Point(1,1),
+        new Point(0,-1)                  ,new Point(1,-1)
     };
 
     /// <summary>
@@ -123,7 +127,14 @@ public class AStarAlgo {
                     int index = Math.Abs(openSet.BinarySearch(neighbour));
                     //Debug.Log(index + " " + neighbour.GetF() + " " + openSet.Count);
                     if (index >= openSet.Count) openSet.Add(neighbour);
-                    else openSet.Insert(index, neighbour);
+                    else
+                    {
+                        while (index > 0 && openSet[index-1].GetF() == neighbour.GetF())
+                        {
+                            index--;
+                        }
+                        openSet.Insert(index, neighbour);
+                    }
                 }
                 // OpenSet contains node, then check if current path is better.
                 else
@@ -247,8 +258,6 @@ public class AStarAlgo {
         }
         return neighbours;
     }
-
-    
 
     /// <summary>
     /// The node class contains it's position, a reference to the node you came from,
