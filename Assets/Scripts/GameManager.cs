@@ -311,13 +311,17 @@ public class GameManager : MonoBehaviour
                             if (heroNotDead)
                             {
                                 bool react = reactions[x, y].React(activeHero);
-                                if (reactions[x,y].GetType().Equals(typeof(HeroMeetReact)) || (reactions[x, y].HeroMeetReact != null && reactions[x, y].HeroMeetReact.Hero.Player.Equals(activeHero.Player)))
+                                if (reactions[x,y].GetType().Equals(typeof(HeroMeetReact)) || (reactions[x, y].PreReaction != null && reactions[x, y].PreReaction.GetType().Equals(typeof(HeroMeetReact))))
                                 {
-                                    Vector2 stepBack = fromPosition;
-                                    if (activeHero.Path.Count > 1)
-                                        stepBack = activeHero.Path[activeHero.Path.Count - 2];
-                                    activeHero.Position = stepBack;
-                                    newPos = HandyMethods.getGraphicPos(stepBack);
+                                    HeroMeetReact hmr = (HeroMeetReact)reactions[x, y].PreReaction;
+                                    if (hmr.Hero.Player.equals(getPlayer(whoseTurn)))
+                                    {
+                                        Vector2 stepBack = fromPosition;
+                                        if (activeHero.Path.Count > 1)
+                                            stepBack = activeHero.Path[activeHero.Path.Count - 2];
+                                        activeHero.Position = stepBack;
+                                        newPos = HandyMethods.getGraphicPos(stepBack);
+                                    }
                                 }
                                 else if (reactions[x, y].GetType().Equals(typeof(HeroMeetReact)))
                                 {
