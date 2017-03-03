@@ -44,11 +44,11 @@ public class HandyMethods
         Vector2 e = new Vector2(0.5f + x, y);
         Vector2 f = new Vector2(0 + x, 0.33f + y);
 
-        if (determineSideOfLine(a, b, pos) < 0) return new Vector2(x, (y + 1) * 2);
-        else if (determineSideOfLine(b, c, pos) < 0) return new Vector2(x + 1, (y + 1) * 2);
-        else if (determineSideOfLine(d, e, pos) < 0) return new Vector2(x + 1, y * 2);
-        else if (determineSideOfLine(e, f, pos) < 0) return new Vector2(x, y * 2 * 2);
-        else return new Vector2(x, (y + 0.5f) * 2);
+        if (determineSideOfLine(a, b, pos) < 0) return new Vector2(x, (y + 1));
+        else if (determineSideOfLine(b, c, pos) < 0) return new Vector2(x + 1, (y + 1));
+        else if (determineSideOfLine(d, e, pos) < 0) return new Vector2(x + 1, (y - 1));
+        else if (determineSideOfLine(e, f, pos) < 0) return new Vector2(x, (y - 1));
+        else return new Vector2(x, y);
 
     }
 
@@ -81,11 +81,11 @@ public class HandyMethods
         Vector2 modified;
         if (pos.y % 2 == 0)
         {
-            modified = new Vector2(pos.x, pos.y / 2);
+            modified = new Vector2(pos.x, pos.y);
         }
         else
         {
-            modified = new Vector2(pos.x + 0.5f, pos.y / 2);
+            modified = new Vector2(pos.x + 0.5f, pos.y);
         }
         return modified;
     }
