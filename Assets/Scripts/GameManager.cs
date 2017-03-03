@@ -292,13 +292,20 @@ public class GameManager : MonoBehaviour
                     {
                         int x = (int)activeHero.Path[0].x;
                         int y = (int)activeHero.Path[0].y;
-                        if (reactions[x, y] != null && (reactions[x, y].GetType().Equals(typeof(HeroMeetReact)) || (reactions[x, y].PreReaction != null && reactions[x, y].PreReaction.GetType().Equals(typeof(HeroMeetReact)))))
+
+                        if(reactions[x, y] != null)
                         {
-                            HeroMeetReact hmr = (HeroMeetReact)reactions[x, y].PreReaction;
-                            // If the upcoming tile has a trigger with an allied hero in it, finish his movement
-                            if (hmr == null || hmr.Hero.Player.equals(getPlayer(whoseTurn)))
+                            if (reactions[x, y].GetType().Equals(typeof(HeroMeetReact)))
                             {
-                                stop = true;
+                                HeroMeetReact hmr = (HeroMeetReact)reactions[x, y];
+                                if (hmr.Hero.Player.equals(getPlayer(whoseTurn)))
+                                    stop = true;
+                            }
+                            else if (reactions[x, y].PreReaction != null && reactions[x, y].PreReaction.GetType().Equals(typeof(HeroMeetReact)))
+                            {
+                                HeroMeetReact hmr = (HeroMeetReact)reactions[x, y].PreReaction;
+                                if (hmr.Hero.Player.equals(getPlayer(whoseTurn)))
+                                    stop = true;
                             }
                         }
                     }
@@ -371,11 +378,13 @@ public class GameManager : MonoBehaviour
 
                             }
                         }
-                        /*
+                        
                         // Clear the previous table reference to current gameobject
-                        heroLayer[(int)activeHero.Position.x, (int)activeHero.Position.y] = null;
+                        heroLayer[(int)fromPosition.x, (int)fromPosition.y] = null;
                         // Also move the gameobject's position in the heroLayer table
                         heroLayer[(int)activeHero.Position.x, (int)activeHero.Position.y] = activeHeroObject;
+                        
+                        /*
                         // Set origin tile's canWalk 0 or 2 if no reaction there
                         if (reactions[(int)fromPosition.x, (int)fromPosition.y] == null)
                             canWalk[(int)fromPosition.x, (int)fromPosition.y] = MapMaker.CANWALK;
@@ -598,14 +607,6 @@ public class GameManager : MonoBehaviour
     
     private void GenerateUI()
     {
-        /*
-        GameObject UI = GameObject.Find("Canvas");
-        nextRoundBtn = UI.GetComponentInChildren<Button>();
-        //GameObject nextRoundUI = GameObject.Find("Canvas/Button");
-        //nextRoundBtn = nextRoundBtn.GetComponent<Button>();
-        nextRoundBtn.onClick.AddListener(nextTurn);
-        */
-
         overWorldCanvas = GameObject.Find("OverworldCanvas");
         nextRoundBtn = overWorldCanvas.GetComponentInChildren<Button>();
 
@@ -953,8 +954,10 @@ public class GameManager : MonoBehaviour
             {
                activeHero = getPlayer(whoseTurn).Heroes[0];
                activeHeroObject = heroLayer[(int)activeHero.Position.x, (int)activeHero.Position.y];
-               if (activeHero.Path != null)
-                    DrawPath(activeHero.Path);
+                if (activeHero.Path != null)
+                {
+                    MarkPath(activeHero.Path[activeHero.Path.Count-1]);
+                }
                // Center camera to the upcoming players first hero
                cameraMovement.centerCamera(HandyMethods.getGraphicPosForIso(activeHero.Position));
             }
