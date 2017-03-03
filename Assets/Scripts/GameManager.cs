@@ -894,6 +894,7 @@ public class GameManager : MonoBehaviour
 
     }
 
+
     public void DestroyBuildingsInTown()
     {
         foreach (GameObject building in buildingsInActiveTown)

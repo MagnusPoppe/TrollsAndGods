@@ -22,8 +22,6 @@ public class DwellingOnClick : MonoBehaviour {
 
     void OnMouseDown()
     {
-        Debug.Log("Du har klikket på " + building.Name);
-
         OpenWindow(Building);
     }
 

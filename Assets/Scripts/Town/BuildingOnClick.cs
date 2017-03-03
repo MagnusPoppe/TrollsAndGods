@@ -15,8 +15,6 @@ public class BuildingOnClick : MonoBehaviour {
     GameObject exitButton;
     GameObject[] buildingObjects;
 
-    bool windowIsOpen;
-
     public GameObject[] BuildingObjects
     {
         get
@@ -66,10 +64,13 @@ public class BuildingOnClick : MonoBehaviour {
         OpenWindow(Building);
     }
 
+    /// <summary>
+    /// Creates the game objects to open a building window
+    /// </summary>
+    /// <param name="b">The building that was clicked on in the town window</param>
     void OpenWindow(Building b)
     {
 
-        windowIsOpen = true;
         // Gets the type of window associated with the given building
         int windowType = b.UIType();
 
@@ -93,21 +94,28 @@ public class BuildingOnClick : MonoBehaviour {
 
         CreateExitButton();
     }
-
+    
+    /// <summary>
+    /// Creates a gameobject exitbutton to exit the building screen
+    /// </summary>
     void CreateExitButton()
     {
+        // creates object and sets its name and position
         exitButton = new GameObject();
         exitButton.name = "ExitButton";
         exitButton.transform.position = cardWindow.transform.parent.position;
 
+        // Attaches a sprite renderer, sets spriet, sorting layer and sorting order
         SpriteRenderer sr = exitButton.AddComponent<SpriteRenderer>();
         sr.sprite = libs.GetDebugSprite(3);
         sr.sortingLayerName = "TownInteractive";
         sr.sortingOrder = cardWindow.GetComponent<SpriteRenderer>().sortingOrder + 1;  
 
+        // sets a box collider trigger around the button
         BoxCollider2D collider = exitButton.AddComponent<BoxCollider2D>();
         collider.isTrigger = true;
 
+        // sends game objects through to the button so it knows what to destroy
         exitButton.AddComponent<ExitButtonOnClick>();
         exitButton.GetComponent<ExitButtonOnClick>().CardWindow = cardWindow;
         exitButton.GetComponent<ExitButtonOnClick>().ExitButton = exitButton;
