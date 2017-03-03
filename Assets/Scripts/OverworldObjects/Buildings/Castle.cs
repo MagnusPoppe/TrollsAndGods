@@ -111,7 +111,7 @@ namespace OverworldObjects
             if(hero != null)
             {
                 CastleReact react = (CastleReact)reactions[x, y];
-                react.HeroMeetReact = new HeroMeetReact(hero, new Vector2(x, y));
+                react.PreReaction = new HeroMeetReact(hero, new Vector2(x, y));
             }
         }
     }
