@@ -303,7 +303,7 @@ public class IngameObjectLibrary
         Sprite[] sprites = new Sprite[UI_COUNT];
         String path = "Sprites/UI/";
 
-        // Viking town sprites
+        // Card template sprites
         sprites[0] = UnityEngine.Resources.Load<Sprite>(path + "card_template");
 
         return sprites;

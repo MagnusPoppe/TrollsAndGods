@@ -108,8 +108,6 @@
      <Compile Include="Assets\Scripts\Stats\HeroStats.cs" />
      <Compile Include="Assets\Scripts\Stats\UnitStats.cs" />
      <Compile Include="Assets\Scripts\Town\Building.cs" />
-     <Compile Include="Assets\Scripts\Town\BuildingOnClick.cs" />
-     <Compile Include="Assets\Scripts\Town\DwellingOnClick.cs" />
      <Compile Include="Assets\Scripts\Town\Town.cs" />
      <Compile Include="Assets\Scripts\Town\UnknownTown\Tower.cs" />
      <Compile Include="Assets\Scripts\Town\UnknownTown\UnknownTown.cs" />
