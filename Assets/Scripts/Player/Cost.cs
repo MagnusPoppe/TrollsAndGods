@@ -18,8 +18,8 @@ public class Cost : Resources {
     /// <returns>Cost*amount</returns>
     public Cost BuyAmount(int amount)
     {
-        return new Cost(resourceTab[0] * amount, resourceTab[1] * amount, resourceTab[2] * amount,
-            resourceTab[3] * amount, resourceTab[4] * amount);
+        return new Cost(resourceTab[(int) type.GOLD] * amount, resourceTab[(int)type.WOOD] * amount, resourceTab[(int)type.ORE] * amount,
+            resourceTab[(int)type.CRYSTAL] * amount, resourceTab[(int)type.GEM] * amount);
     }
 
     /// <summary>

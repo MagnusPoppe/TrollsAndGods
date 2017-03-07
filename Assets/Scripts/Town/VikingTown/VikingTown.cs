@@ -32,10 +32,10 @@ namespace TownView
         {
             Building[] buildings = new Building[5];
 
-            buildings[0] = new DragonTower();
+            buildings[0] = new TownHall();
             buildings[1] = new Pallisade();
             buildings[2] = new Temple();
-            buildings[3] = new TownHall();
+            buildings[3] = new DragonTower();
             buildings[4] = new TrollCave();
 
             return buildings;

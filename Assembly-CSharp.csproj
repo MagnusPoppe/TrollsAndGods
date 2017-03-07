@@ -46,12 +46,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\CameraMovement.cs" />
-     <Compile Include="Assets\Resources\Sprites\Buildings\Towns\BuildingOnClick.cs" />
      <Compile Include="Assets\Scripts\AStarAlgo.cs" />
      <Compile Include="Assets\Scripts\Abilities\Ability.cs" />
      <Compile Include="Assets\Scripts\Abilities\Active.cs" />
      <Compile Include="Assets\Scripts\Abilities\Passive.cs" />
+     <Compile Include="Assets\Scripts\CameraMovement.cs" />
      <Compile Include="Assets\Scripts\Date.cs" />
      <Compile Include="Assets\Scripts\Elements\Air.cs" />
      <Compile Include="Assets\Scripts\Elements\Bludgeoning.cs" />
@@ -86,6 +85,7 @@
      <Compile Include="Assets\Scripts\OverworldObjects\Buildings\Resource\OreMine.cs" />
      <Compile Include="Assets\Scripts\OverworldObjects\Buildings\ResourceBuilding.cs" />
      <Compile Include="Assets\Scripts\OverworldObjects\Buildings\UnknownCastle.cs" />
+     <Compile Include="Assets\Scripts\OverworldObjects\Buildings\VikingCastle.cs" />
      <Compile Include="Assets\Scripts\OverworldObjects\IngameObjectLibrary.cs" />
      <Compile Include="Assets\Scripts\OverworldObjects\Item.cs" />
      <Compile Include="Assets\Scripts\OverworldObjects\OverworldInteractable.cs" />
@@ -108,6 +108,8 @@
      <Compile Include="Assets\Scripts\Stats\HeroStats.cs" />
      <Compile Include="Assets\Scripts\Stats\UnitStats.cs" />
      <Compile Include="Assets\Scripts\Town\Building.cs" />
+     <Compile Include="Assets\Scripts\Town\BuildingOnClick.cs" />
+     <Compile Include="Assets\Scripts\Town\DwellingOnClick.cs" />
      <Compile Include="Assets\Scripts\Town\Town.cs" />
      <Compile Include="Assets\Scripts\Town\UnknownTown\Tower.cs" />
      <Compile Include="Assets\Scripts\Town\UnknownTown\UnknownTown.cs" />
@@ -116,9 +118,17 @@
      <Compile Include="Assets\Scripts\Town\VikingTown\VikingBuildings\Temple.cs" />
      <Compile Include="Assets\Scripts\Town\VikingTown\VikingBuildings\TownHall.cs" />
      <Compile Include="Assets\Scripts\Town\VikingTown\VikingBuildings\TrollCave.cs" />
+     <Compile Include="Assets\Scripts\Town\VikingTown\VikingBuildings\TrollCaveOnClick.cs" />
      <Compile Include="Assets\Scripts\Town\VikingTown\VikingTown.cs" />
+     <Compile Include="Assets\Scripts\UI\UnitPlayingCard.cs" />
+     <Compile Include="Assets\Scripts\UI\Window.cs" />
+     <Compile Include="Assets\Scripts\UI\WindowTypes.cs" />
      <Compile Include="Assets\Scripts\Units\Melee.cs" />
+     <Compile Include="Assets\Scripts\Units\Move.cs" />
+     <Compile Include="Assets\Scripts\Units\Moves\BoulderThrow.cs" />
+     <Compile Include="Assets\Scripts\Units\Moves\TreeSwing.cs" />
      <Compile Include="Assets\Scripts\Units\Ranged.cs" />
+     <Compile Include="Assets\Scripts\Units\StoneTroll.cs" />
      <Compile Include="Assets\Scripts\Units\Unit.cs" />
      <Compile Include="Assets\Scripts\libs\delunay\Delaunay\Edge.cs" />
      <Compile Include="Assets\Scripts\libs\delunay\Delaunay\EdgeList.cs" />

@@ -231,7 +231,7 @@ namespace MapGenerator
 				}
 				debugOutput += "\n";
 			}
-			Debug.Log(debugOutput);
+			//Debug.Log(debugOutput);
 			return true;
 		}
 

@@ -38,7 +38,7 @@ public class GameManager : MonoBehaviour
 
     // Map Globals:
     int width, height;
-    IngameObjectLibrary libs;
+    static public IngameObjectLibrary libs;
     AStarAlgo aStar;
     GameObject[,] tiles;
     public const float XRESOLUTION = 2598;
@@ -80,7 +80,8 @@ public class GameManager : MonoBehaviour
     List<GameObject> pathObjects;
     bool pathMarked;
     int stepNumber;
-    public float animationSpeed = 0.05f;
+    [Range(0.01f, 1f)]
+    public float animationSpeed = 0.01f;
     bool walking;
     bool lastStep;
     int tilesWalking;
@@ -246,25 +247,11 @@ public class GameManager : MonoBehaviour
                 // TODO else if(GUInextTurnClicked)
                 //else if (false)
             }
-            // TODO right mousebutton clicked
-            else if (Input.GetMouseButtonDown(1))
-            {
-                if (IsWalking())
-                {
-                    SetLastStep(true);
-                }
-                // TODO: temp town creation
-                VikingTown t = new VikingTown(new Player(0,0));
-                for (int i = 0; i < t.Buildings.Length; i++)
-                {
-                    t.Buildings[i].Build();
-                }
-                EnterTown(t);
-            }
+
             // Center camera around first hero or castle
-            else if(Input.GetKeyDown(KeyCode.Space))
+            else if (Input.GetKeyDown(KeyCode.Space))
             {
-                if(getPlayer(whoseTurn).Heroes[0] != null)
+                if (getPlayer(whoseTurn).Heroes[0] != null)
                 {
                     cameraMovement.centerCamera(HandyMethods.getGraphicPosForIso(activeHero.Position));
                 }
@@ -274,10 +261,11 @@ public class GameManager : MonoBehaviour
                 }
             }
             // Nextturn by enter
-            else if(Input.GetKeyDown(KeyCode.Return))
+            else if (Input.GetKeyDown(KeyCode.Return))
             {
                 nextTurn();
             }
+
             // Upon every update, activedhero will be moved in a direction if walking is enabled
             if (IsWalking())
             {
@@ -872,7 +860,6 @@ public class GameManager : MonoBehaviour
     /// <param name="town"></param>
     public void DrawTown(Town town)
     {
-
         float scaleFactor = 0.45f; //TODO: regn ut fra skjerm
 
         // Sets up the town view background
@@ -904,10 +891,16 @@ public class GameManager : MonoBehaviour
                 buildingsInActiveTown[i].transform.position = placement;
                 buildingsInActiveTown[i].transform.localScale = new Vector3(scaleFactor, scaleFactor, 1);
 
+                // CONNECTING GAMEOBJECT WITH BUILDING OBJECT: 
+                Debug.Log(town.Buildings[i].ToString());
+                buildingsInActiveTown[i].GetComponent<BuildingOnClick>().Building = town.Buildings[i];
+                buildingsInActiveTown[i].GetComponent<BuildingOnClick>().BuildingObjects = buildingsInActiveTown;
+
             }
         }
 
     }
+
 
     public void DestroyBuildingsInTown()
     {

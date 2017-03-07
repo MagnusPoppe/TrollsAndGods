@@ -31,5 +31,14 @@ namespace TownView
         public Pallisade() : base(name, requirements, new Resources(GOLD_COST, WOOD_COST, ORE_COST, CRYSTAL_COST, GEM_COST), LOCAL_SPRITEID)
         {
         }
+
+        /// <summary>
+        /// Override class to tell which card window this building uses
+        /// </summary>
+        /// <returns>Integer for which window type to display in the game</returns>
+        protected override int GetUIType()
+        {
+            return UI.WindowTypes.BUILDING_PLAYING_CARD;
+        }
     }
 }
