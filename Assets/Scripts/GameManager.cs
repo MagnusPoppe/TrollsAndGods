@@ -187,7 +187,7 @@ public class GameManager : MonoBehaviour
                 int x = (int)posClicked.x;
                 int y = (int)posClicked.y;
                 // Owners castle is clicked
-                if (reactions[x, y] != null && reactions[x, y].GetType().Equals(typeof(CastleReact)))
+                if (canWalk[(int)posClicked.x, (int)posClicked.y] != MapMaker.TRIGGER && reactions[x, y] != null && reactions[x, y].GetType().Equals(typeof(CastleReact)))
                 {
                     if (prepareDoubleClick)
                     {
@@ -593,6 +593,9 @@ public class GameManager : MonoBehaviour
         mapmaker = null;
 	}
     
+    /// <summary>
+    /// Setting up UI buttons, text and images.
+    /// </summary>
     private void GenerateUI()
     {
         overWorldCanvas = GameObject.Find("OverworldCanvas");
@@ -606,7 +609,18 @@ public class GameManager : MonoBehaviour
         {
             textObject = GameObject.Find(resourceTextPosition[i]);
             resourceText[i] = textObject.GetComponent<Text>();
-            resourceText[i].text = i + ""; // TODO currentPlayer.getResource(i);
+        }
+        updateResourceText();
+    }
+
+    /// <summary>
+    /// Setting resourcepanel's textboxes to the players resources.
+    /// </summary>
+    private void updateResourceText()
+    {
+        for (int i = 0; i < resourceText.Length; i++)
+        {
+            resourceText[i].text = getPlayer(whoseTurn).Wallet.GetResource(i) + "";
         }
     }
 
@@ -963,6 +977,8 @@ public class GameManager : MonoBehaviour
             }
             // Gathert income for the upcoming player
             getPlayer(whoseTurn).GatherIncome();
+            // Update wallet UI
+            updateResourceText();
         }
     }
 

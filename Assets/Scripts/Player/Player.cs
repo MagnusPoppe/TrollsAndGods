@@ -9,7 +9,7 @@ using TownView;
 /// </summary>
 public class Player
 {
-    private Resources resources;
+    private Wallet wallet;
     private Hero[] heroes;
     private int nextEmptyHero;
     private List<Castle> castle;
@@ -26,7 +26,7 @@ public class Player
     /// <param name="difficulty">How difficult the game is set to be</param>
     public Player(int playerID, int difficulty)
     {
-        Resources = new Resources(difficulty);
+        wallet = new Wallet(difficulty);
         Heroes = new Hero[MAXHEROES];
         Castle = new List<Castle>();
         PlayerID = playerID;
@@ -40,7 +40,7 @@ public class Player
     {
         foreach (ResourceBuilding rb in ResourceBuildings)
         {
-            Resources.adjustResource(rb.ResourceID, 1);
+            Wallet.adjustResource(rb.ResourceID, 1);
         }
     }
 
@@ -123,16 +123,16 @@ public class Player
         }
     }
 
-    public Resources Resources
+    public Wallet Wallet
     {
         get
         {
-            return resources;
+            return wallet;
         }
 
         set
         {
-            resources = value;
+            wallet = value;
         }
     }
 
