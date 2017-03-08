@@ -162,77 +162,55 @@ namespace MapGenerator
 
 		private void CreateTransitions()
 		{
+            int[,] tempMap = HandyMethods.Copy2DArray(map);
 			for (int y = 1; y < height - 1; y++)
 			{
 				for (int x = 1; x < width - 1; x++)
 				{
 					int direction = FindDirection(x, y);
 
-					if (direction >= 0)
-					{ 
-						map[x, y] = 0 + direction;
-					}
+                    if (direction >= 0)
+                    { 
+                        tempMap[x, y] = direction;
+                    }
+                    else
+                    {
+                        tempMap[x, y] = map[x, y];
+                    }
 				}
 			}
+            map = tempMap;
 		}
 
 		private int FindDirection(int x, int y)
 		{
-			if (Transition(CompassF.NORTH, x, y))
+            CompassF.Direction direction = CompassF.GetDirection(map, x, y, WATER_SPRITEID, GRASS_SPRITEID);
+
+            if (direction == CompassF.Direction.north)
 				return (int)GRASS_WATER_NORTH;
 
-			//else if (Transition(CompassF.NORTH_EAST, x, y))
-			//	return (int)GRASS_WATER_NORTH_EAST_OUT;
+            else if (direction == CompassF.Direction.northEast)
+				return (int)GRASS_WATER_NORTH_EAST_OUT;
 
-			//else if (Transition(CompassF.EAST, x, y))
-			//	return (int)GRASS_WATER_EAST;
+            else if (direction == CompassF.Direction.east)
+				return (int)GRASS_WATER_EAST;
 
-			//else if (Transition(CompassF.SOUTH_EAST, x, y))
-			//	return (int)GRASS_WATER_SOUTH_EAST_OUT;
+            else if (direction == CompassF.Direction.southEast)
+				return (int)GRASS_WATER_SOUTH_EAST_OUT;
 
-			//else if (Transition(CompassF.SOUTH, x, y))
-			//	return (int)GRASS_WATER_SOUTH;
+            else if (direction == CompassF.Direction.south)
+				return (int)GRASS_WATER_SOUTH;
 
-			//else if (Transition(CompassF.SOUTH_WEST, x, y))
-			//	return (int)GRASS_WATER_SOUTH_WEST_OUT;
+            else if (direction == CompassF.Direction.southWest)
+				return (int)GRASS_WATER_SOUTH_WEST_OUT;
 
-			//else if (Transition(CompassF.WEST, x, y))
-			//	return (int)GRASS_WATER_WEST;
+            else if (direction == CompassF.Direction.west)
+				return (int)GRASS_WATER_WEST;
 
-			//else if (Transition(CompassF.NORTH_WEST, x, y))
-			//	return (int)GRASS_WATER_NORTH_WEST_OUT;
+            else if (direction == CompassF.Direction.northWest)
+				return (int)GRASS_WATER_NORTH_WEST_OUT;
 			
-			return -1; // AREA IS HOMOGENUS
-		}
-
-		private bool Transition(int[,] filter, int realX, int realY)
-		{
-			int range = filter.GetLength(0) / 2;
-
-			string debugOutput = "FOR ("+realX+", "+realY+"):\n";
-
-			for (int y = 0; y < filter.GetLength(0); y++)
-			{
-				for (int x = 0; x < filter.GetLength(1); x++)
-				{
-					int fx = realX + (x - range);
-					int fy = realY + (y - range);
-
-					if (filter[x, y] == 1 && map[fx, fy] != WATER_SPRITEID) // THESE SHOULD BE WATER
-					{
-						return false;
-					}
-
-					if (filter[x, y] == 0 && map[fx, fy] == WATER_SPRITEID)
-					{
-						return false;
-					}
-					debugOutput += "("+x+","+y+") = "+ (filter[x, y] == 1 && map[fx, fy] == WATER_SPRITEID) + ",   ";
-				}
-				debugOutput += "\n";
-			}
-			//Debug.Log(debugOutput);
-			return true;
+			return -1; // AREA IS HOMOGENUS, NO CHANGES.
 		}
 
 		/// <summary>
