@@ -4,31 +4,46 @@ using UnityEngine;
 
 public class UnitStats : BaseStats {
 
-    int damage;
+    int minDamage;
+    int maxDamage;
     int health;
     int initative;
     int accuracy;
 
     public UnitStats(int attack, int defence, int speed, int moral, int luck,
-        int damage, int health, int initative, int accuracy
+        int minDamage,int maxDamage, int health, int initative, int accuracy
         ) : base(attack, defence, speed, moral, luck)
     {
-        Damage = damage;
+        MinDamage = minDamage;
+        MaxDamage = maxDamage;
         Health = health;
         Initative = initative;
         Accuracy = accuracy;
     }
 
-    public int Damage
+    public int MinDamage
     {
         get
         {
-            return damage;
+            return minDamage;
         }
 
         set
         {
-            damage = value;
+            minDamage = value;
+        }
+    }
+
+    public int MaxDamage
+    {
+        get
+        {
+            return maxDamage;
+        }
+
+        set
+        {
+            maxDamage = value;
         }
     }
 

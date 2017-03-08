@@ -9,7 +9,7 @@ public class UnitTree
 {
     private Unit[] units;
     private int[] unitAmount;
-    private const int TREESIZE = 7;
+    public static readonly int TREESIZE = 7;
 
     public UnitTree()
     {
@@ -64,5 +64,10 @@ public class UnitTree
     public Unit[] GetUnits()
     {
         return units;
+    }
+
+    public int getUnitAmount(int index)
+    {
+        return unitAmount[index];
     }
 }
