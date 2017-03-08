@@ -4,26 +4,25 @@ namespace OverworldObjects
 {
 	public class Shapes
 	{
-		public const int NOTHING 	= -1;
-		public const int SINGLE 	= 0;
-		public const int DOUBLE01 	= 1;
-		public const int DOUBLE02 	= 2;
-		public const int CUBE01 	= 3;
-		public const int CUBE02 	= 4;
-		public const int TRIPLE 	= 5;
-		public const int TRIPLEx2 	= 6;
-		public const int TRIPLEx3 	= 7;
-		public const int QUAD01 	= 8;
-		public const int QUAD02 	= 9;
-		public const int QUAD01x2 	= 10;
-		public const int QUAD02x2 	= 11;
-		public const int QUAD01x3 	= 12;
-		public const int QUAD02x3 	= 13;
+		public const int NOTHING 	    = -1;
+		public const int SINGLE 	    = 0;
+		public const int DOUBLE_RIGHT 	= 1;
+		public const int DOUBLE_LEFT 	= 2;
+		public const int CUBE 	        = 3;
+		public const int TRIPLE 	    = 4;
+		public const int TRIPLEx2_RIGHT = 5;
+        public const int TRIPLEx2_LEFT  = 6;
+		public const int TRIPLEx3_RIGHT = 7;
+        public const int TRIPLEx3_LEFT  = 8;
+		public const int QUAD_LEFT 	    = 9;
+		public const int QUAD_RIGHT 	= 10;
+		public const int QUADx2_RIGHT 	= 11;
+		public const int QUADx2_LEFT 	= 12;
 
-		public const int SHAPE_COUNT = 13;
+		public const int SHAPE_COUNT = 12;
 
 		public static int[] dx = { -2, -1, 0, 1, 2 };
-		public static int[] dy = { -3, -2, -1, 0, -1 };
+		public static int[] dy = { -1, 0, 1, 2, 3 };
 
 		const int FILTER_SIZE = 5;
 
@@ -112,93 +111,88 @@ namespace OverworldObjects
 			return copy;
 		}
 
-		private static int[,,] ALL_SHAPES =
-		{
-			{ // SINGLE
-				{0,0,0,0,0},
-				{0,0,1,0,0},
-				{0,0,0,0,0},
-				{0,0,0,0,0},
-				{0,0,0,0,0}
-			},{ // DOUBLE 01
-				{0,0,0,0,0},
-				{0,0,1,1,0},
-				{0,0,0,0,0},
-				{0,0,0,0,0},
-				{0,0,0,0,0}
-			},{ // DOUBLE 02
-				{0,0,0,0,0},
-				{0,1,1,0,0},
-				{0,0,0,0,0},
-				{0,0,0,0,0},
-				{0,0,0,0,0}
-			},{ // CUBE 01
-				{0,0,0,0,0},
-				{0,1,1,0,0},
-				{0,1,1,0,0},
-				{0,0,0,0,0},
-				{0,0,0,0,0}
-			}, { // CUBE 02
-				{0,0,0,0,0},
-				{0,0,1,1,0},
-				{0,0,1,1,0},
-				{0,0,0,0,0},
-				{0,0,0,0,0}
-			}, { // TRIPLE
-				{0,0,0,0,0},
-				{0,1,1,1,0},
-				{0,0,0,0,0},
-				{0,0,0,0,0},
-				{0,0,0,0,0}
-			}, { // TRIPLE x2
-				{0,0,0,0,0},
-				{0,1,1,1,0},
-				{0,1,1,1,0},
-				{0,0,0,0,0},
-				{0,0,0,0,0}
-			}, { // TRIPLE x3
-				{0,0,0,0,0},
-				{0,1,1,1,0},
-				{0,1,1,1,0},
-				{0,1,1,1,0},
-				{0,0,0,0,0}
-			}, { // QUAD 01
-				{0,0,0,0,0},
-				{1,1,1,1,0},
-				{0,0,0,0,0},
-				{0,0,0,0,0},
-				{0,0,0,0,0}
-			}, { // QUAD 02
-				{0,0,0,0,0},
-				{0,1,1,1,1},
-				{0,0,0,0,0},
-				{0,0,0,0,0},
-				{0,0,0,0,0}
-			}, { // QUAD 01 x2
-				{0,0,0,0,0},
-				{1,1,1,1,0},
-				{1,1,1,1,0},
-				{0,0,0,0,0},
-				{0,0,0,0,0}
-			}, { // QUAD 02 x2
-				{0,0,0,0,0},
-				{0,1,1,1,1},
-				{0,1,1,1,1},
-				{0,0,0,0,0},
-				{0,0,0,0,0}
-			}, { // QUAD 01 x3
-				{0,0,0,0,0},
-				{1,1,1,1,0},
-				{1,1,1,1,0},
-				{1,1,1,1,0},
-				{0,0,0,0,0}
-			}, { // QUAD 02 x3
-				{0,0,0,0,0},
-				{0,1,1,1,1},
-				{0,1,1,1,1},
-				{0,1,1,1,1},
-				{0,0,0,0,0}
-			}
-		};
+
+        private static int[,,] ALL_SHAPES =
+            {
+                { // SINGLE
+                    {0,0,0,0,0},
+                    {0,0,1,0,0},
+                    {0,0,0,0,0},
+                    {0,0,0,0,0},
+                    {0,0,0,0,0}
+                },{ // DOUBLE RIGHT
+                    {0,0,0,0,0},
+                    {0,0,1,0,0},
+                    {0,0,0,1,0},
+                    {0,0,0,0,0},
+                    {0,0,0,0,0}
+                },{ // DOUBLE LEFT
+                    {0,0,0,0,0},
+                    {0,0,1,0,0},
+                    {0,0,1,0,0},
+                    {0,0,0,0,0},
+                    {0,0,0,0,0}
+                }, { // CUBE
+                    {0,0,0,0,0},
+                    {0,0,1,0,0},
+                    {0,0,1,1,0},
+                    {0,0,1,0,0},
+                    {0,0,0,0,0}
+                }, { // TRIPLE
+                    {0,0,0,0,0},
+                    {0,0,1,0,0},
+                    {0,0,1,0,0},
+                    {0,0,1,0,0},
+                    {0,0,0,0,0}
+                }, { // TRIPLE x2 RIGHT
+                    {0,0,0,0,0},
+                    {0,0,1,0,0},
+                    {0,0,1,1,0},
+                    {0,0,1,1,0},
+                    {0,0,0,1,0}
+                }, { // TRIPLE x2 LEFT
+                    {0,0,0,0,0},
+                    {0,0,1,0,0},
+                    {0,0,1,1,0},
+                    {0,1,1,0,0},
+                    {0,0,1,0,0}
+                }, { // TRIPLE x3 RIGHT
+                    {0,0,1,0,0},
+                    {0,1,1,0,0},
+                    {0,1,1,1,0},
+                    {0,1,1,0,0},
+                    {0,0,1,0,0}
+                }, { // TRIPLE x3 LEFT
+                    {0,0,0,1,0},
+                    {0,0,1,1,0},
+                    {0,0,1,1,1},
+                    {0,0,1,1,0},
+                    {0,0,0,1,0}
+                }, { // QUAD LEFT
+                    {0,0,0,0,0},
+                    {0,0,0,1,0},
+                    {0,0,0,1,0},
+                    {0,0,1,0,0},
+                    {0,0,1,0,0}
+                }, { // QUAD RIGHT
+                    {0,0,0,0,0},
+                    {0,1,0,0,0},
+                    {0,0,1,0,0},
+                    {0,0,1,0,0},
+                    {0,0,0,1,0}
+                }, { // QUAD x2 RIGHT
+                    {0,0,1,0,0},
+                    {0,1,1,0,0},
+                    {0,0,1,1,0},
+                    {0,0,1,1,0},
+                    {0,0,0,1,0}
+                }, { // QUAD x2 LEFT
+                    {0,0,0,1,0},
+                    {0,0,1,1,0},
+                    {0,0,1,1,0},
+                    {0,1,1,0,0},
+                    {0,0,1,0,0}
+                }
+            };
 	}
 }
