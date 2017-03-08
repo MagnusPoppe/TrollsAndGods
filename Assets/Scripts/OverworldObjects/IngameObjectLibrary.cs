@@ -268,7 +268,7 @@ public class IngameObjectLibrary
     // towns-variabler. towns[] holder alle sprites, TOWNS_START er global startverdi for towns sprites, TOWNS_COUNT er antall towns sprites
     Sprite[] towns;
     public const int TOWNS_START = CASTLES_START + CASTLES_COUNT;
-    public const int TOWNS_COUNT = 6;
+    public const int TOWNS_COUNT = 11;
 
     /// <summary>
     /// Initialiserer et array for å holde på alle towns sprites
@@ -286,6 +286,13 @@ public class IngameObjectLibrary
         sprites[3] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Temple");
         sprites[4] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Dragon Tower");
         sprites[5] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Troll Cave");
+
+        // viking town blueprint sprites
+        sprites[6] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Town Hall");
+        sprites[7] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Pallisade");
+        sprites[8] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Temple");
+        sprites[9] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Dragon Tower");
+        sprites[10] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Troll Cave");
 
         return sprites;
     }
@@ -307,7 +314,7 @@ public class IngameObjectLibrary
         // Viking town sprites
         // TODO: temp has duplicates to correspond to WINDOW TYPES
         sprites[0] = UnityEngine.Resources.Load<Sprite>(path + "card_template");
-        sprites[1] = sprites[0];
+        sprites[1] = UnityEngine.Resources.Load<Sprite>(path + "card_template2");
         sprites[2] = sprites[0];
         return sprites;
     }

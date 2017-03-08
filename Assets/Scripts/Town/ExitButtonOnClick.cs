@@ -59,11 +59,17 @@ public class ExitButtonOnClick : MonoBehaviour  {
     // Destroys all the given game objects and returns to the town screen
     void OnMouseDown()
     {
-        Destroy(cardWindow);
-        Destroy(exitButton);
         for (int i = 0; i < BuildingObjects.Length; i++)
         {
-            BuildingObjects[i].GetComponent<PolygonCollider2D>().enabled = true;
+            // TODO: make into list so we dont have to check for null?
+            if (BuildingObjects[i] != null)
+                BuildingObjects[i].GetComponent<PolygonCollider2D>().enabled = true;
         }
+
+        foreach (GameObject go in GameObject.FindGameObjectsWithTag("toDestroy"))
+            Destroy(go);
+
+        // Redraw town
+
     }
 }

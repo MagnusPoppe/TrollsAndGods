@@ -13,8 +13,9 @@ namespace TownView
         private string name;
         private bool built;
         protected bool[] requirements;
-        protected Resources cost;
+        protected Cost cost;
         private Vector2 placement;
+        private int local_sprite_blueprint;
         private const IngameObjectLibrary.Category CATEGORY = IngameObjectLibrary.Category.Town; // TODO: ny kategori for town buildings
 
 
@@ -52,21 +53,34 @@ namespace TownView
                 name = value;
             }
         }
-        
+
+        public Cost Cost
+        {
+            get
+            {
+                return cost;
+            }
+
+            set
+            {
+                cost = value;
+            }
+        }
+
         public void Build()
         {
-            // TODO: implementer metoden med cost
             built = true;
         }
 
 
 
-        public Building(string name, bool[] requirements, Resources cost, int localID) :base(localID, CATEGORY)
+        public Building(string name, bool[] requirements, Cost cost, int localID, int LOCAL_SPRITEID_BLUEPRINT) :base(localID, CATEGORY)
         {
             Name = name;
             this.requirements = requirements;
             Placement = placement;
             this.cost = cost;
+            local_sprite_blueprint = LOCAL_SPRITEID_BLUEPRINT;
         }
 
         /// <summary>
@@ -87,6 +101,9 @@ namespace TownView
             return WindowTypes.NO_PLAYING_CARD;
         }
 
-
+        public virtual int GetSpriteBlueprintID()
+        {
+            return local_sprite_blueprint + IngameObjectLibrary.GetOffset(CATEGORY);
+        }
     }
 }
