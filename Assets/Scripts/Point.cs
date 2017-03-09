@@ -14,5 +14,11 @@ public class Point
         this.x = x;
         this.y = y;
     }
+
+    public Point(Vector2 v)
+    {
+        x = (int)v.x;
+        y = (int)v.y;
+    }
 }
 
