@@ -52,7 +52,7 @@ public class ResourceReaction : Reaction
     /// <returns>returns true to signal graphical change, true since resource is always picked up</returns>
     public override bool React(Hero h)
     {
-        h.Player.Resources.adjustResource(resourceID, amount);
+        h.Player.Wallet.adjustResource(resourceID, amount);
         // Resource picked up, returned true
         return true;
     }

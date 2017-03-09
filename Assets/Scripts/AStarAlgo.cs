@@ -9,20 +9,24 @@ using System.Linq;
 /// </summary>
 public class AStarAlgo {
 
-
+    const float TURNCOST = 0.05f;
     int[,] canWalk;
     Node[,] nodes;
     int width, height;
     protected bool hex;
     readonly Point[] evenIsometricDirections = {
-        new Point(-1,-1),new Point(0,-2),new Point(0,-1),
-        new Point(-1,0),                   new Point(1,0),
-        new Point(-1,1),new Point(0,2),new Point(0,1)
+                        new Point(0,2),
+        new Point(-1,0),                 new Point(1,0),
+                        new Point(0,-2),
+        new Point(-1,1)                ,new Point(0,1),
+        new Point(-1,-1)                ,new Point(0,-1)
     };
     readonly Point[] oddIsometricDirections = {
-        new Point(0,-1),new Point(0,-2),new Point(1,-1),
-        new Point(-1,0),                   new Point(1,0),
-        new Point(0,1),new Point(0,2),new Point(1,1)
+                        new Point(0,2),
+        new Point(-1,0),                 new Point(1,0),
+                        new Point(0,-2),
+        new Point(0,1)                 ,new Point(1,1),
+        new Point(0,-1)                  ,new Point(1,-1)
     };
 
     /// <summary>
@@ -79,6 +83,7 @@ public class AStarAlgo {
         s.calculateF();
         s.inOpenSet = true;
         s.SetCameFrom(s);
+        s.TravellingDir = -1;
         openSet.Add(s);
 
         // Starts loop that continues until openset is empty or a path has been found
@@ -114,24 +119,35 @@ public class AStarAlgo {
                 // If not in openSet, add to openSet, set where it came from and calculate pathCost
                 if (!neighbour.inOpenSet)
                 {
-                    neighbour.SetGScore(cur.GetGScore() + 1);
+                    float w = 1;
+                    if (cur.TravellingDir != neighbour.TravellingDir) w += TURNCOST;
+                    neighbour.SetGScore(cur.GetGScore() + w);
                     neighbour.calculateH(goal, hex);
                     neighbour.calculateF();
                     neighbour.SetCameFrom(cur);
                     neighbour.inOpenSet = true;
 
+                    //Inserts neighbour node into openset at sorted position
                     int index = Math.Abs(openSet.BinarySearch(neighbour));
-                    //Debug.Log(index + " " + neighbour.GetF() + " " + openSet.Count);
                     if (index >= openSet.Count) openSet.Add(neighbour);
-                    else openSet.Insert(index, neighbour);
+                    else
+                    {
+                        while (index > 0 && openSet[index-1].GetF() == neighbour.GetF())
+                        {
+                            index--;
+                        }
+                        openSet.Insert(index, neighbour);
+                    }
                 }
                 // OpenSet contains node, then check if current path is better.
                 else
                 {
-                    int f = neighbour.calcNewF(cur.GetGScore() + 1);
+                    float w = 1;
+                    if (cur.TravellingDir != neighbour.TravellingDir) w += TURNCOST;
+                    float f = neighbour.calcNewF(cur.GetGScore() + w);
                     if (f < neighbour.GetF())
                     {
-                        neighbour.SetGScore(cur.GetGScore() + 1);
+                        neighbour.SetGScore(cur.GetGScore() + w);
                         neighbour.calculateF();
                         neighbour.SetCameFrom(cur);
                     }
@@ -178,30 +194,26 @@ public class AStarAlgo {
         // array for directions based on that
         if (posY % 2 == 0)
         {
-            foreach (Point v in evenIsometricDirections)
+            for (int i = 0; i < evenIsometricDirections.Length; i++)
             {
-                if (posX + v.x >= 0 && posX + v.x < width
-                    && posY + v.y >= 0 && posY + v.y < height
-				    && (canWalk[posX + (int)v.x, posY + (int)v.y] == MapGenerator.MapMaker.CANWALK
-                    || (canWalk[posX + (int)v.x, posY + (int)v.y] == MapGenerator.MapMaker.TRIGGER
-                    && posX + (int)v.x == goal.x && posY + (int)v.y == goal.y)))
+                Point dir = evenIsometricDirections[i];
+                if (checkCanwalk(posX,posY,goal,dir))
                 {
-                    neighbours[logPos] = nodes[posX + (int)v.x, posY + (int)v.y];
+                    neighbours[logPos] = nodes[posX + dir.x, posY + dir.y];
+                    neighbours[logPos].TravellingDir = i;
                     logPos++;
                 }
             }
         }
         else
         {
-            foreach (Point v in oddIsometricDirections)
+            for (int i = 0; i < oddIsometricDirections.Length; i++)
             {
-                if (posX + v.x >= 0 && posX + v.x < width
-                    && posY + v.y >= 0 && posY + v.y < height
-                    && (canWalk[posX + (int)v.x, posY + (int)v.y] == MapGenerator.MapMaker.CANWALK
-                    || (canWalk[posX + (int)v.x, posY + (int)v.y] == MapGenerator.MapMaker.TRIGGER
-                    && posX + (int)v.x == goal.x && posY + (int)v.y == goal.y)))
+                Point dir = oddIsometricDirections[i];
+                if (checkCanwalk(posX, posY, goal, dir))
                 {
-                    neighbours[logPos] = nodes[posX + (int)v.x, posY + (int)v.y];
+                    neighbours[logPos] = nodes[posX + dir.x, posY + dir.y];
+                    neighbours[logPos].TravellingDir = i;
                     logPos++;
                 }
             }
@@ -248,7 +260,14 @@ public class AStarAlgo {
         return neighbours;
     }
 
-    
+    private bool checkCanwalk(int posX, int posY, Point goal, Point dir)
+    {
+        return (posX + dir.x >= 0 && posX + dir.x < width
+                    && posY + dir.y >= 0 && posY + dir.y < height
+                    && (canWalk[posX + dir.x, posY + dir.y] == MapGenerator.MapMaker.CANWALK
+                    || (canWalk[posX + dir.x, posY + dir.y] == MapGenerator.MapMaker.TRIGGER
+                    && posX + dir.x == goal.x && posY + dir.y == goal.y)));
+    }
 
     /// <summary>
     /// The node class contains it's position, a reference to the node you came from,
@@ -258,9 +277,10 @@ public class AStarAlgo {
     /// </summary>
     public class Node : IComparable<Node>
     {
+        int travellingDir;
         Node cameFrom;
         Point pos;
-        int gScore, hScore, f;
+        float gScore, hScore, f;
         public bool evaluvated, inOpenSet;
 
         public Node(Point pos)
@@ -311,7 +331,7 @@ public class AStarAlgo {
         }
 
         // Calculates the estimated cost of a path trou this node based on given g
-        public int calcNewF(int g)
+        public float calcNewF(float g)
         {
             return g + hScore;
         }
@@ -345,15 +365,15 @@ public class AStarAlgo {
             return pos;
         }
 
-        public int GetGScore()
+        public float GetGScore()
         {
             return gScore;
         }
-        public int GetHScore()
+        public float GetHScore()
         {
             return hScore;
         }
-        public int GetF()
+        public float GetF()
         {
             return f;
         }
@@ -365,22 +385,35 @@ public class AStarAlgo {
         {
             pos = p;
         }
-        public void SetGScore(int g)
+        public void SetGScore(float g)
         {
             gScore = g;
         }
-        public void SetHScore(int h)
+        public void SetHScore(float h)
         {
             hScore = h;
         }
-        public void SetF(int f)
+        public void SetF(float f)
         {
             this.f = f;
         }
 
+        public int TravellingDir
+        {
+            get
+            {
+                return travellingDir;
+            }
+
+            set
+            {
+                travellingDir = value;
+            }
+        }
+
         public int CompareTo(Node n)
         {
-            return f-n.f;
+            return (int)(f*100-n.f*100);
         }
     }
 

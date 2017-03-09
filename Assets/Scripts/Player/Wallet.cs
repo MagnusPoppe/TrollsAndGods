@@ -8,6 +8,22 @@ public class Wallet : Resources
     {
     }
 
+
+    /// <summary>
+    /// Consctructor that sets resource values according to set difficulty
+    /// </summary>
+    /// <param name="difficulty">easy, normal, hard level of difficulty</param>
+    public Wallet(int difficulty)
+    {
+        if (difficulty == 0)
+            resourceTab = new int[] { 15000, 20, 20, 10, 10, 10, 10 };
+        else if (difficulty == 1)
+            resourceTab = new int[] { 10000, 15, 15, 5, 5, 5, 5 };
+        else
+            resourceTab = new int[] { 5000, 10, 10, 0, 0, 0, 0 };
+    }
+
+
     /// <summary>
     /// Method that checks if parameter values is lower or equal to the objects resource values
     /// </summary>

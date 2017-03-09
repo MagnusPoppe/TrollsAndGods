@@ -12,18 +12,9 @@ public class Resources
 
     public enum type { GOLD, WOOD, ORE, CRYSTAL, GEM };
 
-    /// <summary>
-    /// Consctructor that sets resource values according to set difficulty
-    /// </summary>
-    /// <param name="difficulty">easy, normal, hard level of difficulty</param>
-    public Resources(int difficulty)
+    public Resources()
     {
-        if (difficulty == 0)
-            resourceTab = new int[] { 15000, 20, 20, 10, 10, 10, 10 };
-        else if (difficulty == 1)
-            resourceTab = new int[] { 10000, 15, 15, 5, 5, 5, 5 };
-        else
-            resourceTab = new int[] { 5000, 10, 10, 0, 0, 0, 0 };
+        resourceTab = new int[5];
     }
 
     /// <summary>
@@ -42,6 +33,11 @@ public class Resources
     public int GetResource(type i)
     {
         return resourceTab[(int)i];
+    }
+
+    public int GetResource(int i)
+    {
+        return resourceTab[i];
     }
     public void adjustResource(type i, int amount)
     {

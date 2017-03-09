@@ -13,7 +13,7 @@ namespace OverworldObjects
     class UnknownCastle : Castle
     {
         // Shape of the sprite:
-        const int shape = Shapes.CUBE01;
+        const int shape = Shapes.CUBE;
 
         // Unique sprite ID for this castle to be displayed in the overworld map: 
         private const int LOCAL_SPRITE_ID = 0;
