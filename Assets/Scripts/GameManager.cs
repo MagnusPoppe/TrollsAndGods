@@ -2,7 +2,6 @@
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System.Collections.Generic;
-using System.Collections;
 using System;
 using TownView;
 using MapGenerator;

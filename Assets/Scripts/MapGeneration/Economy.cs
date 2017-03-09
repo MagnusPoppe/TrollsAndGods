@@ -1,6 +1,4 @@
-﻿using System;
-using UnityEngine;
-namespace MapGenerator
+﻿namespace MapGenerator
 {
 	public class Economy
 	{

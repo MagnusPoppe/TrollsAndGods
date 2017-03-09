@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class UnitStats : BaseStats {
+﻿public class UnitStats : BaseStats {
 
     int minDamage;
     int maxDamage;

@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class HeroStat : BaseStats
+﻿public class HeroStat : BaseStats
 {
 
     int wisdom;

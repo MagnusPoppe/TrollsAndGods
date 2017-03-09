@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using OverworldObjects;
+﻿using OverworldObjects;
 
 /// <summary>
 /// governs what happens when you interact with a dwelling

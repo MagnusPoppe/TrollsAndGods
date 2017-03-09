@@ -374,7 +374,7 @@ namespace MapGenerator
             bool inRegion = false;
 
             Region prev = regions[0];
-            Point prevPos = new Point(Vector2.zero);
+            Point prevPos = new Point(0,0);
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
