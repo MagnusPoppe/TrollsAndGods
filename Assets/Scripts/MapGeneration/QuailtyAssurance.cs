@@ -1,5 +1,4 @@
-﻿using System;
-using OverworldObjects;
+﻿using OverworldObjects;
 using UnityEngine;
 
 namespace MapGenerator
