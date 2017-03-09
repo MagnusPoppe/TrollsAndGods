@@ -11,6 +11,7 @@ public class Unit	{
     UnitStats unitstats;
     bool haveNotRetaliated;
     bool isRanged = false;
+    int currentHealth;
 
     public Element Element
     {
@@ -103,6 +104,19 @@ public class Unit	{
         }
     }
 
+    public int CurrentHealth
+    {
+        get
+        {
+            return currentHealth;
+        }
+
+        set
+        {
+            currentHealth = value;
+        }
+    }
+
     public Unit(string name,Element element, int tier, int faction, UnitStats unitstats)
     {
         Name = name;
@@ -111,21 +125,7 @@ public class Unit	{
         Faction = faction;
         Unitstats = unitstats;
         HaveNotRetaliated = true;
-    }
-
-    public int attack()
-    {
-        return unitstats.Damage;
-    }
-
-    public int retaliate()
-    {
-        if (HaveNotRetaliated)
-        {
-            return attack();
-            HaveNotRetaliated = false;
-        }
-        else return 0;
+        CurrentHealth = unitstats.Health;
     }
 
     public bool equals(Unit u)

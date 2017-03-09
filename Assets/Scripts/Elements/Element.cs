@@ -6,7 +6,7 @@ public class Element {
 
     public static readonly int MIN = 0;
     public static readonly int NEUTRAL = 1;
-    public readonly int MAX = 2;
+    public static readonly int MAX = 2;
     public static readonly int NRELEMENTS = 7;
 
     public static readonly int FIRE = 0;
@@ -18,6 +18,7 @@ public class Element {
     public static readonly int SLASH = 6;
     
     protected int[] resistances = new int[NRELEMENTS];
+    protected int element;
 
     public Element()
     {
@@ -27,6 +28,11 @@ public class Element {
     public int getElementResistance (int index)
     {
         return resistances[index];
+    }
+
+    public int getElement()
+    {
+        return element;
     }
     
 }
