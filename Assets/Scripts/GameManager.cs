@@ -12,14 +12,13 @@ public class GameManager : MonoBehaviour
 
     public MapMaker mapmaker;
 
-    public Sprite[] groundTiles;
-
     // Loads in camera variables
     Camera mainCamera;
     CameraMovement cameraMovement;
 
 	// ONLY SET FOR USE WITH UNITY EDITOR!
 	public bool CanWalkDebugMode = false;
+    public bool DrawCostalTilesTransitions = true;
 
     public int WIDTH = 64;
     public int HEIGHT = 64;
@@ -567,7 +566,8 @@ public class GameManager : MonoBehaviour
             players, width, height, 40,                     // Map Properites TODO: fjern parameter 40/length 
 			seed, fillpercentWalkable, smoothIterations,    // BinaryMap Properities
 			sites, relaxIterations,                         // Voronoi Properties
-			buildingCount
+			buildingCount,
+            DrawCostalTilesTransitions
 		);
 
         int[,] map = mapmaker.GetMap();

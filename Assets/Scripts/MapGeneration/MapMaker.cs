@@ -77,7 +77,8 @@ namespace MapGenerator
 			int spritecount, string seed, 
 			int fill, int smooth, 
 			int sites, int relax, 
-			int buildingCount
+			int buildingCount,
+            bool coast
 		)
 		{
 			this.width = width;
@@ -93,7 +94,9 @@ namespace MapGenerator
 
             // PLACE TREES IN OCCUPIED AREAS:
             replaceWalls();
-            CreateTransitions();
+
+            if (coast)
+                CreateTransitions();
 
             /*
             Reaction[,] reactions = new Reaction[width, height];
