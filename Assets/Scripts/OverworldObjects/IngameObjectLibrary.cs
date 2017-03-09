@@ -268,7 +268,7 @@ public class IngameObjectLibrary
     // towns-variabler. towns[] holder alle sprites, TOWNS_START er global startverdi for towns sprites, TOWNS_COUNT er antall towns sprites
     Sprite[] towns;
     public const int TOWNS_START = CASTLES_START + CASTLES_COUNT;
-    public const int TOWNS_COUNT = 11;
+    public const int TOWNS_COUNT = 21;
 
     /// <summary>
     /// Initialiserer et array for å holde på alle towns sprites
@@ -287,12 +287,24 @@ public class IngameObjectLibrary
         sprites[4] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Dragon Tower");
         sprites[5] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Troll Cave");
 
-        // viking town blueprint sprites
+        // viking town can build blueprint sprites
         sprites[6] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Town Hall");
         sprites[7] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Pallisade");
         sprites[8] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Temple");
         sprites[9] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Dragon Tower");
         sprites[10] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Troll Cave");
+        // viking town has built sprites
+        sprites[11] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Town Hall HasBought");
+        sprites[12] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Pallisade HasBought");
+        sprites[13] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Temple HasBought");
+        sprites[14] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Dragon Tower HasBought");
+        sprites[15] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Troll Cave HasBought");
+        // viking town can't build sprites
+        sprites[16] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Town Hall NoBuy");
+        sprites[17] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Pallisade NoBuy");
+        sprites[18] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Temple NoBuy");
+        sprites[19] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Dragon Tower NoBuy");
+        sprites[20] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Troll Cave NoBuy");
 
         return sprites;
     }

@@ -122,8 +122,8 @@ public class BuildingOnClick : MonoBehaviour {
 
         // Creates an object with a spriterenderer, sets its position, layer, name and parent
         cardWindow = new GameObject();
-        cardWindow.transform.parent = GameObject.Find("Town").transform;
-        cardWindow.name = "BuildingWindow";
+        cardWindow.transform.parent = GameObject.Find("Canvas").transform;
+        cardWindow.name = "TownCardPanel";
         cardWindow.tag = "toDestroy";
         cardWindow.transform.position = cardWindow.transform.parent.position;
         cardSpriteRenderer = cardWindow.AddComponent<SpriteRenderer>();
@@ -158,48 +158,110 @@ public class BuildingOnClick : MonoBehaviour {
     {
         exitBtnPosition = getUpRightCorner(cardSpriteRenderer);
         // TOOD: get parents order and i++
-        int layer = 1;
-        float offsetX = cardSpriteRenderer.transform.position.x - (cardSpriteRenderer.bounds.size.x / 3);
+        float offsetX = cardSpriteRenderer.transform.position.x - (cardSpriteRenderer.bounds.size.x / 2.5f);
         float offsetY = cardSpriteRenderer.transform.position.y + (cardSpriteRenderer.bounds.size.y / 4);
-        Vector2 previousPosition = new Vector2(offsetX, offsetY);
-        float startX = previousPosition.x;
+        Vector2 nextPosition = new Vector2(offsetX, offsetY);
+        float startX = nextPosition.x;
         // Create the object for each building in Town Hall view
         for (int i = 0; i < town.Buildings.Length; i++)
         {
             // Create the gameobject to see and click on
             GameObject buildingObject = new GameObject();
-            buildingObject.transform.parent = GameObject.Find("Canvas").transform;
+            buildingObject.transform.parent = GameObject.Find("TownCardPanel").transform;
+            buildingObject.transform.position = GameObject.Find("TownCardPanel").transform.position;
             buildingObject.name = town.Buildings[i].Name;
             buildingObject.tag = "toDestroy";
 
-            // Add components to the building
+            // Add components to the gameobject window
             buildingObject.AddComponent<TownHallOnClick>();
             buildingObject.GetComponent<TownHallOnClick>().Building = town.Buildings[i];
             buildingObject.GetComponent<TownHallOnClick>().Town = Town;
             buildingObject.GetComponent<TownHallOnClick>().Player = Player;
 
+            // If it's already purchased or you can't build it, use another sprite, set by an offset
+            int offset = 0;
+            if (town.Buildings[i].Built)
+                offset = town.Buildings.Length;
+            else if (!Player.Wallet.CanPay(town.Buildings[i].Cost) || town.HasBuiltThisRound)
+                offset = town.Buildings.Length * 2;
+
             // Add the picture of the building
             SpriteRenderer spr = buildingObject.AddComponent<SpriteRenderer>();
-            spr.sprite = libs.GetTown(town.Buildings[i].GetSpriteBlueprintID());
-            spr.sortingOrder = layer++;
-            spr.sortingLayerName = "TownInteractive";
+            spr.sprite = libs.GetTown(town.Buildings[i].GetSpriteBlueprintID() + offset);
+            spr.sortingLayerName = "GUI";
 
             // Add the collider to click on to build a building
             BoxCollider2D collider = buildingObject.AddComponent<BoxCollider2D>();
             collider.size = spr.bounds.size;
 
+            // Add text below building
+            GameObject textObject = new GameObject();
+            textObject.transform.parent = GameObject.Find(town.Buildings[i].Name).transform;
+            textObject.transform.localScale = GameObject.Find("Canvas").transform.localScale;
+            textObject.name = town.Buildings[i].Name + " text";
+            Text text = textObject.AddComponent<Text>();
+            text.font = UnityEngine.Resources.Load<Font>("Fonts/ARIAL");
+            text.fontSize = 18;
+            text.text = town.Buildings[i].Name;
+            text.alignment = TextAnchor.UpperCenter;
+            text.color = Color.black;
+
+            // Position icon and text
+            buildingObject.transform.position = nextPosition;
+            textObject.transform.position = new Vector2(buildingObject.transform.position.x, buildingObject.transform.position.y-spr.bounds.size.y);
+
+
+            // Create text and image for every resource next to the icon
+            Vector2 position = new Vector2(buildingObject.transform.position.x + (spr.bounds.size.x / 1.6f), nextPosition.y + spr.bounds.size.y / 2);
+            for (int j = 0; j<town.Buildings[i].Cost.GetResourceTab().Length; j++)
+            {
+                if (town.Buildings[i].Cost.GetResourceTab()[j] != 0)
+                {
+                    GameObject imageObject = new GameObject();
+                    imageObject.transform.parent = GameObject.Find(town.Buildings[i].Name).transform;
+                    imageObject.name = town.Buildings[i].Cost.ResourceToString(i) + "image";
+                    SpriteRenderer sprResource = imageObject.AddComponent<SpriteRenderer>();
+                    string spritePath = "Sprites/UI/gold"; // TODO add to IngameObjectLibrary
+                    if (j == 1)
+                        spritePath = "Sprites/UI/wood";
+                    else if (j == 2)
+                        spritePath = "Sprites/UI/ore";
+                    else if (j == 3)
+                        spritePath = "Sprites/UI/crystal";
+                    else if (j == 4)
+                        spritePath = "Sprites/UI/gem";
+                    sprResource.sprite = UnityEngine.Resources.Load<Sprite>(spritePath);
+                    sprResource.sortingLayerName = "GUI";
+                    
+                    GameObject textCostObject = new GameObject();
+                    textCostObject.transform.parent = GameObject.Find(town.Buildings[i].Name).transform;
+                    textCostObject.transform.localScale = GameObject.Find("Canvas").transform.localScale;
+                    textCostObject.name = town.Buildings[i].Cost.ToString(j);
+                    Text textCost = textCostObject.AddComponent<Text>();
+                    textCost.font = UnityEngine.Resources.Load<Font>("Fonts/ARIAL");
+                    textCost.text = town.Buildings[i].Cost.CostToString(j);
+                    textCost.color = Color.black;
+                    textCost.alignment = TextAnchor.MiddleLeft;
+
+                    imageObject.transform.position = position;
+                    textCostObject.transform.position = new Vector2(position.x + (sprResource.bounds.size.x * 2.3f), position.y);
+                    position = new Vector2(buildingObject.transform.position.x + (spr.bounds.size.x / 1.6f), position.y - sprResource.bounds.size.y);
+
+                }
+            }
             // Calculate the position for the next gameobject
-            float newX = previousPosition.x;
-            float newY = previousPosition.y;
-            buildingObject.transform.position = previousPosition;
-            if (previousPosition.x > cardSpriteRenderer.transform.position.x)
+            float newX = nextPosition.x;
+            float newY = nextPosition.y;
+
+            if (nextPosition.x > cardSpriteRenderer.transform.position.x + spr.bounds.size.x * 1.3f)
             {
                 newX = startX;
-                newY -= (cardSpriteRenderer.bounds.size.y / 2.5f);
+                newY -= (spr.bounds.size.y * 1.5f);
             }
             else
-                newX += (cardSpriteRenderer.bounds.size.x / 3);
-            previousPosition = new Vector2(newX, newY);
+                newX += (spr.bounds.size.x * 1.45f);
+            nextPosition = new Vector2(newX, newY);
+            
         }
     }
 
@@ -228,7 +290,7 @@ public class BuildingOnClick : MonoBehaviour {
         SpriteRenderer sr = exitButton.AddComponent<SpriteRenderer>();
         ExitButton button = new ExitButton();
         sr.sprite = libs.GetUI(button.GetSpriteID());
-        sr.sortingLayerName = "TownInteractive";
+        sr.sortingLayerName = "GUI";
         sr.sortingOrder = cardWindow.GetComponent<SpriteRenderer>().sortingOrder + 1;  
 
         // sets a box collider trigger around the button

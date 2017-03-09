@@ -16,11 +16,11 @@ public class Wallet : Resources
     public Wallet(int difficulty)
     {
         if (difficulty == 0)
-            resourceTab = new int[] { 15000, 20, 20, 10, 10, 10, 10 };
+            ResourceTab = new int[] { 15000, 20, 20, 10, 10, 10, 10 };
         else if (difficulty == 1)
-            resourceTab = new int[] { 10000, 15, 15, 5, 5, 5, 5 };
+            ResourceTab = new int[] { 10000, 15, 15, 5, 5, 5, 5 };
         else
-            resourceTab = new int[] { 5000, 10, 10, 0, 0, 0, 0 };
+            ResourceTab = new int[] { 5000, 10, 10, 0, 0, 0, 0 };
     }
 
 
@@ -35,11 +35,11 @@ public class Wallet : Resources
     /// <returns>true if there is enough resources</returns>
     public bool CanPay(int gold, int wood, int ore, int crystal, int gem)
     {
-        return this.resourceTab[0] >= gold 
-            && this.resourceTab[1] >= wood 
-            && this.resourceTab[2] >= ore 
-            && this.resourceTab[3] >= crystal 
-            && this.resourceTab[4] >= gem;
+        return this.ResourceTab[0] >= gold 
+            && this.ResourceTab[1] >= wood 
+            && this.ResourceTab[2] >= ore 
+            && this.ResourceTab[3] >= crystal 
+            && this.ResourceTab[4] >= gem;
     }
 
     /// <summary>
@@ -49,11 +49,11 @@ public class Wallet : Resources
     /// <param name="cost">Cost.</param>
     public bool CanPay(Cost cost)
     {
-        return this.resourceTab[(int)type.GOLD]     >= cost.GetResource(type.GOLD)
-            && this.resourceTab[(int)type.WOOD]     >= cost.GetResource(type.WOOD)
-            && this.resourceTab[(int)type.ORE]      >= cost.GetResource(type.ORE)
-            && this.resourceTab[(int)type.CRYSTAL]  >= cost.GetResource(type.CRYSTAL)
-            && this.resourceTab[(int)type.GEM]      >= cost.GetResource(type.GEM);
+        return this.ResourceTab[(int)type.GOLD]     >= cost.GetResource(type.GOLD)
+            && this.ResourceTab[(int)type.WOOD]     >= cost.GetResource(type.WOOD)
+            && this.ResourceTab[(int)type.ORE]      >= cost.GetResource(type.ORE)
+            && this.ResourceTab[(int)type.CRYSTAL]  >= cost.GetResource(type.CRYSTAL)
+            && this.ResourceTab[(int)type.GEM]      >= cost.GetResource(type.GEM);
     }
 
     /// <summary>
@@ -64,11 +64,11 @@ public class Wallet : Resources
     {
         if (CanPay(cost))
         {
-            resourceTab[(int)type.GOLD] -= cost.GetResource(type.GOLD);
-            resourceTab[(int)type.WOOD] -= cost.GetResource(type.WOOD);
-            resourceTab[(int)type.ORE] -= cost.GetResource(type.ORE);
-            resourceTab[(int)type.CRYSTAL] -= cost.GetResource(type.CRYSTAL);
-            resourceTab[(int)type.GEM] -= cost.GetResource(type.GEM);
+            ResourceTab[(int)type.GOLD] -= cost.GetResource(type.GOLD);
+            ResourceTab[(int)type.WOOD] -= cost.GetResource(type.WOOD);
+            ResourceTab[(int)type.ORE] -= cost.GetResource(type.ORE);
+            ResourceTab[(int)type.CRYSTAL] -= cost.GetResource(type.CRYSTAL);
+            ResourceTab[(int)type.GEM] -= cost.GetResource(type.GEM);
         }
     }
 }

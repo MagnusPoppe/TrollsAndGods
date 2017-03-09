@@ -32,8 +32,6 @@ namespace TownView
         {
             Building[] buildings = new Building[1];
 
-            buildings[0] = new Tower( );
-
             return buildings;
         } 
 

@@ -18,8 +18,8 @@ public class Cost : Resources {
     /// <returns>Cost*amount</returns>
     public Cost BuyAmount(int amount)
     {
-        return new Cost(resourceTab[(int) type.GOLD] * amount, resourceTab[(int)type.WOOD] * amount, resourceTab[(int)type.ORE] * amount,
-            resourceTab[(int)type.CRYSTAL] * amount, resourceTab[(int)type.GEM] * amount);
+        return new Cost(ResourceTab[(int) type.GOLD] * amount, ResourceTab[(int)type.WOOD] * amount, ResourceTab[(int)type.ORE] * amount,
+            ResourceTab[(int)type.CRYSTAL] * amount, ResourceTab[(int)type.GEM] * amount);
     }
 
     /// <summary>
@@ -31,23 +31,23 @@ public class Cost : Resources {
     {
         int goldOwned = wallet.GetResource(type.GOLD);
         int goldCost = 0;
-        int goldPrUnit = resourceTab[(int)type.GOLD];
+        int goldPrUnit = ResourceTab[(int)type.GOLD];
 
         int woodOwned = wallet.GetResource(type.WOOD);
         int woodCost = 0;
-        int woodPrUnit = resourceTab[(int)type.WOOD];
+        int woodPrUnit = ResourceTab[(int)type.WOOD];
 
         int oreOwned = wallet.GetResource(type.ORE);
         int oreCost = 0;
-        int orePrUnit = resourceTab[(int)type.ORE];
+        int orePrUnit = ResourceTab[(int)type.ORE];
 
         int crystalOwned = wallet.GetResource(type.CRYSTAL);
         int crystalCost = 0;
-        int crystalPrUnit = resourceTab[(int)type.CRYSTAL];
+        int crystalPrUnit = ResourceTab[(int)type.CRYSTAL];
 
         int gemOwned = wallet.GetResource(type.GEM);
         int gemCost = 0;
-        int gemPrUnit = resourceTab[(int)type.GEM];
+        int gemPrUnit = ResourceTab[(int)type.GEM];
 
         int amount = 0;
         bool canPay = true;
@@ -72,5 +72,36 @@ public class Cost : Resources {
         }
 
         return amount;
+    }
+
+    public int[] GetResourceTab()
+    {
+        return resourceTab;
+    }
+
+    public string CostToString(int i)
+    {
+        return GetResourceTab()[i] + "";
+    }
+
+    public string ResourceToString(int i)
+    {
+        String text = " ";
+        if ((int)type.GOLD == i)
+            text += "Gold";
+        else if ((int)type.WOOD == i)
+            text += "Wood";
+        else if ((int)type.ORE == i)
+            text += "Ore";
+        else if ((int)type.CRYSTAL == i)
+            text += "Crystal";
+        else if ((int)type.GEM == i)
+            text += "Gem";
+        return text;
+    }
+
+    public string ToString(int i)
+    {
+        return CostToString(i) + ResourceToString(i);
     }
 }

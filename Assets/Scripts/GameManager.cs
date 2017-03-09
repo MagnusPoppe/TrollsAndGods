@@ -988,7 +988,6 @@ public class GameManager : MonoBehaviour
             getPlayer(whoseTurn).GatherIncome();
             // Update wallet UI
             updateResourceText();
-            Debug.Log(getPlayer(whoseTurn).Wallet.GetResource(0));
         }
     }
 
