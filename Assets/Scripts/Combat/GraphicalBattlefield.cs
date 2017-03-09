@@ -31,6 +31,10 @@ public class GraphicalBattlefield : MonoBehaviour {
             {
                 //Todo keep moving
             }
+            else if (livingAttackers == 0 || livingDefenders == 0)
+            {
+                endCombat();
+            }
         }
 	}
 
@@ -180,6 +184,16 @@ public class GraphicalBattlefield : MonoBehaviour {
                 BeginWalking(path);
                 //todo trigger animation
             }
+        }
+        if (defender.UnitTree.getUnitAmount(defender.PosInUnitTree) == 0)
+        {
+            if (defender.AttackingSide) livingAttackers--;
+            else livingDefenders--;
+        }
+        if (activeUnit.UnitTree.getUnitAmount(activeUnit.PosInUnitTree) == 0)
+        {
+            if (activeUnit.AttackingSide) livingAttackers--;
+            else livingDefenders--;
         }
     }
 
