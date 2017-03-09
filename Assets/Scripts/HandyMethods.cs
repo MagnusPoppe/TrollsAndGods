@@ -101,4 +101,15 @@ public class HandyMethods
     {
         return (point.x - start.x) * (end.y - start.y) - (point.y - start.y) * (end.x - start.x);
     }
+
+    static public int[,] Copy2DArray(int[,] array)
+    {
+        int[,] output = new int[array.GetLength(0), array.GetLength(1)];
+        for (int y = 0; y < array.GetLength(0); y++) {
+            for (int x = 0; x < array.GetLength(1); x++) {
+                output[x, y] = array[x, y];
+            }
+        }
+        return output;
+    }
 }

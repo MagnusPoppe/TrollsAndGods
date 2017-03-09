@@ -11,7 +11,7 @@ public class Hero
     private string name;
     private int faction;
     private Player player;
-    private Unit[] units;
+    private UnitTree units;
     private List<Item> items;
     private Item[] equippedItems;
     private int movementSpeed;
@@ -28,7 +28,7 @@ public class Hero
     public Hero(Player player, Vector2 position)
     {
         Player = player;
-        Units = new Unit[7];
+        Units = new UnitTree();
         Items = new List<Item>();
         EquippedItems = new Item[7];
         Position = position;
@@ -64,7 +64,7 @@ public class Hero
         }
     }
 
-    public Unit[] Units
+    public UnitTree Units
     {
         get
         {
