@@ -6,13 +6,12 @@ using System.Collections;
 using System;
 using TownView;
 using MapGenerator;
+using OverworldObjects;
 
 public class GameManager : MonoBehaviour
 {
 
     public MapMaker mapmaker;
-
-    public Sprite[] groundTiles;
 
     // Loads in camera variables
     Camera mainCamera;
@@ -20,6 +19,7 @@ public class GameManager : MonoBehaviour
 
 	// ONLY SET FOR USE WITH UNITY EDITOR!
 	public bool CanWalkDebugMode = false;
+    public bool DrawCostalTilesTransitions = true;
 
     public int WIDTH = 64;
     public int HEIGHT = 64;
@@ -62,7 +62,7 @@ public class GameManager : MonoBehaviour
     Date date;
 
     // Click listeners
-    const int CLICKSPEED = 20;
+    const int CLICKSPEED = 35;
     bool prepareDoubleClick;
     int clickCount;
     Vector2 savedClickedPos;
@@ -145,7 +145,6 @@ public class GameManager : MonoBehaviour
         mainCamera = tempCameraObject.GetComponent<Camera>();
         cameraMovement = tempCameraObject.GetComponent<CameraMovement>();
         
-
         // Set active Hero
         heroActive = true;
         activeHero = getPlayer(0).Heroes[0];
@@ -243,9 +242,6 @@ public class GameManager : MonoBehaviour
                         activeHero = heroClicked.Hero;
                     }
                 }
-
-                // TODO else if(GUInextTurnClicked)
-                //else if (false)
             }
 
             // Center camera around first hero or castle
@@ -265,7 +261,6 @@ public class GameManager : MonoBehaviour
             {
                 nextTurn();
             }
-
             // Upon every update, activedhero will be moved in a direction if walking is enabled
             if (IsWalking())
             {
@@ -567,7 +562,8 @@ public class GameManager : MonoBehaviour
             players, width, height, 40,                     // Map Properites TODO: fjern parameter 40/length 
 			seed, fillpercentWalkable, smoothIterations,    // BinaryMap Properities
 			sites, relaxIterations,                         // Voronoi Properties
-			buildingCount
+			buildingCount,
+            DrawCostalTilesTransitions
 		);
 
         int[,] map = mapmaker.GetMap();
@@ -616,7 +612,7 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Setting resourcepanel's textboxes to the players resources.
     /// </summary>
-    private void updateResourceText()
+    public void updateResourceText()
     {
         for (int i = 0; i < resourceText.Length; i++)
         {
@@ -868,6 +864,15 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void ExitTown()
+    {
+        overWorldCanvas.SetActive(true);
+        townWindow.SetActive(false);
+        overWorld = true;
+        cameraMovement.enabled = true;
+        DestroyBuildingsInTown();
+    }
+
     /// <summary>
     /// Draws the town view
     /// </summary>
@@ -888,31 +893,35 @@ public class GameManager : MonoBehaviour
         // loads in the town buildings
         for (int i = 0; i < town.Buildings.Length; i++)
         {
-
             // If the building is built, draw it 
             if (town.Buildings[i].Built)
             {
-
-                // Gets parent X,Y and uses offset coords to draw in place
-                Vector2 placement = new Vector2(
-                    townWindow.transform.position.x + town.Buildings[i].Placement.x,
-                    townWindow.transform.position.y + town.Buildings[i].Placement.y
-                );
-
-                // Creates a game object for the building, gives it a name and places and scales it properly
-                string prefabPath = "Prefabs/" + town.Buildings[i].Name;
-                buildingsInActiveTown[i] = Instantiate(UnityEngine.Resources.Load<GameObject>(prefabPath));
-                buildingsInActiveTown[i].transform.position = placement;
-                buildingsInActiveTown[i].transform.localScale = new Vector3(scaleFactor, scaleFactor, 1);
-
-                // CONNECTING GAMEOBJECT WITH BUILDING OBJECT: 
-                Debug.Log(town.Buildings[i].ToString());
-                buildingsInActiveTown[i].GetComponent<BuildingOnClick>().Building = town.Buildings[i];
-                buildingsInActiveTown[i].GetComponent<BuildingOnClick>().BuildingObjects = buildingsInActiveTown;
-
+                DrawBuilding(town, town.Buildings[i], i);
             }
         }
 
+    }
+
+    public void DrawBuilding(Town town, Building building, int i)
+    {
+        float scaleFactor = 0.45f; //TODO: regn ut fra skjerm
+
+        // Gets parent X,Y and uses offset coords to draw in place
+        Vector2 placement = new Vector2(
+            townWindow.transform.position.x + town.Buildings[i].Placement.x,
+            townWindow.transform.position.y + town.Buildings[i].Placement.y
+        );
+        // Creates a game object for the building, gives it a name and places and scales it properly
+        string prefabPath = "Prefabs/" + town.Buildings[i].Name;
+        buildingsInActiveTown[i] = Instantiate(UnityEngine.Resources.Load<GameObject>(prefabPath));
+        buildingsInActiveTown[i].transform.position = placement;
+        buildingsInActiveTown[i].transform.localScale = new Vector3(scaleFactor, scaleFactor, 1);
+
+        // CONNECTING GAMEOBJECT WITH BUILDING OBJECT: 
+        buildingsInActiveTown[i].GetComponent<BuildingOnClick>().Building = town.Buildings[i];
+        buildingsInActiveTown[i].GetComponent<BuildingOnClick>().BuildingObjects = buildingsInActiveTown;
+        buildingsInActiveTown[i].GetComponent<BuildingOnClick>().Town = town;
+        buildingsInActiveTown[i].GetComponent<BuildingOnClick>().Player = getPlayer(whoseTurn);
     }
 
 
@@ -961,7 +970,7 @@ public class GameManager : MonoBehaviour
             {
                activeHero = getPlayer(whoseTurn).Heroes[0];
                activeHeroObject = heroLayer[(int)activeHero.Position.x, (int)activeHero.Position.y];
-                if (activeHero.Path != null)
+                if (activeHero.Path != null && activeHero.Path.Count > 0)
                 {
                     MarkPath(activeHero.Path[activeHero.Path.Count-1]);
                 }
@@ -979,6 +988,7 @@ public class GameManager : MonoBehaviour
             getPlayer(whoseTurn).GatherIncome();
             // Update wallet UI
             updateResourceText();
+            Debug.Log(getPlayer(whoseTurn).Wallet.GetResource(0));
         }
     }
 
@@ -989,7 +999,19 @@ public class GameManager : MonoBehaviour
         {
             whoseTurn = 0;
             dateText.text = date.incrementDay();
+            updateCanBuild();
+
         }
     }
 
+    private void updateCanBuild()
+    {
+        for (int i = 0; i < players.Length; i++)
+        {
+            foreach(Castle castle in getPlayer(i).Castle)
+            {
+                castle.Town.HasBuiltThisRound = false;
+            }
+        }
+    }
 }
