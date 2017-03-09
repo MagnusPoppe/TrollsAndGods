@@ -416,18 +416,4 @@ public class AStarAlgo {
             return (int)(f*100-n.f*100);
         }
     }
-
-    /// <summary>
-    /// simple class to handle x,y coordinates.
-    /// </summary>
-    public class Point
-    {
-        public int x,y;
-
-        public Point(int x, int y)
-        {
-            this.x = x;
-            this.y = y;
-        }
-    }
 }
