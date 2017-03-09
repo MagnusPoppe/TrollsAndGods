@@ -11,6 +11,7 @@ public class BattleField {
     int width, height;
     AStarAlgo aStar;
     Hero attacker, defender;
+    UnitTree attackingUnits, defendingUnits;
     UnitAndAmount[,] unitsPos;
 
     /// <summary>
@@ -30,19 +31,22 @@ public class BattleField {
         CanWalk = canWalk;
         aStar = new AStarAlgo(canWalk, width, height, true);
 
-        Unit[] attackingUnits = attacker.Units.GetUnits();
-        Unit[] defendingUnits = defender.Units.GetUnits();
+        attackingUnits = attacker.Units;
+        defendingUnits = defender.Units;
+
+        Unit[] attackingUnitsTab = attackingUnits.GetUnits();
+        Unit[] defendingUnitsTab = defendingUnits.GetUnits();
 
         int increment = height / UnitTree.TREESIZE;
         int place = 0;
         for (int i = 0; i < UnitTree.TREESIZE; i++)
         {
-            if (attackingUnits[i] != null)
+            if (attackingUnitsTab[i] != null)
             {
                 UnitAndAmount atroop = new UnitAndAmount(attacker.Units, i);
                 unitsPos[0, place] = atroop;
             }
-            if (defendingUnits[i] != null)
+            if (defendingUnitsTab[i] != null)
             {
                 UnitAndAmount dtroop = new UnitAndAmount(defender.Units, i);
                 unitsPos[width-1, place] = dtroop;
@@ -69,14 +73,23 @@ public class BattleField {
         CanWalk = canWalk;
         aStar = new AStarAlgo(canWalk, width, height, true);
 
+        Unit[] attackingUnits = attacker.Units.GetUnits();
+        Unit[] defendingUnits = defender.GetUnits();
+
         int increment = height / UnitTree.TREESIZE;
         int place = 0;
         for (int i = 0; i < UnitTree.TREESIZE; i++)
         {
-            UnitAndAmount atroop = new UnitAndAmount(attacker.Units, i);
-            UnitAndAmount dtroop = new UnitAndAmount(defender, i);
-            unitsPos[0, place] = atroop;
-            unitsPos[width - 1, place] = dtroop;
+            if (attackingUnits[i] != null)
+            {
+                UnitAndAmount atroop = new UnitAndAmount(attacker.Units, i);
+                unitsPos[0, place] = atroop;
+            }
+            if (defendingUnits[i] != null)
+            {
+                UnitAndAmount dtroop = new UnitAndAmount(defender, i);
+                unitsPos[width - 1, place] = dtroop;
+            }
             place += increment;
         }
     }
@@ -88,15 +101,15 @@ public class BattleField {
     /// <param name="goal">Goal position</param>
     /// <param name="attackedUnitPos">Position of unit to be attacked</param>
     /// <returns>List with movement path, null if no path</returns>
-    public List<Vector2> UnitMoveAndAttack(Vector2 start, Vector2 goal, Vector2 attackedUnitPos)
+    public List<Vector2> UnitMoveAndAttack(Point start, Point goal, Point attackedUnitPos)
     {
         List<Vector2> path = aStar.calculate(start, goal);
         if (path.Count != 0)
         {
-            unitsPos[(int)goal.x, (int)goal.y] = unitsPos[(int)start.x, (int)start.y];
-            unitsPos[(int)start.x, (int)start.y] = null;
-            UnitAndAmount attackingUnits = unitsPos[(int)goal.x, (int)goal.y];
-            UnitAndAmount defendingUnits = unitsPos[(int)attackedUnitPos.x, (int)attackedUnitPos.y];
+            unitsPos[goal.x, goal.y] = unitsPos[start.x, start.y];
+            unitsPos[start.x, start.y] = null;
+            UnitAndAmount attackingUnits = unitsPos[goal.x, goal.y];
+            UnitAndAmount defendingUnits = unitsPos[attackedUnitPos.x, attackedUnitPos.y];
             attackingUnits.dealDamage(defendingUnits,false);
             if (defendingUnits.Unit.HaveNotRetaliated && defendingUnits.Amount > 0)
             {
@@ -115,10 +128,10 @@ public class BattleField {
     /// </summary>
     /// <param name="attackingUnitPos">Position of attacking unit</param>
     /// <param name="defendingUnitPos">Position of defending unit</param>
-    public void attackWithoutMoving (Vector2 attackingUnitPos, Vector2 defendingUnitPos, bool ranged)
+    public void attackWithoutMoving (Point attackingUnitPos, Point defendingUnitPos, bool ranged)
     {
-        UnitAndAmount attackingUnits = unitsPos[(int)attackingUnitPos.x, (int)attackingUnitPos.y];
-        UnitAndAmount defendingUnits = unitsPos[(int)defendingUnitPos.x, (int)defendingUnitPos.y];
+        UnitAndAmount attackingUnits = unitsPos[attackingUnitPos.x, attackingUnitPos.y];
+        UnitAndAmount defendingUnits = unitsPos[defendingUnitPos.x, defendingUnitPos.y];
         attackingUnits.dealDamage(defendingUnits, ranged);
         if (defendingUnits.Unit.HaveNotRetaliated && defendingUnits.Amount > 0 && !ranged)
         {
@@ -127,6 +140,21 @@ public class BattleField {
         }
         if (attackingUnits.Amount < 0) attackingUnits.Amount = 0;
         if (defendingUnits.Amount < 0) defendingUnits.Amount = 0;
+    }
+
+    public void endCombat()
+    {
+        for (int i = 0; i<UnitTree.TREESIZE; i++)
+        {
+            if (attackingUnits.GetUnits()[i] != null && attackingUnits.getUnitAmount(i) == 0)
+            {
+                attackingUnits.removeUnit(i);
+            }
+            if (defendingUnits.GetUnits()[i] != null && defendingUnits.getUnitAmount(i) == 0)
+            {
+                defendingUnits.removeUnit(i);
+            }
+        }
     }
 
     public int[,] CanWalk
@@ -212,6 +240,8 @@ public class BattleField {
     /// </summary>
     private class UnitAndAmount
     {
+        UnitTree unitTree;
+        int posInUnitTree;
         Unit unit;
         int amount;
 
@@ -222,6 +252,8 @@ public class BattleField {
         /// <param name="i">Index of unit in UnitTree</param>
         public UnitAndAmount(UnitTree ut, int i)
         {
+            UnitTree = ut;
+            posInUnitTree = i;
             Unit = ut.GetUnits()[i];
             Amount = ut.getUnitAmount(i);
         }
@@ -267,6 +299,7 @@ public class BattleField {
             //Applies damage and kills units.
             int killedUnits = totalDamage / defendingUnits.Unit.Unitstats.Health;
             defendingUnits.Amount -= killedUnits;
+            defendingUnits.UnitTree.changeAmount(-killedUnits, PosInUnitTree);
             defendingUnits.unit.CurrentHealth -= totalDamage % defendingUnits.Unit.Unitstats.Health;
             if (defendingUnits.unit.CurrentHealth <= 0)
             {
@@ -298,6 +331,32 @@ public class BattleField {
             set
             {
                 amount = value;
+            }
+        }
+
+        public UnitTree UnitTree
+        {
+            get
+            {
+                return unitTree;
+            }
+
+            set
+            {
+                unitTree = value;
+            }
+        }
+
+        public int PosInUnitTree
+        {
+            get
+            {
+                return posInUnitTree;
+            }
+
+            set
+            {
+                posInUnitTree = value;
             }
         }
     }
