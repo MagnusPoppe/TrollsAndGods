@@ -1,7 +1,5 @@
-﻿using System;
-using OverworldObjects;
+﻿using OverworldObjects;
 using TownView;
-using UnityEngine;
 
 namespace OverworldObjects
 {

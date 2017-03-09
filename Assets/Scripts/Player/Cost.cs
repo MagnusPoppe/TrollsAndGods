@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-/// <summary>
+﻿/// <summary>
 /// class for handlig how much a unit or a building costs.
 /// </summary>
 public class Cost : Resources {

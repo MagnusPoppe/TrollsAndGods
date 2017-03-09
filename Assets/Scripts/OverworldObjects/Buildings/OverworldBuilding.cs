@@ -1,6 +1,4 @@
-﻿using System;
-using UnityEngine;
-using OverworldObjects;
+﻿using OverworldObjects;
 
 namespace OverworldObjects
 {

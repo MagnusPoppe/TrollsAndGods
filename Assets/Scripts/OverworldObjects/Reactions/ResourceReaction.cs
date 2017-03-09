@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-/// <summary>
+﻿/// <summary>
 /// governs what happens when interacting with a resource pickup
 /// </summary>
 public class ResourceReaction : Reaction

@@ -1,8 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 using OverworldObjects;
-using TownView;
 
 /// <summary>
 /// Player class that holds everything corresponding to the players values and actions.

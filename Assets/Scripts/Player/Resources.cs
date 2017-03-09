@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-/// <summary>
+﻿/// <summary>
 /// Class that holds resource values for heroes, resource costs for buildings and units.
 /// It is used to check if the player can afford actions, and updates his values.
 /// </summary>

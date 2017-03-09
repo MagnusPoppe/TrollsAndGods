@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace TownView
+﻿namespace TownView
 {
     /// <summary>
     /// Placeholder town. Used as a template for a spesific town.
