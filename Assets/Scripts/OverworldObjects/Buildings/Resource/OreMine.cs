@@ -6,7 +6,7 @@ namespace OverworldObjects
 {
 	public class OreMine : ResourceBuilding
 	{
-		const int SHAPE = Shapes.CUBE01;
+		const int SHAPE = Shapes.CUBE;
         private const int LOCAL_SPRITE_ID = 0;
         const IngameObjectLibrary.Category SPRITE_CATEGORY = IngameObjectLibrary.Category.ResourceBuildings;
         const Resources.type RESOURCE_ID = Resources.type.ORE;
