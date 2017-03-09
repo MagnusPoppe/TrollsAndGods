@@ -12,6 +12,8 @@ public class BuildingOnClick : MonoBehaviour {
     
     IngameObjectLibrary libs;
     SpriteSystem spriteSystem;
+    SpriteRenderer cardSpriteRenderer;
+    Vector2 exitBtnPosition;
 
     GameObject cardWindow;
     GameObject exitButton;
@@ -79,6 +81,7 @@ public class BuildingOnClick : MonoBehaviour {
 
     }
 
+    // Fade effet when hovering a building in the town view
     private void OnMouseOver()
     {
         if (add > 0.6f)
@@ -94,9 +97,7 @@ public class BuildingOnClick : MonoBehaviour {
     {
         OpenWindow(Building);
     }
-
-    // TODO move all castle listeners to this update
-    // TODO townHallOnClick's town.building = built
+    
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -125,9 +126,9 @@ public class BuildingOnClick : MonoBehaviour {
         cardWindow.name = "BuildingWindow";
         cardWindow.tag = "toDestroy";
         cardWindow.transform.position = cardWindow.transform.parent.position;
-        SpriteRenderer sr = cardWindow.AddComponent<SpriteRenderer>();
-        sr.sprite = libs.GetUI(card.GetSpriteID());
-        sr.sortingLayerName = "TownInteractive";
+        cardSpriteRenderer = cardWindow.AddComponent<SpriteRenderer>();
+        cardSpriteRenderer.sprite = libs.GetUI(card.GetSpriteID());
+        cardSpriteRenderer.sortingLayerName = "TownInteractive";
 
         // disables colliders in other layers when window is open
         for (int i = 0; i < BuildingObjects.Length; i++)
@@ -137,76 +138,79 @@ public class BuildingOnClick : MonoBehaviour {
                 BuildingObjects[i].GetComponent<PolygonCollider2D>().enabled = false;
         }
 
-        Vector2 exitBtnPosition = cardWindow.transform.parent.position;
+        exitBtnPosition = cardWindow.transform.parent.position;
 
 
+        // Lage townhall building
         if (windowType == WindowTypes.TOWN_HALL_CARD)
         {
-            exitBtnPosition = getUpRightCorner(sr);
-            // TOOD: get parents order and i++
-            int layer = 1;
-            float offsetX = sr.transform.position.x - (sr.bounds.size.x/3);
-            float offsetY = sr.transform.position.y + (sr.bounds.size.y/4);
-            Vector2 previousPosition = new Vector2(offsetX, offsetY);
-            float startX = previousPosition.x;
-            for (int i=0; i<town.Buildings.Length; i++)
-            {
-                GameObject buildingObject = new GameObject();
-                buildingObject.transform.parent = GameObject.Find("Canvas").transform;
-                buildingObject.name = town.Buildings[i].Name;
-                buildingObject.tag = "toDestroy";
-
-                buildingObject.AddComponent<TownHallOnClick>();
-                buildingObject.GetComponent<TownHallOnClick>().Building = town.Buildings[i];
-                buildingObject.GetComponent<TownHallOnClick>().Town = Town;
-                buildingObject.GetComponent<TownHallOnClick>().Player = Player;
-
-                /*
-                Text text = buildingObject.AddComponent<Text>();
-                text.text = town.Buildings[i].Name;
-                text.font = UnityEngine.Resources.Load<Font>("Font/ARIAL");
-                */
-
-                /*
-                GameObject textObject = new GameObject();
-                Text text = textObject.AddComponent<Text>();
-                text.text = town.Buildings[i].Name;
-                text.font = UnityEngine.Resources.Load<Font>("Font/ARIAL");
-                textObject.transform.parent = buildingObject.transform;
-                textObject.transform.position = previousPosition;
-                textObject.tag = "toDestroy";
-                */
-
-                SpriteRenderer spr = buildingObject.AddComponent<SpriteRenderer>();
-                spr.sprite = libs.GetTown(town.Buildings[i].GetSpriteBlueprintID());
-                spr.sortingOrder = layer++;
-                spr.sortingLayerName = "TownInteractive";
-                
-                BoxCollider2D collider = buildingObject.AddComponent<BoxCollider2D>();
-                collider.size = spr.bounds.size;
-
-
-
-                float newX = previousPosition.x;
-                Debug.Log(newX);
-                float newY = previousPosition.y;
-                buildingObject.transform.position = previousPosition;
-                if (previousPosition.x > sr.transform.position.x)
-                {
-                    newX = startX;
-                    newY -= (sr.bounds.size.y / 2.5f);
-                }
-                else
-                    newX += (sr.bounds.size.x / 3);
-                previousPosition = new Vector2(newX, newY);
-            }
+            CreateTownHallView();
         }
+
         CreateExitButton(exitBtnPosition);
     }
 
+    /// <summary>
+    /// General method for all TownHall-type buildings to build their view, consisitng of all the buildings this tonw type can build
+    /// and displaying whether they're buildable, unbuildable or already built.
+    /// </summary>
+    private void CreateTownHallView()
+    {
+        exitBtnPosition = getUpRightCorner(cardSpriteRenderer);
+        // TOOD: get parents order and i++
+        int layer = 1;
+        float offsetX = cardSpriteRenderer.transform.position.x - (cardSpriteRenderer.bounds.size.x / 3);
+        float offsetY = cardSpriteRenderer.transform.position.y + (cardSpriteRenderer.bounds.size.y / 4);
+        Vector2 previousPosition = new Vector2(offsetX, offsetY);
+        float startX = previousPosition.x;
+        // Create the object for each building in Town Hall view
+        for (int i = 0; i < town.Buildings.Length; i++)
+        {
+            // Create the gameobject to see and click on
+            GameObject buildingObject = new GameObject();
+            buildingObject.transform.parent = GameObject.Find("Canvas").transform;
+            buildingObject.name = town.Buildings[i].Name;
+            buildingObject.tag = "toDestroy";
+
+            // Add components to the building
+            buildingObject.AddComponent<TownHallOnClick>();
+            buildingObject.GetComponent<TownHallOnClick>().Building = town.Buildings[i];
+            buildingObject.GetComponent<TownHallOnClick>().Town = Town;
+            buildingObject.GetComponent<TownHallOnClick>().Player = Player;
+
+            // Add the picture of the building
+            SpriteRenderer spr = buildingObject.AddComponent<SpriteRenderer>();
+            spr.sprite = libs.GetTown(town.Buildings[i].GetSpriteBlueprintID());
+            spr.sortingOrder = layer++;
+            spr.sortingLayerName = "TownInteractive";
+
+            // Add the collider to click on to build a building
+            BoxCollider2D collider = buildingObject.AddComponent<BoxCollider2D>();
+            collider.size = spr.bounds.size;
+
+            // Calculate the position for the next gameobject
+            float newX = previousPosition.x;
+            float newY = previousPosition.y;
+            buildingObject.transform.position = previousPosition;
+            if (previousPosition.x > cardSpriteRenderer.transform.position.x)
+            {
+                newX = startX;
+                newY -= (cardSpriteRenderer.bounds.size.y / 2.5f);
+            }
+            else
+                newX += (cardSpriteRenderer.bounds.size.x / 3);
+            previousPosition = new Vector2(newX, newY);
+        }
+    }
+
+    /// <summary>
+    /// Gets the upper right corner of the current building card.
+    /// </summary>
+    /// <param name="sr">The sprite renderer to get the bounds from</param>
+    /// <returns></returns>
     private Vector2 getUpRightCorner(SpriteRenderer sr)
     {
-        return new Vector2(sr.transform.position.x + (sr.bounds.size.x / 2.2f), sr.transform.position.y + (sr.bounds.size.y / 2.2f));
+        return new Vector2(sr.transform.position.x + (sr.bounds.size.x / 2.15f), sr.transform.position.y + (sr.bounds.size.y / 2.2f));
     }
     
     /// <summary>
@@ -222,7 +226,8 @@ public class BuildingOnClick : MonoBehaviour {
 
         // Attaches a sprite renderer, sets spriet, sorting layer and sorting order
         SpriteRenderer sr = exitButton.AddComponent<SpriteRenderer>();
-        sr.sprite = libs.GetDebugSprite(3);
+        ExitButton button = new ExitButton();
+        sr.sprite = libs.GetUI(button.GetSpriteID());
         sr.sortingLayerName = "TownInteractive";
         sr.sortingOrder = cardWindow.GetComponent<SpriteRenderer>().sortingOrder + 1;  
 

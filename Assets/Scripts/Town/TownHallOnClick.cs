@@ -62,26 +62,29 @@ class TownHallOnClick : MonoBehaviour
     // Destroys all the given game objects and returns to the town screen
     void OnMouseDown()
     {
-        Debug.Log("Buy " + Building.Name);
-
-        // CHECKLIST
-        if (!Town.HasBuiltThisRound && Player.Wallet.CanPay(Building.Cost))
+        // Build building if town has not already built that day, player can pay, and building is not built already
+        if (!Town.HasBuiltThisRound && Player.Wallet.CanPay(Building.Cost) && !Building.Built)
         {
-            Debug.Log("Du kan kjøpe!");
-            //town.Buildings[i].Build();
-            Debug.Log("Du kjøpte...");
+            // Player pays
             Player.Wallet.Pay(Building.Cost);
-            Debug.Log(building.Cost.GetResource(0));
             town.HasBuiltThisRound = true;
             gm.updateResourceText();
+        
+            // Find the building in the town's list, build it and draw it in the view
+            for(int i=0; i<town.Buildings.Length; i++)
+            {
+                if (town.Buildings[i].Equals(Building))
+                {
+                    Debug.Log("YOU BOUGHT: " + building.Name); // TODO remove
+                    town.Buildings[i].Build();
+                    gm.DrawBuilding(town, building, i);
+                    return;
+                }
+            }
         }
         else
         {
-            Debug.Log("Du kan ikke kjøpe :(");
+            Debug.Log("YOU DO NOT HAVE THE SUFFICIENT ECONOMICAL WEALTH TO PRODUCE THE STRUCTURE OF CHOICE: " + building.Name); // TODO remove
         }
-        // check if town has built this turn
-        // check if player can pay
-            
-
     }
 }

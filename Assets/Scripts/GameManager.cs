@@ -6,6 +6,7 @@ using System.Collections;
 using System;
 using TownView;
 using MapGenerator;
+using OverworldObjects;
 
 public class GameManager : MonoBehaviour
 {
@@ -895,27 +896,32 @@ public class GameManager : MonoBehaviour
             // If the building is built, draw it 
             if (town.Buildings[i].Built)
             {
-                // Gets parent X,Y and uses offset coords to draw in place
-                Vector2 placement = new Vector2(
-                    townWindow.transform.position.x + town.Buildings[i].Placement.x,
-                    townWindow.transform.position.y + town.Buildings[i].Placement.y
-                );
-                Debug.Log(i + " - " + town.Buildings[i].Name);
-                // Creates a game object for the building, gives it a name and places and scales it properly
-                string prefabPath = "Prefabs/" + town.Buildings[i].Name;
-                buildingsInActiveTown[i] = Instantiate(UnityEngine.Resources.Load<GameObject>(prefabPath));
-                buildingsInActiveTown[i].transform.position = placement;
-                buildingsInActiveTown[i].transform.localScale = new Vector3(scaleFactor, scaleFactor, 1);
-
-                // CONNECTING GAMEOBJECT WITH BUILDING OBJECT: 
-                buildingsInActiveTown[i].GetComponent<BuildingOnClick>().Building = town.Buildings[i];
-                buildingsInActiveTown[i].GetComponent<BuildingOnClick>().BuildingObjects = buildingsInActiveTown;
-                buildingsInActiveTown[i].GetComponent<BuildingOnClick>().Town = town;
-                buildingsInActiveTown[i].GetComponent<BuildingOnClick>().Player = getPlayer(whoseTurn);
-
+                DrawBuilding(town, town.Buildings[i], i);
             }
         }
 
+    }
+
+    public void DrawBuilding(Town town, Building building, int i)
+    {
+        float scaleFactor = 0.45f; //TODO: regn ut fra skjerm
+
+        // Gets parent X,Y and uses offset coords to draw in place
+        Vector2 placement = new Vector2(
+            townWindow.transform.position.x + town.Buildings[i].Placement.x,
+            townWindow.transform.position.y + town.Buildings[i].Placement.y
+        );
+        // Creates a game object for the building, gives it a name and places and scales it properly
+        string prefabPath = "Prefabs/" + town.Buildings[i].Name;
+        buildingsInActiveTown[i] = Instantiate(UnityEngine.Resources.Load<GameObject>(prefabPath));
+        buildingsInActiveTown[i].transform.position = placement;
+        buildingsInActiveTown[i].transform.localScale = new Vector3(scaleFactor, scaleFactor, 1);
+
+        // CONNECTING GAMEOBJECT WITH BUILDING OBJECT: 
+        buildingsInActiveTown[i].GetComponent<BuildingOnClick>().Building = town.Buildings[i];
+        buildingsInActiveTown[i].GetComponent<BuildingOnClick>().BuildingObjects = buildingsInActiveTown;
+        buildingsInActiveTown[i].GetComponent<BuildingOnClick>().Town = town;
+        buildingsInActiveTown[i].GetComponent<BuildingOnClick>().Player = getPlayer(whoseTurn);
     }
 
 
@@ -982,6 +988,7 @@ public class GameManager : MonoBehaviour
             getPlayer(whoseTurn).GatherIncome();
             // Update wallet UI
             updateResourceText();
+            Debug.Log(getPlayer(whoseTurn).Wallet.GetResource(0));
         }
     }
 
@@ -992,7 +999,19 @@ public class GameManager : MonoBehaviour
         {
             whoseTurn = 0;
             dateText.text = date.incrementDay();
+            updateCanBuild();
+
         }
     }
 
+    private void updateCanBuild()
+    {
+        for (int i = 0; i < players.Length; i++)
+        {
+            foreach(Castle castle in getPlayer(i).Castle)
+            {
+                castle.Town.HasBuiltThisRound = false;
+            }
+        }
+    }
 }

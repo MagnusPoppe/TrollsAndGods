@@ -16,7 +16,7 @@ namespace TownView
         protected Cost cost;
         private Vector2 placement;
         private int local_sprite_blueprint;
-        private const IngameObjectLibrary.Category CATEGORY = IngameObjectLibrary.Category.Town; // TODO: ny kategori for town buildings
+        private const IngameObjectLibrary.Category CATEGORY = IngameObjectLibrary.Category.Town;
 
 
 

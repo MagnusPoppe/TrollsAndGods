@@ -315,7 +315,7 @@ public class IngameObjectLibrary
         // TODO: temp has duplicates to correspond to WINDOW TYPES
         sprites[0] = UnityEngine.Resources.Load<Sprite>(path + "card_template");
         sprites[1] = UnityEngine.Resources.Load<Sprite>(path + "card_template2");
-        sprites[2] = sprites[0];
+        sprites[2] = UnityEngine.Resources.Load<Sprite>(path + "exit");
         return sprites;
     }
 
