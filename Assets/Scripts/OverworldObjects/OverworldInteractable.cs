@@ -5,9 +5,9 @@ namespace OverworldObjects
 {
 	public class OverworldInteractable : SpriteSystem
 	{
-        private Vector2 origo;
+        private Point origo;
 
-        public Vector2 Origo
+        public Point Origo
         {
             get
             {
@@ -20,7 +20,7 @@ namespace OverworldObjects
             }
         }
 
-        public OverworldInteractable( Vector2 origo, IngameObjectLibrary.Category category, int localSpriteID ) : base(localSpriteID, category)
+        public OverworldInteractable( Point origo, IngameObjectLibrary.Category category, int localSpriteID ) : base(localSpriteID, category)
 		{
 			Origo = origo;
 		}

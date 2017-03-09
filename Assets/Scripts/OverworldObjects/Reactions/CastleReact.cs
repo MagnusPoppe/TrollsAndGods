@@ -11,7 +11,7 @@ public class CastleReact : Reaction {
     Castle castle;
     GameManager gm;
 
-    public CastleReact(Castle castle, Vector2 pos)
+    public CastleReact(Castle castle, Point pos)
     {
         Castle = castle;
         Pos = pos;

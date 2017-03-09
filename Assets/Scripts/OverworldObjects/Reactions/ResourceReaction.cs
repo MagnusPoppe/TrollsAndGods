@@ -38,7 +38,7 @@ public class ResourceReaction : Reaction
         }
     }
 
-    public ResourceReaction(Resources.type resID, int amount, Vector2 pos)
+    public ResourceReaction(Resources.type resID, int amount, Point pos)
     {
         ResourceID = resID;
         Amount = amount;

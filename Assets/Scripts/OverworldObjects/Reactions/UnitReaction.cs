@@ -10,7 +10,7 @@ public class UnitReaction : Reaction {
 
     UnitTree units;
 
-    public UnitReaction(UnitTree units, Vector2 pos)
+    public UnitReaction(UnitTree units, Point pos)
     {
         Units = units;
         Pos = pos;

@@ -19,7 +19,7 @@ namespace MapGenerator
 		/// </summary>
 		/// <param name="voronoiMap">Voronoi map.</param>
 		/// <param name="seeds">Seeds.</param>
-		public RegionFill(int[,] voronoiMap, Vector2[] seeds)
+		public RegionFill(int[,] voronoiMap, Point[] seeds)
         {
             this.map = voronoiMap;
 
@@ -32,7 +32,7 @@ namespace MapGenerator
             int label = DEFAULT_LABEL_START;
             for (int i = 0; i < seeds.Length; i++)
 			{
-				if (map[(int)seeds[i].x,(int)seeds[i].y] == 0) //UNMARKED
+				if (map[seeds[i].x, seeds[i].y] == 0) //UNMARKED
                 {
                      FloodFill(seeds[i], label++);
                 }
@@ -68,9 +68,9 @@ namespace MapGenerator
 		/// </summary>
 		/// <param name="seed">Seed.</param>
 		/// <param name="label">Label for the point.</param>
-		void FloodFill(Vector2 seed, int label)
+        void FloodFill(Point seed, int label)
 		{
-			Queue<Vector2> queue = new Queue<Vector2>();
+			Queue<Point> queue = new Queue<Point>();
 			queue.Enqueue(seed);
 
 			Fill(queue, label);
@@ -84,8 +84,8 @@ namespace MapGenerator
 		/// <param name="label">Label for the point.</param>
 		void FloodFill( int x, int y, int label )
         {
-            Queue<Vector2> queue = new Queue<Vector2>();
-            queue.Enqueue(new Vector2(x, y));
+            Queue<Point> queue = new Queue<Point>();
+            queue.Enqueue(new Point(x, y));
 
 			Fill(queue, label);
         }
@@ -96,15 +96,15 @@ namespace MapGenerator
 		/// </summary>
 		/// <param name="queue">Queue.</param>
 		/// <param name="label">Label.</param>
-		private void Fill(Queue<Vector2> queue, int label)
+		private void Fill(Queue<Point> queue, int label)
 		{
-			List<Vector2> region = new List<Vector2>();
-			Vector2 center = queue.Peek();
+			List<Point> region = new List<Point>();
+			Point center = queue.Peek();
 
 			while (queue.Count != 0)
 			{
 				
-				Vector2 current = queue.Dequeue();
+				Point current = queue.Dequeue();
 				int x = (int)current.x;
 				int y = (int)current.y;
 
@@ -121,10 +121,10 @@ namespace MapGenerator
 						region.Add(current);
 
 						// Adding neighbours to queue
-						queue.Enqueue(new Vector2(x - 1, y));
-						queue.Enqueue(new Vector2(x + 1, y));
-						queue.Enqueue(new Vector2(x, y - 1));
-						queue.Enqueue(new Vector2(x, y + 1));
+                        queue.Enqueue(new Point(x - 1, y));
+                        queue.Enqueue(new Point(x + 1, y));
+                        queue.Enqueue(new Point(x, y - 1));
+                        queue.Enqueue(new Point(x, y + 1));
 					}
 				}
  			}

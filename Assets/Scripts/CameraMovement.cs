@@ -45,7 +45,7 @@ public class CameraMovement : MonoBehaviour
         cameraWidth /= 2;
 
         // At start, center camera at player1's first hero
-        centerCamera(HandyMethods.getGraphicPosForIso(gm.activeHero.Position));
+        centerCamera(HandyMethods.getGraphicPosForIso(gm.activeHero.Position.ToVector2()));
     }
 	
     /// <summary>

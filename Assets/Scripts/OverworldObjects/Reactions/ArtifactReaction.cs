@@ -37,7 +37,7 @@ public class ArtifactReaction : Reaction {
         }
     }
 
-    public ArtifactReaction(Item artifact, Vector2 pos)
+    public ArtifactReaction(Item artifact, Point pos)
     {
         Artifact = artifact;
         Pos = pos;

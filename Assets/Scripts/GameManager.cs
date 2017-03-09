@@ -253,7 +253,7 @@ public class GameManager : MonoBehaviour
                 }
                 else
                 {
-                    cameraMovement.centerCamera(getPlayer(whoseTurn).Castle[0].GetPosition());
+                    cameraMovement.centerCamera(getPlayer(whoseTurn).Castle[0].GetPosition().ToVector2());
                 }
             }
             // Nextturn by enter
@@ -302,7 +302,7 @@ public class GameManager : MonoBehaviour
                     // Stop the movement when amount of tiles moved has reached the limit, or walking is disabled
                     if (IsLastStep(stepNumber))
                     {
-                        Vector2 fromPosition = activeHero.Position;
+                        Vector2 fromPosition = activeHero.Position.ToVector2();
                         // Set hero position when he stops walking to his isometric position
                         activeHero.Position = HandyMethods.getIsoTilePos(activeHeroObject.transform.position);
                         activeHero.CurMovementSpeed -= stepNumber;
@@ -447,7 +447,7 @@ public class GameManager : MonoBehaviour
         // Needs to clear existing objects if an earlier path was already made
         RemoveMarkers(pathObjects);
         // Call algorithm method that returns a list of Vector2 positions to the point, go through all objects
-        activeHero.Path = aStar.calculate(activeHero.Position, pos);
+        activeHero.Path = aStar.calculate(activeHero.Position.ToVector2(), pos);
         DrawPath(activeHero.Path);
         return pathObjects;
     }
@@ -982,7 +982,7 @@ public class GameManager : MonoBehaviour
                 activeHero = null;
                 activeHeroObject = null;
                 // Center camera to the upcoming players first castle
-                cameraMovement.centerCamera(HandyMethods.getGraphicPosForIso(getPlayer(whoseTurn).Castle[0].GetPosition()));
+                cameraMovement.centerCamera(HandyMethods.getGraphicPosForIso(getPlayer(whoseTurn).Castle[0].GetPosition().ToVector2()));
             }
             // Gathert income for the upcoming player
             getPlayer(whoseTurn).GatherIncome();
