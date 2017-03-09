@@ -59,6 +59,12 @@ public class UnitTree
     public void setUnit(Unit unit, int amount, int pos)
     {
         units[pos] = unit;
+        unitAmount[pos] = amount;
+    }
+
+    public void removeUnit(int pos)
+    {
+        units[pos] = null;
     }
 
     public Unit[] GetUnits()
