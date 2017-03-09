@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using OverworldObjects;
+﻿using OverworldObjects;
 
 /// <summary>
 /// Governs what happens when interacting with a resource generating building

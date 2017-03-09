@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class Date {
+﻿public class Date {
 
     int day;
     int week;

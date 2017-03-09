@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-/// <summary>
+﻿/// <summary>
 /// Class of the units that are kept in a town, or a hero
 /// </summary>
 public class UnitTree

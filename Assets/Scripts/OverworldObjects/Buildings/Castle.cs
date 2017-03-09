@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
-using TownView;
+﻿using TownView;
 
 namespace OverworldObjects
 {

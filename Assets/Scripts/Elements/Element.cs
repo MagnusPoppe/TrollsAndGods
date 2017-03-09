@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class Element {
+﻿public class Element {
 
     public static readonly int MIN = 0;
     public static readonly int NEUTRAL = 1;

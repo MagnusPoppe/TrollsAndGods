@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using System;
-using System.Linq;
 
 /// <summary>
 /// The AstarAlgo class exists to calculate the shortest possible path from start to end

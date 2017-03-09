@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-public abstract class SpriteSystem
+﻿public abstract class SpriteSystem
 {
     int LocalSpriteID;
     IngameObjectLibrary.Category SpriteCategory;

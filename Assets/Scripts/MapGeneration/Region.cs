@@ -1,7 +1,5 @@
 ﻿using System;
-using UnityEngine;
 using System.Collections.Generic;
-using OverworldObjects;
 
 namespace MapGenerator
 {
@@ -69,7 +67,7 @@ namespace MapGenerator
         }
         
         /// <summary>
-        /// Takes a vector2 and checks if its is in region.
+        /// Takes a Point and checks if its is in region.
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
