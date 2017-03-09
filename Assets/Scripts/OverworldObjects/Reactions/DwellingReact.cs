@@ -10,7 +10,7 @@ public class DwellingReact : Reaction {
 
     Dwelling dwelling;
 
-    public DwellingReact(Dwelling dwelling, Vector2 pos)
+    public DwellingReact(Dwelling dwelling, Point pos)
     {
         Dwelling = dwelling;
         Pos = pos;

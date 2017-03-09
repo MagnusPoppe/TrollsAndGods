@@ -75,6 +75,11 @@ public class HandyMethods
         return modified;
     }
 
+    static public Vector2 getGraphicPosForIso(Point pos)
+    {
+        return getGraphicPosForIso(pos.ToVector2());
+    }
+
     /// <summary>
     /// Gets the graphical position of a hex tile
     /// </summary>

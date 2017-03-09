@@ -22,7 +22,7 @@ public class HeroMeetReact : Reaction {
         }
     }
 
-    public HeroMeetReact(Hero hero, Vector2 pos)
+    public HeroMeetReact(Hero hero, Point pos)
     {
         Hero = hero;
         Pos = pos;

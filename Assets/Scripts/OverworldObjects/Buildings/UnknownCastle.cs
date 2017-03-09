@@ -29,7 +29,7 @@ namespace OverworldObjects
         /// </summary>
         /// <param name="origo">pkt the castle should be placed at.</param>
         /// <param name="owner">Player that owns the castle.</param>
-        public UnknownCastle(Vector2 origo, Player owner ) 
+        public UnknownCastle(Point origo, Player owner ) 
             : base(origo, shape, owner, LOCAL_SPRITE_ID, SPRITE_CATEGORY, environmentTileType)
         {
 			EnvironmentTileType = MapGenerator.MapMaker.GRASS_SPRITEID;

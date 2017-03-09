@@ -11,7 +11,7 @@ public class ResourceBuildingReaction : Reaction {
     ResourceBuilding resourceBuilding;
     UnitReaction unitReact;
 
-    public ResourceBuildingReaction(ResourceBuilding resourceBuilding, Vector2 pos)
+    public ResourceBuildingReaction(ResourceBuilding resourceBuilding, Point pos)
     {
         ResourceBuilding = resourceBuilding;
         Pos = pos;

@@ -16,7 +16,7 @@ public class Hero
     private Item[] equippedItems;
     private int movementSpeed;
     private int curMovementSpeed;
-    private Vector2 position;
+    private Point position;
     private int localSpriteID;
     private const IngameObjectLibrary.Category SPRITECATEGORY = IngameObjectLibrary.Category.Heroes;
     private List<Vector2> path;
@@ -25,7 +25,7 @@ public class Hero
     /// Constructor that prepares unit, items, and equippeditems list for the hero
     /// </summary>
     /// <param name="color">id of which player gets the hero</param>
-    public Hero(Player player, Vector2 position)
+    public Hero(Player player, Point position)
     {
         Player = player;
         Units = new UnitTree();
@@ -142,7 +142,7 @@ public class Hero
         }
     }
 
-    public Vector2 Position
+    public Point Position
     {
         get
         {

@@ -7,10 +7,10 @@ namespace MapGenerator
 {
 	public class Region : IComparable
 	{
-        protected List<Vector2> coordinates;
-        private Vector2 regionCenter;
+        protected List<Point> coordinates;
+        private Point regionCenter;
 
-        public Vector2 RegionCenter
+        public Point RegionCenter
         {
             get
             {
@@ -23,24 +23,24 @@ namespace MapGenerator
             }
         }
 
-        public Region(List<Vector2> coordinates, Vector2 regionCenter)
+        public Region(List<Point> coordinates, Point regionCenter)
         {
             this.coordinates = coordinates;
             this.RegionCenter = regionCenter;
         } 
         
         /// <returns>All points in region as list</returns>
-        public List<Vector2> GetCoordinates()
+        public List<Point> GetCoordinates()
         {
             return coordinates;
         }
 
         /// <returns>All points in region as array</returns>
-		public Vector2[] GetCoordinatesArray()
+        public Point[] GetCoordinatesArray()
         {
             int i = 0;
-            Vector2[] temp = new Vector2[coordinates.Count];
-            foreach (Vector2 c in coordinates)
+            Point[] temp = new Point[coordinates.Count];
+            foreach (Point c in coordinates)
                 coordinates[i++] = c;
             return temp;
         }
@@ -50,20 +50,20 @@ namespace MapGenerator
         /// <returns>X value of the region center point</returns>
         public int getX()
         {
-            return (int) RegionCenter.x;
+            return RegionCenter.x;
         }
 
         /// <returns>Y value of the region center point</returns>
         public int getY()
         {
-            return (int)RegionCenter.y;
+            return RegionCenter.y;
         }
 
         /// <summary>
         /// Adds a point to region.
         /// </summary>
         /// <param name="pkt">point to be added.</param>
-        public void AddToRegion(Vector2 pkt)
+        public void AddToRegion(Point pkt)
         {
             coordinates.Add(pkt);
         }
@@ -73,9 +73,9 @@ namespace MapGenerator
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
-        public bool isPointInRegion(Vector2 point)
+        public bool isPointInRegion(Point point)
         {
-            foreach (Vector2 p in coordinates)
+            foreach (Point p in coordinates)
             {
                 if (p.x == point.x && p.y == point.y)
                 {
@@ -104,10 +104,10 @@ namespace MapGenerator
         /// <param name="map">Map.</param>
         public int[,] ResetRegionGroundTileType(int[,] map)
         {
-            foreach (Vector2 v in coordinates)
+            foreach (Point v in coordinates)
             {
-                if (map[(int)v.x, (int)v.y] >= RegionFill.DEFAULT_LABEL_START)
-                    map[(int)v.x, (int)v.y] = MapMaker.GROUND;
+                if (map[v.x,v.y] >= RegionFill.DEFAULT_LABEL_START)
+                    map[v.x,v.y] = MapMaker.GROUND;
             }
             return map;
         }
@@ -123,10 +123,10 @@ namespace MapGenerator
         /// <param name="map">Map.</param>
         public int[,] SetRegionGroundTileType(int groundTile, int[,] map)
         {
-            foreach (Vector2 v in coordinates)
+            foreach (Point v in coordinates)
             {
-                if (map[(int)v.x, (int)v.y] == MapMaker.GROUND)
-                    map[(int)v.x, (int)v.y] = groundTile;
+                if (map[v.x, v.y] == MapMaker.GROUND)
+                    map[v.x, v.y] = groundTile;
             }
             return map;
         }

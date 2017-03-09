@@ -79,7 +79,7 @@ namespace OverworldObjects
             }
         }
 
-        public Dwelling(Vector2 origo, int shape, Player player, int spriteID, IngameObjectLibrary.Category spriteCategory, Town town, Unit unitType, int unitsPresent, int unitsPerWeek) 
+        public Dwelling(Point origo, int shape, Player player, int spriteID, IngameObjectLibrary.Category spriteCategory, Town town, Unit unitType, int unitsPresent, int unitsPerWeek) 
             : base(origo, shape, player, spriteID, spriteCategory)
         {
             Town = town;
