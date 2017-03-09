@@ -59,14 +59,11 @@ public class AStarAlgo {
     /// This method calculates the shortest possible path from start to goal
     /// using the a* pathfinding algorithm, in a square grid
     /// </summary>
-    /// <param name="startPos">Start position</param>
-    /// <param name="goalPos">Goal position</param>
+    /// <param name="start">Start position</param>
+    /// <param name="goal">Goal position</param>
     /// <returns>A vector2 List containing the shortest path</returns>
-    public List<Vector2> calculate(Vector2 startPos, Vector2 goalPos)
+    public List<Vector2> calculate(Point start, Point goal)
     {
-        Point start = new Point((int)startPos.x, (int)startPos.y);
-        Point goal = new Point((int)goalPos.x, (int)goalPos.y);
-
 
         // Return variable
         List<Vector2> path = new List<Vector2>();
