@@ -4,17 +4,35 @@
     int maxDamage;
     int health;
     int initative;
-    int accuracy;
+    private int bonusInitative;
+    private int baseInitative;
+    int effectiveRange;
 
-    public UnitStats(int attack, int defence, int speed, int moral, int luck,
-        int minDamage,int maxDamage, int health, int initative, int accuracy
-        ) : base(attack, defence, speed, moral, luck)
+    public UnitStats(int baseAttack, int baseDefence, int baseSpeed, int baseMoral, int baseLuck, int minDamage, int maxDamage, int health, int baseInitative, int effectiveRange) : base(baseAttack, baseDefence, baseSpeed, baseMoral, baseLuck)
     {
-        MinDamage = minDamage;
-        MaxDamage = maxDamage;
-        Health = health;
-        Initative = initative;
-        Accuracy = accuracy;
+        this.minDamage = minDamage;
+        this.maxDamage = maxDamage;
+        this.health = health;
+        this.baseInitative = baseInitative;
+        this.effectiveRange = effectiveRange;
+        updateStats();
+    }
+
+    public UnitStats(int bonusAttack, int baseAttack, int bonusDefence, int baseDefence, int bonusSpeed, int baseSpeed, int bonusMoral, int baseMoral, int bonusLuck, int baseLuck, int minDamage, int maxDamage, int health, int bonusInitative, int baseInitative, int effectiveRange) : base(bonusAttack, baseAttack, bonusDefence, baseDefence, bonusSpeed, baseSpeed, bonusMoral, baseMoral, bonusLuck, baseLuck)
+    {
+        this.minDamage = minDamage;
+        this.maxDamage = maxDamage;
+        this.health = health;
+        this.bonusInitative = bonusInitative;
+        this.baseInitative = baseInitative;
+        this.effectiveRange = effectiveRange;
+        updateStats();
+    }
+
+    public new void updateStats()
+    {
+        base.updateStats();
+        initative = baseInitative + bonusInitative;
     }
 
     public int MinDamage
@@ -69,16 +87,22 @@
         }
     }
 
-    public int Accuracy
+    public int BaseInitative
+    {
+        get { return baseInitative; }
+        set { baseInitative = value; }
+    }
+
+    public int EffectiveRange
     {
         get
         {
-            return accuracy;
+            return effectiveRange;
         }
 
         set
         {
-            accuracy = value;
+            effectiveRange = value;
         }
     }
 }

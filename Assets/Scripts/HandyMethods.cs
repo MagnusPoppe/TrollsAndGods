@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class HandyMethods
 {
@@ -30,31 +31,6 @@ public class HandyMethods
     }
 
     /// <summary>
-    /// Gets the logical position of a hex tile
-    /// </summary>
-    /// <param name="pos">Graphical position</param>
-    /// <returns>Logical position</returns>
-    static public Vector2 getHexTilePos(Vector2 pos)
-    {
-        float x = (int)pos.x;
-        float y = (int)pos.y;
-
-        Vector2 a = new Vector2(0 + x, 0.66f + y);
-        Vector2 b = new Vector2(0.5f + x, 1 + y);
-        Vector2 c = new Vector2(1 + x, 0.66f + y);
-        Vector2 d = new Vector2(1 + x, 0.33f + y);
-        Vector2 e = new Vector2(0.5f + x, y);
-        Vector2 f = new Vector2(0 + x, 0.33f + y);
-
-        if (determineSideOfLine(a, b, pos) < 0) return new Vector2(x, (y + 1));
-        else if (determineSideOfLine(b, c, pos) < 0) return new Vector2(x + 1, (y + 1));
-        else if (determineSideOfLine(d, e, pos) < 0) return new Vector2(x + 1, (y - 1));
-        else if (determineSideOfLine(e, f, pos) < 0) return new Vector2(x, (y - 1));
-        else return new Vector2(x, y);
-
-    }
-
-    /// <summary>
     /// Gets the graphical position of a isometric tile
     /// </summary>
     /// <param name="pos">Logical position</param>
@@ -78,24 +54,7 @@ public class HandyMethods
         return getGraphicPosForIso(pos.ToVector2());
     }
 
-    /// <summary>
-    /// Gets the graphical position of a hex tile
-    /// </summary>
-    /// <param name="pos">Graphical position</param>
-    /// <returns>Logical position</returns>
-    static public Vector2 getGraphicPosForHex(Vector2 pos)
-    {
-        Vector2 modified;
-        if (pos.y % 2 == 0)
-        {
-            modified = new Vector2(pos.x, pos.y);
-        }
-        else
-        {
-            modified = new Vector2(pos.x + 0.5f, pos.y);
-        }
-        return modified;
-    }
+    
 
     /// <summary>
     /// Checks if point is on one or the other side of a line.
@@ -118,5 +77,42 @@ public class HandyMethods
             }
         }
         return output;
+    }
+
+    /// <summary>
+    /// Returns distance to target in a offset grid, ignoring obstacles
+    /// </summary>
+    /// <param name="a">Start pos</param>
+    /// <param name="b">End pos</param>
+    /// <returns>Distance</returns>
+    static public int DistanceHex(Point a, Point b)
+    {
+        Vector3 s = oddROffsetToCube(a);
+        Vector3 g = oddROffsetToCube(b);
+        return cubeDistance(s, g);
+    }
+
+    /// <summary>
+    /// Transelates offset cordinates to cube cordinates
+    /// </summary>
+    /// <param name="pos">Offset cordinates to be transelated</param>
+    /// <returns>Cube cordinates</returns>
+    static public Vector3 oddROffsetToCube(Point pos)
+    {
+        int x = (pos.x - ((pos.y - 1 * (pos.y & 1)) / 2));
+        int z = pos.y;
+        int y = -x - z;
+        return new Vector3(x, y, z);
+    }
+
+    /// <summary>
+    /// Returns distance to target in a cube grid, ignoring obstacles
+    /// </summary>
+    /// <param name="a">Start pos</param>
+    /// <param name="b">End pos</param>
+    /// <returns>Distance</returns>
+    static public int cubeDistance(Vector3 a, Vector3 b)
+    {
+        return (int)Math.Max(Math.Abs(a.x - b.x), Math.Max(Math.Abs(a.y - b.y), Math.Abs(a.z - b.z)));
     }
 }

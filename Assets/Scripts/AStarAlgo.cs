@@ -287,52 +287,42 @@ public class AStarAlgo {
             inOpenSet = false;
         }
 
-        // Calculates the estimated cost of moving to goal from this node, ignoring obstacles, as hScore
+        /// <summary>
+        /// Calculates the estimated cost of moving to goal from this node, ignoring obstacles, as hScore
+        /// </summary>
+        /// <param name="goal">Goal</param>
+        /// <param name="hex">If hex</param>
         public void calculateH(Point goal, bool hex)
         {
             if (hex)
-                hScore = DistanceHex(pos, goal);
+                hScore = HandyMethods.DistanceHex(pos, goal);
             else
                 hScore = (int)Math.Sqrt(Math.Abs(goal.x - pos.x) + Math.Abs(goal.y - pos.y));
         }
 
-        // Transelates offset cordinates to cube cordinates
-        private Vector3 oddROffsetToCube(Point pos)
-        {
-            int x = (pos.x - ((pos.y - 1 * (pos.y & 1)) / 2));
-            int z = pos.y;
-            int y = -x - z;
-            return new Vector3(x, y, z);
-        }
-
-        // returns distance to target in a offset grid, ignoring obstacles
-        private int DistanceHex(Point a, Point b)
-        {
-            Vector3 s = oddROffsetToCube(a);
-            Vector3 g = oddROffsetToCube(b);
-            return cubeDistance(s, g);
-        }
-
-        // returns distance to target in a cube grid, ignoring obstacles
-        private int cubeDistance(Vector3 a, Vector3 b)
-        {
-            return (int)Math.Max(Math.Abs(a.x - b.x), Math.Max(Math.Abs(a.y - b.y), Math.Abs(a.z - b.z)));
-        }
-
-        // Calculates the estimated cost of this path wich is gScore + hScore.
+        /// <summary>
+        /// Calculates the estimated cost of this path wich is gScore + hScore.
+        /// </summary>
         public void calculateF()
         {
             f = gScore + hScore;
         }
 
-        // Calculates the estimated cost of a path trou this node based on given g
+        /// <summary>
+        /// Calculates the estimated cost of a path trou this node based on given g
+        /// </summary>
+        /// <param name="g">G</param>
+        /// <returns>new Fscore</returns>
         public float calcNewF(float g)
         {
             return g + hScore;
         }
 
-        // Recursive method that travels from node to node using the cameFrom reference, to construct a path
-        // result is stored in the given list
+        /// <summary>
+        /// Recursive method that travels from node to node using the cameFrom reference, to construct a path
+        /// Result is stored in the given list
+        /// </summary>
+        /// <param name="n">List to be passed on and filled</param>
         public void backTrack(List<Vector2> n)
         {
             if (!cameFrom.Equals(this))
@@ -342,9 +332,11 @@ public class AStarAlgo {
             }
         }
 
-
-
-        // Returns true if this.pos equals n.pos
+        /// <summary>
+        /// Returns true if this.pos equals n.pos
+        /// </summary>
+        /// <param name="n">Node</param>
+        /// <returns>True if this.pos equals n.pos</returns>
         public bool equals(Node n)
         {
             return (n.pos.Equals(pos));

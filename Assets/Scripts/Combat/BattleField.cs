@@ -119,10 +119,10 @@ public class BattleField {
             unitsPos[start.x, start.y] = null;
             UnitAndAmount attackingUnits = unitsPos[goal.x, goal.y];
             UnitAndAmount defendingUnits = unitsPos[attackedUnitPos.x, attackedUnitPos.y];
-            attackingUnits.dealDamage(defendingUnits,false);
+            attackingUnits.dealDamage(defendingUnits,false,0);
             if (defendingUnits.Unit.HaveNotRetaliated && defendingUnits.Amount > 0)
             {
-                defendingUnits.dealDamage(attackingUnits,false);
+                defendingUnits.dealDamage(attackingUnits,false,0);
                 defendingUnits.Unit.HaveNotRetaliated = false;
             }
             if (attackingUnits.Amount < 0) attackingUnits.Amount = 0;
@@ -139,12 +139,13 @@ public class BattleField {
     /// <param name="defendingUnitPos">Position of defending unit</param>
     public void attackWithoutMoving (Point attackingUnitPos, Point defendingUnitPos, bool ranged)
     {
+        int distance = HandyMethods.DistanceHex(attackingUnitPos, defendingUnitPos);
         UnitAndAmount attackingUnits = unitsPos[attackingUnitPos.x, attackingUnitPos.y];
         UnitAndAmount defendingUnits = unitsPos[defendingUnitPos.x, defendingUnitPos.y];
-        attackingUnits.dealDamage(defendingUnits, ranged);
+        attackingUnits.dealDamage(defendingUnits, ranged, distance);
         if (defendingUnits.Unit.HaveNotRetaliated && defendingUnits.Amount > 0 && !ranged)
         {
-            defendingUnits.dealDamage(attackingUnits, ranged);
+            defendingUnits.dealDamage(attackingUnits, ranged, distance);
             defendingUnits.Unit.HaveNotRetaliated = false;
         }
         if (attackingUnits.Amount < 0) attackingUnits.Amount = 0;
@@ -271,7 +272,7 @@ public class BattleField {
         /// Method for dealing damage
         /// </summary>
         /// <param name="defendingUnits">Defending side</param>
-        public void dealDamage(UnitAndAmount defendingUnits, bool ranged)
+        public void dealDamage(UnitAndAmount defendingUnits, bool ranged, int distance)
         {
             //Calculates min and max damage
             int minDamage = Unit.Unitstats.MinDamage * Amount;
@@ -292,11 +293,15 @@ public class BattleField {
             {
                 totalDamage = Random.Range(minDamage, maxDamage+1);
             }
-            //Checks for meele penalty
-            if (!ranged && unit.GetType().Equals(typeof(Ranged)))
+            //Checks for meele penalty or outside effective range
+            if (unit.GetType().Equals(typeof(Ranged)))
             {
                 Ranged r = (Ranged)unit;
-                if (r.MeleePenalty)
+                if (!ranged && r.MeleePenalty)
+                {
+                    totalDamage /= 2;
+                }
+                else if (ranged && r.Unitstats.EffectiveRange < distance)
                 {
                     totalDamage /= 2;
                 }
