@@ -5,6 +5,8 @@
 
 
         Resources.type resourceID;
+        private Earn earnings;
+
         private int minDistFromTown;
         private int maxDistFromTown;
 
@@ -20,6 +22,13 @@
                 resourceID = value;
             }
         }
+
+        public Earn Earnings
+        {
+            get { return earnings; }
+            set { earnings = value; }
+        }
+
 
         public int MinDistFromTown
         {
@@ -47,12 +56,13 @@
             }
         }
 
-        public ResourceBuilding(int shape, Player owner, int spriteID, IngameObjectLibrary.Category spriteCategory, Resources.type resourceID, int minDistFromTown, int maxDistFromTown)
+        public ResourceBuilding(int shape, Player owner, int spriteID, IngameObjectLibrary.Category spriteCategory, Resources.type resourceID, Earn amountPerWeek, int minDistFromTown, int maxDistFromTown)
             : base(shape, owner, spriteID, spriteCategory)
         {
             MinDistFromTown = minDistFromTown;
             MaxDistFromTown = maxDistFromTown;
             ResourceID = resourceID;
+            Earnings = amountPerWeek;
         }
 
         public override Reaction makeReaction()

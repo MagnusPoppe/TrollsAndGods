@@ -104,6 +104,7 @@
      <Compile Include="Assets\Scripts\OverworldObjects\Shapes.cs" />
      <Compile Include="Assets\Scripts\OverworldObjects\UnitTree.cs" />
      <Compile Include="Assets\Scripts\Player\Cost.cs" />
+     <Compile Include="Assets\Scripts\Player\Earn.cs" />
      <Compile Include="Assets\Scripts\Player\Player.cs" />
      <Compile Include="Assets\Scripts\Player\Resources.cs" />
      <Compile Include="Assets\Scripts\Player\Wallet.cs" />
@@ -116,6 +117,7 @@
      <Compile Include="Assets\Scripts\Town\BuildingOnClick.cs" />
      <Compile Include="Assets\Scripts\Town\DwellingOnClick.cs" />
      <Compile Include="Assets\Scripts\Town\ExitButtonOnClick.cs" />
+     <Compile Include="Assets\Scripts\Town\ResourceBuilding.cs" />
      <Compile Include="Assets\Scripts\Town\Town.cs" />
      <Compile Include="Assets\Scripts\Town\TownHallOnClick.cs" />
      <Compile Include="Assets\Scripts\Town\VikingTown\VikingBuildings\DragonTower.cs" />

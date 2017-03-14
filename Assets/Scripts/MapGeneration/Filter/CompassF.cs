@@ -34,9 +34,7 @@
         private static bool CorrectDirection(int[,] map,int filterlength, int[,] compass, int initX, int initY, int environment, int otherEnvironment)
         {
             int offset = filterlength / 2;
-
-            bool failed = false; // If a filter does not match the specs, it will fail.
-
+           
             for (int iy = 0; iy < filterlength; iy++)
             {
                 for (int ix = 0; ix < filterlength; ix++)

@@ -6,6 +6,20 @@ public class Resources
 {
     protected int[] resourceTab;
 
+
+    protected int[] ResourceTab
+    {
+        get
+        {
+            return resourceTab;
+        }
+
+        set
+        {
+            resourceTab = value;
+        }
+    }
+
     public enum type { GOLD, WOOD, ORE, CRYSTAL, GEM };
 
     public Resources()
@@ -39,4 +53,16 @@ public class Resources
     {
         resourceTab[(int)i] += amount;
     }
+
+    public override string ToString()
+    {
+        return "{ " +
+                   "Gold : " + GetResource(type.GOLD) + ", " +
+                   "Wood : " + GetResource(type.WOOD) + ", " +
+                   "ORE : " + GetResource(type.ORE) + ", " +
+                   "GEM : " + GetResource(type.GEM) + ", " +
+                   "CRYSTAL : " + GetResource(type.CRYSTAL) +
+               " }";
+    }
+
 }
