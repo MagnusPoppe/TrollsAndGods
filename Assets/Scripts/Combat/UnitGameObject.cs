@@ -31,7 +31,15 @@ public class UnitGameObject : MonoBehaviour {
     {
         if (ItsTurn)
         {
-            //defend
+            //todo defend
+        }
+        else
+        {
+            //todo determine direction
+            Point goal = logicalPos;
+            goal.x -= 1;
+            if (goal.x < 0) goal.x += 2;
+            graphicalBattlefield.attackUnit(this,goal);
         }
     }
 
