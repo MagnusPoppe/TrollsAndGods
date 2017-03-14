@@ -27,6 +27,14 @@ public class UnitGameObject : MonoBehaviour {
 
     }
 
+    void onMouseDown()
+    {
+        if (ItsTurn)
+        {
+            //defend
+        }
+    }
+
     public bool ItsTurn
     {
         get

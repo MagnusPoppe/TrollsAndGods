@@ -93,6 +93,16 @@ public class BattleField {
         }
     }
 
+    public List<Vector2> unitMove(Point start, Point goal)
+    {
+        List<Vector2> path = AStar.calculate(start, goal);
+        if (path.Count != 0)
+        {
+            unitsPos[goal.x, goal.y] = unitsPos[start.x, start.y];
+            unitsPos[start.x, start.y] = null;
+        }
+        return path;
+    }
     /// <summary>
     /// Method for moving unit and attacking target
     /// </summary>
@@ -305,6 +315,7 @@ public class BattleField {
                 defendingUnits.Amount--;
                 defendingUnits.Unit.CurrentHealth = defendingUnits.Unit.Unitstats.Health + defendingUnits.Unit.CurrentHealth;
             }
+            
         }
 
         public Unit Unit

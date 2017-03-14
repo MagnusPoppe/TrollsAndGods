@@ -1,12 +1,24 @@
-﻿using System;
-
-/// <summary>
+﻿/// <summary>
 /// Class that holds resource values for heroes, resource costs for buildings and units.
 /// It is used to check if the player can afford actions, and updates his values.
 /// </summary>
 public class Resources
 {
     protected int[] resourceTab;
+
+
+    protected int[] ResourceTab
+    {
+        get
+        {
+            return resourceTab;
+        }
+
+        set
+        {
+            resourceTab = value;
+        }
+    }
 
     public enum type { GOLD, WOOD, ORE, CRYSTAL, GEM };
 

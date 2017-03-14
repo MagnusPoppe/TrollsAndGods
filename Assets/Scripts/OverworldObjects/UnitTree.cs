@@ -44,6 +44,7 @@ public class UnitTree
     public void changeAmount(int amount, int pos)
     {
         unitAmount[pos] += amount;
+        if (unitAmount[pos] < 0) unitAmount[pos] = 0;
     }
 
     /// <summary>

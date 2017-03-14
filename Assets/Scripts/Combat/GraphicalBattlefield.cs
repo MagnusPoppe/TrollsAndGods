@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Linq;
+using System.Collections.Generic;
 
 public class GraphicalBattlefield : MonoBehaviour {
 
@@ -9,6 +10,7 @@ public class GraphicalBattlefield : MonoBehaviour {
     bool inCombat;
     GameObject[,] field;
     GameObject[,] unitsOnField;
+    GameObject parent;
     bool isWalking;
     UnitGameObject[] initative;
     int whoseTurn;
@@ -28,6 +30,10 @@ public class GraphicalBattlefield : MonoBehaviour {
             {
                 //Todo keep moving
             }
+            else if (livingAttackers == 0 || livingDefenders == 0)
+            {
+                endCombat();
+            }
         }
 	}
 
@@ -46,6 +52,7 @@ public class GraphicalBattlefield : MonoBehaviour {
         }
         BattleField = new BattleField(width, height, attacker, defender, Canwalk);
 
+        populateField();
         populateInitative(attacker, defender.Units);
     }
 
@@ -64,11 +71,29 @@ public class GraphicalBattlefield : MonoBehaviour {
         }
         BattleField = new BattleField(width, height, attacker, defender, Canwalk);
 
+        populateField();
         populateInitative(attacker, defender);
+    }
+
+    public void populateField()
+    {
+        field = new GameObject[width,height];
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                GameObject go = new GameObject("ground x=" + x + ", y=" + y);
+                go.AddComponent<GroundGameObject>();
+                GroundGameObject ggo = go.GetComponent<GroundGameObject>();
+                ggo.GraphicalBattlefield = this;
+                ggo.LogicalPos = new Point(x, y);
+            }
+        }
     }
 
     public void populateInitative(Hero attacker, UnitTree defender)
     {
+        unitsOnField = new GameObject[width,height];
         Initative = new UnitGameObject[UnitTree.TREESIZE * 2];
         int logPos = 0;
         int increment = Height / UnitTree.TREESIZE;
@@ -80,6 +105,7 @@ public class GraphicalBattlefield : MonoBehaviour {
             if (units.GetUnits()[i] != null)
             {
                 GameObject go = new GameObject("a" + i);
+                //todo add sprite
                 go.AddComponent<UnitGameObject>();
                 UnitGameObject ugo = go.GetComponent<UnitGameObject>();
                 ugo.UnitTree = units;
@@ -87,9 +113,12 @@ public class GraphicalBattlefield : MonoBehaviour {
                 ugo.GraphicalBattlefield = this;
                 ugo.AttackingSide = true;
                 ugo.Initative = units.GetUnits()[i].Unitstats.Initative;
+                ugo.LogicalPos = new Point(0, place);
                 Initative[logPos++] = ugo;
+                //set correct graphical pos
                 gameObject.transform.position = new Vector2(0, place);
                 UnitsOnField[0, place] = go;
+                field[0, place].GetComponent<GroundGameObject>().IsOccupied = true;
                 livingAttackers++;
             }
             place += increment;
@@ -102,6 +131,7 @@ public class GraphicalBattlefield : MonoBehaviour {
             if (units.GetUnits()[i] != null)
             {
                 GameObject go = new GameObject("d" + i);
+                //todo add sprite
                 go.AddComponent<UnitGameObject>();
                 UnitGameObject ugo = go.GetComponent<UnitGameObject>();
                 ugo.UnitTree = units;
@@ -109,9 +139,12 @@ public class GraphicalBattlefield : MonoBehaviour {
                 ugo.GraphicalBattlefield = this;
                 ugo.AttackingSide = false;
                 ugo.Initative = units.GetUnits()[i].Unitstats.Initative;
+                ugo.LogicalPos = new Point(width-1, place);
                 Initative[logPos++] = ugo;
+                //set correct graphical pos
                 gameObject.transform.position = new Vector2(Width - 1, place);
                 UnitsOnField[Width-1, place] = go;
+                field[width-1, place].GetComponent<GroundGameObject>().IsOccupied = true;
                 livingDefenders++;
             }
             place += increment;
@@ -135,23 +168,42 @@ public class GraphicalBattlefield : MonoBehaviour {
         if (activeUnit.transform.position.Equals(goal))
         {
             battleField.attackWithoutMoving(activeUnit.LogicalPos, defender.LogicalPos, false);
-            //todo trigger death animation if death occured
+            //todo trigger animation
         }
         else
         {
             if (attackingUnit.IsRanged)
             {
                 battleField.attackWithoutMoving(activeUnit.LogicalPos, defender.LogicalPos, true);
-                //todo trigger death animation if death occured
+                //todo trigger animation
             }
             else
             {
-                battleField.UnitMoveAndAttack(activeUnit.LogicalPos, goal, defender.LogicalPos);
+                List<Vector2> path = battleField.UnitMoveAndAttack(activeUnit.LogicalPos, goal, defender.LogicalPos);
+                BeginWalking(path);
+                //todo trigger animation
             }
+        }
+        if (defender.UnitTree.getUnitAmount(defender.PosInUnitTree) == 0)
+        {
+            if (defender.AttackingSide) livingAttackers--;
+            else livingDefenders--;
+        }
+        if (activeUnit.UnitTree.getUnitAmount(activeUnit.PosInUnitTree) == 0)
+        {
+            if (activeUnit.AttackingSide) livingAttackers--;
+            else livingDefenders--;
         }
     }
 
-    public void BeginWalking(Vector2 path)
+    public void moveUnit(Point goal)
+    {
+        UnitGameObject activeUnit = initative[whoseTurn];
+        List<Vector2> path = battleField.unitMove(activeUnit.LogicalPos, goal);
+        BeginWalking(path);
+    }
+
+    public void BeginWalking(List<Vector2> path)
     {
         //todo begin walking
     }

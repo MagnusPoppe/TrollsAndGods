@@ -16,11 +16,11 @@
         const int WINDOW_TYPE = 0;
 
         // Resources cost: 
-        const int GOLD_COST = 1000;
-        const int WOOD_COST = 5;
-        const int ORE_COST = 5;
-        const int CRYSTAL_COST = 5;
-        const int GEM_COST = 5;
+        const int GOLD_COST = 1500;
+        const int WOOD_COST = 0;
+        const int ORE_COST = 0;
+        const int CRYSTAL_COST = 0;
+        const int GEM_COST = 0;
 
         static Earn earnings = new Earn(1000,0,0,0,0);
 
