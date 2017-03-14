@@ -1,10 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using TownView;
-using UI;
-using UnityEngine.UI;
-
+﻿using UnityEngine;
 
 public class ExitButtonOnClick : MonoBehaviour  {
 

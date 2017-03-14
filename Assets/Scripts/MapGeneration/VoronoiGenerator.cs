@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 using csDelaunay;
@@ -52,13 +51,13 @@ namespace MapGenerator
 			relaxedPoints = voronoi.GetRelaxedPoints();
         }
 
-		public Vector2[] GetNewSites()
+        public Point[] GetNewSites()
 		{
-			Vector2[] v = new Vector2[relaxedPoints.Count];
+            Point[] v = new Point[relaxedPoints.Count];
 			int i = 0;
-			foreach (Vector2f point in relaxedPoints)
+            foreach (Vector2f pkt in relaxedPoints)
 			{
-				v[i++] = new Vector2(point.x, point.y);
+                v[i++] = new Point((int)pkt.x, (int)pkt.y);
 			}
 			return v;
 		}

@@ -18,7 +18,7 @@ namespace MapGenerator
         int[,] initialMap;
 
         // Overworld objects
-        Vector2[] regionCenterPoints;
+        Point[] regionCenterPoints;
 
 		// Constants
 		public const int  GROUND 					= 0;
@@ -77,7 +77,8 @@ namespace MapGenerator
 			int spritecount, string seed, 
 			int fill, int smooth, 
 			int sites, int relax, 
-			int buildingCount
+			int buildingCount,
+            bool coast
 		)
 		{
 			this.width = width;
@@ -93,7 +94,9 @@ namespace MapGenerator
 
             // PLACE TREES IN OCCUPIED AREAS:
             replaceWalls();
-            CreateTransitions();
+
+            if (coast)
+                CreateTransitions();
 
             /*
             Reaction[,] reactions = new Reaction[width, height];
@@ -368,11 +371,10 @@ namespace MapGenerator
         /// <param name="map"></param>
         public void connectLostPointsToRegions(int[,] map)
         {
-
             bool inRegion = false;
 
             Region prev = regions[0];
-            Vector2 prevPos = Vector2.zero;
+            Point prevPos = new Point(0,0);
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
@@ -381,9 +383,9 @@ namespace MapGenerator
                     {
                         foreach (Region r in regions)
                         {
-                            if (r.isPointInRegion(new Vector2(x, y)))
+                            if (r.isPointInRegion(new Point(x, y)))
                             {
-                                prevPos = new Vector2(x, y);
+                                prevPos = new Point(x, y);
                                 inRegion = true;
                                 if (!typeof(WaterRegion).Equals(r.GetType()))
                                     prev = r;
@@ -392,7 +394,7 @@ namespace MapGenerator
                         }
                         if (!inRegion)
                         {
-                            prev.AddToRegion(new Vector2(x, y));
+                            prev.AddToRegion(new Point(x, y));
                             map[x, y] = MapMaker.FOREST_SPRITEID; // map[(int) prevPos.x, (int) prevPos.y];
                         }
                         inRegion = false;
@@ -411,7 +413,7 @@ namespace MapGenerator
         private VoronoiGenerator VoronoiSiteSetup(int sites, int relaxItr, int totalSprites)
 		{
 			// DEFINING CASTLE POSITIONS ON THE MAP:
-			Vector2[] sitelist = CreateRandomPoints(sites); // TODO: Place castles smart.
+			Vector2[] sitelist = CreateRandomPoints(sites);
 
 			// APPLYING VORONOI TO THE MAP ARRAY
 			VoronoiGenerator voronoi = new VoronoiGenerator(width, height, sitelist, relaxItr);

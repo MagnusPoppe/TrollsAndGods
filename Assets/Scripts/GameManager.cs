@@ -2,7 +2,6 @@
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System.Collections.Generic;
-using System.Collections;
 using System;
 using TownView;
 using MapGenerator;
@@ -13,14 +12,13 @@ public class GameManager : MonoBehaviour
 
     public MapMaker mapmaker;
 
-    public Sprite[] groundTiles;
-
     // Loads in camera variables
     Camera mainCamera;
     CameraMovement cameraMovement;
 
 	// ONLY SET FOR USE WITH UNITY EDITOR!
 	public bool CanWalkDebugMode = false;
+    public bool DrawCostalTilesTransitions = true;
 
     public int WIDTH = 64;
     public int HEIGHT = 64;
@@ -182,7 +180,7 @@ public class GameManager : MonoBehaviour
             {
                 // Fetch the point just clicked and adjust the position in the square to the corresponding isometric position
                 Vector2 posClicked = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                posClicked = HandyMethods.getIsoTilePos(posClicked);
+                posClicked = HandyMethods.getIsoTilePos(posClicked).ToVector2();
 
                 int x = (int)posClicked.x;
                 int y = (int)posClicked.y;
@@ -254,7 +252,7 @@ public class GameManager : MonoBehaviour
                 }
                 else
                 {
-                    cameraMovement.centerCamera(getPlayer(whoseTurn).Castle[0].GetPosition());
+                    cameraMovement.centerCamera(getPlayer(whoseTurn).Castle[0].GetPosition().ToVector2());
                 }
             }
             // Nextturn by enter
@@ -303,7 +301,7 @@ public class GameManager : MonoBehaviour
                     // Stop the movement when amount of tiles moved has reached the limit, or walking is disabled
                     if (IsLastStep(stepNumber))
                     {
-                        Vector2 fromPosition = activeHero.Position;
+                        Vector2 fromPosition = activeHero.Position.ToVector2();
                         // Set hero position when he stops walking to his isometric position
                         activeHero.Position = HandyMethods.getIsoTilePos(activeHeroObject.transform.position);
                         activeHero.CurMovementSpeed -= stepNumber;
@@ -390,7 +388,7 @@ public class GameManager : MonoBehaviour
             else
             {
                 Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                mousePos = HandyMethods.getIsoTilePos(mousePos);
+                mousePos = HandyMethods.getIsoTilePos(mousePos).ToVector2();
                 int x = (int)mousePos.x;
                 int y = (int)mousePos.y;
                 if (x >= 0 && x < width && y >= 0 && y < height && reactions[x, y] != null)
@@ -448,7 +446,7 @@ public class GameManager : MonoBehaviour
         // Needs to clear existing objects if an earlier path was already made
         RemoveMarkers(pathObjects);
         // Call algorithm method that returns a list of Vector2 positions to the point, go through all objects
-        activeHero.Path = aStar.calculate(activeHero.Position, pos);
+        activeHero.Path = aStar.calculate(activeHero.Position, new Point(pos));
         DrawPath(activeHero.Path);
         return pathObjects;
     }
@@ -563,7 +561,8 @@ public class GameManager : MonoBehaviour
             players, width, height, 40,                     // Map Properites TODO: fjern parameter 40/length 
 			seed, fillpercentWalkable, smoothIterations,    // BinaryMap Properities
 			sites, relaxIterations,                         // Voronoi Properties
-			buildingCount
+			buildingCount,
+            DrawCostalTilesTransitions
 		);
 
         int[,] map = mapmaker.GetMap();
@@ -982,7 +981,7 @@ public class GameManager : MonoBehaviour
                 activeHero = null;
                 activeHeroObject = null;
                 // Center camera to the upcoming players first castle
-                cameraMovement.centerCamera(HandyMethods.getGraphicPosForIso(getPlayer(whoseTurn).Castle[0].GetPosition()));
+                cameraMovement.centerCamera(HandyMethods.getGraphicPosForIso(getPlayer(whoseTurn).Castle[0].GetPosition().ToVector2()));
             }
             // Gathert income for the upcoming player
             getPlayer(whoseTurn).GatherIncome();

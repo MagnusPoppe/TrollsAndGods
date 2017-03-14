@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class HandyMethods
 {
@@ -10,7 +8,7 @@ public class HandyMethods
     /// </summary>
     /// <param name="pos">Graphical position</param>
     /// <returns>Logical position</returns>
-    static public Vector2 getIsoTilePos(Vector2 pos)
+    static public Point getIsoTilePos(Vector2 pos)
     {
         float x = (int)pos.x;
         float y = (int)(pos.y * 2) / 2.0f;
@@ -20,11 +18,15 @@ public class HandyMethods
         Vector2 c = new Vector2(1 + x, 0.25f + y);
         Vector2 d = new Vector2(0.5f + x, y);
 
-        if (determineSideOfLine(a, b, pos) < 0) return new Vector2(x, (y + 0.5f) * 2*2);
-        else if (determineSideOfLine(b, c, pos) < 0) return new Vector2(x + 1, (y + 0.5f) * 2 * 2);
-        else if (determineSideOfLine(c, d, pos) < 0) return new Vector2(x + 1, y * 2 * 2);
-        else if (determineSideOfLine(d, a, pos) < 0) return new Vector2(x, y * 2 * 2);
-        else return new Vector2(x, (y + 0.25f) * 2 * 2);
+        Vector2 tempValue;
+
+        if (determineSideOfLine(a, b, pos) < 0) tempValue = new Vector2(x, (y + 0.5f) * 2*2);
+        else if (determineSideOfLine(b, c, pos) < 0) tempValue = new Vector2(x + 1, (y + 0.5f) * 2 * 2);
+        else if (determineSideOfLine(c, d, pos) < 0) tempValue = new Vector2(x + 1, y * 2 * 2);
+        else if (determineSideOfLine(d, a, pos) < 0) tempValue = new Vector2(x, y * 2 * 2);
+        else tempValue = new Vector2(x, (y + 0.25f) * 2 * 2);
+
+        return new Point(tempValue);
     }
 
     /// <summary>
@@ -69,6 +71,11 @@ public class HandyMethods
             modified = new Vector2(pos.x + 0.5f, pos.y / 2 / 2);
         }
         return modified;
+    }
+
+    static public Vector2 getGraphicPosForIso(Point pos)
+    {
+        return getGraphicPosForIso(pos.ToVector2());
     }
 
     /// <summary>

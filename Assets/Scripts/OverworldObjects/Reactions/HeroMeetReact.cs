@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
+﻿
 /// <summary>
 /// Governs what happens when two heroes meet.
 /// </summary>
@@ -22,7 +19,7 @@ public class HeroMeetReact : Reaction {
         }
     }
 
-    public HeroMeetReact(Hero hero, Vector2 pos)
+    public HeroMeetReact(Hero hero, Point pos)
     {
         Hero = hero;
         Pos = pos;

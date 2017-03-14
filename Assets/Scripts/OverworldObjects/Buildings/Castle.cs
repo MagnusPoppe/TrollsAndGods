@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
-using TownView;
+﻿using TownView;
 
 namespace OverworldObjects
 {
@@ -10,7 +8,7 @@ namespace OverworldObjects
 		string name;
         Town town;
 
-        public Castle(Vector2 origo, int shape, Player owner, int spriteID, IngameObjectLibrary.Category spriteCategory, int environmentTileType)
+        public Castle(Point origo, int shape, Player owner, int spriteID, IngameObjectLibrary.Category spriteCategory, int environmentTileType)
             : base(origo, shape, owner, spriteID, spriteCategory)
         {
             Name = "unnamed";
@@ -68,7 +66,7 @@ namespace OverworldObjects
 			return EnvironmentTileType;
 		}
 
-		public Vector2 GetPosition()
+        public Point GetPosition()
 		{
 			return Origo;
         }
@@ -104,14 +102,14 @@ namespace OverworldObjects
 
                     if (shape[fx, fy] == 1)
                     {
-                        reactions[dxx, dyy] = new CastleReact(this, new Vector2(dxx, dyy));
+                        reactions[dxx, dyy] = new CastleReact(this, new Point(dxx, dyy));
                     }
                 }
             }
             if(hero != null)
             {
                 CastleReact react = (CastleReact)reactions[x, y];
-                react.PreReaction = new HeroMeetReact(hero, new Vector2(x, y));
+                react.PreReaction = new HeroMeetReact(hero, new Point(x, y));
             }
         }
     }

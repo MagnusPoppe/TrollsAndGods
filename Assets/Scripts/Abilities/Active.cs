@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class Active : Ability
+﻿public class Active : Ability
 {
     private int cooldown;
 

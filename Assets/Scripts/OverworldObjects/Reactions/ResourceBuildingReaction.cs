@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using OverworldObjects;
+﻿using OverworldObjects;
 
 /// <summary>
 /// Governs what happens when interacting with a resource generating building
@@ -11,7 +8,7 @@ public class ResourceBuildingReaction : Reaction {
     ResourceBuilding resourceBuilding;
     UnitReaction unitReact;
 
-    public ResourceBuildingReaction(ResourceBuilding resourceBuilding, Vector2 pos)
+    public ResourceBuildingReaction(ResourceBuilding resourceBuilding, Point pos)
     {
         ResourceBuilding = resourceBuilding;
         Pos = pos;

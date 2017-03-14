@@ -1,9 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UI;
-using System;
-
+﻿using UI;
 namespace TownView
 {
 
@@ -14,7 +9,7 @@ namespace TownView
         private bool built;
         protected bool[] requirements;
         protected Cost cost;
-        private Vector2 placement;
+        private Point placement;
         private int local_sprite_blueprint;
         private const IngameObjectLibrary.Category CATEGORY = IngameObjectLibrary.Category.Town;
 
@@ -28,7 +23,7 @@ namespace TownView
             }
         }
 
-        public Vector2 Placement
+        public Point Placement
         {
             get
             {

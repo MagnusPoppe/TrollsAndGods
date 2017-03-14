@@ -1,6 +1,4 @@
-﻿using System;
-
-public class Wallet : Resources
+﻿public class Wallet : Resources
 {
 
     public Wallet(int gold, int wood, int ore, int crystal, int gem)

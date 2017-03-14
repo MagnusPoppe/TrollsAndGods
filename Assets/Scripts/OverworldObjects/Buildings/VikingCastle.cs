@@ -1,7 +1,5 @@
-﻿using System;
-using OverworldObjects;
+﻿using OverworldObjects;
 using TownView;
-using UnityEngine;
 
 namespace OverworldObjects
 {
@@ -28,7 +26,7 @@ namespace OverworldObjects
         /// </summary>
         /// <param name="origo">pkt the castle should be placed at.</param>
         /// <param name="owner">Player that owns the castle.</param>
-        public VikingCastle(Vector2 origo, Player owner)
+        public VikingCastle(Point origo, Player owner)
             : base(origo, shape, owner, LOCAL_SPRITE_ID, SPRITE_CATEGORY, environmentTileType)
         {
             EnvironmentTileType = MapGenerator.MapMaker.GRASS_SPRITEID;

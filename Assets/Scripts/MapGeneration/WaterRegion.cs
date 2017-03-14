@@ -1,13 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 
 namespace MapGenerator
 {
     public class WaterRegion : Region
     {
 
-        public WaterRegion(List<Vector2> coordinateList, Vector2 regionCenter) 
+        public WaterRegion(List<Point> coordinateList, Point regionCenter) 
             :base(coordinateList, regionCenter)
         {
            
@@ -21,26 +19,23 @@ namespace MapGenerator
         /// <param name="map">Map.</param>
         public void FillRegionWithWater(int[,] map, int[,] canWalk)
         {
-            map[(int)RegionCenter.x, (int)RegionCenter.y] = MapMaker.GROUND;
-            foreach (Vector2 pkt in coordinates)
+            map[RegionCenter.x, RegionCenter.y] = MapMaker.GROUND;
+            foreach (Point pkt in coordinates)
             {
-                int x = (int)pkt.x;
-                int y = (int)pkt.y;
-
-                if (map[x, y] == MapMaker.GROUND)
+                if (map[pkt.x, pkt.y] == MapMaker.GROUND)
                 {
-                    map[x, y] = MapMaker.WATER_SPRITEID;
-                    canWalk[x, y] = MapMaker.CANNOTWALK;
+                    map[pkt.x, pkt.y] = MapMaker.WATER_SPRITEID;
+                    canWalk[pkt.x, pkt.y] = MapMaker.CANNOTWALK;
                 }
-                else if (map[x, y] == MapMaker.REGION_CENTER)
+                else if (map[pkt.x, pkt.y] == MapMaker.REGION_CENTER)
                 {
-                    map[x, y] = MapMaker.WATER_SPRITEID;
-                    canWalk[x, y] = MapMaker.CANNOTWALK;
+                    map[pkt.x, pkt.y] = MapMaker.WATER_SPRITEID;
+                    canWalk[pkt.x, pkt.y] = MapMaker.CANNOTWALK;
                 }
-                else if (map[x, y] == MapMaker.WALL)
+                else if (map[pkt.x, pkt.y] == MapMaker.WALL)
                 {
-                    canWalk[x, y] = MapMaker.CANWALK;
-                    map[x, y] = MapMaker.GRASS_SPRITEID;
+                    canWalk[pkt.x, pkt.y] = MapMaker.CANWALK;
+                    map[pkt.x, pkt.y] = MapMaker.GRASS_SPRITEID;
                 }
             }
         }

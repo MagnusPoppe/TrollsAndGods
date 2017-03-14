@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-/// <summary>
+﻿/// <summary>
 /// governs what happens when interacting with a resource pickup
 /// </summary>
 public class ResourceReaction : Reaction
@@ -38,7 +33,7 @@ public class ResourceReaction : Reaction
         }
     }
 
-    public ResourceReaction(Resources.type resID, int amount, Vector2 pos)
+    public ResourceReaction(Resources.type resID, int amount, Point pos)
     {
         ResourceID = resID;
         Amount = amount;

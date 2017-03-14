@@ -1,5 +1,4 @@
 ﻿using System;
-using UnityEngine;
 using OverworldObjects;
 using System.Collections.Generic;
 
@@ -7,18 +6,18 @@ namespace MapGenerator
 {
 	public class Block
 	{
-		Vector2 position;
+        Point position;
 		bool[] possibleBuildings;
 		float rating;
 		float distanceFromCastle;
 
-		public Block(Vector2 origin, Vector2 position, int[,] canWalk)
+        public Block(Point origin, Point position, int[,] canWalk)
 		{
 			this.position = position;
 			possibleBuildings = Shapes.GetBuildingFit(position, canWalk);
 			rating = 0.0f;
 
-			distanceFromCastle = Vector2.Distance(origin, position);
+			distanceFromCastle = origin.DistanceTo(position);
 
 			for (int i = 0; i < possibleBuildings.Length; i++)
 				if (possibleBuildings[i])
@@ -33,7 +32,7 @@ namespace MapGenerator
 			return distanceFromCastle;
 		}
 
-		public Vector2 GetPosition()
+		public Point GetPosition()
 		{
 			return position;
 		}
@@ -48,13 +47,13 @@ namespace MapGenerator
 			return possibleBuildings[buildingType];
 		}
 
-		public Vector2[] GetOccupiedTiles(int buildingType)
+        public Point[] GetOccupiedTiles(int buildingType)
 		{
-			int x = (int)position.x;
-			int y = (int)position.y;
+			int x = position.x;
+			int y = position.y;
 
 			int[,] shape = Shapes.GetShape(buildingType);
-			List<Vector2> occupiedArea = new List<Vector2>();
+            List<Point> occupiedArea = new List<Point>();
 
 			for (int iy = 0; iy < shape.GetLength(0); iy++)
 			{
@@ -64,7 +63,7 @@ namespace MapGenerator
 					int dy = Shapes.dy[iy];
 
 					if (shape[ix, iy] == 1)
-						occupiedArea.Add(new Vector2(x + dx, y + dy));
+                        occupiedArea.Add(new Point(x + dx, y + dy));
 				}
 			}
 			if (occupiedArea.Count > 0)

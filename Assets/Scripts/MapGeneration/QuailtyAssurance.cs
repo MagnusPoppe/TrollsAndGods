@@ -1,5 +1,4 @@
-﻿using System;
-using OverworldObjects;
+﻿using OverworldObjects;
 using UnityEngine;
 
 namespace MapGenerator
@@ -15,10 +14,10 @@ namespace MapGenerator
 		{
 			AStarAlgo aStar = new AStarAlgo(canWalk, canWalk.GetLength(0), canWalk.GetLength(1), false);
 
-			Vector2 castlePlacement = region.GetCastle().GetPosition();
+			Point castlePlacement = region.GetCastle().GetPosition();
 			foreach (OverworldBuilding building in region.GetBuildings())
 			{
-				Vector2 buildingPlacement = building.Origo;
+                Point buildingPlacement = building.Origo;
 				if (aStar.calculate(castlePlacement, buildingPlacement).Count == 0)
 				{
 					return false;
@@ -36,8 +35,8 @@ namespace MapGenerator
 			{
 				if (TestPathsBetweenBuildings(allRegions[i], canWalk))
 				{
-					Vector2 a = allRegions[i - 1].GetCastle().GetPosition();
-					Vector2 b;
+                    Point a = allRegions[i - 1].GetCastle().GetPosition();
+                    Point b;
 					if (i == 0)
 					{
 						b = allRegions[allRegions.GetLength(0)-1].GetCastle().GetPosition();
