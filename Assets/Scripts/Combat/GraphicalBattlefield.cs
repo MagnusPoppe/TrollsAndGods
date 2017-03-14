@@ -19,7 +19,7 @@ public class GraphicalBattlefield : MonoBehaviour {
     // Use this for initialization
     void Start () {
         InCombat = false;
-        IsWalking = false;
+        IsWalking = finishedWalking = false;
 	}
 	
 	// Update is called once per frame
