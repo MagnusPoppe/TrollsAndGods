@@ -15,9 +15,12 @@ public class BuildingOnClick : MonoBehaviour {
     SpriteSystem spriteSystem;
     SpriteRenderer cardSpriteRenderer;
     Vector2 exitBtnPosition;
-
+    Vector2 buyBtnPosition;
+    TownHallOnClick onClick;
     GameObject cardWindow;
     GameObject exitButton;
+    GameObject buyButtonObject;
+    BuyButtonOnClick buyButton;
     GameObject[] buildingObjects;
     GameManager gm;
 
@@ -139,13 +142,22 @@ public class BuildingOnClick : MonoBehaviour {
                 BuildingObjects[i].GetComponent<PolygonCollider2D>().enabled = false;
         }
 
-        exitBtnPosition = cardWindow.transform.parent.position;
+
+        exitBtnPosition = getUpRightCorner(cardSpriteRenderer);
+        buyBtnPosition = getDownRightCorner(cardSpriteRenderer);
 
 
         // Lage townhall building
         if (windowType == WindowTypes.TOWN_HALL_CARD)
         {
+            CreateBuyButton(buyBtnPosition);
             CreateTownHallView();
+        }
+        // Lage tavern bygning
+        else if (windowType == WindowTypes.TAVERN_CARD)
+        {
+            CreateBuyButton(buyBtnPosition);
+            CreateTavernView();
         }
 
         CreateExitButton(exitBtnPosition);
@@ -157,15 +169,31 @@ public class BuildingOnClick : MonoBehaviour {
     /// </summary>
     private void CreateTownHallView()
     {
-        exitBtnPosition = getUpRightCorner(cardSpriteRenderer);
+        
         // TOOD: get parents order and i++
         float offsetX = cardSpriteRenderer.transform.position.x - (cardSpriteRenderer.bounds.size.x / 2.5f);
         float offsetY = cardSpriteRenderer.transform.position.y + (cardSpriteRenderer.bounds.size.y / 4);
         Vector2 nextPosition = new Vector2(offsetX, offsetY);
         float startX = nextPosition.x;
         // Create the object for each building in Town Hall view
+
+        // Array for all building frames frames
+        GameObject[] buildingFrames = new GameObject[town.Buildings.Length];
         for (int i = 0; i < town.Buildings.Length; i++)
         {
+
+            // sets teh fram behind the object
+            GameObject heroFrameObject = new GameObject();
+            heroFrameObject.transform.parent = GameObject.Find("TownCardPanel").transform;
+            heroFrameObject.name = town.Buildings[i].Name;
+            SpriteRenderer frameImage = heroFrameObject.AddComponent<SpriteRenderer>();
+            frameImage.sprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/hero_frame");
+            frameImage.sortingLayerName = "TownInteractive";
+            frameImage.sortingOrder = 1;
+            buildingFrames[i] = heroFrameObject;
+            if (i != 0)
+                heroFrameObject.SetActive(false);
+
             // Create the gameobject to see and click on
             GameObject buildingObject = new GameObject();
             buildingObject.transform.parent = GameObject.Find("TownCardPanel").transform;
@@ -173,17 +201,22 @@ public class BuildingOnClick : MonoBehaviour {
             buildingObject.name = town.Buildings[i].Name;
             buildingObject.tag = "toDestroy";
 
+
             // Add components to the gameobject window
-            buildingObject.AddComponent<TownHallOnClick>();
-            buildingObject.GetComponent<TownHallOnClick>().Building = town.Buildings[i];
-            buildingObject.GetComponent<TownHallOnClick>().Town = Town;
-            buildingObject.GetComponent<TownHallOnClick>().Player = Player;
+            onClick = buildingObject.AddComponent<TownHallOnClick>();
+            onClick.BuyButton = buyButton;
+            onClick.Building = town.Buildings[i];
+            onClick.Town = Town;
+            onClick.Player = Player;
+            onClick.AllFrames = buildingFrames;
+            onClick.NewHeroFrame = heroFrameObject;
+            
 
             // If it's already purchased or you can't build it, use another sprite, set by an offset
             int offset = 0;
             if (town.Buildings[i].Built)
                 offset = town.Buildings.Length;
-            else if (!Player.Wallet.CanPay(town.Buildings[i].Cost) || town.HasBuiltThisRound)
+            else if (!Player.Wallet.CanPay(town.Buildings[i].Cost) || town.HasBuiltThisRound || !town.Buildings[i].MeetsRequirements(town))
                 offset = town.Buildings.Length * 2;
 
             // Add the picture of the building
@@ -209,6 +242,7 @@ public class BuildingOnClick : MonoBehaviour {
 
             // Position icon and text
             buildingObject.transform.position = nextPosition;
+            heroFrameObject.transform.position = buildingObject.transform.position;
             textObject.transform.position = new Vector2(buildingObject.transform.position.x, buildingObject.transform.position.y-spr.bounds.size.y);
 
 
@@ -262,7 +296,100 @@ public class BuildingOnClick : MonoBehaviour {
             else
                 newX += (spr.bounds.size.x * 1.45f);
             nextPosition = new Vector2(newX, newY);
-            
+        }
+    }
+
+    private void CreateTavernView()
+    {
+        Vector2 nextPosition = new Vector2(cardSpriteRenderer.transform.position.x, cardSpriteRenderer.transform.position.y + (cardSpriteRenderer.bounds.size.y / 4));
+        float startX = nextPosition.x;
+
+        float leftX = startX;
+        float rightX = startX;
+        // Add each hero that you can buy in Tavern
+        int count = 0;
+
+        // holds all the frames to be disabled
+        GameObject[] heroFrames = new GameObject[gm.heroes.Length];
+
+        for (int i = 0; i < gm.heroes.Length; i++)
+        {
+            if (gm.heroes[i] != null && !gm.heroes[i].Alive)
+            {
+
+                GameObject heroFrameObject = new GameObject();
+                heroFrameObject.transform.parent = GameObject.Find("TownCardPanel").transform;
+                heroFrameObject.name = gm.heroes[i].Name + "'s frame";
+                SpriteRenderer frameImage = heroFrameObject.AddComponent<SpriteRenderer>();
+                frameImage.sprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/hero_frame");
+                frameImage.sortingLayerName = "TownInteractive";
+                heroFrames[count] = heroFrameObject;
+
+                // Create the gameobject to see and click on
+                GameObject heroObject = new GameObject();
+                heroObject.transform.parent = GameObject.Find("TownCardPanel").transform;
+                heroObject.name = "heroName";
+                heroObject.tag = "toDestroy";
+
+                // Add the picture of the building
+                SpriteRenderer spr = heroObject.AddComponent<SpriteRenderer>();
+                spr.sprite = libs.GetPortrait(gm.heroes[i].GetPortraitID());// TODO libs.GetPortrait(town.Owner.Heroes[0].GetPortraitID());
+                spr.sortingLayerName = "GUI";
+
+                // Add the collider to click on to build a building
+                BoxCollider2D collider = heroObject.AddComponent<BoxCollider2D>();
+                collider.size = spr.bounds.size;
+
+                GameObject textNameObject = new GameObject();
+                textNameObject.transform.parent = heroObject.transform;
+                textNameObject.transform.localScale = GameObject.Find("Canvas").transform.localScale;
+                textNameObject.name = gm.heroes[i].Name;
+                Text textName = textNameObject.AddComponent<Text>();
+                textName.font = UnityEngine.Resources.Load<Font>("Fonts/ARIAL");
+                textName.fontSize = 18;
+                textName.text = gm.heroes[i].Name;
+                textName.color = Color.black;
+                //textCost.alignment = TextAnchor.MiddleCenter;
+
+
+                /*
+                GameObject textDescriptionObject = new GameObject();
+                textDescriptionObject.transform.parent = heroObject.transform;
+                textDescriptionObject.transform.localScale = GameObject.Find("Canvas").transform.localScale;
+                textDescriptionObject.name = gm.heroes[i].Name + "'s description";
+                Text textDescription = textDescriptionObject.AddComponent<Text>();
+                textDescription.font = UnityEngine.Resources.Load<Font>("Fonts/ARIAL");
+                textDescription.fontSize = 18;
+                textDescription.text = gm.heroes[i].Description;
+                textDescription.color = Color.black;
+                */
+                if (i != 0)
+                    heroFrameObject.SetActive(false);
+
+
+                heroObject.transform.position = nextPosition;
+                heroFrameObject.transform.position = nextPosition;
+                textNameObject.transform.position = new Vector2(nextPosition.x, (nextPosition.y - spr.bounds.size.y));
+                //textDescriptionObject.transform.position = new Vector2(startX, (nextPosition.y - (spr.bounds.size.y*1.5f)));
+
+                // Calculate the position for the next gameobject
+                float newX = nextPosition.x;
+                float newY = nextPosition.y;
+
+                if (count % 2 == 0)
+                    newX = leftX -= (spr.bounds.size.x * 1.2f);
+                else
+                    newX = rightX += (spr.bounds.size.x * 1.2f);
+                nextPosition = new Vector2(newX, newY);
+
+                // Attaches onclick
+                PortraitOnClick onClick = heroObject.AddComponent<PortraitOnClick>();
+                onClick.Hero = gm.heroes[count];
+                onClick.NewHeroFrame = heroFrameObject;
+                onClick.AllFrames = heroFrames;
+
+                count++;
+            }
         }
     }
 
@@ -275,7 +402,17 @@ public class BuildingOnClick : MonoBehaviour {
     {
         return new Vector2(sr.transform.position.x + (sr.bounds.size.x / 2.15f), sr.transform.position.y + (sr.bounds.size.y / 2.2f));
     }
-    
+
+    /// <summary>
+    /// Gets the bottom right corner of the current building card.
+    /// </summary>
+    /// <param name="sr">The sprite renderer to get the bounds from</param>
+    /// <returns></returns>
+    private Vector2 getDownRightCorner(SpriteRenderer sr)
+    {
+        return new Vector2(sr.transform.position.x + (sr.bounds.size.x / 2.15f), sr.transform.position.y - (sr.bounds.size.y / 2.2f));
+    }
+
     /// <summary>
     /// Creates a gameobject exitbutton to exit the building screen
     /// </summary>
@@ -304,4 +441,38 @@ public class BuildingOnClick : MonoBehaviour {
         exitButton.GetComponent<ExitButtonOnClick>().ExitButton = exitButton;
         exitButton.GetComponent<ExitButtonOnClick>().BuildingObjects = buildingObjects;
     }
+
+    /// <summary>
+    /// Creates a gameobject exitbutton to exit the building screen
+    /// </summary>
+    void CreateBuyButton(Vector2 position)
+    {
+        // creates object and sets its name and position
+        buyButtonObject = new GameObject();
+        buyButtonObject.name = "BuyButton";
+        buyButtonObject.tag = "toDestroy";
+        buyButtonObject.transform.position = position;
+
+        // Attaches a sprite renderer, sets spriet, sorting layer and sorting order
+        SpriteRenderer sr = buyButtonObject.AddComponent<SpriteRenderer>();
+        ExitButton button = new ExitButton();
+        sr.sprite = libs.GetUI(button.GetSpriteID()+1);
+        sr.sortingLayerName = "GUI";
+        sr.sortingOrder = cardWindow.GetComponent<SpriteRenderer>().sortingOrder + 1;
+
+        // sets a box collider trigger around the button
+        BoxCollider2D collider = buyButtonObject.AddComponent<BoxCollider2D>();
+        collider.isTrigger = true;
+
+        // sends game objects through to the button so it knows what to destroy
+        buyButton = buyButtonObject.AddComponent<BuyButtonOnClick>();
+        buyButton.CardWindow = cardWindow;
+        buyButton.BuyButton = buyButtonObject;
+        buyButton.BuildingObjects = buildingObjects;
+
+
+        buyButton.Town = Town;
+        buyButton.Player = Player;
+    }
+
 }

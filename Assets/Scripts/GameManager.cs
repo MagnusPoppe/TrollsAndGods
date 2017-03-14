@@ -86,6 +86,8 @@ public class GameManager : MonoBehaviour
     int tilesWalking;
     bool newStep;
 
+    public Hero[] heroes = new Hero[5];
+
     // Town
     GameObject[] buildingsInActiveTown;
     GameObject townWindow;
@@ -102,6 +104,12 @@ public class GameManager : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
+        heroes[0] = new Blueberry();
+        heroes[1] = new Gork();
+        heroes[2] = new JackMcBlackwell();
+        heroes[3] = new JohnyMudbone();
+        heroes[4] = new Mantooth();
+
         parentToMarkers = new GameObject();
         parentToMarkers.name = "Path";
         width = WIDTH;
@@ -888,6 +896,8 @@ public class GameManager : MonoBehaviour
 
         // Creates a GameObject array for the new building
         buildingsInActiveTown = new GameObject[town.Buildings.Length];
+
+        //town.BuildAll(town);
 
         // loads in the town buildings
         for (int i = 0; i < town.Buildings.Length; i++)

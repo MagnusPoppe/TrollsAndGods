@@ -12,7 +12,7 @@ namespace TownView
     {
         // Required values for building:
         const string name = "Troll Cave";
-        static bool[] requirements = new bool[]{true, true, false, false, false};
+        static bool[] requirements = new bool[]{false, true, false, false, false};
         const int LOCAL_SPRITEID = 5;
         const int LOCAL_SPRITEID_BLUEPRINT = 10;
 
@@ -82,7 +82,7 @@ namespace TownView
         /// <returns>Integer for which window type to display in the game</returns>
         protected override int GetUIType()
         {
-            return UI.WindowTypes.DWELLING_PLAYING_CARD;
+            return UI.WindowTypes.DWELLING_CARD;
         }
     }
 }

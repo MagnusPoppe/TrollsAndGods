@@ -8,7 +8,7 @@ namespace UI
     class ExitButton : UIElements
     {
 
-        const int LOCAL_SPRITEID = 2;
+        const int LOCAL_SPRITEID = 6;
 
         public ExitButton() : base(LOCAL_SPRITEID)
         {
