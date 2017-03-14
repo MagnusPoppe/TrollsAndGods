@@ -4,15 +4,21 @@ namespace OverworldObjects
 {
 	public class Castle : OverworldBuilding
 	{
-		int environmentTileType;
-		string name;
+		Environment environment;
+
+	    public Environment Environment
+	    {
+	        get { return environment; }
+	    }
+
+	    string name;
         Town town;
 
-        public Castle(Point origo, int shape, Player owner, int spriteID, IngameObjectLibrary.Category spriteCategory, int environmentTileType)
+        public Castle(Point origo, int shape, Player owner, int spriteID, IngameObjectLibrary.Category spriteCategory, Environment environment)
             : base(origo, shape, owner, spriteID, spriteCategory)
         {
             Name = "unnamed";
-            EnvironmentTileType = environmentTileType;
+            this.environment = environment;
             Town = town;
         }
         public Castle( int shape, Player owner, int spriteID, IngameObjectLibrary.Category spriteCategory)
@@ -20,19 +26,6 @@ namespace OverworldObjects
         {
             this.Name = "unnamed";
             Town = town;
-        }
-
-        public int EnvironmentTileType
-        {
-            get
-            {
-                return environmentTileType;
-            }
-
-            set
-            {
-                environmentTileType = value;
-            }
         }
 
         public string Name
@@ -61,19 +54,9 @@ namespace OverworldObjects
             }
         }
 
-        public int GetEnvironment()
-		{
-			return EnvironmentTileType;
-		}
-
         public Point GetPosition()
 		{
 			return Origo;
-        }
-
-        public void SetEnvironment(int environmentType)
-        {
-            this.EnvironmentTileType = environmentType;
         }
 
         public override string ToString()

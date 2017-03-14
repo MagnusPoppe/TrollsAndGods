@@ -27,27 +27,31 @@ namespace MapGenerator
 		public const bool KEEP_VORONOI_REGION_LINES = false;
 
 		// Base sprites
-        public const int GRASS_SPRITEID =   IngameObjectLibrary.GROUND_START + 0;
-        public const int WATER_SPRITEID =   IngameObjectLibrary.GROUND_START + 1;
+        public const int GRASS_SPRITEID =   IngameObjectLibrary.GROUND_START + 13;
+        public const int GRASS2_SPRITEID = IngameObjectLibrary.GROUND_START + 14;
+        public const int GRASS3_SPRITEID = IngameObjectLibrary.GROUND_START + 15;
+        public const int GRASS4_SPRITEID = IngameObjectLibrary.GROUND_START + 16;
+
+        public const int WATER_SPRITEID =   IngameObjectLibrary.GROUND_START + 0;
 
 		// WATER->Grass Transition sprites:
-		public const int GRASS_WATER_NORTH = IngameObjectLibrary.GROUND_START + 2;
-		public const int GRASS_WATER_EAST = IngameObjectLibrary.GROUND_START + 3;
-		public const int GRASS_WATER_SOUTH = IngameObjectLibrary.GROUND_START + 4;
-		public const int GRASS_WATER_WEST = IngameObjectLibrary.GROUND_START + 5;
+		public const int GRASS_WATER_NORTH    = IngameObjectLibrary.GROUND_START + 1;
+		public const int GRASS_WATER_EAST     = IngameObjectLibrary.GROUND_START + 2;
+		public const int GRASS_WATER_SOUTH    = IngameObjectLibrary.GROUND_START + 3;
+		public const int GRASS_WATER_WEST     = IngameObjectLibrary.GROUND_START + 4;
 
-		public const int GRASS_WATER_NORTH_EAST_IN = IngameObjectLibrary.GROUND_START + 6;
-		public const int GRASS_WATER_SOUTH_EAST_IN = IngameObjectLibrary.GROUND_START + 7;
-		public const int GRASS_WATER_SOUTH_WEST_IN = IngameObjectLibrary.GROUND_START + 8;
-		public const int GRASS_WATER_NORTH_WEST_IN = IngameObjectLibrary.GROUND_START + 9;
+		public const int GRASS_WATER_NORTH_EAST_IN = IngameObjectLibrary.GROUND_START + 5;
+		public const int GRASS_WATER_SOUTH_EAST_IN = IngameObjectLibrary.GROUND_START + 6;
+		public const int GRASS_WATER_SOUTH_WEST_IN = IngameObjectLibrary.GROUND_START + 7;
+		public const int GRASS_WATER_NORTH_WEST_IN = IngameObjectLibrary.GROUND_START + 8;
 
-		public const int GRASS_WATER_NORTH_EAST_OUT = IngameObjectLibrary.GROUND_START + 10;
-		public const int GRASS_WATER_SOUTH_EAST_OUT = IngameObjectLibrary.GROUND_START + 11;
-		public const int GRASS_WATER_SOUTH_WEST_OUT = IngameObjectLibrary.GROUND_START + 12;
-		public const int GRASS_WATER_NORTH_WEST_OUT = IngameObjectLibrary.GROUND_START + 13;
+		public const int GRASS_WATER_NORTH_EAST_OUT = IngameObjectLibrary.GROUND_START + 9;
+		public const int GRASS_WATER_SOUTH_EAST_OUT = IngameObjectLibrary.GROUND_START + 10;
+		public const int GRASS_WATER_SOUTH_WEST_OUT = IngameObjectLibrary.GROUND_START + 11;
+		public const int GRASS_WATER_NORTH_WEST_OUT = IngameObjectLibrary.GROUND_START + 12;
 
 		// Environment sprites:
-        public const int FOREST_SPRITEID = IngameObjectLibrary.ENVIRONMENT_START + 0;
+        public const int FOREST_SPRITEID    = IngameObjectLibrary.ENVIRONMENT_START + 0;
         public const int MOUNTAIN1_SPRITEID = IngameObjectLibrary.ENVIRONMENT_START + 1;
         public const int MOUNTAIN2_SPRITEID = IngameObjectLibrary.ENVIRONMENT_START + 2;
         public const int MOUNTAIN3_SPRITEID = IngameObjectLibrary.ENVIRONMENT_START + 3;
@@ -189,10 +193,8 @@ namespace MapGenerator
 
                     if (0 <= x && x < map.GetLength(0) && 0 <= y && y < map.GetLength(0))
                     {
-                        if (shape[ix, iy] == 1)
-                            map[x, y] = spriteID;
-                        else if (shape[ix, iy] == 2)
-                            map[x, y] = environment;
+                        if (shape[ix, iy] == 1) map[x, y] = spriteID;
+                        else if (shape[ix, iy] == 2) map[x, y] = environment;
                     }
                 }
             }
@@ -405,7 +407,7 @@ namespace MapGenerator
                 if (region.GetType().Equals(typeof(LandRegion)))
                 {
                     LandRegion lr = (LandRegion)region;
-                    lr.SetRegionGroundTileType(lr.GetCastle().EnvironmentTileType, generatedMap);
+                    lr.SetRegionGroundTileType(generatedMap);
 
                 }
                 else if (region.GetType().Equals(typeof(WaterRegion)))

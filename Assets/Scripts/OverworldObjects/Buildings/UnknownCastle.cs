@@ -18,7 +18,7 @@ namespace OverworldObjects
         const IngameObjectLibrary.Category SPRITE_CATEGORY = IngameObjectLibrary.Category.Castle;
 
         // The enviroment that surrounds the castle:
-        const int environmentTileType = MapGenerator.MapMaker.GRASS_SPRITEID;
+        static Environment environmentTileType = new Grass();
 
         /// <summary>
         /// Default constructor:
@@ -30,7 +30,6 @@ namespace OverworldObjects
         public UnknownCastle(Point origo, Player owner ) 
             : base(origo, shape, owner, LOCAL_SPRITE_ID, SPRITE_CATEGORY, environmentTileType)
         {
-			EnvironmentTileType = MapGenerator.MapMaker.GRASS_SPRITEID;
             Town = new VikingTown(owner);
         }
 
