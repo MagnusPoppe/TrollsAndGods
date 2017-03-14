@@ -1,6 +1,4 @@
-﻿using System;
-using UnityEngine;
-namespace OverworldObjects
+﻿namespace OverworldObjects
 {
 	public class Shapes
 	{
@@ -32,17 +30,15 @@ namespace OverworldObjects
 		/// <returns>The building fit.</returns>
 		/// <param name="Position">Position.</param>
 		/// <param name="canWalk">Can walk.</param>
-		public static bool[] GetBuildingFit(Vector2 Position, int[,] canWalk)
+		public static bool[] GetBuildingFit(Point Position, int[,] canWalk)
 		{
-			int x = (int)Position.x;
-			int y = (int)Position.y;
 			bool[] BuildingTypesFit = new bool[SHAPE_COUNT];
 
-			if ((x >= FILTER_SIZE/2 && x < canWalk.GetLength(1)-FILTER_SIZE/2) 
-			&&  (y >= FILTER_SIZE/2 && y < canWalk.GetLength(0)-FILTER_SIZE/2))
+			if ((Position.x >= FILTER_SIZE/2 && Position.x < canWalk.GetLength(1)-FILTER_SIZE/2) 
+			&&  (Position.y >= FILTER_SIZE/2 && Position.y < canWalk.GetLength(0)-FILTER_SIZE/2))
 			{
 				for (int i = 0; i < SHAPE_COUNT; i++)
-					BuildingTypesFit[i] = fits(i, x, y, canWalk);
+					BuildingTypesFit[i] = fits(i, Position.x, Position.y, canWalk);
 			}
 			return BuildingTypesFit;
 		}

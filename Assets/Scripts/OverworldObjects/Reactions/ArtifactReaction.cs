@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
+﻿
 /// <summary>
 /// Governs what happens when you interact with an artifact pickup on the map
 /// </summary>
@@ -37,7 +33,7 @@ public class ArtifactReaction : Reaction {
         }
     }
 
-    public ArtifactReaction(Item artifact, Vector2 pos)
+    public ArtifactReaction(Item artifact, Point pos)
     {
         Artifact = artifact;
         Pos = pos;

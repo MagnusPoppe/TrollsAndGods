@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-/// <summary>
+﻿/// <summary>
 /// Class of the units that are kept in a town, or a hero
 /// </summary>
 public class UnitTree
@@ -48,6 +44,7 @@ public class UnitTree
     public void changeAmount(int amount, int pos)
     {
         unitAmount[pos] += amount;
+        if (unitAmount[pos] < 0) unitAmount[pos] = 0;
     }
 
     /// <summary>
@@ -59,6 +56,12 @@ public class UnitTree
     public void setUnit(Unit unit, int amount, int pos)
     {
         units[pos] = unit;
+        unitAmount[pos] = amount;
+    }
+
+    public void removeUnit(int pos)
+    {
+        units[pos] = null;
     }
 
     public Unit[] GetUnits()

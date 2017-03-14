@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
-
-namespace TownView
+﻿namespace TownView
 {
     /// <summary>
     /// Placeholder class for a spesific building.
@@ -20,11 +14,11 @@ namespace TownView
 
 
         // Resources cost: 
-        const int GOLD_COST = 1000;
+        const int GOLD_COST = 500;
         const int WOOD_COST = 5;
         const int ORE_COST = 5;
-        const int CRYSTAL_COST = 5;
-        const int GEM_COST = 5;
+        const int CRYSTAL_COST = 2;
+        const int GEM_COST = 2;
 
 
 

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
+﻿
 /// <summary>
 /// Governs what happens when interacting with a unit on the map
 /// </summary>
@@ -10,7 +6,7 @@ public class UnitReaction : Reaction {
 
     UnitTree units;
 
-    public UnitReaction(UnitTree units, Vector2 pos)
+    public UnitReaction(UnitTree units, Point pos)
     {
         Units = units;
         Pos = pos;

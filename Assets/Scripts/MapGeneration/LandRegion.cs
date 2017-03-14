@@ -1,8 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 using OverworldObjects;
-using TownView;
 
 namespace MapGenerator
 {
@@ -23,7 +20,7 @@ namespace MapGenerator
         /// </summary>
         /// <param name="coordinateList">Coordinate list.</param>
         /// <param name="regionCenter">Castle position.</param>
-        public LandRegion(List<Vector2> coordinateList, Vector2 regionCenter) 
+        public LandRegion(List<Point> coordinateList, Point regionCenter) 
             :base(coordinateList, regionCenter)
         {
             // TODO: alt skal ikke være viking town
@@ -34,17 +31,17 @@ namespace MapGenerator
 
         public void PlaceHero(Player player, int[,] map, int[,] canWalk)
         {
-            Vector2 heroPos = new Vector2((int)RegionCenter.x, (int)RegionCenter.y - 2);
+            Point heroPos = new Point(RegionCenter.x, RegionCenter.y - 2);
             hero = new TestHero(player, heroPos);
             player.addHero(hero);
-            canWalk[(int)heroPos.x, (int)heroPos.y] = 2;
-            map[(int)heroPos.x, (int)heroPos.y] = hero.GetSpriteID();
+            canWalk[heroPos.x, heroPos.y] = 2;
+            map[heroPos.x, heroPos.y] = hero.GetSpriteID();
         }
 
         public void PlaceCastle(int[,] map, int[,] canWalk)
         {
             castle.FlipCanWalk(canWalk);
-            map[(int)RegionCenter.x, (int)RegionCenter.y] = castle.GetSpriteID();
+            map[RegionCenter.x, RegionCenter.y] = castle.GetSpriteID();
         }
 
 
@@ -110,9 +107,9 @@ namespace MapGenerator
         /// </summary>
         /// <returns><c>true</c>, if position in region, <c>false</c> otherwise.</returns>
         /// <param name="Position">Position.</param>
-        public bool IsPositionInRegion(Vector2 Position)
+        public bool IsPositionInRegion(Point Position)
         {
-            foreach (Vector2 coordinate in coordinates)
+            foreach (Point coordinate in coordinates)
             {
                 if (coordinate.Equals(Position))
                     return true;

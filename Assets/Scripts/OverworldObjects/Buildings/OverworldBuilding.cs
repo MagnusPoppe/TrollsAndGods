@@ -1,6 +1,4 @@
-﻿using System;
-using UnityEngine;
-using OverworldObjects;
+﻿using OverworldObjects;
 
 namespace OverworldObjects
 {
@@ -55,7 +53,7 @@ namespace OverworldObjects
 			ShapeType = shape;
 			Player = owner;
 		}
-        public OverworldBuilding(Vector2 origo, int shape, Player owner, int spriteID, IngameObjectLibrary.Category spriteCategory)
+        public OverworldBuilding(Point origo, int shape, Player owner, int spriteID, IngameObjectLibrary.Category spriteCategory)
             : base(origo, spriteCategory, spriteID)
         {
             ShapeType = shape;
@@ -64,23 +62,20 @@ namespace OverworldObjects
 
         public void FlipCanWalk( int[,] canWalk )
 		{
-			int x = (int)Origo.x;
-			int y = (int)Origo.y;
-
 			int[,] shape = Shapes.GetShape(ShapeType);
 
 			for (int fy = 0; fy < shape.GetLength(0); fy++)
 			{
 				for (int fx = 0; fx < shape.GetLength(1); fx++)
 				{
-					int dxx = x + Shapes.dx[fx];
-					int dyy = y + Shapes.dy[fy];
+                    int dxx = Origo.x + Shapes.dx[fx];
+                    int dyy = Origo.y + Shapes.dy[fy];
 
 					if (shape[fx,fy] == 1)
 						canWalk[dxx,dyy] = MapGenerator.MapMaker.CANNOTWALK;
 				}
 			}
-            canWalk[x,y] = MapGenerator.MapMaker.TRIGGER;
+            canWalk[Origo.x,Origo.y] = MapGenerator.MapMaker.TRIGGER;
         }
 
         public virtual Reaction makeReaction()

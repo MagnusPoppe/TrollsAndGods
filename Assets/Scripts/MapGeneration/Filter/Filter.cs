@@ -1,5 +1,4 @@
-﻿using System;
-namespace Filter
+﻿namespace Filter
 {
 	public interface Filter
 	{

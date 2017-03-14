@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using OverworldObjects;
+﻿using OverworldObjects;
 
 /// <summary>
 /// governs what happens when you interact with a dwelling
@@ -10,7 +7,7 @@ public class DwellingReact : Reaction {
 
     Dwelling dwelling;
 
-    public DwellingReact(Dwelling dwelling, Vector2 pos)
+    public DwellingReact(Dwelling dwelling, Point pos)
     {
         Dwelling = dwelling;
         Pos = pos;

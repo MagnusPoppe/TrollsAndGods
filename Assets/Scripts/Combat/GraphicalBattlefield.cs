@@ -1,6 +1,6 @@
-﻿using System.Collections;
+﻿using UnityEngine;
+using System.Linq;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class GraphicalBattlefield : MonoBehaviour {
 
@@ -9,53 +9,220 @@ public class GraphicalBattlefield : MonoBehaviour {
     int width, height;
     bool inCombat;
     GameObject[,] field;
-    GameObject[,] units;
+    GameObject[,] unitsOnField;
+    GameObject parent;
     bool isWalking;
     UnitGameObject[] initative;
     int whoseTurn;
+    int livingAttackers, livingDefenders;
 
     // Use this for initialization
     void Start () {
-        inCombat = false;
-        isWalking = false;
+        InCombat = false;
+        IsWalking = false;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (inCombat)
+		if (InCombat)
         {
-            if (isWalking)
+            if (IsWalking)
             {
                 //Todo keep moving
+            }
+            else if (livingAttackers == 0 || livingDefenders == 0)
+            {
+                endCombat();
             }
         }
 	}
 
-    public void beginCombat(int width, int height)
+    public void beginCombat(int width, int height, Hero attacker, Hero defender)
     {
-        //Todo ready and show combat
+        Width = width;
+        Height = height;
+        InCombat = true;
+        Canwalk = new int[width, height];
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                Canwalk[x, y] = MapGenerator.MapMaker.CANWALK;
+            }
+        }
+        BattleField = new BattleField(width, height, attacker, defender, Canwalk);
+
+        populateField();
+        populateInitative(attacker, defender.Units);
     }
 
-    public void BeginWalking(Vector2 path)
+    public void beginCombat(int width, int height, Hero attacker, UnitTree defender)
+    {
+        Width = width;
+        Height = height;
+        InCombat = true;
+        Canwalk = new int[width, height];
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                Canwalk[x, y] = MapGenerator.MapMaker.CANWALK;
+            }
+        }
+        BattleField = new BattleField(width, height, attacker, defender, Canwalk);
+
+        populateField();
+        populateInitative(attacker, defender);
+    }
+
+    public void populateField()
+    {
+        field = new GameObject[width,height];
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                GameObject go = new GameObject("ground x=" + x + ", y=" + y);
+                go.AddComponent<GroundGameObject>();
+                GroundGameObject ggo = go.GetComponent<GroundGameObject>();
+                ggo.GraphicalBattlefield = this;
+                ggo.LogicalPos = new Point(x, y);
+            }
+        }
+    }
+
+    public void populateInitative(Hero attacker, UnitTree defender)
+    {
+        unitsOnField = new GameObject[width,height];
+        Initative = new UnitGameObject[UnitTree.TREESIZE * 2];
+        int logPos = 0;
+        int increment = Height / UnitTree.TREESIZE;
+        int place = 0;
+        livingAttackers = livingDefenders = 0;
+        UnitTree units = attacker.Units;
+        for (int i = 0; i < UnitTree.TREESIZE; i++)
+        {
+            if (units.GetUnits()[i] != null)
+            {
+                GameObject go = new GameObject("a" + i);
+                //todo add sprite
+                go.AddComponent<UnitGameObject>();
+                UnitGameObject ugo = go.GetComponent<UnitGameObject>();
+                ugo.UnitTree = units;
+                ugo.PosInUnitTree = i;
+                ugo.GraphicalBattlefield = this;
+                ugo.AttackingSide = true;
+                ugo.Initative = units.GetUnits()[i].Unitstats.Initative;
+                ugo.LogicalPos = new Point(0, place);
+                Initative[logPos++] = ugo;
+                //set correct graphical pos
+                gameObject.transform.position = new Vector2(0, place);
+                UnitsOnField[0, place] = go;
+                field[0, place].GetComponent<GroundGameObject>().IsOccupied = true;
+                livingAttackers++;
+            }
+            place += increment;
+        }
+
+        units = defender;
+        place = 0;
+        for (int i = 0; i < UnitTree.TREESIZE; i++)
+        {
+            if (units.GetUnits()[i] != null)
+            {
+                GameObject go = new GameObject("d" + i);
+                //todo add sprite
+                go.AddComponent<UnitGameObject>();
+                UnitGameObject ugo = go.GetComponent<UnitGameObject>();
+                ugo.UnitTree = units;
+                ugo.PosInUnitTree = i;
+                ugo.GraphicalBattlefield = this;
+                ugo.AttackingSide = false;
+                ugo.Initative = units.GetUnits()[i].Unitstats.Initative;
+                ugo.LogicalPos = new Point(width-1, place);
+                Initative[logPos++] = ugo;
+                //set correct graphical pos
+                gameObject.transform.position = new Vector2(Width - 1, place);
+                UnitsOnField[Width-1, place] = go;
+                field[width-1, place].GetComponent<GroundGameObject>().IsOccupied = true;
+                livingDefenders++;
+            }
+            place += increment;
+        }
+
+        Initative = Initative.OrderByDescending(UnitGameObject => UnitGameObject.Initative).ToArray();
+        WhoseTurn = 0;
+        initative[whoseTurn].ItsTurn = true;
+    }
+
+    public void endCombat()
+    {
+        battleField.endCombat();
+        InCombat = false;
+    }
+
+    public void attackUnit(UnitGameObject defender, Point goal)
+    {
+        UnitGameObject activeUnit = initative[whoseTurn];
+        Unit attackingUnit = activeUnit.UnitTree.GetUnits()[activeUnit.PosInUnitTree];
+        if (activeUnit.transform.position.Equals(goal))
+        {
+            battleField.attackWithoutMoving(activeUnit.LogicalPos, defender.LogicalPos, false);
+            //todo trigger animation
+        }
+        else
+        {
+            if (attackingUnit.IsRanged)
+            {
+                battleField.attackWithoutMoving(activeUnit.LogicalPos, defender.LogicalPos, true);
+                //todo trigger animation
+            }
+            else
+            {
+                List<Vector2> path = battleField.UnitMoveAndAttack(activeUnit.LogicalPos, goal, defender.LogicalPos);
+                BeginWalking(path);
+                //todo trigger animation
+            }
+        }
+        if (defender.UnitTree.getUnitAmount(defender.PosInUnitTree) == 0)
+        {
+            if (defender.AttackingSide) livingAttackers--;
+            else livingDefenders--;
+        }
+        if (activeUnit.UnitTree.getUnitAmount(activeUnit.PosInUnitTree) == 0)
+        {
+            if (activeUnit.AttackingSide) livingAttackers--;
+            else livingDefenders--;
+        }
+    }
+
+    public void moveUnit(Point goal)
+    {
+        UnitGameObject activeUnit = initative[whoseTurn];
+        List<Vector2> path = battleField.unitMove(activeUnit.LogicalPos, goal);
+        BeginWalking(path);
+    }
+
+    public void BeginWalking(List<Vector2> path)
     {
         //todo begin walking
     }
 
     public UnitGameObject getUnitWhoseTurnItIs()
     {
-        return initative[whoseTurn];
+        return Initative[WhoseTurn];
     }
 
     public UnitGameObject[] Initative
     {
         get
         {
-            return initative;
+            return Initative;
         }
 
         set
         {
-            initative = value;
+            Initative = value;
         }
     }
 
@@ -63,12 +230,116 @@ public class GraphicalBattlefield : MonoBehaviour {
     {
         get
         {
-            return whoseTurn;
+            return WhoseTurn;
         }
 
         set
         {
-            whoseTurn = value;
+            WhoseTurn = value;
+        }
+    }
+
+    public BattleField BattleField
+    {
+        get
+        {
+            return battleField;
+        }
+
+        set
+        {
+            battleField = value;
+        }
+    }
+
+    public int[,] Canwalk
+    {
+        get
+        {
+            return canwalk;
+        }
+
+        set
+        {
+            canwalk = value;
+        }
+    }
+
+    public int Width
+    {
+        get
+        {
+            return width;
+        }
+
+        set
+        {
+            width = value;
+        }
+    }
+
+    public int Height
+    {
+        get
+        {
+            return height;
+        }
+
+        set
+        {
+            height = value;
+        }
+    }
+
+    public bool InCombat
+    {
+        get
+        {
+            return inCombat;
+        }
+
+        set
+        {
+            inCombat = value;
+        }
+    }
+
+    public GameObject[,] Field
+    {
+        get
+        {
+            return field;
+        }
+
+        set
+        {
+            field = value;
+        }
+    }
+
+    public GameObject[,] UnitsOnField
+    {
+        get
+        {
+            return unitsOnField;
+        }
+
+        set
+        {
+            unitsOnField = value;
+        }
+    }
+
+    public bool IsWalking
+    {
+        get
+        {
+            return isWalking;
+        }
+
+        set
+        {
+            isWalking = value;
         }
     }
 }

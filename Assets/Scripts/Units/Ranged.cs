@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class Ranged : Unit
+﻿public class Ranged : Unit
 {
     int ammo;
     bool meleePenalty;
