@@ -12,7 +12,7 @@ namespace TownView
     {
         // Required values for building:
         const string name = "Troll Cave";
-        const bool[] requirements = null;
+        static bool[] requirements = new bool[]{true, true, false, false, false};
         const int LOCAL_SPRITEID = 5;
         const int LOCAL_SPRITEID_BLUEPRINT = 10;
 
