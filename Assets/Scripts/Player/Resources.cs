@@ -1,4 +1,6 @@
-﻿/// <summary>
+﻿using System;
+
+/// <summary>
 /// Class that holds resource values for heroes, resource costs for buildings and units.
 /// It is used to check if the player can afford actions, and updates his values.
 /// </summary>
@@ -39,4 +41,16 @@ public class Resources
     {
         resourceTab[(int)i] += amount;
     }
+
+    public override string ToString()
+    {
+        return "{ " +
+                   "Gold : " + GetResource(type.GOLD) + ", " +
+                   "Wood : " + GetResource(type.WOOD) + ", " +
+                   "ORE : " + GetResource(type.ORE) + ", " +
+                   "GEM : " + GetResource(type.GEM) + ", " +
+                   "CRYSTAL : " + GetResource(type.CRYSTAL) +
+               " }";
+    }
+
 }

@@ -49,5 +49,10 @@ public class Point
     {
         return new Vector3(x, y, 0);
     }
+
+    public string ToString()
+    {
+        return "(" + x + ", " + y + ")";
+    }
 }
 

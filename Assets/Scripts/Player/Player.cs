@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using OverworldObjects;
+using UnityEngine;
 
 /// <summary>
 /// Player class that holds everything corresponding to the players values and actions.
@@ -35,10 +36,27 @@ public class Player
 
     public void GatherIncome()
     {
-        foreach (ResourceBuilding rb in ResourceBuildings)
+        string debug = "WAS : " + wallet;
+        foreach (ResourceBuilding building in ResourceBuildings)
         {
-            Wallet.adjustResource(rb.ResourceID, 1);
+            Debug.Log("Gathering resources from " + building);
+            wallet = building.Earnings.adjustResources(wallet);
         }
+        foreach (Castle c in castle)
+        {
+            foreach (TownView.Building building in c.Town.Buildings)
+            {
+                if (building.GetType() == typeof(TownView.ResourceBuilding))
+                {
+                    TownView.ResourceBuilding b = (TownView.ResourceBuilding) building;
+                    wallet = b.Earnings.adjustResources(wallet);
+                    Debug.Log("Gathering resources from " + b);
+                }
+            }
+        }
+
+        debug += "\nIS : " + wallet;
+        Debug.Log(debug);
     }
 
     // override object.Equals

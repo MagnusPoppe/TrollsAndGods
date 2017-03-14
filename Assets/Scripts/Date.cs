@@ -18,6 +18,11 @@
         Month = 1;
     }
 
+    public bool isNewWeek()
+    {
+        return day == 1;
+    }
+
     public string incrementDay()
     {
         Day++;

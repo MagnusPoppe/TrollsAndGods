@@ -141,12 +141,89 @@ namespace MapGenerator
         // TODO: Include mountains
         private void replaceWalls()
         {
+
+            // Trying mountains first:
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
                 {
                     if (map[x, y] == WALL)
-                        map[x, y] = FOREST_SPRITEID;
+                    {
+                        if (Shapes.CanFitShapeOver(WALL, new Point(x, y), Shapes.GetShape(Shapes.TRIPLEx3_LEFT), map))
+                        {
+                            int[,] mountain = // TRIPLE x3 LEFT SPECIAL VERSION.
+                            {
+                                // ORIGO = 1, OTHER SPACE = 2, ELSE = UNTOUCHED.
+                                { 0, 0, 0, 2, 0 },
+                                { 0, 0, 2, 2, 0 },
+                                { 0, 0, 2, 1, 2 },
+                                { 0, 0, 2, 2, 0 },
+                                { 0, 0, 0, 2, 0 }
+                            };
+                            PlaceMountain(new Point(x, y), MOUNTAIN1_SPRITEID, GRASS_SPRITEID, mountain);
+                        }
+                    }
+                }
+            }
+
+            // Filling with forests where mountains do not fill.
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    if (map[x, y] == WALL)
+                        FloodFillWall(new Point(x, y), FOREST_SPRITEID);
+                }
+            }
+        }
+
+        void PlaceMountain(Point pos, int spriteID, int environment, int[,] shape)
+        {
+            for (int iy = 0; iy < shape.GetLength(0); iy++)
+            {
+                for (int ix = 0; ix < shape.GetLength(1); ix++)
+                {
+                    
+                    int x = pos.x + (ix - (shape.GetLength(1)/2));
+                    int y = pos.y + (iy - (shape.GetLength(0)/2));
+
+                    if (0 <= x && x < map.GetLength(0) && 0 <= y && y < map.GetLength(0))
+                    {
+                        if (shape[ix, iy] == 1)
+                            map[x, y] = spriteID;
+                        else if (shape[ix, iy] == 2)
+                            map[x, y] = environment;
+                    }
+                }
+            }
+        }
+
+        private void FloodFillWall( Point initial, int spriteID )
+        {
+            Queue<Point> queue = new Queue<Point>();
+            queue.Enqueue(initial);
+
+            Point center = queue.Peek();
+
+            while (queue.Count != 0)
+            {      
+                Point here = queue.Dequeue();
+
+                // Checking if inbounds
+                if (here.x >= 0 && here.x < width && here.y >= 0 && here.y < height)
+                {
+                    // Checking if wall
+                    if (map[here.x, here.y] == WALL)
+                    {
+                        // Labeling:
+                        map[here.x, here.y] = spriteID;
+
+                        // Adding neighbours to queue
+                        queue.Enqueue(new Point(here.x - 1, here.y));
+                        queue.Enqueue(new Point(here.x + 1, here.y));
+                        queue.Enqueue(new Point(here.x, here.y - 1));
+                        queue.Enqueue(new Point(here.x, here.y + 1));
+                    }
                 }
             }
         }

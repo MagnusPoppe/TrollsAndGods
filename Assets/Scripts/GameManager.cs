@@ -983,11 +983,12 @@ public class GameManager : MonoBehaviour
                 // Center camera to the upcoming players first castle
                 cameraMovement.centerCamera(HandyMethods.getGraphicPosForIso(getPlayer(whoseTurn).Castle[0].GetPosition().ToVector2()));
             }
+
             // Gathert income for the upcoming player
             getPlayer(whoseTurn).GatherIncome();
+
             // Update wallet UI
             updateResourceText();
-            Debug.Log(getPlayer(whoseTurn).Wallet.GetResource(0));
         }
     }
 
