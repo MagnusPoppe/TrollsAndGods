@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Linq;
+using System.Collections.Generic;
 
 public class GraphicalBattlefield : MonoBehaviour {
 
@@ -10,7 +11,7 @@ public class GraphicalBattlefield : MonoBehaviour {
     GameObject[,] field;
     GameObject[,] unitsOnField;
     GameObject parent;
-    bool isWalking;
+    bool isWalking, finishedWalking;
     UnitGameObject[] initative;
     int whoseTurn;
     int livingAttackers, livingDefenders;
@@ -28,6 +29,11 @@ public class GraphicalBattlefield : MonoBehaviour {
             if (IsWalking)
             {
                 //Todo keep moving
+            }
+            else if (finishedWalking)
+            {
+                //animation
+                nextTurn();
             }
             else if (livingAttackers == 0 || livingDefenders == 0)
             {
@@ -164,10 +170,11 @@ public class GraphicalBattlefield : MonoBehaviour {
     {
         UnitGameObject activeUnit = initative[whoseTurn];
         Unit attackingUnit = activeUnit.UnitTree.GetUnits()[activeUnit.PosInUnitTree];
-        if (activeUnit.transform.position.Equals(goal))
+        if (activeUnit.LogicalPos.Equals(goal))
         {
             battleField.attackWithoutMoving(activeUnit.LogicalPos, defender.LogicalPos, false);
             //todo trigger animation
+            nextTurn();
         }
         else
         {
@@ -175,6 +182,7 @@ public class GraphicalBattlefield : MonoBehaviour {
             {
                 battleField.attackWithoutMoving(activeUnit.LogicalPos, defender.LogicalPos, true);
                 //todo trigger animation
+                nextTurn();
             }
             else
             {
@@ -205,6 +213,14 @@ public class GraphicalBattlefield : MonoBehaviour {
     public void BeginWalking(List<Vector2> path)
     {
         //todo begin walking
+    }
+
+    public void nextTurn()
+    {
+        initative[whoseTurn].ItsTurn = false;
+        whoseTurn++;
+        if (whoseTurn == initative.Length) whoseTurn = 0;
+        initative[whoseTurn].ItsTurn = true;
     }
 
     public UnitGameObject getUnitWhoseTurnItIs()
