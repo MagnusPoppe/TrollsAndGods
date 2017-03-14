@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using TownView;
 using UI;
+using UnityEngine.UI;
 
 public class BuildingOnClick : MonoBehaviour {
 

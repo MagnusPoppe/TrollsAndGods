@@ -907,8 +907,8 @@ public class GameManager : MonoBehaviour
 
         // Gets parent X,Y and uses offset coords to draw in place
         Vector2 placement = new Vector2(
-            townWindow.transform.position.x + town.Buildings[i].Placement.x,
-            townWindow.transform.position.y + town.Buildings[i].Placement.y
+            townWindow.transform.position.x,
+            townWindow.transform.position.y
         );
         // Creates a game object for the building, gives it a name and places and scales it properly
         string prefabPath = "Prefabs/" + town.Buildings[i].Name;

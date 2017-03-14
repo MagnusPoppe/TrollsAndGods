@@ -81,7 +81,7 @@ public class Cost : Resources {
 
     public string ResourceToString(int i)
     {
-        String text = " ";
+        string text = " ";
         if ((int)type.GOLD == i)
             text += "Gold";
         else if ((int)type.WOOD == i)
