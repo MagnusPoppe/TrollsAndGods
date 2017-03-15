@@ -1,4 +1,6 @@
-﻿public class Unit	{
+﻿using Units;
+
+public class Unit	{
 
     string name;
     Element element;
@@ -8,6 +10,20 @@
     bool haveNotRetaliated;
     bool isRanged = false;
     int currentHealth;
+    private Move[] moves;
+    private Ability[] abilities;
+
+    public Move[] Moves
+    {
+        get { return moves; }
+        set { moves = value; }
+    }
+
+    public Ability[] Abilities
+    {
+        get { return abilities; }
+        set { abilities = value; }
+    }
 
     public Element Element
     {
@@ -113,7 +129,7 @@
         }
     }
 
-    public Unit(string name,Element element, int tier, int faction, UnitStats unitstats)
+    public Unit(string name,Element element, int tier, int faction, UnitStats unitstats, Move[] moves, Ability[] abilities)
     {
         Name = name;
         Element = element;
@@ -122,6 +138,8 @@
         Unitstats = unitstats;
         HaveNotRetaliated = true;
         CurrentHealth = unitstats.Health;
+        Moves = moves;
+        Abilities = abilities;
     }
 
     public Unit()

@@ -1,4 +1,6 @@
-﻿public class Ranged : Unit
+﻿using Units;
+
+public class Ranged : Unit
 {
     int ammo;
     bool meleePenalty;
@@ -30,8 +32,8 @@
     }
 
     public Ranged(string name, Element element, int tier, int faction, UnitStats unitstats,
-        int ammo, bool meleePenalty
-        ) : base(name, element, tier, faction, unitstats)
+        Move[] moves, Ability[] abilities,int ammo, bool meleePenalty
+        ) : base(name, element, tier, faction, unitstats,moves,abilities)
     {
         Ammo = ammo;
         IsRanged = true;

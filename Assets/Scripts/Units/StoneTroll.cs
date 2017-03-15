@@ -3,14 +3,8 @@
     public class StoneTroll : Ranged
     {
 
-        
-        Move[] moves;
-        Ability ability;
-
-        public StoneTroll(string name, Element element, int tier, int faction, UnitStats unitstats, int ammo, bool meleePenalty, Move[] moves, Ability ability) : base(name, element, tier, faction, unitstats, ammo, meleePenalty)
+        public StoneTroll(string name, Element element, int tier, int faction, UnitStats unitstats, int ammo, bool meleePenalty, Move[] moves, Ability[] abilities) : base(name, element, tier, faction, unitstats,moves,abilities, ammo, meleePenalty)
         {
-            this.moves = moves;
-            this.ability = ability;
         }
 
         public StoneTroll()
@@ -35,7 +29,7 @@
 
             Ammo = 3;
             MeleePenalty = false;
-            moves = new Move[] { new TreeSwing(), new BoulderThrow()};
+            Moves = new Move[] { new TreeSwing(), new BoulderThrow()};
             //ability = new StoneSkin(); TODO: make ability
         }
     }
