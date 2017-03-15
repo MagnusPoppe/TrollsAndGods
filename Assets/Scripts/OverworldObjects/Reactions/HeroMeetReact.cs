@@ -1,10 +1,13 @@
 ﻿
+using UnityEngine;
+
 /// <summary>
 /// Governs what happens when two heroes meet.
 /// </summary>
 public class HeroMeetReact : Reaction {
 
     Hero hero;
+    private GameManager gm;
 
     public Hero Hero
     {
@@ -23,6 +26,8 @@ public class HeroMeetReact : Reaction {
     {
         Hero = hero;
         Pos = pos;
+        GameObject go = GameObject.Find("GameManager");
+        gm = go.GetComponent<GameManager>();
     }
 
     /// <summary>
@@ -32,17 +37,9 @@ public class HeroMeetReact : Reaction {
     /// <returns>Returns false if friendly meeting, else true</returns>
     public override bool React(Hero h)
     {
-        //TODO fight. if win delete opponent, else delete self. transfer loot and exp.
+        if (hero.Player.equals(h.Player)) return false;
+        gm.enterCombat(10,10,h,hero);
+        Debug.Log("Youve entered combat, this is not yet finished and your stuck now");
         return true;
-    }
-
-    public bool alliedHero(Hero h)
-    {
-        if (hero.Player.equals(h.Player))
-        {
-            //TODO friendly meeting
-            return true;
-        }
-        return false;
     }
 }
