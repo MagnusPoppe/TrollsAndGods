@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class GroundGameObject : MonoBehaviour {
 
-    bool isOccupied;
+    bool isOccupied, reachable;
     Point logicalPos;
     GraphicalBattlefield graphicalBattlefield;
 
     // Use this for initialization
     void Start () {
-        isOccupied = false;
+        isOccupied = reachable = false;
 	}
 	
 	void onMouseOver()
@@ -38,6 +38,12 @@ public class GroundGameObject : MonoBehaviour {
         {
             isOccupied = value;
         }
+    }
+
+    public bool Reachable
+    {
+        get { return reachable; }
+        set { reachable = value; }
     }
 
     public Point LogicalPos

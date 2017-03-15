@@ -2,7 +2,7 @@
 
 public class UnitGameObject : MonoBehaviour {
 
-    bool itsTurn, attackingSide;
+    bool itsTurn, attackingSide, attackable;
     int initative;
     UnitTree unitTree;
     int posInUnitTree;
@@ -11,7 +11,7 @@ public class UnitGameObject : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        AttackingSide = ItsTurn = false;
+        AttackingSide = ItsTurn = attackable = false;
 	}
 	
 	void OnMouseOver()
@@ -67,6 +67,12 @@ public class UnitGameObject : MonoBehaviour {
         {
             attackingSide = value;
         }
+    }
+
+    public bool Attackable
+    {
+        get { return attackable; }
+        set { attackable = value; }
     }
 
     public UnitTree UnitTree
