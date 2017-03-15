@@ -2,6 +2,9 @@
 using System.Linq;
 using System.Collections.Generic;
 
+/// <summary>
+/// Class handles the graphical side of combat
+/// </summary>
 public class GraphicalBattlefield : MonoBehaviour {
 
     BattleField battleField;
@@ -43,12 +46,20 @@ public class GraphicalBattlefield : MonoBehaviour {
         }
 	}
 
+    /// <summary>
+    /// Readies battlefield between two heroes
+    /// </summary>
+    /// <param name="width">Width of battlefield</param>
+    /// <param name="height">Height of battlefield</param>
+    /// <param name="attacker">Attacking hero</param>
+    /// <param name="defender">Defending hero</param>
     public void beginCombat(int width, int height, Hero attacker, Hero defender)
     {
         Width = width;
         Height = height;
         InCombat = true;
         Canwalk = new int[width, height];
+        //todo add obstacles
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
@@ -64,6 +75,13 @@ public class GraphicalBattlefield : MonoBehaviour {
         possibleMovement.flipReachable(Initative[whoseTurn].LogicalPos, Initative[whoseTurn].UnitTree.GetUnits()[Initative[whoseTurn].PosInUnitTree].Unitstats.Speed);
     }
 
+    /// <summary>
+    /// Readies battlefield between hero and neutral units
+    /// </summary>
+    /// <param name="width">Width of battlefield</param>
+    /// <param name="height">Height of battlefield</param>
+    /// <param name="attacker">Attacking hero</param>
+    /// <param name="defender">Defending units</param>
     public void beginCombat(int width, int height, Hero attacker, UnitTree defender)
     {
         Width = width;
@@ -83,6 +101,9 @@ public class GraphicalBattlefield : MonoBehaviour {
         populateInitative(attacker, defender);
     }
 
+    /// <summary>
+    /// fills 2d array for groundtiles
+    /// </summary>
     public void populateField()
     {
         field = new GameObject[width,height];
@@ -99,6 +120,11 @@ public class GraphicalBattlefield : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Readies initative and populates 2d array for units
+    /// </summary>
+    /// <param name="attacker">Attacking hero</param>
+    /// <param name="defender">Defending units</param>
     public void populateInitative(Hero attacker, UnitTree defender)
     {
         unitsOnField = new GameObject[width,height];
@@ -107,6 +133,7 @@ public class GraphicalBattlefield : MonoBehaviour {
         int increment = Height / UnitTree.TREESIZE;
         int place = 0;
         livingAttackers = livingDefenders = 0;
+        // Adds attacking units
         UnitTree units = attacker.Units;
         for (int i = 0; i < UnitTree.TREESIZE; i++)
         {
@@ -132,6 +159,7 @@ public class GraphicalBattlefield : MonoBehaviour {
             place += increment;
         }
 
+        //Adds defending units
         units = defender;
         place = 0;
         for (int i = 0; i < UnitTree.TREESIZE; i++)
@@ -157,22 +185,31 @@ public class GraphicalBattlefield : MonoBehaviour {
             }
             place += increment;
         }
-
+        // Sorts initative in descending order
         Initative = Initative.OrderByDescending(UnitGameObject => UnitGameObject.Initative).ToArray();
         WhoseTurn = 0;
         initative[whoseTurn].ItsTurn = true;
     }
 
+    /// <summary>
+    /// Ends combat
+    /// </summary>
     public void endCombat()
     {
         battleField.endCombat();
         InCombat = false;
     }
 
+    /// <summary>
+    /// Initiates attack on unit
+    /// </summary>
+    /// <param name="defender">Unit thats being attacked</param>
+    /// <param name="goal">Place on field attacking unit is going to</param>
     public void attackUnit(UnitGameObject defender, Point goal)
     {
         UnitGameObject activeUnit = initative[whoseTurn];
         Unit attackingUnit = activeUnit.UnitTree.GetUnits()[activeUnit.PosInUnitTree];
+        //If unit does not need to move, call on method for attacking without moving
         if (activeUnit.LogicalPos.Equals(goal))
         {
             battleField.attackWithoutMoving(activeUnit.LogicalPos, defender.LogicalPos, false);
@@ -181,6 +218,7 @@ public class GraphicalBattlefield : MonoBehaviour {
         }
         else
         {
+            //checks if unit is ranged, and if it has ammo. if not move and attack
             if (attackingUnit.IsRanged)
             {
                 Ranged r = (Ranged)attackingUnit;
@@ -204,6 +242,7 @@ public class GraphicalBattlefield : MonoBehaviour {
                 //todo trigger animation
             }
         }
+        //Updates living units counts
         if (defender.UnitTree.getUnitAmount(defender.PosInUnitTree) == 0)
         {
             if (defender.AttackingSide) livingAttackers--;
@@ -216,6 +255,10 @@ public class GraphicalBattlefield : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Moves unit logically by calling on unitmove and graphically by calling on beginwalking
+    /// </summary>
+    /// <param name="goal">Destination</param>
     public void moveUnit(Point goal)
     {
         UnitGameObject activeUnit = initative[whoseTurn];
@@ -223,13 +266,28 @@ public class GraphicalBattlefield : MonoBehaviour {
         BeginWalking(path);
     }
 
+    /// <summary>
+    /// Begins walking animation
+    /// </summary>
+    /// <param name="path">Path</param>
     public void BeginWalking(List<Vector2> path)
     {
         //todo begin walking
     }
 
+    /// <summary>
+    /// Moves to next in initative
+    /// </summary>
     public void nextTurn()
     {
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                field[x, y].GetComponent<GroundGameObject>().Reachable = false;
+                if (unitsOnField[x, y] != null) unitsOnField[x, y].GetComponent<UnitGameObject>().Attackable = false;
+            }
+        }
         initative[whoseTurn].ItsTurn = false;
         whoseTurn++;
         if (whoseTurn == initative.Length) whoseTurn = 0;
