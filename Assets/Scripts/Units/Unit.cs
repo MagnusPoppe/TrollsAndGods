@@ -124,6 +124,11 @@
         CurrentHealth = unitstats.Health;
     }
 
+    public Unit()
+    {
+        HaveNotRetaliated = true;
+    }
+
     public bool equals(Unit u)
     {
         return name.Equals(u.Name);

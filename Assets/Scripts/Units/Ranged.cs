@@ -37,4 +37,9 @@
         IsRanged = true;
         MeleePenalty = meleePenalty;
     }
+
+    public Ranged()
+    {
+        IsRanged = true;
+    }
 }
