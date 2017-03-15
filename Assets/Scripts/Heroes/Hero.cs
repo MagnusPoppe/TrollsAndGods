@@ -4,10 +4,10 @@ using UnityEngine;
 /// <summary>
 /// Class for the player's heroes
 /// </summary>
-public class Hero
+public class Hero : SpriteSystem
 {
-    private Sprite portrait;
     private string name;
+    private string description;
     private int faction;
     private Player player;
     private UnitTree units;
@@ -17,26 +17,46 @@ public class Hero
     private int curMovementSpeed;
     private Point position;
     private int localSpriteID;
+    private int portraitID;
     private const IngameObjectLibrary.Category SPRITECATEGORY = IngameObjectLibrary.Category.Heroes;
+    private const IngameObjectLibrary.Category SPRITEPORTRAITCATEGORY = IngameObjectLibrary.Category.Portraits;
     private List<Vector2> path;
+    private bool alive;
 
     /// <summary>
     /// Constructor that prepares unit, items, and equippeditems list for the hero
     /// </summary>
     /// <param name="color">id of which player gets the hero</param>
-    public Hero(Player player, Point position)
+    public Hero(Player player, Point position, int localSpriteID, int portraitID, string name, string description) : base(localSpriteID, SPRITECATEGORY)
     {
         Player = player;
         Units = new UnitTree();
         Items = new List<Item>();
         EquippedItems = new Item[7];
         Position = position;
+        CurMovementSpeed = MovementSpeed = 12;
+        this.portraitID = portraitID;
+        Alive = true;
+        Name = name;
+        Description = description;
     }
 
-    public Sprite GetPortrait()
+    /// <summary>
+    /// Constructor that prepares unit, items, and equippeditems list for the hero
+    /// </summary>
+    /// <param name="color">id of which player gets the hero</param>
+    public Hero(int localSpriteID, int portraitID, string name, string description) : base(localSpriteID, SPRITECATEGORY)
     {
-        return portrait;
+        Units = new UnitTree();
+        Items = new List<Item>();
+        EquippedItems = new Item[7];
+        CurMovementSpeed = MovementSpeed = 12;
+        this.portraitID = portraitID;
+        Alive = false;
+        Name = name;
+        Description = description;
     }
+
     public string Name
     {
         get
@@ -180,8 +200,39 @@ public class Hero
         }
     }
 
+    public string Description
+    {
+        get
+        {
+            return description;
+        }
+
+        set
+        {
+            description = value;
+        }
+    }
+
+    public bool Alive
+    {
+        get
+        {
+            return alive;
+        }
+
+        set
+        {
+            alive = value;
+        }
+    }
+
     public int GetSpriteID()
     {
         return LocalSpriteID + IngameObjectLibrary.GetOffset(SPRITECATEGORY);
+    }
+
+    public int GetPortraitID()
+    {
+        return portraitID + IngameObjectLibrary.GetOffset(SPRITEPORTRAITCATEGORY);
     }
 }

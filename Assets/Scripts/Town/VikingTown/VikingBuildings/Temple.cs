@@ -33,7 +33,7 @@
         /// <returns>Integer for which window type to display in the game</returns>
         protected override int GetUIType()
         {
-            return UI.WindowTypes.BUILDING_PLAYING_CARD;
+            return UI.WindowTypes.TAVERN_CARD;
         }
     }
 }
