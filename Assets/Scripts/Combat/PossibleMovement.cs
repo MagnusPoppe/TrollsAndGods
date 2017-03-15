@@ -75,6 +75,7 @@ public class PossibleMovement
                     }
                 }
             }
+            if (openSet[0].WalkedSteps == speed + 2) break;
         }
     }
 
