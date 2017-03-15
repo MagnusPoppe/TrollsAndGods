@@ -15,6 +15,7 @@ public class GraphicalBattlefield : MonoBehaviour {
     UnitGameObject[] initative;
     int whoseTurn;
     int livingAttackers, livingDefenders;
+    private PossibleMovement possibleMovement;
 
     // Use this for initialization
     void Start () {
@@ -59,6 +60,8 @@ public class GraphicalBattlefield : MonoBehaviour {
 
         populateField();
         populateInitative(attacker, defender.Units);
+        possibleMovement = new PossibleMovement(field,unitsOnField,canwalk,width,height);
+        possibleMovement.flipReachable(Initative[whoseTurn].LogicalPos, Initative[whoseTurn].UnitTree.GetUnits()[Initative[whoseTurn].PosInUnitTree].Unitstats.Speed);
     }
 
     public void beginCombat(int width, int height, Hero attacker, UnitTree defender)
@@ -231,6 +234,7 @@ public class GraphicalBattlefield : MonoBehaviour {
         whoseTurn++;
         if (whoseTurn == initative.Length) whoseTurn = 0;
         initative[whoseTurn].ItsTurn = true;
+        possibleMovement.flipReachable(Initative[whoseTurn].LogicalPos, Initative[whoseTurn].UnitTree.GetUnits()[Initative[whoseTurn].PosInUnitTree].Unitstats.Speed);
     }
 
     public UnitGameObject getUnitWhoseTurnItIs()
