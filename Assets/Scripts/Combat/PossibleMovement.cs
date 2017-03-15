@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// this class registers all possible places you can move to, as well as registering what you can attack
+/// </summary>
 public class PossibleMovement
 {
     private Node[,] field;
@@ -10,6 +13,14 @@ public class PossibleMovement
     private int[,] canWalk;
     private int width, height;
 
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="ground">GameObjects constituting the ground</param>
+    /// <param name="units">GameObjects constituting the units on the field</param>
+    /// <param name="canWalk">2d array over where you can walk</param>
+    /// <param name="width">Width of battlefield</param>
+    /// <param name="height">Height of battlefield</param>
     public PossibleMovement(GameObject[,] ground, GameObject[,] units, int[,] canWalk, int width, int height)
     {
         this.canWalk = canWalk;
@@ -26,26 +37,40 @@ public class PossibleMovement
         }
     }
 
+    /// <summary>
+    /// Checks in a growing circular fashion what you can reach and flips the appropriate bool
+    /// </summary>
+    /// <param name="startingPoint">Position of unit</param>
+    /// <param name="speed">How many steps the unit can take</param>
     public void flipReachable(Point startingPoint, int speed)
     {
+        // List for all nodes that are to be evaluvated
         List<Node> openSet = new List<Node>();
 
+        //Adds starting node to openSet
         Node s = field[startingPoint.x, startingPoint.y];
+        s.WalkedSteps = 0;
         s.InOpenSet = true;
         openSet.Add(s);
 
+        //Loops as long as there are unevaluvated nodes
         while (openSet.Count > 0)
         {
+            //Fetches current node from openset
             Node cur = openSet[0];
+            //Removes cur from openset and marks as evaluvated
             openSet.Remove(cur);
             cur.InOpenSet = false;
             cur.Evaluvated = true;
+            //Flips bool for reachable or attackable if unit can reach cur
             if (cur.Ggo.IsOccupied && units[cur.Pos.x, cur.Pos.y] != null && cur.WalkedSteps <= speed+1)
                 units[cur.Pos.x, cur.Pos.y].GetComponent<UnitGameObject>().Attackable = true;
             else if (cur.WalkedSteps <= speed) cur.Ggo.Reachable = true;
 
+            //Finds walkable neighbours
             Node[] neighbours = findNeighboursHex(cur.Pos);
 
+            //Loops trou neighbours
             for (int i = 0; i < neighbours.Length && neighbours[i] != null; i++)
             {
 
@@ -54,7 +79,7 @@ public class PossibleMovement
                 if (neighbour.Evaluvated)
                     continue;
 
-                // If not in openSet, add to openSet, set where it came from and calculate pathCost
+                // If not in openSet, add to openSet and calculate WalkedSteps
                 if (!neighbour.InOpenSet)
                 {
                     neighbour.WalkedSteps = cur.WalkedSteps + 1;
@@ -75,16 +100,24 @@ public class PossibleMovement
                     }
                 }
             }
+            //Breaks loop if next node to be checked is unreachable
             if (openSet[0].WalkedSteps == speed + 2) break;
+        }
+        //Readies for new run
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                field[x, y].Evaluvated = false;
+                field[x, y].InOpenSet = false;
+            }
         }
     }
 
     /// <summary>
     /// This method finds neighbours in a hex grid
     /// </summary>
-    /// <param name="posX">Current position for x</param>
-    /// <param name="posY">Current position for y</param>
-    /// <param name="goal">goal to make it possible to walk to triggers</param>
+    /// <param name="pos">Current position</param>
     /// <returns>Array with neighbour nodes</returns>
     private Node[] findNeighboursHex(Point pos)
     {
@@ -118,6 +151,9 @@ public class PossibleMovement
         return neighbours;
     }
 
+    /// <summary>
+    /// Inner class for nodes, implements Comparable
+    /// </summary>
     private class Node : IComparable<Node>
     {
         private GroundGameObject ggo;
@@ -125,6 +161,12 @@ public class PossibleMovement
         private int walkedSteps;
         private bool inOpenSet, evaluvated;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="ggo">GroundGameObject</param>
+        /// <param name="walkedSteps">WalkedSteps</param>
+        /// <param name="pos">Position</param>
         public Node(GroundGameObject ggo, int walkedSteps, Point pos)
         {
             this.ggo = ggo;
