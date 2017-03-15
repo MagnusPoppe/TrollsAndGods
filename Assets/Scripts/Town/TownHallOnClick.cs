@@ -106,7 +106,6 @@ class TownHallOnClick : MonoBehaviour
         }
         newHeroFrame.SetActive(true);
         buyButton.Building = Building;
-        // TODO: Why is this not an instance of an object?
 
         /*
         // Build building if town has not already built that day, player can pay, and building is not built already

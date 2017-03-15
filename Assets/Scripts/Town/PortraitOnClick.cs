@@ -11,6 +11,8 @@ class PortraitOnClick : MonoBehaviour
     GameObject[] allFrames;
     Hero hero;
 
+    BuyButtonOnClick buyButton;
+
     public Hero Hero
     {
         get
@@ -50,13 +52,20 @@ class PortraitOnClick : MonoBehaviour
         }
     }
 
+    public BuyButtonOnClick BuyButton
+    {
+        get { return buyButton; }
+        set { buyButton = value; }
+    }
+
     void OnMouseDown()
     {
-        for (int i = 0; i < allFrames.Length; i++)
+        foreach (GameObject t in allFrames)
         {
-            allFrames[i].SetActive(false);
+            if (t != null)
+                t.SetActive(false);
         }
         newHeroFrame.SetActive(true);
-        Debug.Log(hero.Name);
+        buyButton.Hero = Hero;
     }
 }

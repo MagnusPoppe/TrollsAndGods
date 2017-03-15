@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using OverworldObjects;
+using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace MapGenerator
 {

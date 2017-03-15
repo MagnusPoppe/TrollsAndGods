@@ -4,7 +4,7 @@
     private const int PORTRAIT_ID = 0;
 
     public TestHero(Player player, Point position) 
-        : base(player, position, LOCAL_SPRITE_ID, PORTRAIT_ID, "", "")
+        : base(player, position, LOCAL_SPRITE_ID, PORTRAIT_ID, "", "", new Cost(0,0,0,0,0))
     {
         Name = "Testhero";
         Description = "Cool dude, yo bro";

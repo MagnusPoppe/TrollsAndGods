@@ -6,6 +6,7 @@ public class BuyButtonOnClick : MonoBehaviour  {
     GameObject cardWindow;
     GameObject buyButton;
     GameObject[] buildingObjects;
+    private BuildingOnClick parent;
 
     Hero hero;
     Building building;
@@ -106,6 +107,12 @@ public class BuyButtonOnClick : MonoBehaviour  {
         }
     }
 
+    public BuildingOnClick Parent
+    {
+        get { return parent; }
+        set { parent = value; }
+    }
+
     public void Start()
     {
         GameObject go = GameObject.Find("GameManager");
@@ -116,6 +123,8 @@ public class BuyButtonOnClick : MonoBehaviour  {
     // Destroys all the given game objects and returns to the town screen
     void OnMouseDown()
     {
+
+        // Checks if a building object has been sent to this onClick-class
         if(building != null)
         {
             // Build building if town has not already built that day, player can pay, and building is not built already
@@ -134,36 +143,37 @@ public class BuyButtonOnClick : MonoBehaviour  {
                         Debug.Log("YOU BOUGHT: " + building.Name); // TODO remove
                         town.Buildings[i].Build();
                         gm.DrawBuilding(town, building, i);
-                        return;
                     }
                 }
             }
             else
             {
                 Debug.Log("YOU DO NOT HAVE THE SUFFICIENT ECONOMICAL WEALTH TO PRODUCE THE STRUCTURE OF CHOICE: " + building.Name); // TODO remove
+                return;
+                // TODO: what's the graphic feedback for trying to purcahse something unpurchasable?
             }
         }
+
+        // If no building object is found, checks if a hero object has been sent to this onClick-class
         else if(Hero != null)
         {
-            Cost cost = new Cost(2000, 0, 0, 0, 0);
-            if (Player.Wallet.CanPay(cost))
+            // checks if the player can afford the hero and if the hero is alive
+            if (Player.Wallet.CanPay(Hero.Cost) && Player.addHero(Hero))
             {
+                Player.Wallet.Pay(Hero.Cost);
                 Debug.Log("Bought the hero" + hero.Name); // TODO remove
-                player.Wallet.Pay(cost);
             }
             else
                 Debug.Log("Not enough gold");
+            return;
         }
 
 
-
-
-
-        for (int i = 0; i < BuildingObjects.Length; i++)
+        foreach (GameObject t in BuildingObjects)
         {
             // TODO: make into list so we dont have to check for null?
-            if (BuildingObjects[i] != null)
-                BuildingObjects[i].GetComponent<PolygonCollider2D>().enabled = true;
+            if (t != null)
+                t.GetComponent<PolygonCollider2D>().enabled = true;
         }
 
         foreach (GameObject go in GameObject.FindGameObjectsWithTag("toDestroy"))

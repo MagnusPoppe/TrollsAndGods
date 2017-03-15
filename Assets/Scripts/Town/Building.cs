@@ -74,7 +74,7 @@ namespace TownView
             Name = name;
             this.requirements = requirements;
             Placement = placement;
-            this.cost = cost;
+            Cost = cost;
             local_sprite_blueprint = LOCAL_SPRITEID_BLUEPRINT;
         }
 

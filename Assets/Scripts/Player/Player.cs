@@ -39,18 +39,18 @@ public class Player
         string debug = "WAS : " + wallet;
         foreach (ResourceBuilding building in ResourceBuildings)
         {
-            Debug.Log("Gathering resources from " + building);
+            Debug.Log("Gathering resources from ResourceBuilding" + building);
             wallet = building.Earnings.adjustResources(wallet);
         }
         foreach (Castle c in castle)
         {
             foreach (TownView.Building building in c.Town.Buildings)
             {
-                if (building.GetType() == typeof(TownView.ResourceBuilding))
+                if (building.GetType().BaseType == typeof(TownView.ResourceBuilding))
                 {
                     TownView.ResourceBuilding b = (TownView.ResourceBuilding) building;
                     wallet = b.Earnings.adjustResources(wallet);
-                    Debug.Log("Gathering resources from " + b);
+                    Debug.Log("Gathering resources from TownBuilding " + b);
                 }
             }
         }
@@ -171,8 +171,9 @@ public class Player
 
     public bool addHero(Hero h)
     {
-        if(nextEmptyHero < MAXHEROES)
+        if(nextEmptyHero < MAXHEROES && !h.Alive)
         {
+            h.Alive = true;
             heroes[nextEmptyHero++] = h;
             return true;
         }
@@ -181,8 +182,9 @@ public class Player
 
     public bool removeHero(int pos)
     {
-        if (heroes[pos] != null)
+        if (heroes[pos] != null && heroes[pos].Alive)
         {
+            heroes[pos].Alive = false;
             heroes[pos] = null;
             nextEmptyHero--;
 

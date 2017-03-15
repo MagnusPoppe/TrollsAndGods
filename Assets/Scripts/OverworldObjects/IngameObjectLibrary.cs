@@ -174,7 +174,7 @@ public class IngameObjectLibrary
 		sprites[11] = UnityEngine.Resources.Load<Sprite>(path + "Grass-Water/southwest-out");
 		sprites[12] = UnityEngine.Resources.Load<Sprite>(path + "Grass-Water/northwest-out");
 
-	    sprites[13] = UnityEngine.Resources.Load<Sprite>(path + "Grass/grass");
+	    sprites[13] = UnityEngine.Resources.Load<Sprite>(path + "Grass/grass1");
 	    sprites[14] = UnityEngine.Resources.Load<Sprite>(path + "Grass/grass2");
 	    sprites[15] = UnityEngine.Resources.Load<Sprite>(path + "Grass/grass3");
 	    sprites[16] = UnityEngine.Resources.Load<Sprite>(path + "Grass/grass4");
@@ -344,7 +344,7 @@ public class IngameObjectLibrary
         sprites[2] = UnityEngine.Resources.Load<Sprite>(path + "card_template3");
         sprites[3] = UnityEngine.Resources.Load<Sprite>(path + "card_template3");
         sprites[4] = UnityEngine.Resources.Load<Sprite>(path + "card_template");
-        sprites[5] = UnityEngine.Resources.Load<Sprite>(path + "card_template");
+        sprites[5] = UnityEngine.Resources.Load<Sprite>(path + "card_template2");
         sprites[6] = UnityEngine.Resources.Load<Sprite>(path + "exit");
         sprites[7] = UnityEngine.Resources.Load<Sprite>(path + "buy");
         sprites[8] = UnityEngine.Resources.Load<Sprite>(path + "hero_frame");

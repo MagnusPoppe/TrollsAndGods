@@ -22,12 +22,13 @@ public class Hero : SpriteSystem
     private const IngameObjectLibrary.Category SPRITEPORTRAITCATEGORY = IngameObjectLibrary.Category.Portraits;
     private List<Vector2> path;
     private bool alive;
+    protected Cost cost;
 
     /// <summary>
     /// Constructor that prepares unit, items, and equippeditems list for the hero
     /// </summary>
     /// <param name="color">id of which player gets the hero</param>
-    public Hero(Player player, Point position, int localSpriteID, int portraitID, string name, string description) : base(localSpriteID, SPRITECATEGORY)
+    public Hero(Player player, Point position, int localSpriteID, int portraitID, string name, string description, Cost cost) : base(localSpriteID, SPRITECATEGORY)
     {
         Player = player;
         Units = new UnitTree();
@@ -36,16 +37,17 @@ public class Hero : SpriteSystem
         Position = position;
         CurMovementSpeed = MovementSpeed = 12;
         this.portraitID = portraitID;
-        Alive = true;
+        // Alive = true; TODO: dont set alive here?
         Name = name;
         Description = description;
+        Cost = cost;
     }
 
     /// <summary>
     /// Constructor that prepares unit, items, and equippeditems list for the hero
     /// </summary>
     /// <param name="color">id of which player gets the hero</param>
-    public Hero(int localSpriteID, int portraitID, string name, string description) : base(localSpriteID, SPRITECATEGORY)
+    public Hero(int localSpriteID, int portraitID, string name, string description, Cost cost) : base(localSpriteID, SPRITECATEGORY)
     {
         Units = new UnitTree();
         Items = new List<Item>();
@@ -55,6 +57,7 @@ public class Hero : SpriteSystem
         Alive = false;
         Name = name;
         Description = description;
+        Cost = cost;
     }
 
     public string Name
@@ -223,6 +226,18 @@ public class Hero : SpriteSystem
         set
         {
             alive = value;
+        }
+    }
+
+    public Cost Cost
+    {
+        get
+        {
+            return cost;
+        }
+        set
+        {
+            cost = value;
         }
     }
 
