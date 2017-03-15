@@ -180,9 +180,19 @@ public class GraphicalBattlefield : MonoBehaviour {
         {
             if (attackingUnit.IsRanged)
             {
-                battleField.attackWithoutMoving(activeUnit.LogicalPos, defender.LogicalPos, true);
-                //todo trigger animation
-                nextTurn();
+                Ranged r = (Ranged)attackingUnit;
+                if (r.Ammo > 0)
+                {
+                    battleField.attackWithoutMoving(activeUnit.LogicalPos, defender.LogicalPos, true);
+                    //todo trigger animation
+                    nextTurn();
+                }
+                else
+                {
+                    List<Vector2> path = battleField.UnitMoveAndAttack(activeUnit.LogicalPos, goal, defender.LogicalPos);
+                    BeginWalking(path);
+                    //todo trigger animation
+                }
             }
             else
             {
