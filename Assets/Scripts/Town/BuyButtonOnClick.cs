@@ -120,7 +120,7 @@ public class BuyButtonOnClick : MonoBehaviour  {
     }
 
 
-    // Destroys all the given game objects and returns to the town screen
+    // Listens to the buyButtons box collider to check for clicks, and attempts to buy the active building or hero
     void OnMouseDown()
     {
 
