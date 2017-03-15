@@ -66,9 +66,6 @@ public class AStarAlgo {
         // Return variable
         List<Vector2> path = new List<Vector2>();
 
-        // Contains evaluvated nodes
-        List<Node> closedSet = new List<Node>();
-
         // Contains nodes that are to be evaluvated
         List<Node> openSet = new List<Node>();
 
@@ -92,7 +89,6 @@ public class AStarAlgo {
 
             // Removes node from openSet and adds to closedSet
             openSet.Remove(cur);
-            closedSet.Add(cur);
             cur.inOpenSet = false;
             cur.evaluvated = true;
 
