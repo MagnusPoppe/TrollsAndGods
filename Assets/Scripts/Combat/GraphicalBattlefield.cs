@@ -246,12 +246,12 @@ public class GraphicalBattlefield : MonoBehaviour {
     {
         get
         {
-            return Initative;
+            return initative;
         }
 
         set
         {
-            Initative = value;
+            initative = value;
         }
     }
 
@@ -259,12 +259,12 @@ public class GraphicalBattlefield : MonoBehaviour {
     {
         get
         {
-            return WhoseTurn;
+            return whoseTurn;
         }
 
         set
         {
-            WhoseTurn = value;
+            whoseTurn = value;
         }
     }
 
