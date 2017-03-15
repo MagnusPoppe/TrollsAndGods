@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// Represents a unit on battlefield
+/// </summary>
 public class UnitGameObject : MonoBehaviour {
 
     bool itsTurn, attackingSide, attackable;

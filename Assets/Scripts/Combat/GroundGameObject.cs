@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Represents a hex tile on battlefield
+/// </summary>
 public class GroundGameObject : MonoBehaviour {
 
     bool isOccupied, reachable;
