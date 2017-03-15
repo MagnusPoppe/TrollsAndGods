@@ -1016,4 +1016,31 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+
+    public void enterCombat(int width, int height, Hero attacker, Hero defender)
+    {
+        overWorld = false;
+        //todo add canvas
+        // graphicalBattlefield.beginCombat(width, height, attacker, defender)
+    }
+
+    public void enterCombat(int width, int height, Hero attacker, UnitTree defender)
+    {
+        overWorld = false;
+        //todo add canvas
+        // graphicalBattlefield.beginCombat(width, height, attacker, defender)
+    }
+
+    public void exitCombat(bool winner)
+    {
+        if (winner)
+        {
+            //attacker won
+        }
+        else
+        {
+            //defender won
+        }
+        overWorld = true;
+    }
 }
