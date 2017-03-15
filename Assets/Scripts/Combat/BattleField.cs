@@ -294,16 +294,17 @@ public class BattleField {
                 totalDamage = Random.Range(minDamage, maxDamage+1);
             }
             //Checks for meele penalty or outside effective range
-            if (unit.GetType().Equals(typeof(Ranged)))
+            if (unit.IsRanged)
             {
                 Ranged r = (Ranged)unit;
                 if (!ranged && r.MeleePenalty)
                 {
                     totalDamage /= 2;
                 }
-                else if (ranged && r.Unitstats.EffectiveRange < distance)
+                else if (ranged)
                 {
-                    totalDamage /= 2;
+                    if (r.Unitstats.EffectiveRange < distance) totalDamage /= 2;
+                    r.Ammo--;
                 }
             }
             //Checks if crit
