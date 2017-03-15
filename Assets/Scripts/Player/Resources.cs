@@ -24,7 +24,7 @@ public class Resources
 
     public Resources()
     {
-        ResourceTab = new int[5];
+        resourceTab = new int[5];
     }
 
     /// <summary>
@@ -37,22 +37,32 @@ public class Resources
     /// <param name="gemCost">gem</param>
     public Resources(int goldCost, int woodCost, int oreCost, int crystalCost, int gemCost)
     {
-        ResourceTab = new int[] { goldCost, woodCost, oreCost, crystalCost, gemCost };
+        resourceTab = new int[] { goldCost, woodCost, oreCost, crystalCost, gemCost };
     }
 
     public int GetResource(type i)
     {
-        return ResourceTab[(int)i];
+        return resourceTab[(int)i];
     }
 
     public int GetResource(int i)
     {
-        return ResourceTab[i];
+        return resourceTab[i];
     }
     public void adjustResource(type i, int amount)
     {
-        ResourceTab[(int)i] += amount;
+        resourceTab[(int)i] += amount;
     }
 
+    public override string ToString()
+    {
+        return "{ " +
+                   "Gold : " + GetResource(type.GOLD) + ", " +
+                   "Wood : " + GetResource(type.WOOD) + ", " +
+                   "ORE : " + GetResource(type.ORE) + ", " +
+                   "GEM : " + GetResource(type.GEM) + ", " +
+                   "CRYSTAL : " + GetResource(type.CRYSTAL) +
+               " }";
+    }
 
 }

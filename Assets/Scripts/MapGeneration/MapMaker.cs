@@ -27,27 +27,31 @@ namespace MapGenerator
 		public const bool KEEP_VORONOI_REGION_LINES = false;
 
 		// Base sprites
-        public const int GRASS_SPRITEID =   IngameObjectLibrary.GROUND_START + 0;
-        public const int WATER_SPRITEID =   IngameObjectLibrary.GROUND_START + 1;
+        public const int GRASS_SPRITEID =   IngameObjectLibrary.GROUND_START + 13;
+        public const int GRASS2_SPRITEID = IngameObjectLibrary.GROUND_START + 14;
+        public const int GRASS3_SPRITEID = IngameObjectLibrary.GROUND_START + 15;
+        public const int GRASS4_SPRITEID = IngameObjectLibrary.GROUND_START + 16;
+
+        public const int WATER_SPRITEID =   IngameObjectLibrary.GROUND_START + 0;
 
 		// WATER->Grass Transition sprites:
-		public const int GRASS_WATER_NORTH = IngameObjectLibrary.GROUND_START + 2;
-		public const int GRASS_WATER_EAST = IngameObjectLibrary.GROUND_START + 3;
-		public const int GRASS_WATER_SOUTH = IngameObjectLibrary.GROUND_START + 4;
-		public const int GRASS_WATER_WEST = IngameObjectLibrary.GROUND_START + 5;
+		public const int GRASS_WATER_NORTH    = IngameObjectLibrary.GROUND_START + 1;
+		public const int GRASS_WATER_EAST     = IngameObjectLibrary.GROUND_START + 2;
+		public const int GRASS_WATER_SOUTH    = IngameObjectLibrary.GROUND_START + 3;
+		public const int GRASS_WATER_WEST     = IngameObjectLibrary.GROUND_START + 4;
 
-		public const int GRASS_WATER_NORTH_EAST_IN = IngameObjectLibrary.GROUND_START + 6;
-		public const int GRASS_WATER_SOUTH_EAST_IN = IngameObjectLibrary.GROUND_START + 7;
-		public const int GRASS_WATER_SOUTH_WEST_IN = IngameObjectLibrary.GROUND_START + 8;
-		public const int GRASS_WATER_NORTH_WEST_IN = IngameObjectLibrary.GROUND_START + 9;
+		public const int GRASS_WATER_NORTH_EAST_IN = IngameObjectLibrary.GROUND_START + 5;
+		public const int GRASS_WATER_SOUTH_EAST_IN = IngameObjectLibrary.GROUND_START + 6;
+		public const int GRASS_WATER_SOUTH_WEST_IN = IngameObjectLibrary.GROUND_START + 7;
+		public const int GRASS_WATER_NORTH_WEST_IN = IngameObjectLibrary.GROUND_START + 8;
 
-		public const int GRASS_WATER_NORTH_EAST_OUT = IngameObjectLibrary.GROUND_START + 10;
-		public const int GRASS_WATER_SOUTH_EAST_OUT = IngameObjectLibrary.GROUND_START + 11;
-		public const int GRASS_WATER_SOUTH_WEST_OUT = IngameObjectLibrary.GROUND_START + 12;
-		public const int GRASS_WATER_NORTH_WEST_OUT = IngameObjectLibrary.GROUND_START + 13;
+		public const int GRASS_WATER_NORTH_EAST_OUT = IngameObjectLibrary.GROUND_START + 9;
+		public const int GRASS_WATER_SOUTH_EAST_OUT = IngameObjectLibrary.GROUND_START + 10;
+		public const int GRASS_WATER_SOUTH_WEST_OUT = IngameObjectLibrary.GROUND_START + 11;
+		public const int GRASS_WATER_NORTH_WEST_OUT = IngameObjectLibrary.GROUND_START + 12;
 
 		// Environment sprites:
-        public const int FOREST_SPRITEID = IngameObjectLibrary.ENVIRONMENT_START + 0;
+        public const int FOREST_SPRITEID    = IngameObjectLibrary.ENVIRONMENT_START + 0;
         public const int MOUNTAIN1_SPRITEID = IngameObjectLibrary.ENVIRONMENT_START + 1;
         public const int MOUNTAIN2_SPRITEID = IngameObjectLibrary.ENVIRONMENT_START + 2;
         public const int MOUNTAIN3_SPRITEID = IngameObjectLibrary.ENVIRONMENT_START + 3;
@@ -141,12 +145,87 @@ namespace MapGenerator
         // TODO: Include mountains
         private void replaceWalls()
         {
+
+            // Trying mountains first:
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
                 {
                     if (map[x, y] == WALL)
-                        map[x, y] = FOREST_SPRITEID;
+                    {
+                        if (Shapes.CanFitShapeOver(WALL, new Point(x, y), Shapes.GetShape(Shapes.TRIPLEx3_LEFT), map))
+                        {
+                            int[,] mountain = // TRIPLE x3 LEFT SPECIAL VERSION.
+                            {
+                                // ORIGO = 1, OTHER SPACE = 2, ELSE = UNTOUCHED.
+                                { 0, 0, 0, 2, 0 },
+                                { 0, 0, 2, 2, 0 },
+                                { 0, 0, 2, 1, 2 },
+                                { 0, 0, 2, 2, 0 },
+                                { 0, 0, 0, 2, 0 }
+                            };
+                            PlaceMountain(new Point(x, y), MOUNTAIN1_SPRITEID, GRASS_SPRITEID, mountain);
+                        }
+                    }
+                }
+            }
+
+            // Filling with forests where mountains do not fill.
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    if (map[x, y] == WALL)
+                        FloodFillWall(new Point(x, y), FOREST_SPRITEID);
+                }
+            }
+        }
+
+        void PlaceMountain(Point pos, int spriteID, int environment, int[,] shape)
+        {
+            for (int iy = 0; iy < shape.GetLength(0); iy++)
+            {
+                for (int ix = 0; ix < shape.GetLength(1); ix++)
+                {
+                    
+                    int x = pos.x + (ix - (shape.GetLength(1)/2));
+                    int y = pos.y + (iy - (shape.GetLength(0)/2));
+
+                    if (0 <= x && x < map.GetLength(0) && 0 <= y && y < map.GetLength(0))
+                    {
+                        if (shape[ix, iy] == 1) map[x, y] = spriteID;
+                        else if (shape[ix, iy] == 2) map[x, y] = environment;
+                    }
+                }
+            }
+        }
+
+        private void FloodFillWall( Point initial, int spriteID )
+        {
+            Queue<Point> queue = new Queue<Point>();
+            queue.Enqueue(initial);
+
+            Point center = queue.Peek();
+
+            while (queue.Count != 0)
+            {      
+                Point here = queue.Dequeue();
+
+                // Checking if inbounds
+                if (here.x >= 0 && here.x < width && here.y >= 0 && here.y < height)
+                {
+                    // Checking if wall
+                    if (map[here.x, here.y] == WALL)
+                    {
+                        // Labeling:
+                        map[here.x, here.y] = spriteID;
+
+                        // Adding neighbours to queue
+                        queue.Enqueue(new Point(here.x - 1, here.y));
+                        queue.Enqueue(new Point(here.x + 1, here.y));
+                        queue.Enqueue(new Point(here.x, here.y - 1));
+                        queue.Enqueue(new Point(here.x, here.y + 1));
+                    }
                 }
             }
         }
@@ -328,7 +407,7 @@ namespace MapGenerator
                 if (region.GetType().Equals(typeof(LandRegion)))
                 {
                     LandRegion lr = (LandRegion)region;
-                    lr.SetRegionGroundTileType(lr.GetCastle().EnvironmentTileType, generatedMap);
+                    lr.SetRegionGroundTileType(generatedMap);
 
                 }
                 else if (region.GetType().Equals(typeof(WaterRegion)))

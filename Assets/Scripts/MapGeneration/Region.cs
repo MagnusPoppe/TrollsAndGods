@@ -110,25 +110,6 @@ namespace MapGenerator
             return map;
         }
 
-
-
-        /// <summary>
-        /// Sets all ground tiles to a given type of tile.
-        /// Definition of groundtile is found in MapMaker.GROUND
-        /// </summary>
-        /// <returns>The region ground tile type.</returns>
-        /// <param name="groundTile">Ground tile.</param>
-        /// <param name="map">Map.</param>
-        public int[,] SetRegionGroundTileType(int groundTile, int[,] map)
-        {
-            foreach (Point v in coordinates)
-            {
-                if (map[v.x, v.y] == MapMaker.GROUND)
-                    map[v.x, v.y] = groundTile;
-            }
-            return map;
-        }
-
         public int CompareTo(object obj)
         {
             Region other = (Region)obj;

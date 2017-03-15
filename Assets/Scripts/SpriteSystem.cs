@@ -1,6 +1,12 @@
 ﻿public abstract class SpriteSystem
 {
     int LocalSpriteID;
+
+    protected int LocalSpriteId
+    {
+        set { LocalSpriteID = value; }
+    }
+
     IngameObjectLibrary.Category SpriteCategory;
 
     /// <summary>

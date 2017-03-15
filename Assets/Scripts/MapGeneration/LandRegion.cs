@@ -47,6 +47,23 @@ namespace MapGenerator
 
 
         /// <summary>
+        /// Sets all ground tiles to a given type of tile.
+        /// Definition of groundtile is found in MapMaker.GROUND
+        /// </summary>
+        /// <returns>The region ground tile type.</returns>
+        /// <param name="groundTile">Ground tile.</param>
+        /// <param name="map">Map.</param>
+        public int[,] SetRegionGroundTileType(int[,] map)
+        {
+            foreach (Point v in coordinates)
+            {
+                if (map[v.x, v.y] == MapMaker.GROUND)
+                    map[v.x, v.y] = castle.Environment.GetSpriteID();
+            }
+            return map;
+        }
+
+        /// <summary>
         /// Gets the castle belonging to the region.
         /// </summary>
         /// <returns>The castle.</returns>
@@ -68,15 +85,6 @@ namespace MapGenerator
         public Hero GetHero()
         {
             return hero;
-        }
-
-        /// <summary>
-        /// Sets the type of the castle for this region.
-        /// </summary>
-        /// <param name="id">Identifier.</param>
-        public void SetCastleType(int id)
-        {
-            castle.SetEnvironment(id);
         }
 
         /// <returns>Buildings list.</returns>

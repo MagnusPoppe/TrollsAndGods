@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using OverworldObjects;
+using UnityEngine;
 
 /// <summary>
 /// Player class that holds everything corresponding to the players values and actions.
@@ -35,28 +36,37 @@ public class Player
 
     public void GatherIncome()
     {
-        foreach (ResourceBuilding rb in ResourceBuildings)
+        string debug = "WAS : " + wallet;
+        foreach (ResourceBuilding building in ResourceBuildings)
         {
-            Wallet.adjustResource(rb.ResourceID, 1);
+            Debug.Log("Gathering resources from " + building);
+            wallet = building.Earnings.adjustResources(wallet);
         }
+        foreach (Castle c in castle)
+        {
+            foreach (TownView.Building building in c.Town.Buildings)
+            {
+                if (building.GetType() == typeof(TownView.ResourceBuilding))
+                {
+                    TownView.ResourceBuilding b = (TownView.ResourceBuilding) building;
+                    wallet = b.Earnings.adjustResources(wallet);
+                    Debug.Log("Gathering resources from " + b);
+                }
+            }
+        }
+
+        debug += "\nIS : " + wallet;
+        Debug.Log(debug);
     }
 
     // override object.Equals
     public bool equals(Player player)
     {
-        //       
-        // See the full list of guidelines at
-        //   http://go.microsoft.com/fwlink/?LinkID=85237  
-        // and also the guidance for operator== at
-        //   http://go.microsoft.com/fwlink/?LinkId=85238
-        //
 
         if (player == null || GetType() != player.GetType())
         {
             return false;
         }
-
-        // TODO: write your implementation of Equals() here
         return playerID == player.PlayerID;    
     }
 

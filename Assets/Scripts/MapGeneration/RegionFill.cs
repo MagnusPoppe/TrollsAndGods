@@ -100,29 +100,26 @@ namespace MapGenerator
 			Point center = queue.Peek();
 
 			while (queue.Count != 0)
-			{
-				
-				Point current = queue.Dequeue();
-				int x = (int)current.x;
-				int y = (int)current.y;
+			{				
+                Point here = queue.Dequeue();
 
 				// Checking if inbounds
-				if (x >= 0 && x < width && y >= 0 && y < height)
+				if (here.x >= 0 && here.x < width && here.y >= 0 && here.y < height)
 				{
 					// Checking if  ground or castle
-					if (map[x, y] == MapMaker.GROUND || map[x, y] == MapMaker.REGION_CENTER)
+					if (map[here.x, here.y] == MapMaker.GROUND || map[here.x, here.y] == MapMaker.REGION_CENTER)
 					{
 						// Labeling:
-						map[x, y] = label;
+						map[here.x, here.y] = label;
 
 						// Creating region:
-						region.Add(current);
+						region.Add(here);
 
 						// Adding neighbours to queue
-                        queue.Enqueue(new Point(x - 1, y));
-                        queue.Enqueue(new Point(x + 1, y));
-                        queue.Enqueue(new Point(x, y - 1));
-                        queue.Enqueue(new Point(x, y + 1));
+                        queue.Enqueue(new Point(here.x - 1, here.y));
+                        queue.Enqueue(new Point(here.x + 1, here.y));
+                        queue.Enqueue(new Point(here.x, here.y - 1));
+                        queue.Enqueue(new Point(here.x, here.y + 1));
 					}
 				}
  			}

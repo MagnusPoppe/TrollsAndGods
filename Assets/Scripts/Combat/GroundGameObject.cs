@@ -20,6 +20,7 @@ public class GroundGameObject : MonoBehaviour {
 
     void onMouseDown()
     {
+        //moves unit if space is not occupied
         if (!isOccupied)
         {
             graphicalBattlefield.moveUnit(logicalPos);

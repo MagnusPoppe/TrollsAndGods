@@ -1,4 +1,6 @@
-﻿namespace OverworldObjects
+﻿using MapGenerator;
+
+namespace OverworldObjects
 {
 	public class Shapes
 	{
@@ -50,7 +52,7 @@
 		/// <param name="x">The x coordinate.</param>
 		/// <param name="y">The y coordinate.</param>
 		/// <param name="canWalk">Can walk.</param>
-		private static bool fits(int shapeType, int ekteX, int ekteY, int[,] canWalk)
+        private static bool fits(int shapeType, int ekteX, int ekteY, int[,] canWalk)
 		{
 			int[,] shape = GetShape(shapeType);
 
@@ -68,6 +70,36 @@
 			}
 			return true;
 		}
+
+        /// <summary>
+        /// Determines whether a shape can fit over the specified Environment in a given map.
+        /// </summary>
+        /// <returns><c>true</c> if this instance can fit shape over the specified Environment initial shape map; otherwise, <c>false</c>.</returns>
+        /// <param name="Environment">Environment.</param>
+        /// <param name="initial">Initial.</param>
+        /// <param name="shape">Shape.</param>
+        /// <param name="map">Map.</param>
+        public static bool CanFitShapeOver(int Environment, Point initial, int[,] shape, int[,] map)
+        {
+            for (int iy = 0; iy < shape.GetLength(0); iy++)
+            {
+                for (int ix = 0; ix < shape.GetLength(1); ix++)
+                {
+                    int x = initial.x + (ix - (shape.GetLength(1)/2));
+                    int y = initial.y + (iy - (shape.GetLength(0)/2));
+
+                    if (0 <= x && x < map.GetLength(0) && 0 <= y && y < map.GetLength(0))
+                    {
+                        if (shape[ix, iy] == 1)
+                        {
+                            if (map[x, y] != Environment)
+                                return false;
+                        }
+                    }
+                }
+            }
+            return true;
+        }
 
 		/// <summary>
 		/// Gets the shape from the "ALL SHAPES" table using a given index.

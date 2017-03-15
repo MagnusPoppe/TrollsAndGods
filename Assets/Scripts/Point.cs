@@ -19,8 +19,8 @@ public class Point
     /// <param name="vector2">Vector2.</param>
     public Point(Vector2 vector)
     {
-        this.x = (int)vector.x;
-        this.y = (int)vector.y;
+        x = (int)vector.x;
+        y = (int)vector.y;
     }
 
     /// <summary>
@@ -29,8 +29,8 @@ public class Point
     /// <param name="vector3">Vector3.</param>
     public Point(Vector3 vector)
     {
-        this.x = (int)vector.x;
-        this.y = (int)vector.y;
+        x = (int)vector.x;
+        y = (int)vector.y;
     }
 
     public float DistanceTo(Point other)
@@ -48,6 +48,21 @@ public class Point
     public Vector3 ToVector3()
     {
         return new Vector3(x, y, 0);
+    }
+
+    public override bool Equals(object obj)
+    {
+        if (!obj.GetType().Equals(typeof(Point)))
+        {
+            return false;
+        }
+        Point p = (Point) obj;
+        return (p.x == x && p.y == y);
+    }
+
+    public string ToString()
+    {
+        return "(" + x + ", " + y + ")";
     }
 }
 

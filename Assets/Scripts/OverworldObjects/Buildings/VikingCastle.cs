@@ -17,7 +17,7 @@ namespace OverworldObjects
         const IngameObjectLibrary.Category SPRITE_CATEGORY = IngameObjectLibrary.Category.Castle;
 
         // The enviroment that surrounds the castle:
-        const int environmentTileType = MapGenerator.MapMaker.GRASS_SPRITEID;
+        private static Environment environment = new Grass();
 
         /// <summary>
         /// Default constructor:
@@ -27,9 +27,8 @@ namespace OverworldObjects
         /// <param name="origo">pkt the castle should be placed at.</param>
         /// <param name="owner">Player that owns the castle.</param>
         public VikingCastle(Point origo, Player owner)
-            : base(origo, shape, owner, LOCAL_SPRITE_ID, SPRITE_CATEGORY, environmentTileType)
+            : base(origo, shape, owner, LOCAL_SPRITE_ID, SPRITE_CATEGORY, environment)
         {
-            EnvironmentTileType = MapGenerator.MapMaker.GRASS_SPRITEID;
             Town = new VikingTown(owner);
 
             // TODO: Fjern temp som bygger alle bygninger

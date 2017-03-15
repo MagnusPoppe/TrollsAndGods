@@ -698,7 +698,7 @@ public class GameManager : MonoBehaviour
 				else if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.Heroes)
 				{
 					heroLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetHero(spriteID), heroes);
-					groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetGround(IngameObjectLibrary.GROUND_START), ground);
+					groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetGround(MapMaker.GRASS_SPRITEID), ground);
 				}
 
 				// If castle
@@ -993,14 +993,18 @@ public class GameManager : MonoBehaviour
                 // Center camera to the upcoming players first castle
                 cameraMovement.centerCamera(HandyMethods.getGraphicPosForIso(getPlayer(whoseTurn).Castle[0].GetPosition().ToVector2()));
             }
-            // Gathert income for the upcoming player
+
+            // Gather income for the upcoming player
             getPlayer(whoseTurn).GatherIncome();
+
             // Update wallet UI
             updateResourceText();
         }
     }
 
-    // Increment turn, reset turn integer when last player has finished, and increment date
+    ///  <summary>
+    /// Increment turn, reset turn integer when last player has finished, and increment date
+    /// </summary>
     private void incrementTurn()
     {
         if (++whoseTurn >= amountOfPlayers)
