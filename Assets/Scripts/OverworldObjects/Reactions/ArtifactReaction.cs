@@ -43,7 +43,7 @@ public class ArtifactReaction : Reaction {
     /// Adds artifact to hero inventory. Equips if room.
     /// </summary>
     /// <param name="h">Hero interacting with artifact</param>
-    /// <returns>returns true to signal graphical change, artifact always picked up</returns>
+    /// <returns>returns true, artifact always picked up</returns>
     public override bool React(Hero h) 
     {
         if (h.EquippedItems[artifact.SlotType] == null)

@@ -34,12 +34,12 @@ public class HeroMeetReact : Reaction {
     /// If the heroes are friendly to each other, friendly meeting. Else fight.
     /// </summary>
     /// <param name="h">The hero that initiated the meeting</param>
-    /// <returns>Returns false if friendly meeting, else true</returns>
+    /// <returns>Returns false</returns>
     public override bool React(Hero h)
     {
         if (hero.Player.equals(h.Player)) return false;
         gm.enterCombat(10,10,h,hero);
         Debug.Log("Youve entered combat, this is not yet finished and your stuck now");
-        return true;
+        return false;
     }
 }
