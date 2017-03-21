@@ -1,0 +1,493 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="49b3dc2e-230c-4cc1-83c9-bf66680a90ab" name="Default" comment="">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Assets/Sprites.meta" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/UIScene.unity" afterPath="$PROJECT_DIR$/Assets/UIScene.unity" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assembly-CSharp.csproj" afterPath="$PROJECT_DIR$/Assembly-CSharp.csproj" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
+  <component name="FileEditorManager">
+    <leaf>
+      <file leaf-file-name="GameManager.cs" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Assets/Scripts/GameManager.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="319">
+              <caret line="929" column="0" lean-forward="false" selection-start-line="929" selection-start-column="0" selection-end-line="930" selection-end-column="0" />
+              <folding>
+                <marker date="1490085457000" expanded="true" signature="6:180" ph="..." />
+                <marker date="1490085457000" expanded="true" signature="222:38717" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="2458:5174" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="3547:4242" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="3613:4232" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="3792:4028" ph="/* if (lr.GetCastle() != null) ... */" />
+                <marker date="1490085457000" expanded="true" signature="5227:18067" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="5256:18061" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="5461:5565" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="5695:9064" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="6308:6981" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="6370:6887" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="6558:6865" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="7186:8358" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="7241:7328" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="7451:7607" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="7758:8340" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="8026:8124" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="8202:8318" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="8592:9050" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="8766:9032" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="9176:9568" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="9250:9390" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="9411:9554" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="9656:9712" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="9838:16493" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="10081:11269" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="10188:11251" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="10381:11229" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="10496:10771" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="10916:11203" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="11532:16254" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="11769:16236" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="12493:15237" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="12780:13015" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="13166:15117" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="13370:13567" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="13664:13837" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="13938:14085" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="14186:14333" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="14429:14576" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="14674:14822" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="14931:15087" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="15150:15211" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="15676:16213" ph="/* Set origin tile's canWalk 0 or 2 if no reaction there ... */" />
+                <marker date="1490085457000" expanded="true" signature="16320:16479" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="16600:18051" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="16953:18037" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="17050:17384" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="17216:17362" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="17470:17800" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="17640:17778" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="17885:18019" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="18073:18205" ph="/// Removes visual marker and the Vector2 in activehero's pathtable, and increments stepnumber. ... " />
+                <marker date="1490085457000" expanded="true" signature="18241:18450" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="18456:18731" ph="/// Prepares movement variables,  ... " />
+                <marker date="1490085457000" expanded="true" signature="18781:19274" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="19280:19424" ph="/// Graphically draw the path objects ... " />
+                <marker date="1490085457000" expanded="true" signature="19469:20926" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="19848:20920" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="20349:20530" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="20932:21089" ph="/// Creates a position with animationspeed and returns it ... " />
+                <marker date="1490085457000" expanded="true" signature="21126:21467" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="21198:21409" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="21473:21619" ph="/// Destroy the tile gameobjects and refresh list ... " />
+                <marker date="1490085457000" expanded="true" signature="21670:21822" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="21714:21759" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="21866:21978" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="22015:22049" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="22079:22115" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="22151:22184" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="22216:22255" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="22295:22332" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="22372:22415" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="22418:22504" ph="/// Generates the map. This replaces the &quot;map.cs&quot; file. ... " />
+                <marker date="1490085457000" expanded="true" signature="22532:23302" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="23175:23214" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="23221:23246" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="23312:23392" ph="/// Setting up UI buttons, text and images. ... " />
+                <marker date="1490085457000" expanded="true" signature="23422:23954" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="23768:23918" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="23960:24060" ph="/// Setting resourcepanel's textboxes to the players resources. ... " />
+                <marker date="1490085457000" expanded="true" signature="24097:24267" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="24157:24261" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="24270:24417" ph="/// Draws a given map using the IngameObjectLibrary sprites. ... " />
+                <marker date="1490085457000" expanded="true" signature="24453:27648" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="25386:27645" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="25426:27610" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="25589:25696" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="25782:26021" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="26124:26360" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="26481:26725" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="26821:27034" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="27132:27366" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="27468:27579" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="27651:27787" ph="/// Draws the debug map. ... " />
+                <marker date="1490085457000" expanded="true" signature="27834:30561" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="28545:30557" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="28585:30522" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="28595:28659" ph="/* gets tile value ... */" />
+                <marker date="1490085457000" expanded="true" signature="28807:28940" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="29043:29277" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="29398:29641" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="29737:29961" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="30059:30292" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="30395:30516" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="30567:31018" ph="/// Configures a game object to the board. ... " />
+                <marker date="1490085457000" expanded="true" signature="31116:31627" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="31633:31893" ph="/// Adjusts the position relative to odd or par placement. ... " />
+                <marker date="1490085457000" expanded="true" signature="31973:32161" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="32167:32234" ph="/// Called by UI click on town ... " />
+                <marker date="1490085457000" expanded="true" signature="32271:32757" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="32312:32529" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="32542:32751" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="32785:32974" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="32980:33076" ph="/// Draws the town view ... " />
+                <marker date="1490085457000" expanded="true" signature="33112:33941" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="33619:33681" ph="/* town.BuildAll(town); ... */" />
+                <marker date="1490085457000" expanded="true" signature="33737:33934" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="33838:33924" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="34008:35152" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="35195:35359" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="35264:35353" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="35365:35435" ph="/// Called by next turn UI button ... " />
+                <marker date="1490085457000" expanded="true" signature="35462:37448" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="35525:35576" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="35589:37442" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="35729:35855" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="35959:36214" ph="/* Set active hero and active hero object to the upcoming players first hero ... */" />
+                <marker date="1490085457000" expanded="true" signature="36397:36934" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="36646:36754" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="36951:37262" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="37454:37580" ph="/// Increment turn, reset turn integer when last player has finished, and increment date ... " />
+                <marker date="1490085457000" expanded="true" signature="37613:37796" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="37663:37790" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="37831:38053" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="37886:38047" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="37954:38037" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="38135:38279" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="38177:38273" ph="/* todo add canvas ... */" />
+                <marker date="1490085457000" expanded="true" signature="38365:38509" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="38407:38503" ph="/* todo add canvas ... */" />
+                <marker date="1490085457000" expanded="true" signature="38550:38715" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="38576:38623" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="38636:38683" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectFrameBounds">
+    <option name="x" value="-1771" />
+    <option name="y" value="-679" />
+    <option name="width" value="1680" />
+    <option name="height" value="1027" />
+  </component>
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="SolutionExplorer" proportions="" version="1">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+      <manualOrder />
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="SolutionExplorer">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerViewPane$ProjectViewPaneTreeStructure$createRoot$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="TrollsAndGods (1 project)" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNodeRider" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Assembly-CSharp" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNodeRider" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Assets" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNodeRider" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Scripts" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNodeRider" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerViewPane$ProjectViewPaneTreeStructure$createRoot$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="TrollsAndGods (1 project)" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNodeRider" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Assembly-CSharp" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNodeRider" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+        <option name="show-file-system" value="false" />
+        <option name="show-all-items" value="false" />
+      </pane>
+    </panes>
+  </component>
+  <component name="RunManager" selected=".NET Project.Default">
+    <configuration default="true" type="DotNetProject" factoryName=".NET Project">
+      <option name="PROJECT_PATH" value="" />
+      <option name="PROJECT_KIND" value="None" />
+      <option name="PROJECT_TFM" value="" />
+      <option name="EXE_PATH" value="" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="USE_MONO" value="0" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="false" name="Default" type="DotNetProject" factoryName=".NET Project">
+      <option name="PROJECT_PATH" value="" />
+      <option name="PROJECT_KIND" value="None" />
+      <option name="PROJECT_TFM" value="" />
+      <option name="EXE_PATH" value="" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="USE_MONO" value="0" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <envs />
+      <method />
+    </configuration>
+    <list size="1">
+      <item index="0" class="java.lang.String" itemvalue=".NET Project.Default" />
+    </list>
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false">
+    <option name="remove_strategy" value="false" />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="49b3dc2e-230c-4cc1-83c9-bf66680a90ab" name="Default" comment="" />
+      <created>1490087078006</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1490087078006</updated>
+      <workItem from="1490087080132" duration="98000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="98000" />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-1771" y="-679" width="1680" height="1027" extended-state="0" />
+    <editor active="true" />
+    <layout>
+      <window_info id="Change Signature" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Errors In Solution" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Build" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
+      <window_info id="Unit Tests" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="NuGet" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+    </layout>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager />
+    <watches-manager />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/Assets/Scripts/GameManager.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="319">
+          <caret line="929" column="0" lean-forward="false" selection-start-line="929" selection-start-column="0" selection-end-line="930" selection-end-column="0" />
+          <folding>
+            <marker date="1490085457000" expanded="true" signature="6:180" ph="..." />
+            <marker date="1490085457000" expanded="true" signature="222:38717" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="2458:5174" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="3547:4242" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="3613:4232" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="3792:4028" ph="/* if (lr.GetCastle() != null) ... */" />
+            <marker date="1490085457000" expanded="true" signature="5227:18067" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="5256:18061" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="5461:5565" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="5695:9064" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="6308:6981" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="6370:6887" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="6558:6865" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="7186:8358" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="7241:7328" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="7451:7607" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="7758:8340" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="8026:8124" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="8202:8318" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="8592:9050" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="8766:9032" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="9176:9568" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="9250:9390" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="9411:9554" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="9656:9712" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="9838:16493" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="10081:11269" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="10188:11251" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="10381:11229" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="10496:10771" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="10916:11203" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="11532:16254" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="11769:16236" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="12493:15237" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="12780:13015" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="13166:15117" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="13370:13567" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="13664:13837" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="13938:14085" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="14186:14333" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="14429:14576" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="14674:14822" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="14931:15087" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="15150:15211" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="15676:16213" ph="/* Set origin tile's canWalk 0 or 2 if no reaction there ... */" />
+            <marker date="1490085457000" expanded="true" signature="16320:16479" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="16600:18051" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="16953:18037" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="17050:17384" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="17216:17362" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="17470:17800" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="17640:17778" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="17885:18019" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="18073:18205" ph="/// Removes visual marker and the Vector2 in activehero's pathtable, and increments stepnumber. ... " />
+            <marker date="1490085457000" expanded="true" signature="18241:18450" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="18456:18731" ph="/// Prepares movement variables,  ... " />
+            <marker date="1490085457000" expanded="true" signature="18781:19274" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="19280:19424" ph="/// Graphically draw the path objects ... " />
+            <marker date="1490085457000" expanded="true" signature="19469:20926" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="19848:20920" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="20349:20530" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="20932:21089" ph="/// Creates a position with animationspeed and returns it ... " />
+            <marker date="1490085457000" expanded="true" signature="21126:21467" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="21198:21409" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="21473:21619" ph="/// Destroy the tile gameobjects and refresh list ... " />
+            <marker date="1490085457000" expanded="true" signature="21670:21822" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="21714:21759" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="21866:21978" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="22015:22049" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="22079:22115" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="22151:22184" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="22216:22255" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="22295:22332" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="22372:22415" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="22418:22504" ph="/// Generates the map. This replaces the &quot;map.cs&quot; file. ... " />
+            <marker date="1490085457000" expanded="true" signature="22532:23302" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="23175:23214" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="23221:23246" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="23312:23392" ph="/// Setting up UI buttons, text and images. ... " />
+            <marker date="1490085457000" expanded="true" signature="23422:23954" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="23768:23918" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="23960:24060" ph="/// Setting resourcepanel's textboxes to the players resources. ... " />
+            <marker date="1490085457000" expanded="true" signature="24097:24267" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="24157:24261" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="24270:24417" ph="/// Draws a given map using the IngameObjectLibrary sprites. ... " />
+            <marker date="1490085457000" expanded="true" signature="24453:27648" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="25386:27645" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="25426:27610" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="25589:25696" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="25782:26021" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="26124:26360" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="26481:26725" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="26821:27034" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="27132:27366" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="27468:27579" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="27651:27787" ph="/// Draws the debug map. ... " />
+            <marker date="1490085457000" expanded="true" signature="27834:30561" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="28545:30557" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="28585:30522" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="28595:28659" ph="/* gets tile value ... */" />
+            <marker date="1490085457000" expanded="true" signature="28807:28940" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="29043:29277" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="29398:29641" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="29737:29961" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="30059:30292" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="30395:30516" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="30567:31018" ph="/// Configures a game object to the board. ... " />
+            <marker date="1490085457000" expanded="true" signature="31116:31627" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="31633:31893" ph="/// Adjusts the position relative to odd or par placement. ... " />
+            <marker date="1490085457000" expanded="true" signature="31973:32161" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="32167:32234" ph="/// Called by UI click on town ... " />
+            <marker date="1490085457000" expanded="true" signature="32271:32757" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="32312:32529" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="32542:32751" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="32785:32974" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="32980:33076" ph="/// Draws the town view ... " />
+            <marker date="1490085457000" expanded="true" signature="33112:33941" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="33619:33681" ph="/* town.BuildAll(town); ... */" />
+            <marker date="1490085457000" expanded="true" signature="33737:33934" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="33838:33924" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="34008:35152" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="35195:35359" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="35264:35353" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="35365:35435" ph="/// Called by next turn UI button ... " />
+            <marker date="1490085457000" expanded="true" signature="35462:37448" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="35525:35576" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="35589:37442" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="35729:35855" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="35959:36214" ph="/* Set active hero and active hero object to the upcoming players first hero ... */" />
+            <marker date="1490085457000" expanded="true" signature="36397:36934" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="36646:36754" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="36951:37262" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="37454:37580" ph="/// Increment turn, reset turn integer when last player has finished, and increment date ... " />
+            <marker date="1490085457000" expanded="true" signature="37613:37796" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="37663:37790" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="37831:38053" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="37886:38047" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="37954:38037" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="38135:38279" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="38177:38273" ph="/* todo add canvas ... */" />
+            <marker date="1490085457000" expanded="true" signature="38365:38509" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="38407:38503" ph="/* todo add canvas ... */" />
+            <marker date="1490085457000" expanded="true" signature="38550:38715" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="38576:38623" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="38636:38683" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
