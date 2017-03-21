@@ -14,7 +14,7 @@ public class GraphicalBattlefield : MonoBehaviour {
     GameObject[,] field;
     GameObject[,] unitsOnField;
     GameObject parent;
-    bool isWalking, finishedWalking;
+    bool isWalking, finishedWalking, attacking;
     UnitGameObject[] initative;
     int whoseTurn;
     int livingAttackers, livingDefenders;
@@ -36,7 +36,10 @@ public class GraphicalBattlefield : MonoBehaviour {
             }
             else if (finishedWalking)
             {
-                //animation
+                if (attacking)
+                {
+                    //todo attack animation
+                }
                 nextTurn();
             }
             else if (livingAttackers == 0 || livingDefenders == 0)
@@ -232,14 +235,14 @@ public class GraphicalBattlefield : MonoBehaviour {
                 {
                     List<Vector2> path = battleField.UnitMoveAndAttack(activeUnit.LogicalPos, goal, defender.LogicalPos);
                     BeginWalking(path);
-                    //todo trigger animation
+                    attacking = true;
                 }
             }
             else
             {
                 List<Vector2> path = battleField.UnitMoveAndAttack(activeUnit.LogicalPos, goal, defender.LogicalPos);
                 BeginWalking(path);
-                //todo trigger animation
+                attacking = true;
             }
         }
         //Updates living units counts
