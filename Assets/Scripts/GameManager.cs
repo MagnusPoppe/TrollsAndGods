@@ -1059,14 +1059,23 @@ public class GameManager : MonoBehaviour
         overWorld = true;
     }
 
+    /// <summary>
+    /// Changes owner of castle to Player whose turn it is
+    /// </summary>
+    /// <param name="cr">CastleReact</param>
     public void changeCastleOwner(CastleReact cr)
     {
         cr.Castle.Player.Castle.Remove(cr.Castle);
-        cr.Castle.Player = activeHero.Player;
-        cr.Castle.Town.Owner = activeHero.Player;
+        cr.Castle.Player = getPlayer(whoseTurn);
+        cr.Castle.Town.Owner = getPlayer(whoseTurn);
         getPlayer(whoseTurn).Castle.Add(cr.Castle);
     }
 
+
+    /// <summary>
+    /// Removes a hero
+    /// </summary>
+    /// <param name="h">Hero to be removed</param>
     public void removeHero(Hero h)
     {
         Hero[] heroes = h.Player.Heroes;
