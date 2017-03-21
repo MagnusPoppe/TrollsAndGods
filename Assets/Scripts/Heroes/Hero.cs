@@ -250,4 +250,22 @@ public class Hero : SpriteSystem
     {
         return portraitID + IngameObjectLibrary.GetOffset(SPRITEPORTRAITCATEGORY);
     }
+
+    protected bool Equals(Hero other)
+    {
+        return string.Equals(name, other.name);
+    }
+
+    public override bool Equals(object obj)
+    {
+        if (ReferenceEquals(null, obj)) return false;
+        if (ReferenceEquals(this, obj)) return true;
+        if (obj.GetType() != this.GetType()) return false;
+        return Equals((Hero) obj);
+    }
+
+    public override int GetHashCode()
+    {
+        return (name != null ? name.GetHashCode() : 0);
+    }
 }
