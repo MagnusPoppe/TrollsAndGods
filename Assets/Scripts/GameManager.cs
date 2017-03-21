@@ -345,7 +345,9 @@ public class GameManager : MonoBehaviour
                                 }
                                 else if (reactions[x, y].GetType().Equals(typeof(CastleReact)))
                                 {
-                                    // TODO change owner of defenseless castle
+                                    // TODO change owner of defenseless castle visually
+                                    CastleReact cr = (CastleReact) reactions[x, y];
+                                    changeCastleOwner(cr);
                                 }
                                 else if (reactions[x, y].GetType().Equals(typeof(DwellingReact)))
                                 {
@@ -1041,5 +1043,13 @@ public class GameManager : MonoBehaviour
             //defender won
         }
         overWorld = true;
+    }
+
+    public void changeCastleOwner(CastleReact cr)
+    {
+        cr.Castle.Player.Castle.Remove(cr.Castle);
+        cr.Castle.Player = activeHero.Player;
+        cr.Castle.Town.Owner = activeHero.Player;
+        getPlayer(whoseTurn).Castle.Add(cr.Castle);
     }
 }
