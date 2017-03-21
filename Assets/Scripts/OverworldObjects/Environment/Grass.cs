@@ -6,11 +6,12 @@
         private static int[] spriteIDs = {
             13,14,15,16
         };
+        private static IngameObjectLibrary.Category category = IngameObjectLibrary.Category.Ground;
 
         /// <summary>
         /// Creates a sprite out of a set of spriteIDs.
         /// </summary>
-        public Grass() : base(spriteIDs)
+        public Grass() : base( spriteIDs, category)
         {
 
         }

@@ -145,7 +145,8 @@ namespace MapGenerator
         // TODO: Include mountains
         private void replaceWalls()
         {
-
+            Mountain mountain = new Mountain();
+            Grass grass = new Grass();
             // Trying mountains first:
             for (int y = 0; y < height; y++)
             {
@@ -155,16 +156,7 @@ namespace MapGenerator
                     {
                         if (Shapes.CanFitShapeOver(WALL, new Point(x, y), Shapes.GetShape(Shapes.TRIPLEx3_LEFT), map))
                         {
-                            int[,] mountain = // TRIPLE x3 LEFT SPECIAL VERSION.
-                            {
-                                // ORIGO = 1, OTHER SPACE = 2, ELSE = UNTOUCHED.
-                                { 0, 0, 0, 2, 0 },
-                                { 0, 0, 2, 2, 0 },
-                                { 0, 0, 2, 1, 2 },
-                                { 0, 0, 2, 2, 0 },
-                                { 0, 0, 0, 2, 0 }
-                            };
-                            PlaceMountain(new Point(x, y), MOUNTAIN1_SPRITEID, GRASS_SPRITEID, mountain);
+                            PlaceMountain(new Point(x, y), mountain.GetSpriteID(), GRASS2_SPRITEID, mountain.Shape);
                         }
                     }
                 }
@@ -181,20 +173,30 @@ namespace MapGenerator
             }
         }
 
+        /// <summary>
+        /// Places a mountain using a filtering algoritm. Places mountain at
+        /// the origo point of the shape, and environment tiles everywhere else.
+        /// </summary>
+        /// <param name="pos"> Position to place mountain</param>
+        /// <param name="spriteID"> ID of mountain sprite</param>
+        /// <param name="environment"> ID of environment underneath the mountain</param>
+        /// <param name="shape"> Shape of the mountain</param>
         void PlaceMountain(Point pos, int spriteID, int environment, int[,] shape)
         {
-            for (int iy = 0; iy < shape.GetLength(0); iy++)
+            for (int iy = 0; iy < shape.GetLength(1); iy++)
             {
-                for (int ix = 0; ix < shape.GetLength(1); ix++)
+                for (int ix = 0; ix < shape.GetLength(0); ix++)
                 {
-                    
+
                     int x = pos.x + (ix - (shape.GetLength(1)/2));
                     int y = pos.y + (iy - (shape.GetLength(0)/2));
-
-                    if (0 <= x && x < map.GetLength(0) && 0 <= y && y < map.GetLength(0))
+                    Point p = new Point(x,y);
+                    if (p.InBounds(map))
                     {
-                        if (shape[ix, iy] == 1) map[x, y] = spriteID;
-                        else if (shape[ix, iy] == 2) map[x, y] = environment;
+                        if (shape[ix, iy] == 1)
+                            map[x, y] = spriteID;
+                        else if (shape[ix, iy] == 2)
+                            map[x, y] = environment;
                     }
                 }
             }
