@@ -143,7 +143,7 @@ public class GameManager : MonoBehaviour
                     reactions[(int)lr.GetCastle().GetPosition().x, (int)lr.GetCastle().GetPosition().y] = new CastleReact(lr.GetCastle(), lr.GetCastle().GetPosition());
                 }*/
                 if (lr.GetHero() != null)
-                    reactions[(int)lr.GetHero().Position.x, (int)lr.GetHero().Position.y] = new HeroMeetReact(lr.GetHero(), lr.GetHero().Position);
+                    reactions[lr.GetHero().Position.x, lr.GetHero().Position.y] = new HeroMeetReact(lr.GetHero(), lr.GetHero().Position);
             }
         }
 
@@ -151,17 +151,17 @@ public class GameManager : MonoBehaviour
         GameObject tempCameraObject = GameObject.Find("Main Camera");
         mainCamera = tempCameraObject.GetComponent<Camera>();
         cameraMovement = tempCameraObject.GetComponent<CameraMovement>();
-        
+
         // Set active Hero
         heroActive = true;
         activeHero = getPlayer(0).Heroes[0];
         activeHeroObject = heroLayer[(int)activeHero.Position.x, (int)activeHero.Position.y];
-        
+
         // Initialize turn based variables and date
         whoseTurn = 0;
         clickCount = 0;
         date = new Date();
-        
+
         //savedClickedPos = HandyMethods.getIsoTilePos(transform.position);
         pathObjects = new List<GameObject>();
         aStar = new AStarAlgo(canWalk, width, height, false);
@@ -669,47 +669,47 @@ public class GameManager : MonoBehaviour
 				int spriteID = map[x, y];
 
 				// If ground
-				if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.Ground)
+				if (IngameObjectLibrary.GetCategory(spriteID) == IngameObjectLibrary.Category.Ground)
 				{
 					groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetGround(spriteID), ground);
 				}
 
-				else if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.Environment)
+				else if (IngameObjectLibrary.GetCategory(spriteID) == IngameObjectLibrary.Category.Environment)
 				{
 					buildingLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetEnvironment(spriteID), mountains);
 					groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetGround(MapMaker.GRASS_SPRITEID), ground); //TODO:temp
 				}
 
 				// If dwelling
-				else if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.Dwellings)
+				else if (IngameObjectLibrary.GetCategory(spriteID) == IngameObjectLibrary.Category.Dwellings)
 				{
 					buildingLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetDwelling(spriteID), buildings);
 					groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetGround(MapMaker.GRASS_SPRITEID), ground); //TODO:temp
 				}
 
 				// If resource buildings
-				else if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.ResourceBuildings)
+				else if (IngameObjectLibrary.GetCategory(spriteID) == IngameObjectLibrary.Category.ResourceBuildings)
 				{
 					buildingLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetResourceBuilding(spriteID), buildings);
 					groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetGround(MapMaker.GRASS_SPRITEID), ground); //TODO:temp
 				}
 
 				// If hero
-				else if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.Heroes)
+				else if (IngameObjectLibrary.GetCategory(spriteID) == IngameObjectLibrary.Category.Heroes)
 				{
 					heroLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetHero(spriteID), heroes);
 					groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetGround(MapMaker.GRASS_SPRITEID), ground);
 				}
 
 				// If castle
-				else if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.Castle)
+				else if (IngameObjectLibrary.GetCategory(spriteID) == IngameObjectLibrary.Category.Castle)
 				{
 					buildingLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetCastle(spriteID), buildings);
 					groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetGround(MapMaker.GRASS_SPRITEID), ground); //TODO:temp
 				}
 
 				// If debug mode:
-				else if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.Debug)
+				else if (IngameObjectLibrary.GetCategory(spriteID) == IngameObjectLibrary.Category.Debug)
 				{
 					groundLayer[x,y] = placeSprite(x, y, isometricOffset, libs.GetDebugSprite(map[x,y]), ground);
 				}
@@ -763,41 +763,41 @@ public class GameManager : MonoBehaviour
 				int spriteID = map[x, y];
 				// TODO: CURRENT: Denne er snudd
 
-				if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.Environment)
+				if (IngameObjectLibrary.GetCategory(spriteID) == IngameObjectLibrary.Category.Environment)
 				{
 					groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetDebugSprite(canWalk[x, y]), DebugTiles); //TODO:temp
 				}
 
 				// If dwelling
-				else if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.Dwellings)
+				else if (IngameObjectLibrary.GetCategory(spriteID) == IngameObjectLibrary.Category.Dwellings)
 				{
 					buildingLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetDwelling(spriteID), buildings);
 					groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetDebugSprite(canWalk[x,y]), DebugTiles); //TODO:temp
 				}
 
 				// If resource buildings
-				else if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.ResourceBuildings)
+				else if (IngameObjectLibrary.GetCategory(spriteID) == IngameObjectLibrary.Category.ResourceBuildings)
 				{
 					buildingLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetResourceBuilding(spriteID), buildings);
 					groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetDebugSprite(canWalk[x, y]), DebugTiles); //TODO:temp
 				}
 
 				// If hero
-				else if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.Heroes)
+				else if (IngameObjectLibrary.GetCategory(spriteID) == IngameObjectLibrary.Category.Heroes)
 				{
 					heroLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetHero(spriteID), heroes);
 					groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetDebugSprite(canWalk[x, y]), DebugTiles); //TODO:temp
 				}
 
 				// If castle
-				else if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.Castle)
+				else if (IngameObjectLibrary.GetCategory(spriteID) == IngameObjectLibrary.Category.Castle)
 				{
 					buildingLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetCastle(spriteID), buildings);
 					groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetDebugSprite(canWalk[x, y]), DebugTiles); //TODO:temp
 				}
 
 				// If debug mode:
-				else if (libs.GetCategory(spriteID) == IngameObjectLibrary.Category.Ground)
+				else if (IngameObjectLibrary.GetCategory(spriteID) == IngameObjectLibrary.Category.Ground)
 				{
 					groundLayer[x, y] = placeSprite(x, y, isometricOffset, libs.GetDebugSprite(canWalk[x, y]), DebugTiles);
 				}

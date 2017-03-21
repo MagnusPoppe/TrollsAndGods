@@ -7,51 +7,58 @@ namespace MapGenerator
 {
     public class MapMaker
     {
-		// Mathematical game objects
-		public int width, height;
+        // Mathematical game objects
+        public int width, height;
+
+        private float percentWater = 0.20f;
         string seed;
 
-		// Information about the map:
-		Region[] regions;
-		int[,] map;
-		int[,] canWalk;
+        // Information about the map:
+        Region[] regions;
+
+        int[,] map;
+        int[,] canWalk;
         int[,] initialMap;
 
         // Overworld objects
         Point[] regionCenterPoints;
 
-		// Constants
-		public const int  GROUND 					= 0;
-		public const int  WALL 						= 1;
-		public const int  REGION_CENTER 			= 2;
-		public const bool KEEP_VORONOI_REGION_LINES = false;
+        // Constants
+        public const int GROUND = 0;
 
-		// Base sprites
-        public const int GRASS_SPRITEID =   IngameObjectLibrary.GROUND_START + 13;
+        public const int WALL = 1;
+        public const int REGION_CENTER = 2;
+        public const bool KEEP_VORONOI_REGION_LINES = false;
+
+        // Base sprites
+        public const int GRASS_SPRITEID = IngameObjectLibrary.GROUND_START + 13;
+
         public const int GRASS2_SPRITEID = IngameObjectLibrary.GROUND_START + 14;
         public const int GRASS3_SPRITEID = IngameObjectLibrary.GROUND_START + 15;
         public const int GRASS4_SPRITEID = IngameObjectLibrary.GROUND_START + 16;
 
-        public const int WATER_SPRITEID =   IngameObjectLibrary.GROUND_START + 0;
+        public const int WATER_SPRITEID = IngameObjectLibrary.GROUND_START + 0;
 
-		// WATER->Grass Transition sprites:
-		public const int GRASS_WATER_NORTH    = IngameObjectLibrary.GROUND_START + 1;
-		public const int GRASS_WATER_EAST     = IngameObjectLibrary.GROUND_START + 2;
-		public const int GRASS_WATER_SOUTH    = IngameObjectLibrary.GROUND_START + 3;
-		public const int GRASS_WATER_WEST     = IngameObjectLibrary.GROUND_START + 4;
+        // WATER->Grass Transition sprites:
+        public const int GRASS_WATER_NORTH = IngameObjectLibrary.GROUND_START + 1;
 
-		public const int GRASS_WATER_NORTH_EAST_IN = IngameObjectLibrary.GROUND_START + 5;
-		public const int GRASS_WATER_SOUTH_EAST_IN = IngameObjectLibrary.GROUND_START + 6;
-		public const int GRASS_WATER_SOUTH_WEST_IN = IngameObjectLibrary.GROUND_START + 7;
-		public const int GRASS_WATER_NORTH_WEST_IN = IngameObjectLibrary.GROUND_START + 8;
+        public const int GRASS_WATER_EAST = IngameObjectLibrary.GROUND_START + 2;
+        public const int GRASS_WATER_SOUTH = IngameObjectLibrary.GROUND_START + 3;
+        public const int GRASS_WATER_WEST = IngameObjectLibrary.GROUND_START + 4;
 
-		public const int GRASS_WATER_NORTH_EAST_OUT = IngameObjectLibrary.GROUND_START + 9;
-		public const int GRASS_WATER_SOUTH_EAST_OUT = IngameObjectLibrary.GROUND_START + 10;
-		public const int GRASS_WATER_SOUTH_WEST_OUT = IngameObjectLibrary.GROUND_START + 11;
-		public const int GRASS_WATER_NORTH_WEST_OUT = IngameObjectLibrary.GROUND_START + 12;
+        public const int GRASS_WATER_NORTH_EAST_IN = IngameObjectLibrary.GROUND_START + 5;
+        public const int GRASS_WATER_SOUTH_EAST_IN = IngameObjectLibrary.GROUND_START + 6;
+        public const int GRASS_WATER_SOUTH_WEST_IN = IngameObjectLibrary.GROUND_START + 7;
+        public const int GRASS_WATER_NORTH_WEST_IN = IngameObjectLibrary.GROUND_START + 8;
 
-		// Environment sprites:
-        public const int FOREST_SPRITEID    = IngameObjectLibrary.ENVIRONMENT_START + 0;
+        public const int GRASS_WATER_NORTH_EAST_OUT = IngameObjectLibrary.GROUND_START + 9;
+        public const int GRASS_WATER_SOUTH_EAST_OUT = IngameObjectLibrary.GROUND_START + 10;
+        public const int GRASS_WATER_SOUTH_WEST_OUT = IngameObjectLibrary.GROUND_START + 11;
+        public const int GRASS_WATER_NORTH_WEST_OUT = IngameObjectLibrary.GROUND_START + 12;
+
+        // Environment sprites:
+        public const int FOREST_SPRITEID = IngameObjectLibrary.ENVIRONMENT_START + 0;
+
         public const int MOUNTAIN1_SPRITEID = IngameObjectLibrary.ENVIRONMENT_START + 1;
         public const int MOUNTAIN2_SPRITEID = IngameObjectLibrary.ENVIRONMENT_START + 2;
         public const int MOUNTAIN3_SPRITEID = IngameObjectLibrary.ENVIRONMENT_START + 3;
@@ -61,40 +68,41 @@ namespace MapGenerator
 
         // CANWALK 
         public const int CANNOTWALK = 0;
-		public const int CANWALK 	= 1;
-		public const int TRIGGER 	= 2;
+
+        public const int CANWALK = 1;
+        public const int TRIGGER = 2;
 
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="T:MapGenerator.MapMaker"/> class.
-		/// </summary>
-		/// <param name="width">Width of map.</param>
-		/// <param name="height">Height of map.</param>
-		/// <param name="seed">Seed used for random generation.</param>
-		/// <param name="fill">Fillpercent for binary growth.</param>
-		/// <param name="smooth">Smooth iterations for binary growth.</param>
-		/// <param name="sites">number of sites/towns.</param>
-		/// <param name="relax">Relax iterations used with Lloyds relaxation.</param>
-		/// <param name="spritecount">Number of total available sprites.</param>
-		public MapMaker(Player[] players, 
-			int width, int height,
-			int spritecount, string seed, 
-			int fill, int smooth, 
-			int sites, int relax, 
-			int buildingCount,
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:MapGenerator.MapMaker"/> class.
+        /// </summary>
+        /// <param name="width">Width of map.</param>
+        /// <param name="height">Height of map.</param>
+        /// <param name="seed">Seed used for random generation.</param>
+        /// <param name="fill">Fillpercent for binary growth.</param>
+        /// <param name="smooth">Smooth iterations for binary growth.</param>
+        /// <param name="sites">number of sites/towns.</param>
+        /// <param name="relax">Relax iterations used with Lloyds relaxation.</param>
+        /// <param name="spritecount">Number of total available sprites.</param>
+        public MapMaker(Player[] players,
+            int width, int height,
+            int spritecount, string seed,
+            int fill, int smooth,
+            int sites, int relax,
+            int buildingCount,
             bool coast
-		)
-		{
-			this.width = width;
-			this.height = height;
-			this.seed = seed;
+        )
+        {
+            this.width = width;
+            this.height = height;
+            this.seed = seed;
 
-			this.map = GenerateMap(
-				sites, relax, // Used for Voronoi algorithm
-				fill, smooth, // Used for Binary map generation algorithm
-				spritecount, players   // Used in castle creation
+            this.map = GenerateMap(
+                sites, relax, // Used for Voronoi algorithm
+                fill, smooth, // Used for Binary map generation algorithm
+                spritecount, players // Used in castle creation
 
-			);
+            );
 
             // PLACE TREES IN OCCUPIED AREAS:
             replaceWalls();
@@ -102,41 +110,17 @@ namespace MapGenerator
             if (coast)
                 CreateTransitions();
 
-            /*
-            Reaction[,] reactions = new Reaction[width, height];
-            canWalk = CreateWalkableArea(initialMap);
+            QuailtyAssurance quality = new QuailtyAssurance();
+            Placement placements = new Placement(map, canWalk);
 
-            int i = 0;
             foreach (Region r in regions)
             {
-                if (r.GetType().Equals(typeof(LandRegion)))
-                {
-                    LandRegion lr = (LandRegion)r;
-                    lr.SetRegionGroundTileType(lr.GetCastle().EnvironmentTileType, map);
-
-
-                    map[r.getX(), r.getY()] = lr.GetCastle().GetSpriteID();
-                    InitBuildings(lr);
-                }
+                placements.Place( r, new OreMine(null));
+                placements.Place( r, new GemMine(null));
+                placements.Place( r, new CrystalMine(null));
+                placements.Place( r, new GoldMine(null));
             }
-            */
 
-        QuailtyAssurance quality = new QuailtyAssurance();
-
-		}
-
-        private void printmap(int[,] map)
-        {
-            string msg = "";
-            for (int y = 0; y < height; y++)
-            {
-                for (int x = 0; x < width; x++)
-                {
-                    msg += map[x, y] +" "; 
-                }
-                msg += "\n";
-            }
-            Debug.Log(msg);
         }
 
         /// <summary>
@@ -202,6 +186,12 @@ namespace MapGenerator
             }
         }
 
+        /// <summary>
+        /// Floodfills all map values where the value matches the constant WALL
+        /// from a given seed.
+        /// </summary>
+        /// <param name="initial">Initial Position</param>
+        /// <param name="spriteID">spriteID</param>
         private void FloodFillWall( Point initial, int spriteID )
         {
             Queue<Point> queue = new Queue<Point>();
@@ -350,10 +340,10 @@ namespace MapGenerator
 
             regionBySize.Sort();
       
-            int waterRegionCount = (int) (regions.Length * 0.20);
+            int waterRegionCount = (int) (regions.Length * percentWater);
             int playerID = 0;
 
-        for (int i = 0; i < regions.Length; i++)
+            for (int i = 0; i < regions.Length; i++)
             {
                 if (i <= waterRegionCount)
                     regionBySize[i] = new WaterRegion(

@@ -1,6 +1,4 @@
-﻿using OverworldObjects;
-
-namespace OverworldObjects
+﻿namespace OverworldObjects
 {
 	public class OreMine : ResourceBuilding
 	{

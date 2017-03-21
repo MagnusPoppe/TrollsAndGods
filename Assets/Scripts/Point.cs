@@ -60,14 +60,31 @@ public class Point
         return (p.x == x && p.y == y);
     }
 
-    public string ToString()
+    public override string ToString()
     {
         return "(" + x + ", " + y + ")";
     }
 
+    /// <summary>
+    /// Checks if this pos is in bounds of a map.
+    /// </summary>
+    /// <param name="map">map</param>
+    /// <returns>true if legal postiton.</returns>
     public bool InBounds(int[,] map)
     {
         return (0 <= x && x < map.GetLength(0) && 0 <= y && y < map.GetLength(0));
+    }
+
+    /// <summary>
+    /// Checks if this position is in bounds of a map given a filter.
+    /// </summary>
+    /// <param name="map">map</param>
+    /// <param name="filter">filter modifier</param>
+    /// <returns>true if legal postiton.</returns>
+    public bool InBounds(int[,] map, int[,] filter)
+    {
+        int range = filter.GetLength(1) / 2;
+        return (0 <= x-range && x+range < map.GetLength(0) && 0 <= y-range && y+range < map.GetLength(0));
     }
 }
 
