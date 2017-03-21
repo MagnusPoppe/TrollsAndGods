@@ -100,6 +100,9 @@ public class GameManager : MonoBehaviour
     string[] resourceTextPosition = new string[] { "TextGold", "TextWood", "TextOre", "TextCrystal", "TextGem" };
     GameObject overWorldCanvas;
 
+    //currentReaction
+    private Reaction curReaction;
+
 
     // Use this for initialization
     void Start ()
@@ -327,6 +330,7 @@ public class GameManager : MonoBehaviour
                             if (reactions[x, y].HasPreReact(activeHero))
                             {
                                 reactions[x, y].PreReact(activeHero);
+                                curReaction = reactions[x, y];
                                 // Remove hero when false, opponent unit or hero when true
                             }
                             // Only perform the main reaction if the hero didn't die in previous reaction
@@ -334,7 +338,7 @@ public class GameManager : MonoBehaviour
                             {
                                 //bool react = reactions[x, y].React(activeHero);
 
-                                
+
                                 if (reactions[x, y].GetType().Equals(typeof(ResourceReaction)))
                                 {
                                     // TODO visually remove picked up resource
@@ -357,6 +361,10 @@ public class GameManager : MonoBehaviour
                                 {
                                     // TODO visually resourceBuilding has been captured
                                 }
+                            }
+                            else
+                            {
+                                curReaction = reactions[x, y];
                             }
                         }
                         
@@ -1037,10 +1045,16 @@ public class GameManager : MonoBehaviour
         if (winner)
         {
             //attacker won
+            if (curReaction.GetType() == typeof(CastleReact))
+            {
+                CastleReact cr = (CastleReact) curReaction;
+                changeCastleOwner(cr);
+            }
         }
         else
         {
             //defender won
+            removeHero(activeHero);
         }
         overWorld = true;
     }
@@ -1051,5 +1065,27 @@ public class GameManager : MonoBehaviour
         cr.Castle.Player = activeHero.Player;
         cr.Castle.Town.Owner = activeHero.Player;
         getPlayer(whoseTurn).Castle.Add(cr.Castle);
+    }
+
+    public void removeHero(Hero h)
+    {
+        Hero[] heroes = h.Player.Heroes;
+        for (int i = 0; i < heroes.Length; i++)
+        {
+            if (h.Equals(heroes[i]))
+            {
+                for (int j = i; j < heroes.Length; j++)
+                {
+                    heroes[j] = heroes[j + 1];
+                }
+                break;
+            }
+        }
+        if (activeHero.Equals(h)) activeHero = null;
+        GameObject go = heroLayer[h.Position.x, h.Position.y];
+        go.SetActive(false);
+        Destroy(go);
+        heroLayer[h.Position.x, h.Position.y] = null;
+        reactions[h.Position.x, h.Position.y] = null;
     }
 }
