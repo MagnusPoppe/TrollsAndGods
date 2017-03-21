@@ -6,6 +6,7 @@ namespace TownView
     public class Building : SpriteSystem, Window
     {
         private string name;
+        private string description;
         private bool built;
         protected bool[] requirements;
         protected Cost cost;
@@ -62,6 +63,19 @@ namespace TownView
             }
         }
 
+        public string Description
+        {
+            get
+            {
+                return description;
+            }
+
+            set
+            {
+                description = value;
+            }
+        }
+
         public void Build()
         {
             built = true;
@@ -69,9 +83,10 @@ namespace TownView
 
 
 
-        public Building(string name, bool[] requirements, Cost cost, int localID, int LOCAL_SPRITEID_BLUEPRINT) :base(localID, CATEGORY)
+        public Building(string name, string description, bool[] requirements, Cost cost, int localID, int LOCAL_SPRITEID_BLUEPRINT) :base(localID, CATEGORY)
         {
             Name = name;
+            Description = description;
             this.requirements = requirements;
             Placement = placement;
             Cost = cost;

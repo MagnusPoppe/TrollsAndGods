@@ -12,9 +12,10 @@ namespace TownView
     {
         // Required values for building:
         const string name = "Troll Cave";
+        const string description = "MUUUUUUUUUU";
         static bool[] requirements = new bool[]{false, true, false, false, false};
         const int LOCAL_SPRITEID = 5;
-        const int LOCAL_SPRITEID_BLUEPRINT = 10;
+        const int LOCAL_SPRITEID_BLUEPRINT = 11;
 
         // Resources cost: 
         const int GOLD_COST = 1000;
@@ -26,7 +27,7 @@ namespace TownView
 
 
         // This needs no indata since it knows its values.
-        public TrollCave() : base(name, requirements, new Cost(GOLD_COST, WOOD_COST, ORE_COST, CRYSTAL_COST, GEM_COST), LOCAL_SPRITEID, LOCAL_SPRITEID_BLUEPRINT)
+        public TrollCave() : base(name, description, requirements, new Cost(GOLD_COST, WOOD_COST, ORE_COST, CRYSTAL_COST, GEM_COST), LOCAL_SPRITEID, LOCAL_SPRITEID_BLUEPRINT)
         {
         }
 

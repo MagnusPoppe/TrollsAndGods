@@ -8,9 +8,10 @@
     {
         // Required values for building:
         const string name = "Temple";
+        const string description = "Pray here";
         const bool[] requirements = null;
         const int LOCAL_SPRITEID = 3;
-        const int LOCAL_SPRITEID_BLUEPRINT = 8;
+        const int LOCAL_SPRITEID_BLUEPRINT = 9;
 
 
         // Resources cost: 
@@ -23,7 +24,7 @@
 
 
         // This needs no indata since it knows its values.
-        public Temple() : base(name, requirements, new Cost(GOLD_COST, WOOD_COST, ORE_COST, CRYSTAL_COST, GEM_COST), LOCAL_SPRITEID, LOCAL_SPRITEID_BLUEPRINT)
+        public Temple() : base(name, description, requirements, new Cost(GOLD_COST, WOOD_COST, ORE_COST, CRYSTAL_COST, GEM_COST), LOCAL_SPRITEID, LOCAL_SPRITEID_BLUEPRINT)
         {
         }
 

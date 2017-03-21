@@ -8,9 +8,10 @@
     {
         // Required values for building:
         const string name = "Pallisade";
+        const string description = "A fence, made from wooden stakes";
         const bool[] requirements = null;
         const int LOCAL_SPRITEID = 2;
-        const int LOCAL_SPRITEID_BLUEPRINT = 7;
+        const int LOCAL_SPRITEID_BLUEPRINT = 8;
 
 
         // Resources cost: 
@@ -23,7 +24,7 @@
 
 
         // This needs no indata since it knows its values.
-        public Pallisade() : base(name, requirements, new Cost(GOLD_COST, WOOD_COST, ORE_COST, CRYSTAL_COST, GEM_COST), LOCAL_SPRITEID, LOCAL_SPRITEID_BLUEPRINT)
+        public Pallisade() : base(name, description, requirements, new Cost(GOLD_COST, WOOD_COST, ORE_COST, CRYSTAL_COST, GEM_COST), LOCAL_SPRITEID, LOCAL_SPRITEID_BLUEPRINT)
         {
         }
 
