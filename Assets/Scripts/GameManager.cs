@@ -326,23 +326,16 @@ public class GameManager : MonoBehaviour
                             // If tile is threatened, perform the additional reaction before the main one
                             if (reactions[x, y].HasPreReact(activeHero))
                             {
-                                heroNotDead = reactions[x, y].PreReact(activeHero);
+                                reactions[x, y].PreReact(activeHero);
                                 // Remove hero when false, opponent unit or hero when true
                             }
                             // Only perform the main reaction if the hero didn't die in previous reaction
-                            if (heroNotDead)
+                            else if (reactions[x, y].React(activeHero))
                             {
-                                bool react = reactions[x, y].React(activeHero);
+                                //bool react = reactions[x, y].React(activeHero);
 
-                                if (reactions[x, y].GetType().Equals(typeof(HeroMeetReact)))
-                                {
-                                    // TODO if battle, visually remove the hero that is now set to null (true when attacker won)
-                                }
-                                else if (reactions[x, y].GetType().Equals(typeof(UnitReaction)))
-                                {
-                                    // TODO visually remove either hero or unit (true when attacker won)
-                                }
-                                else if (reactions[x, y].GetType().Equals(typeof(ResourceReaction)))
+                                
+                                if (reactions[x, y].GetType().Equals(typeof(ResourceReaction)))
                                 {
                                     // TODO visually remove picked up resource
                                 }
@@ -352,20 +345,16 @@ public class GameManager : MonoBehaviour
                                 }
                                 else if (reactions[x, y].GetType().Equals(typeof(CastleReact)))
                                 {
-                                    // TODO visually remove picked up artifact
+                                    // TODO change owner of defenseless castle
                                 }
                                 else if (reactions[x, y].GetType().Equals(typeof(DwellingReact)))
                                 {
-                                    // TODO visually dweeling has been captured
+                                    // TODO visually dwelling has been captured
                                 }
                                 else if (reactions[x, y].GetType().Equals(typeof(ResourceBuildingReaction)))
                                 {
                                     // TODO visually resourceBuilding has been captured
                                 }
-                            }
-                            else
-                            {
-
                             }
                         }
                         

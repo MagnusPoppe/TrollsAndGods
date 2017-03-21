@@ -43,7 +43,18 @@ public class CastleReact : Reaction {
         }
         else
         {
-            gm.enterCombat(10,10,h,castle.Town.StationedUnits);
+            if (castle.Town.VisitingUnits != null)
+            {
+                //todo combine with stationed units and battle
+                return false;
+            }
+            else if (castle.Town.StationedUnits != null)
+            {
+                //battle
+                gm.enterCombat(10, 10, h, castle.Town.StationedUnits);
+                return false;
+            }
+            return true;
         }
         return false;
     }
