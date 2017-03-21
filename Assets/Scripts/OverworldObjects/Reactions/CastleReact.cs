@@ -51,7 +51,7 @@ public class CastleReact : Reaction {
             else if (castle.Town.StationedUnits != null)
             {
                 //battle
-                gm.enterCombat(10, 10, h, castle.Town.StationedUnits);
+                gm.enterCombat(15, 11, h, castle.Town.StationedUnits);
                 return false;
             }
             return true;
