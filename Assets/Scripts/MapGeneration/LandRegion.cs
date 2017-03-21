@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using OverworldObjects;
+using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace MapGenerator
 {
@@ -36,6 +39,7 @@ namespace MapGenerator
             player.addHero(hero);
             canWalk[heroPos.x, heroPos.y] = 2;
             map[heroPos.x, heroPos.y] = hero.GetSpriteID();
+            castle.Town.Owner = player;
         }
 
         public void PlaceCastle(int[,] map, int[,] canWalk)

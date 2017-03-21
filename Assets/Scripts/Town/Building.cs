@@ -74,7 +74,7 @@ namespace TownView
             Name = name;
             this.requirements = requirements;
             Placement = placement;
-            this.cost = cost;
+            Cost = cost;
             local_sprite_blueprint = LOCAL_SPRITEID_BLUEPRINT;
         }
 
@@ -93,12 +93,25 @@ namespace TownView
         /// <returns>Integer to signify that no valid card window exists for general class.</returns>
         protected virtual int GetUIType()
         {
-            return WindowTypes.NO_PLAYING_CARD;
+            return WindowTypes.BUILDING_CARD;
         }
 
         public virtual int GetSpriteBlueprintID()
         {
             return local_sprite_blueprint + IngameObjectLibrary.GetOffset(CATEGORY);
+        }
+        
+        public bool MeetsRequirements(Town town)
+        {
+            if(requirements != null)
+            {
+                for (int i = 0; i < town.Buildings.Length; i++)
+                {
+                    if (requirements[i] && !town.Buildings[i].Built)
+                        return false;
+                }
+            }
+            return true;
         }
     }
 }

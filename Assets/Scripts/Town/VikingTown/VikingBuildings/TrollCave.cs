@@ -12,14 +12,14 @@ namespace TownView
     {
         // Required values for building:
         const string name = "Troll Cave";
-        const bool[] requirements = null;
+        static bool[] requirements = new bool[]{false, true, false, false, false};
         const int LOCAL_SPRITEID = 5;
         const int LOCAL_SPRITEID_BLUEPRINT = 10;
 
         // Resources cost: 
         const int GOLD_COST = 1000;
         const int WOOD_COST = 5;
-        const int ORE_COST = 20;
+        const int ORE_COST = 0;
         const int CRYSTAL_COST = 0;
         const int GEM_COST = 0;
 
@@ -82,7 +82,7 @@ namespace TownView
         /// <returns>Integer for which window type to display in the game</returns>
         protected override int GetUIType()
         {
-            return UI.WindowTypes.DWELLING_PLAYING_CARD;
+            return UI.WindowTypes.DWELLING_CARD;
         }
     }
 }

@@ -18,9 +18,9 @@ namespace OverworldObjects
         /// <returns>Valid Sprite ID</returns>
         public new int GetSpriteID()
         {
-            Debug.Log("GETTING SPRITE: " +
-                      localIDs[UnityEngine.Random.Range(0, localIDs.Length-1)] + IngameObjectLibrary.GetOffset(category)
-            );
+            //Debug.Log("GETTING SPRITE: " +
+            //          localIDs[UnityEngine.Random.Range(0, localIDs.Length-1)] + IngameObjectLibrary.GetOffset(category)
+            //);
             return localIDs[UnityEngine.Random.Range(0, localIDs.Length-1)] + IngameObjectLibrary.GetOffset(category);
         }
     }

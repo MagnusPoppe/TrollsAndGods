@@ -18,6 +18,7 @@ public class IngameObjectLibrary
         castles = InitializeCastles();
         towns = InitializeTowns();
         ui = InitializeUI();
+        portraits = InitializePortraits();
 	}
 
     /// <summary>
@@ -25,7 +26,7 @@ public class IngameObjectLibrary
     /// </summary>
     public enum Category
     {
-        Debug, Ground, Environment, Dwellings, ResourceBuildings, Heroes, Castle, Town, UI, NOT_FOUND
+        Debug, Ground, Environment, Dwellings, ResourceBuildings, Heroes, Castle, Town, UI, Portraits, NOT_FOUND
     }
 
     /// <summary>
@@ -58,6 +59,9 @@ public class IngameObjectLibrary
 
         else if (category == Category.UI)
             return UI_START;
+
+        else if (category == Category.Portraits)
+            return PORTRAIT_START;
 
         else if (category == Category.Debug)
             return DEBUG_SPRITES_START;
@@ -106,9 +110,13 @@ public class IngameObjectLibrary
         {
             return Category.Town;
         }
-        else if (spriteID <= UI_START + UI_COUNT)
+        else if (spriteID <= UI_START)
         {
             return Category.UI;
+        }
+        else if (spriteID < PORTRAIT_START + PORTRAIT_COUNT)
+        {
+            return Category.Portraits;
         }
 
         // TODO: Debugger
@@ -166,7 +174,7 @@ public class IngameObjectLibrary
 		sprites[11] = UnityEngine.Resources.Load<Sprite>(path + "Grass-Water/southwest-out");
 		sprites[12] = UnityEngine.Resources.Load<Sprite>(path + "Grass-Water/northwest-out");
 
-	    sprites[13] = UnityEngine.Resources.Load<Sprite>(path + "Grass/grass");
+	    sprites[13] = UnityEngine.Resources.Load<Sprite>(path + "Grass/grass1");
 	    sprites[14] = UnityEngine.Resources.Load<Sprite>(path + "Grass/grass2");
 	    sprites[15] = UnityEngine.Resources.Load<Sprite>(path + "Grass/grass3");
 	    sprites[16] = UnityEngine.Resources.Load<Sprite>(path + "Grass/grass4");
@@ -244,6 +252,8 @@ public class IngameObjectLibrary
     {
         Sprite[] sprites = new Sprite[HEROES_COUNT];
         String path = "Sprites/Heroes/";
+
+        // Overworld sprites
         sprites[0] = UnityEngine.Resources.Load<Sprite>(path + "hero1");
         sprites[1] = UnityEngine.Resources.Load<Sprite>(path + "hero2");
 
@@ -316,7 +326,7 @@ public class IngameObjectLibrary
     // UI-variabler. UI[] holder alle sprites, UI_START er global startverdi for towns sprites, UI_COUNT er antall towns sprites
     Sprite[] ui;
     public const int UI_START = TOWNS_START + TOWNS_COUNT;
-    public const int UI_COUNT = 3;
+    public const int UI_COUNT = 9;
 
     /// <summary>
     /// Initialiserer et array for å holde på alle ui sprites
@@ -329,9 +339,39 @@ public class IngameObjectLibrary
 
         // Viking town sprites
         // TODO: temp has duplicates to correspond to WINDOW TYPES
-        sprites[0] = UnityEngine.Resources.Load<Sprite>(path + "card_template");
-        sprites[1] = UnityEngine.Resources.Load<Sprite>(path + "card_template2");
-        sprites[2] = UnityEngine.Resources.Load<Sprite>(path + "exit");
+        sprites[0] = UnityEngine.Resources.Load<Sprite>(path + "card_template2");
+        sprites[1] = UnityEngine.Resources.Load<Sprite>(path + "card_template3");
+        sprites[2] = UnityEngine.Resources.Load<Sprite>(path + "card_template3");
+        sprites[3] = UnityEngine.Resources.Load<Sprite>(path + "card_template3");
+        sprites[4] = UnityEngine.Resources.Load<Sprite>(path + "card_template");
+        sprites[5] = UnityEngine.Resources.Load<Sprite>(path + "card_template2");
+        sprites[6] = UnityEngine.Resources.Load<Sprite>(path + "exit");
+        sprites[7] = UnityEngine.Resources.Load<Sprite>(path + "buy");
+        sprites[8] = UnityEngine.Resources.Load<Sprite>(path + "hero_frame");
+        return sprites;
+    }
+
+    // heroes-variabler. heroes[] holder alle sprites, HEROES_START er global startverdi for heroes sprites, HEROES_COUNT er antall heroes sprites
+    Sprite[] portraits;
+    public const int PORTRAIT_START = UI_START + UI_COUNT;
+    public const int PORTRAIT_COUNT = 5;
+
+    /// <summary>
+    /// Initialiserer et array for å holde på alle heroes sprites
+    /// </summary>
+    /// <returns>Array med heroes sprites</returns>
+    private Sprite[] InitializePortraits()
+    {
+        Sprite[] sprites = new Sprite[PORTRAIT_COUNT];
+        String path = "Sprites/Heroes/";
+
+        // portrait sprites
+        sprites[0] = UnityEngine.Resources.Load<Sprite>(path + "BlueBerry");
+        sprites[1] = UnityEngine.Resources.Load<Sprite>(path + "Gork");
+        sprites[2] = UnityEngine.Resources.Load<Sprite>(path + "Jack McBlackwell");
+        sprites[3] = UnityEngine.Resources.Load<Sprite>(path + "Johny Mudbone");
+        sprites[4] = UnityEngine.Resources.Load<Sprite>(path + "Mantooth");
+
         return sprites;
     }
 
@@ -398,6 +438,11 @@ public class IngameObjectLibrary
     public Sprite GetUI(int spriteID)
     {
         return ui[spriteID - UI_START];
+    }
+
+    public Sprite GetPortrait(int spriteID)
+    {
+        return portraits[spriteID - PORTRAIT_START];
     }
 
     public Sprite GetDebugSprite(int spriteID)
