@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-class Wood : SpriteSystem
+class Wood : ResourceSprite
 {
-    private int LOCAL_SPRITE_ID = 1;
-    private IngameObjectLibrary.Category CATEGORY = IngameObjectLibrary.Category.Resources;
+    const int LOCAL_SPRITE_ID = 1;
 
-    public Wood(int localID, IngameObjectLibrary.Category category) : base(localID, category)
+    public Wood() : base(LOCAL_SPRITE_ID)
     {
     }
 }

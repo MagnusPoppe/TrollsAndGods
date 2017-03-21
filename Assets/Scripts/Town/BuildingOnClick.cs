@@ -8,12 +8,13 @@ namespace TownView
 
     public class BuildingOnClick : MonoBehaviour
     {
-
         public Building building;
         private Town town;
         Player player;
         SpriteRenderer spriteRenderer;
         float add = 1f;
+
+        GameObject[] frames;
 
         IngameObjectLibrary libs;
         SpriteSystem spriteSystem;
@@ -28,6 +29,10 @@ namespace TownView
         PortraitOnClick portraitOnClick;
         GameObject[] buildingObjects;
         GameManager gm;
+        int[] ratio = { 1, 100, 100, 200, 200 };
+        Text textLeftResource, textRightResource;
+        int selectedPayResource = 0;
+        int selectedEarnResource = 1;
 
         public GameObject[] BuildingObjects
         {
@@ -218,27 +223,30 @@ namespace TownView
 
         private void CreateMarketplaceView()
         {
-            Vector2 nextPosition = new Vector2(cardSpriteRenderer.transform.position.x, cardSpriteRenderer.transform.position.y + (cardSpriteRenderer.bounds.size.y / 4));
-            float startX = nextPosition.x;
+            Vector2 nextPositionPay = new Vector2(cardSpriteRenderer.transform.position.x, cardSpriteRenderer.transform.position.y + (cardSpriteRenderer.bounds.size.y / 4));
+            Vector2 nextPositionEarn = new Vector2(nextPositionPay.x, (nextPositionPay.y - cardSpriteRenderer.bounds.size.y/5f));
+            float startX = nextPositionPay.x;
 
             float leftX = startX;
             float rightX = startX;
             // Add each hero that you can buy in Tavern
 
             // holds all the frames to be disabled
-            GameObject[] heroFrames = new GameObject[gm.heroes.Length];
-
+            GameObject[] resourceFramesPay = new GameObject[System.Enum.GetNames(typeof(Resources.type)).Length];
+            GameObject[] resourceFramesEarn = new GameObject[System.Enum.GetNames(typeof(Resources.type)).Length];
+            
             for (int i = 0; i < System.Enum.GetNames(typeof(Resources.type)).Length; i++)
             {
 
                 GameObject resourceFrameObjectPay = new GameObject();
                 resourceFrameObjectPay.transform.parent = GameObject.Find("TownCardPanel").transform;
-                resourceFrameObjectPay.name = player.Wallet.GetResourceName(i);
-                SpriteRenderer frameImage = resourceFrameObjectPay.AddComponent<SpriteRenderer>();
-                frameImage.sprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/resource_frame");
-                frameImage.sortingLayerName = "TownInteractive";
-                heroFrames[i] = resourceFrameObjectPay;
+                resourceFrameObjectPay.name = player.Wallet.GetResourceName(i) + " pay frame";
+                SpriteRenderer frameImagePay = resourceFrameObjectPay.AddComponent<SpriteRenderer>();
+                frameImagePay.sprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/resource_frame");
+                frameImagePay.sortingLayerName = "TownInteractive";
+                resourceFramesPay[i] = resourceFrameObjectPay;
                 resourceFrameObjectPay.SetActive(false);
+                
 
                 // Create the gameobject to see and click on
                 GameObject resourceObjectPay = new GameObject();
@@ -248,7 +256,17 @@ namespace TownView
 
                 // Add the picture of the resource
                 SpriteRenderer sprPay = resourceObjectPay.AddComponent<SpriteRenderer>();
-                sprPay.sprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/gold");// TODO libs.GetPortrait(town.Owner.Heroes[0].GetPortraitID());
+
+                // Quick and dirty switch
+                switch (i)
+                {
+                    case 0: sprPay.sprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/gold"); break;
+                    case 1: sprPay.sprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/wood"); break;
+                    case 2: sprPay.sprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/ore"); break;
+                    case 3: sprPay.sprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/crystal"); break;
+                    case 4: sprPay.sprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/gem"); break;
+                }
+
                 sprPay.sortingLayerName = "GUI";
 
                 // Add the collider to click on to build a building
@@ -259,13 +277,30 @@ namespace TownView
 
 
 
+                GameObject textNameObject = new GameObject();
+                textNameObject.transform.parent = resourceObjectPay.transform;
+                textNameObject.transform.localScale = GameObject.Find("Canvas").transform.localScale;
+                textNameObject.name = player.Wallet.GetResource(i) + ", " + player.Wallet.GetResourceName(i);
+                Text textResource = textNameObject.AddComponent<Text>();
+                textResource.font = UnityEngine.Resources.Load<Font>("Fonts/ARIAL");
+                textResource.fontSize = 18;
+                textResource.text = player.Wallet.GetResource(i) + "";
+                textResource.color = Color.black;
+                textResource.alignment = TextAnchor.LowerCenter;
+
+
+
+
+
+
+
                 GameObject resourceFrameObjectEarn = new GameObject();
                 resourceFrameObjectEarn.transform.parent = GameObject.Find("TownCardPanel").transform;
-                resourceFrameObjectEarn.name = player.Wallet.GetResourceName(i);
+                resourceFrameObjectEarn.name = player.Wallet.GetResourceName(i) + " earn frame";
                 SpriteRenderer frameImageEarn = resourceFrameObjectEarn.AddComponent<SpriteRenderer>();
-                frameImage.sprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/resource_frame");
-                frameImage.sortingLayerName = "TownInteractive";
-                heroFrames[i] = resourceFrameObjectEarn;
+                frameImageEarn.sprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/resource_frame");
+                frameImageEarn.sortingLayerName = "TownInteractive";
+                resourceFramesEarn[i] = resourceFrameObjectEarn;
                 resourceFrameObjectEarn.SetActive(false);
 
                 // Create the gameobject to see and click on
@@ -276,41 +311,38 @@ namespace TownView
 
                 // Add the picture of the resource
                 SpriteRenderer sprEarn = resourceObjectEarn.AddComponent<SpriteRenderer>();
-                sprEarn.sprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/gold");// TODO libs.GetPortrait(town.Owner.Heroes[0].GetPortraitID());
+                sprEarn.sprite = sprPay.sprite;
                 sprEarn.sortingLayerName = "GUI";
 
                 // Add the collider to click on to build a building
                 BoxCollider2D colliderEarn = resourceObjectEarn.AddComponent<BoxCollider2D>();
                 colliderEarn.size = sprEarn.bounds.size;
+                
 
-                /*
-                GameObject textNameObject = new GameObject();
-                textNameObject.transform.parent = resourceObject.transform;
-                textNameObject.transform.localScale = GameObject.Find("Canvas").transform.localScale;
-                textNameObject.name = gm.heroes[i].Name;
-                Text textName = textNameObject.AddComponent<Text>();
-                textName.font = UnityEngine.Resources.Load<Font>("Fonts/ARIAL");
-                textName.fontSize = 18;
-                textName.text = gm.heroes[i].Name;
-                textName.color = Color.black;
-                */
 
-                resourceObjectPay.transform.position = nextPosition;
-                resourceObjectEarn.transform.position = nextPosition;
-                resourceFrameObjectPay.transform.position = nextPosition;
-                resourceFrameObjectEarn.transform.position = nextPosition;
+
+
+                resourceObjectPay.transform.position = nextPositionPay;
+                resourceObjectEarn.transform.position = nextPositionEarn;
+                resourceFrameObjectPay.transform.position = nextPositionPay;
+                resourceFrameObjectEarn.transform.position = nextPositionEarn;
                 //textNameObject.transform.position = new Vector2(nextPosition.x, (nextPosition.y - spr.bounds.size.y));
                 //textDescriptionObject.transform.position = new Vector2(startX, (nextPosition.y - (spr.bounds.size.y*1.5f)));
 
                 // Calculate the position for the next gameobject
-                float newX = nextPosition.x;
-                float newY = nextPosition.y;
+                float newX = nextPositionPay.x;
+                float newY = nextPositionPay.y;
 
                 if (i % 2 == 0)
+                {
                     newX = leftX -= (sprPay.bounds.size.x * 4f);
+                }
                 else
+                {
                     newX = rightX += (sprPay.bounds.size.x * 4f);
-                nextPosition = new Vector2(newX, newY);
+                }
+                nextPositionPay = new Vector2(newX, newY);
+                nextPositionEarn = new Vector2(newX, nextPositionEarn.y);
 
                 // Attaches onclick
                 /*portraitOnClick = heroObject.AddComponent<PortraitOnClick>();
@@ -321,11 +353,59 @@ namespace TownView
 
                 // Turns last hero active
                 if (i == 0)
-                {
                     resourceFrameObjectPay.SetActive(true);
-                    //buyButton.Cost = Cost;
-                }
+                if(i == 1)
+                    resourceFrameObjectEarn.SetActive(true);
             }
+
+
+
+
+
+
+            string prefabPath = "Prefabs/Slider";
+            GameObject sliderObject = Instantiate(UnityEngine.Resources.Load<GameObject>(prefabPath));
+            sliderObject.transform.parent = cardSpriteRenderer.transform;
+            sliderObject.transform.localScale = GameObject.Find("Canvas").transform.localScale;
+            
+            float bottomY = cardSpriteRenderer.transform.position.y * 0.5f;
+
+            sliderObject.transform.position = new Vector2(cardSpriteRenderer.transform.position.x, bottomY);
+            
+
+            GameObject textLeftObject = new GameObject();
+            textLeftObject.transform.parent = cardSpriteRenderer.transform;
+            textLeftObject.transform.localScale = GameObject.Find("Canvas").transform.localScale;
+            textLeftResource = textLeftObject.AddComponent<Text>();
+            textLeftResource.font = UnityEngine.Resources.Load<Font>("Fonts/ARIAL");
+            textLeftResource.fontSize = 16;
+            textLeftResource.text = ratio[0] * ratio[1] + "";
+            textLeftResource.color = Color.black;
+            textLeftResource.alignment = TextAnchor.MiddleRight;
+            textLeftObject.transform.position = new Vector2((cardSpriteRenderer.transform.position.x * 0.92f), bottomY);
+            
+
+            GameObject textRightObject = new GameObject();
+            textRightObject.transform.parent = cardSpriteRenderer.transform;
+            textRightObject.transform.localScale = GameObject.Find("Canvas").transform.localScale;
+            textRightResource = textRightObject.AddComponent<Text>();
+            textRightResource.font = UnityEngine.Resources.Load<Font>("Fonts/ARIAL");
+            textRightResource.fontSize = 16;
+            textRightResource.text = 1 + "";
+            textRightResource.color = Color.black;
+            textRightResource.alignment = TextAnchor.MiddleLeft;
+            textRightResource.transform.position = new Vector2((cardSpriteRenderer.transform.position.x * 1.08f), bottomY);
+            
+            Slider slider = sliderObject.GetComponent<Slider>();
+            slider.maxValue = player.Wallet.GetResource(0) / ratio[1];
+
+            slider.onValueChanged.AddListener(adjustTradeAmount);
+        }
+
+        public void adjustTradeAmount(float value)
+        {
+            textRightResource.text = value + "";
+            textLeftResource.text = value * ratio[selectedEarnResource] + "";
         }
 
         /// <summary>
@@ -652,6 +732,16 @@ namespace TownView
             buyButton.Player = Player;
         }
 
+        private void updateFrames(GameObject frame)
+        {
+            foreach (GameObject t in frames)
+            {
+                if (t != null)
+                    t.SetActive(false);
+            }
+            frame.SetActive(true);
+            //buyButton.Hero = frame.hero;
+        }
     }
 
 }
