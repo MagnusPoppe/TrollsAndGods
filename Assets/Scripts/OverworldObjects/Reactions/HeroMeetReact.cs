@@ -38,7 +38,7 @@ public class HeroMeetReact : Reaction {
     public override bool React(Hero h)
     {
         if (hero.Player.equals(h.Player)) return false;
-        gm.enterCombat(10,10,h,hero);
+        gm.enterCombat(15,11,h,hero);
         Debug.Log("Youve entered combat, this is not yet finished and your stuck now");
         return false;
     }
