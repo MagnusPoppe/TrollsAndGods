@@ -19,14 +19,15 @@ public class IngameObjectLibrary
         towns = InitializeTowns();
         ui = InitializeUI();
         portraits = InitializePortraits();
-	}
+        resources = InitializeResources();
+    }
 
     /// <summary>
     /// Kategorier for sprites
     /// </summary>
     public enum Category
     {
-        Debug, Ground, Environment, Dwellings, ResourceBuildings, Heroes, Castle, Town, UI, Portraits, NOT_FOUND
+        Debug, Ground, Environment, Dwellings, ResourceBuildings, Heroes, Castle, Town, UI, Portraits, Resources, NOT_FOUND
     }
 
     /// <summary>
@@ -62,6 +63,9 @@ public class IngameObjectLibrary
 
         else if (category == Category.Portraits)
             return PORTRAIT_START;
+
+        else if (category == Category.Resources)
+            return RESOURCES_START;
 
         else if (category == Category.Debug)
             return DEBUG_SPRITES_START;
@@ -114,9 +118,13 @@ public class IngameObjectLibrary
         {
             return Category.UI;
         }
-        else if (spriteID < PORTRAIT_START + PORTRAIT_COUNT)
+        else if (spriteID < PORTRAIT_START)
         {
             return Category.Portraits;
+        }
+        else if (spriteID <= RESOURCES_START + RESOURCES_COUNT)
+        {
+            return Category.Resources;
         }
 
         // TODO: Debugger
@@ -382,6 +390,30 @@ public class IngameObjectLibrary
         return sprites;
     }
 
+    // resources-variabler. resources[] holder alle sprites, resources_START er global startverdi for heroes sprites, resources_COUNT er antall resources sprites
+    Sprite[] resources;
+    public const int RESOURCES_START = UI_START + UI_COUNT;
+    public const int RESOURCES_COUNT = 5;
+
+    /// <summary>
+    /// Initialiserer et array for å holde på alle resources sprites
+    /// </summary>
+    /// <returns>Array med resources sprites</returns>
+    private Sprite[] InitializeResources()
+    {
+        Sprite[] sprites = new Sprite[PORTRAIT_COUNT];
+        String path = "Sprites/UI/";
+
+        // portrait sprites
+        sprites[0] = UnityEngine.Resources.Load<Sprite>(path + "gold");
+        sprites[1] = UnityEngine.Resources.Load<Sprite>(path + "wood");
+        sprites[2] = UnityEngine.Resources.Load<Sprite>(path + "ore");
+        sprites[3] = UnityEngine.Resources.Load<Sprite>(path + "crystal");
+        sprites[4] = UnityEngine.Resources.Load<Sprite>(path + "gem");
+
+        return sprites;
+    }
+
     /// <summary>
     /// Gjør global spriteID til lokal spriteID for ground tiles
     /// </summary>
@@ -450,6 +482,11 @@ public class IngameObjectLibrary
     public Sprite GetPortrait(int spriteID)
     {
         return portraits[spriteID - PORTRAIT_START];
+    }
+
+    public Sprite GetResources(int spriteID)
+    {
+        return resources[spriteID - RESOURCES_START];
     }
 
     public Sprite GetDebugSprite(int spriteID)
