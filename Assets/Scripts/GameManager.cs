@@ -217,7 +217,7 @@ public class GameManager : MonoBehaviour
                         SetLastStep(true);
                     }
                     // Hero's own position is clicked
-                    else if (activeHero.Position.Equals(posClicked))
+                    else if (activeHero.Position.Equals(new Point(posClicked)))
                     {
                         Debug.Log("Clicked on activated hero");
                         // Todo, open hero menu
