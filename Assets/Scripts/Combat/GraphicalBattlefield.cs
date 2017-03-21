@@ -116,9 +116,16 @@ public class GraphicalBattlefield : MonoBehaviour {
             {
                 GameObject go = new GameObject("ground x=" + x + ", y=" + y);
                 go.AddComponent<GroundGameObject>();
+                go.AddComponent<SpriteRenderer>();
+                SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
+                //todo set sprite
+                go.AddComponent<PolygonCollider2D>();
+                PolygonCollider2D pc = go.GetComponent<PolygonCollider2D>();
+                //todo set polygon collider
                 GroundGameObject ggo = go.GetComponent<GroundGameObject>();
                 ggo.GraphicalBattlefield = this;
                 ggo.LogicalPos = new Point(x, y);
+                //todo set gameobjects position
             }
         }
     }
