@@ -107,7 +107,7 @@ namespace OverworldObjects
         /// </summary>
         /// <param name="shape">Shape to outline</param>
         /// <returns>2D array containing the outline.</returns>
-        public static int[,] GetOutlineOfShape(int[,] shape)
+        public static int[,] GetOutline(int[,] shape)
         {
             int[,] outline = new int[shape.GetLength(0),shape.GetLength(1)];
 

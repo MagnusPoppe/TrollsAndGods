@@ -97,7 +97,8 @@ namespace OverworldObjects
                 if (placementMap[position.x, position.y] != AVAILABLE) continue;
                 if (!position.InBounds(placementMap, shape)) continue;
 
-                other.Scenery(UnityEngine.Random.Range(0,10));
+                // Rating the scenery
+                other.Scenery( position, shape, realMap );
 
                 // All available buildings for this position:
                 bool[] buildable = Shapes.GetBuildingFit(position, placementMap);
@@ -130,9 +131,10 @@ namespace OverworldObjects
 
             if (bestPossible != null) // PLACING AT BEST POSSIBLE LOCATION:
             {
-                //Debug.Log("Best placement: " + bestPossible+",  score="+highest);
+                // Debug.Log("Best placement: " + bestPossible+",  score="+highest);
                 realMap[bestPossible.x, bestPossible.y] = building.GetSpriteID();
                 markOccupied(bestPossible, shape);
+                return true;
             }
 
             // NO PLACEMENT FOR THIS BUILDING FOUND...

@@ -14,6 +14,11 @@
             get { return shape; }
         }
 
+        public int[] Sprites
+        {
+            get { return spriteIDs; }
+        }
+
         private int below = 6;
 
         public int Below
@@ -36,7 +41,6 @@
                 { 0, 0, 2, 2, 0 },
                 { 0, 0, 0, 1, 0 }
             };
-
         }
     }
 }

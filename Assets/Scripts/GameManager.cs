@@ -613,7 +613,25 @@ public class GameManager : MonoBehaviour
 
     private void PlaceBuildings()
     {
-        HandyMethods.print2DArray(Shapes.GetOutlineOfShape(Shapes.GetShape(Shapes.DOUBLE_LEFT)));
+        Player ownerOfMines = players[0];
+        foreach (Region r in regions)
+        {
+            OverworldObjects.ResourceBuilding mine = new OreMine(ownerOfMines);
+            placement.Place( r, mine );
+            ownerOfMines.ResourceBuildings.Add(mine);
+
+            mine = new GemMine(ownerOfMines);
+            placement.Place( r, mine);
+            ownerOfMines.ResourceBuildings.Add(mine);
+
+            mine = new CrystalMine(ownerOfMines);
+            placement.Place( r, mine);
+            ownerOfMines.ResourceBuildings.Add(mine);
+
+            mine = new GoldMine(ownerOfMines);
+            placement.Place( r, mine);
+            ownerOfMines.ResourceBuildings.Add(mine);
+        }
     }
     
     /// <summary>
