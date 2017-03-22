@@ -581,15 +581,10 @@ public class GameManager : MonoBehaviour
         // SETTING UP REGIONS WITH PLAYERS, CASTLE AND HERO:
         mapmaker.initializePlayers(map, canWalk, players);
 
+	    // Placeing all buildings within the regions.
+	    mapmaker.PlaceBuildings(players);
 
-        if (CanWalkDebugMode)
-		{
-			DrawDebugMap(map, canWalk);
-		}
-		else
-		{
-			DrawMap(map);
-		}
+        if (CanWalkDebugMode) DrawDebugMap(map, canWalk); else DrawMap(map);
 
         // Kaster mapmaker
         mapmaker = null;

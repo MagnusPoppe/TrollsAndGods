@@ -2,6 +2,7 @@
 using OverworldObjects;
 using Filter;
 using System.Collections.Generic;
+using UnityEditor;
 
 namespace MapGenerator
 {
@@ -72,7 +73,6 @@ namespace MapGenerator
         public const int CANWALK = 1;
         public const int TRIGGER = 2;
 
-
         /// <summary>
         /// Initializes a new instance of the <see cref="T:MapGenerator.MapMaker"/> class.
         /// </summary>
@@ -111,17 +111,9 @@ namespace MapGenerator
                 CreateTransitions();
 
             QuailtyAssurance quality = new QuailtyAssurance();
-            Placement placements = new Placement(map, canWalk);
-
-            foreach (Region r in regions)
-            {
-                placements.Place( r, new OreMine(null));
-                placements.Place( r, new GemMine(null));
-                placements.Place( r, new CrystalMine(null));
-                placements.Place( r, new GoldMine(null));
-            }
 
         }
+
 
         /// <summary>
         /// Replaces walls with mountains/forests/unwalkables
@@ -434,6 +426,39 @@ namespace MapGenerator
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Uses the placement class to place buildings onto the map.
+        /// This is done through a given region.
+        /// </summary>
+        public void PlaceBuildings(Player[] players)
+        {
+            Placement placements = new Placement(map, canWalk);
+
+            // PLACEMENT OF ALL BUILDINGS:
+            // TODO: GIVE THE MINES TO PLAYERS, NOT JUST players[0]
+            Player ownerOfMines = players[0];
+            if (ownerOfMines != null) Debug.Log("Player=" + ownerOfMines.PlayerID);
+            foreach (Region r in regions)
+            {
+                ResourceBuilding mine = new OreMine(ownerOfMines);
+                placements.Place( r, mine );
+                ownerOfMines.ResourceBuildings.Add(mine);
+
+                mine = new GemMine(ownerOfMines);
+                placements.Place( r, mine);
+                ownerOfMines.ResourceBuildings.Add(mine);
+
+                mine = new CrystalMine(ownerOfMines);
+                placements.Place( r, mine);
+                ownerOfMines.ResourceBuildings.Add(mine);
+
+                mine = new GoldMine(ownerOfMines);
+                placements.Place( r, mine);
+                ownerOfMines.ResourceBuildings.Add(mine);
+            }
+            Debug.Log("Size of player's Resourcebuildings: " + ownerOfMines.ResourceBuildings.Count);
         }
 
         /// <summary>

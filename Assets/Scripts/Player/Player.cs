@@ -36,11 +36,15 @@ public class Player
 
     public void GatherIncome()
     {
-        string debug = "WAS : " + wallet;
+        string debug = "PLAYER "+playerID + " WAS : " + wallet;
+
+        Debug.Log("Size of player's Resourcebuildings when collecting: " + ResourceBuildings.Count);
+
         foreach (ResourceBuilding building in ResourceBuildings)
         {
-            Debug.Log("Gathering resources from ResourceBuilding" + building);
+            Debug.Log("Gathering resources from ResourceBuilding: " + building);
             wallet = building.Earnings.adjustResources(wallet);
+            // TODO: EVERYONE GETS EVERYONES RESOURCES... MAYBE JUST GIVE IT TO THE PLAYER WHO OWNS THE MINE?
         }
         foreach (Castle c in castle)
         {
@@ -55,7 +59,7 @@ public class Player
             }
         }
 
-        debug += "\nIS : " + wallet;
+        debug += ";  IS : " + wallet;
         Debug.Log(debug);
     }
 

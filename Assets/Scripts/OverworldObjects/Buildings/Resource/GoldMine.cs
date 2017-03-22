@@ -10,7 +10,7 @@
 
         // RESOURCE VALUES:
         const Resources.type RESOURCE_ID = Resources.type.GOLD;
-        private const int GOLD = 10000;
+        private const int GOLD = 1000;
         private const int WOOD = 0;
         private const int ORE = 0;
         private const int GEM = 0;

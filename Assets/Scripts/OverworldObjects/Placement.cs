@@ -86,7 +86,7 @@ namespace OverworldObjects
             List<Point> coord = region.GetCoordinates();
             int[,] shape = Shapes.GetShape(building.ShapeType);
 
-            Rating highest = new Rating(0,0,0);
+            Rating highest = new Rating();
             Point bestPossible = null;
 
             foreach (Point position in coord)

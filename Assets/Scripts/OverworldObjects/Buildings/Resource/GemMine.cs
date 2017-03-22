@@ -13,7 +13,7 @@
         private const int GOLD = 0;
         private const int WOOD = 0;
         private const int ORE = 0;
-        private const int GEM = 2;
+        private const int GEM = 1;
         private const int CRYSTAL = 0;
         static Earn AMOUNT_PER_WEEK = new Earn(GOLD,WOOD,ORE,GEM,CRYSTAL);
 

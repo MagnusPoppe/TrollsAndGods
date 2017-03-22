@@ -13,8 +13,8 @@
         private const int GOLD = 0;
         private const int WOOD = 0;
         private const int ORE = 0;
-        private const int GEM = 2;
-        private const int CRYSTAL = 0;
+        private const int GEM = 0;
+        private const int CRYSTAL = 1;
         static Earn AMOUNT_PER_WEEK = new Earn(GOLD,WOOD,ORE,GEM,CRYSTAL);
 
         // USED FOR PLACEMENT OF THE OREMINE:
