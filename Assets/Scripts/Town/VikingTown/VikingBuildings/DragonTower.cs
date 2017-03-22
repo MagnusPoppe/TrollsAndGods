@@ -8,9 +8,10 @@
     {
         // Required values for building:
         const string name = "Dragon Tower";
+        const string description = "Recruit dragons";
         static bool[] requirements = new bool[] { false, false, true, false, false };
         const int LOCAL_SPRITEID = 4;
-        const int LOCAL_SPRITEID_BLUEPRINT = 9;
+        const int LOCAL_SPRITEID_BLUEPRINT = 10;
 
 
         // Resources cost: 
@@ -21,7 +22,7 @@
         const int GEM_COST = 5;
 
         // This needs no indata since it knows its values.
-        public DragonTower() : base(name, requirements, new Cost(GOLD_COST, WOOD_COST, ORE_COST, CRYSTAL_COST, GEM_COST), LOCAL_SPRITEID, LOCAL_SPRITEID_BLUEPRINT)
+        public DragonTower() : base(name, description, requirements, new Cost(GOLD_COST, WOOD_COST, ORE_COST, CRYSTAL_COST, GEM_COST), LOCAL_SPRITEID, LOCAL_SPRITEID_BLUEPRINT)
         {
         }
 

@@ -26,43 +26,6 @@ namespace OverworldObjects
         }
 
         /// <summary>
-        /// Finds a placement for a given building inside a given region.
-        ///
-        /// </summary>
-        /// <param name="region"> Region to place the building in</param>
-        /// <param name="building"> Building to be placed</param>
-        /// <returns> coordinate to place the building on, NULL if no available placement. </returns>
-        public bool Place(Region region, OverworldBuilding building)
-        {
-            List<Point> coord = region.GetCoordinates();
-            int[,] shape = Shapes.GetShape(building.ShapeType);
-
-            Rating highest = new Rating();
-            Point Hightest = null;
-
-            foreach (Point position in coord)
-            {
-                Rating other = new Rating();
-                // Edge cases:
-                if (placementMap[position.x, position.y] != AVAILABLE) continue;
-                if (!position.InBounds(placementMap, shape)) continue;
-
-                // All available buildings for this position:
-                bool[] buildable = Shapes.GetBuildingFit(position, placementMap);
-
-                if (buildable[building.ShapeType])
-                {
-                    realMap[position.x, position.y] = building.GetSpriteID();
-                    markOccupied(position, shape);
-                    return true;
-                }
-            }
-
-            // NO PLACEMENT FOR THIS BUILDING FOUND...
-            return false;
-        }
-
-        /// <summary>
         /// Generates a placementmap out of a real map containing all available placements, as
         /// well as placement possibillities for special cases, like mines.
         /// </summary>
@@ -103,9 +66,77 @@ namespace OverworldObjects
                     }
                 }
             }
-            Debug.Log("AVAILABLE=" + debug_numAvailable + ",   NOT_AVAILABLE=" + debug_numNotAvailable +
-                      ",   MINE_AVAILABLE=" + debug_numMineAvailable);
+            //Debug.Log("AVAILABLE=" + debug_numAvailable + ",   NOT_AVAILABLE=" + debug_numNotAvailable +",   MINE_AVAILABLE=" + debug_numMineAvailable);
             return tempMap;
+        }
+
+        /// <summary>
+        /// Finds a placement for a given building inside a region. Uses a rating system
+        /// to find the best possible placement for any building.
+        ///
+        /// NOTE: The best position of a building may be the best position for another
+        /// building. Therefore, use the algorithm on the most important buildings or
+        /// the ones that have the strictest needs first.
+        /// </summary>
+        /// <param name="region"> Region to place the building in</param>
+        /// <param name="building"> Building to be placed</param>
+        /// <returns> coordinate to place the building on, NULL if no available placement. </returns>
+        public bool Place(Region region, OverworldBuilding building)
+        {
+            List<Point> coord = region.GetCoordinates();
+            int[,] shape = Shapes.GetShape(building.ShapeType);
+
+            Rating highest = new Rating(0,0,0);
+            Point bestPossible = null;
+
+            foreach (Point position in coord)
+            {
+                Rating other = new Rating();
+
+                // Edge cases:
+                if (placementMap[position.x, position.y] != AVAILABLE) continue;
+                if (!position.InBounds(placementMap, shape)) continue;
+
+                other.Scenery(UnityEngine.Random.Range(0,10));
+
+                // All available buildings for this position:
+                bool[] buildable = Shapes.GetBuildingFit(position, placementMap);
+
+                if (buildable[building.ShapeType])
+                {
+                    other.PossibleBuildings(buildable);
+                    if (building.GetType().BaseType == typeof(ResourceBuilding)) // NEEDS TO BE INSIDE A GIVEN RANGE.
+                    {
+                        ResourceBuilding rs = (ResourceBuilding) building;
+                        float actual = position.DistanceTo(region.RegionCenter);
+
+                        if (rs.MinDistFromTown < actual && actual < rs.MaxDistFromTown) // INSIDE RANGE.
+                        {
+                            other.Distance(rs.MinDistFromTown, actual, rs.MaxDistFromTown);
+                        }
+                        else // NOT INSIDE RANGE.
+                        {
+                            continue;
+                        }
+                    }
+
+                    if (other.Bigger(highest))
+                    {
+                        bestPossible = position;
+                        highest = other;
+                    }
+                }
+            }
+
+            if (bestPossible != null) // PLACING AT BEST POSSIBLE LOCATION:
+            {
+                Debug.Log("Best placement: " + bestPossible+",  score="+highest);
+                realMap[bestPossible.x, bestPossible.y] = building.GetSpriteID();
+                markOccupied(bestPossible, shape);
+            }
+
+            // NO PLACEMENT FOR THIS BUILDING FOUND...
+            return false;
         }
 
         /// <summary>

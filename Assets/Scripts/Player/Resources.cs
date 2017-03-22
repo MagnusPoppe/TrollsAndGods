@@ -22,6 +22,22 @@ public class Resources
 
     public enum type { GOLD, WOOD, ORE, CRYSTAL, GEM };
 
+    public string GetResourceName(int i)
+    {
+        string name = "";
+        if (i == 0)
+            name = "Gold";
+        else if (i == 1)
+            name = "Wood";
+        else if (i == 2)
+            name = "Ore";
+        else if (i == 3)
+            name = "Crystal";
+        else if (i == 4)
+            name = "Gem";
+        return name;
+    }
+
     public Resources()
     {
         resourceTab = new int[5];

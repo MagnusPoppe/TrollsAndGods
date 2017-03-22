@@ -30,7 +30,7 @@ public class DwellingReact : Reaction {
     /// If you don't own the dwelling, change owner. Hire units that are at dwelling.
     /// </summary>
     /// <param name="h">The hero interacting with the dwelling</param>
-    /// <returns>True if you do not own dwelling, else false.</returns>
+    /// <returns>True if owner changed</returns>
     public override bool React(Hero h)
     {
         if (!dwelling.Owner.equals(h.Player))

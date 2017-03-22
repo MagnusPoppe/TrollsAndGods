@@ -100,6 +100,9 @@ public class GameManager : MonoBehaviour
     string[] resourceTextPosition = new string[] { "TextGold", "TextWood", "TextOre", "TextCrystal", "TextGem" };
     GameObject overWorldCanvas;
 
+    //currentReaction
+    private Reaction curReaction;
+
 
     // Use this for initialization
     void Start ()
@@ -326,23 +329,17 @@ public class GameManager : MonoBehaviour
                             // If tile is threatened, perform the additional reaction before the main one
                             if (reactions[x, y].HasPreReact(activeHero))
                             {
-                                heroNotDead = reactions[x, y].PreReact(activeHero);
+                                reactions[x, y].PreReact(activeHero);
+                                curReaction = reactions[x, y];
                                 // Remove hero when false, opponent unit or hero when true
                             }
                             // Only perform the main reaction if the hero didn't die in previous reaction
-                            if (heroNotDead)
+                            else if (reactions[x, y].React(activeHero))
                             {
-                                bool react = reactions[x, y].React(activeHero);
+                                //bool react = reactions[x, y].React(activeHero);
 
-                                if (reactions[x, y].GetType().Equals(typeof(HeroMeetReact)))
-                                {
-                                    // TODO if battle, visually remove the hero that is now set to null (true when attacker won)
-                                }
-                                else if (reactions[x, y].GetType().Equals(typeof(UnitReaction)))
-                                {
-                                    // TODO visually remove either hero or unit (true when attacker won)
-                                }
-                                else if (reactions[x, y].GetType().Equals(typeof(ResourceReaction)))
+
+                                if (reactions[x, y].GetType().Equals(typeof(ResourceReaction)))
                                 {
                                     // TODO visually remove picked up resource
                                 }
@@ -352,11 +349,13 @@ public class GameManager : MonoBehaviour
                                 }
                                 else if (reactions[x, y].GetType().Equals(typeof(CastleReact)))
                                 {
-                                    // TODO visually remove picked up artifact
+                                    // TODO change owner of defenseless castle visually
+                                    CastleReact cr = (CastleReact) reactions[x, y];
+                                    changeCastleOwner(cr);
                                 }
                                 else if (reactions[x, y].GetType().Equals(typeof(DwellingReact)))
                                 {
-                                    // TODO visually dweeling has been captured
+                                    // TODO visually dwelling has been captured
                                 }
                                 else if (reactions[x, y].GetType().Equals(typeof(ResourceBuildingReaction)))
                                 {
@@ -365,7 +364,7 @@ public class GameManager : MonoBehaviour
                             }
                             else
                             {
-
+                                curReaction = reactions[x, y];
                             }
                         }
                         
@@ -1046,11 +1045,56 @@ public class GameManager : MonoBehaviour
         if (winner)
         {
             //attacker won
+            if (curReaction.GetType() == typeof(CastleReact))
+            {
+                CastleReact cr = (CastleReact) curReaction;
+                changeCastleOwner(cr);
+            }
         }
         else
         {
             //defender won
+            removeHero(activeHero);
         }
         overWorld = true;
+    }
+
+    /// <summary>
+    /// Changes owner of castle to Player whose turn it is
+    /// </summary>
+    /// <param name="cr">CastleReact</param>
+    public void changeCastleOwner(CastleReact cr)
+    {
+        cr.Castle.Player.Castle.Remove(cr.Castle);
+        cr.Castle.Player = getPlayer(whoseTurn);
+        cr.Castle.Town.Owner = getPlayer(whoseTurn);
+        getPlayer(whoseTurn).Castle.Add(cr.Castle);
+    }
+
+
+    /// <summary>
+    /// Removes a hero
+    /// </summary>
+    /// <param name="h">Hero to be removed</param>
+    public void removeHero(Hero h)
+    {
+        Hero[] heroes = h.Player.Heroes;
+        for (int i = 0; i < heroes.Length; i++)
+        {
+            if (h.Equals(heroes[i]))
+            {
+                for (int j = i; j < heroes.Length; j++)
+                {
+                    heroes[j] = heroes[j + 1];
+                }
+                break;
+            }
+        }
+        if (activeHero.Equals(h)) activeHero = null;
+        GameObject go = heroLayer[h.Position.x, h.Position.y];
+        go.SetActive(false);
+        Destroy(go);
+        heroLayer[h.Position.x, h.Position.y] = null;
+        reactions[h.Position.x, h.Position.y] = null;
     }
 }

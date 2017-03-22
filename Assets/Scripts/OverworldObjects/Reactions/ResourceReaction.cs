@@ -44,7 +44,7 @@ public class ResourceReaction : Reaction
     /// Adds resource amount to player
     /// </summary>
     /// <param name="h">Hero interacting with resource</param>
-    /// <returns>returns true to signal graphical change, true since resource is always picked up</returns>
+    /// <returns>returns true, true since resource is always picked up</returns>
     public override bool React(Hero h)
     {
         h.Player.Wallet.adjustResource(resourceID, amount);

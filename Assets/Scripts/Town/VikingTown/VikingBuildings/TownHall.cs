@@ -8,9 +8,10 @@
     {
         // Required values for building:
         const string name = "Town Hall";
+        const string description = "Build buildings here";
         const bool[] requirements = null;
         const int LOCAL_SPRITEID = 1;
-        const int LOCAL_SPRITEID_BLUEPRINT = 6;
+        const int LOCAL_SPRITEID_BLUEPRINT = 7;
 
         // Resources cost: 
         const int GOLD_COST = 1500;
@@ -22,7 +23,7 @@
         static Earn earnings = new Earn(1000,5,5,5,5);
 
         // This needs no indata since it knows its values.
-        public TownHall() : base(name, requirements, new Cost(GOLD_COST, WOOD_COST, ORE_COST, CRYSTAL_COST, GEM_COST), LOCAL_SPRITEID, LOCAL_SPRITEID_BLUEPRINT, earnings)
+        public TownHall() : base(name, description, requirements, new Cost(GOLD_COST, WOOD_COST, ORE_COST, CRYSTAL_COST, GEM_COST), LOCAL_SPRITEID, LOCAL_SPRITEID_BLUEPRINT, earnings)
         {
             
         }

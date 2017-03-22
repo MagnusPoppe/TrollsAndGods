@@ -10,6 +10,7 @@ public class BuyButtonOnClick : MonoBehaviour  {
 
     Hero hero;
     Building building;
+    Unit unit;
     Town town;
     Player player;
     GameManager gm;
@@ -143,6 +144,7 @@ public class BuyButtonOnClick : MonoBehaviour  {
                         Debug.Log("YOU BOUGHT: " + building.Name); // TODO remove
                         town.Buildings[i].Build();
                         gm.DrawBuilding(town, building, i);
+                        DestroyObjects();
                     }
                 }
             }
@@ -162,13 +164,16 @@ public class BuyButtonOnClick : MonoBehaviour  {
             {
                 Player.Wallet.Pay(Hero.Cost);
                 Debug.Log("Bought the hero" + hero.Name); // TODO remove
+                DestroyObjects();
             }
             else
                 Debug.Log("Not enough gold");
             return;
         }
+    }
 
-
+    private void DestroyObjects()
+    {
         foreach (GameObject t in BuildingObjects)
         {
             // TODO: make into list so we dont have to check for null?

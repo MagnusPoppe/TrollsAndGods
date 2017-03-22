@@ -2,30 +2,128 @@
 <project version="4">
   <component name="BookmarkManager">
     <bookmark url="file://$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Placement.cs" line="83" mnemonic="8" />
+    <bookmark url="file://$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Rating.cs" line="83" mnemonic="9" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="49b3dc2e-230c-4cc1-83c9-bf66680a90ab" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Buildings/Resource/CrystalMine.cs" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Buildings/Resource/GemMine.cs" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Buildings/Resource/GoldMine.cs" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Buildings/Resource/GoldMine.cs.meta" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Placement.cs" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Placement.cs.meta" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Rating.cs" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/MapMakerTester/PlacementTester.cs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Resources/Prefabs/Marketplace.prefab" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Resources/Sprites/Buildings/Towns/Viking/Icons Marketplace HasBought.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Resources/Sprites/Buildings/Towns/Viking/Icons Marketplace NoBuy.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Resources/Sprites/Buildings/Towns/Viking/Icons Marketplace.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Resources/Sprites/Buildings/Towns/Viking/Marketplace.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Resources/Sprites/Combat/Combat Screen Background.jpeg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Resources/Sprites/Combat/Grid.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Resources/Sprites/Combat/black.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Resources/Sprites/UI/building_card.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Resources/Sprites/UI/building_frame.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Resources/Sprites/UI/resource_frame.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Resources/Sprites/UI/townhall_card.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Resources/Prefabs/Marketplace.prefab.meta" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Resources/Sprites/Buildings/Towns/Viking/Icons Marketplace HasBought.png.meta" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Resources/Sprites/Buildings/Towns/Viking/Icons Marketplace NoBuy.png.meta" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Resources/Sprites/Buildings/Towns/Viking/Marketplace.png.meta" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Resources/Sprites/Combat.meta" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Resources/Sprites/Combat/Combat Screen Background.jpeg.meta" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Resources/Sprites/Combat/Grid.png.meta" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Resources/Sprites/Combat/black.png.meta" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Resources/Sprites/UI/building_frame.png.meta" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Resources/Sprites/UI/resource_frame.png.meta" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Resources/Sprites/UI/tavern_card.png.meta" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Resources/Sprites/UI/townhall_card.png.meta" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Scripts/Player/Resources.meta" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Scripts/Player/Resources/Crystal.cs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Scripts/Player/Resources/Crystal.cs.meta" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Scripts/Player/Resources/Gem.cs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Scripts/Player/Resources/Gem.cs.meta" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Scripts/Player/Resources/Gold.cs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Scripts/Player/Resources/Gold.cs.meta" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Scripts/Player/Resources/Ore.cs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Scripts/Player/Resources/Ore.cs.meta" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Scripts/Player/Resources/Wood.cs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Scripts/Player/Resources/Wood.cs.meta" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Scripts/Town/VikingTown/VikingBuildings/Marketplace.cs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Scripts/Town/VikingTown/VikingBuildings/Marketplace.cs.meta" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Assets/Resources/Sprites/UI/card_template2.png" afterPath="" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Assets/Resources/Sprites/UI/card_template.png" afterPath="$PROJECT_DIR$/Assets/Resources/Sprites/UI/unit_card.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Assets/Resources/Sprites/UI/card_template.png.meta" afterPath="$PROJECT_DIR$/Assets/Resources/Sprites/UI/building_card.png.meta" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Assets/Resources/Sprites/UI/card_template2.png.meta" afterPath="$PROJECT_DIR$/Assets/Resources/Sprites/Buildings/Towns/Viking/Icons Marketplace.png.meta" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Assets/Resources/Sprites/UI/card_template3.png" afterPath="$PROJECT_DIR$/Assets/Resources/Sprites/UI/tavern_card.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Assets/Resources/Sprites/UI/card_template3.png.meta" afterPath="$PROJECT_DIR$/Assets/Resources/Sprites/UI/unit_card.png.meta" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/TownBuilding.unity" afterPath="$PROJECT_DIR$/Assets/TownBuilding.unity" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/UML/UMLDIAGRAM.vpp" afterPath="$PROJECT_DIR$/Assets/UML/UMLDIAGRAM.vpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MapMakerTester/bin/Debug/Assembly-CSharp.dll" afterPath="$PROJECT_DIR$/MapMakerTester/bin/Debug/Assembly-CSharp.dll" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MapMakerTester/bin/Debug/MapMakerTester.dll" afterPath="$PROJECT_DIR$/MapMakerTester/bin/Debug/MapMakerTester.dll" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MapMakerTester/bin/Debug/Unity.CecilTools.dll" afterPath="$PROJECT_DIR$/MapMakerTester/bin/Debug/Unity.CecilTools.dll" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MapMakerTester/bin/Debug/Unity.DataContract.dll" afterPath="$PROJECT_DIR$/MapMakerTester/bin/Debug/Unity.DataContract.dll" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MapMakerTester/bin/Debug/Unity.SerializationLogic.dll" afterPath="$PROJECT_DIR$/MapMakerTester/bin/Debug/Unity.SerializationLogic.dll" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MapMakerTester/bin/Debug/Unity.UNetWeaver.dll" afterPath="$PROJECT_DIR$/MapMakerTester/bin/Debug/Unity.UNetWeaver.dll" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MapMakerTester/bin/Debug/UnityEngine.Analytics.dll" afterPath="$PROJECT_DIR$/MapMakerTester/bin/Debug/UnityEngine.Analytics.dll" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MapMakerTester/bin/Debug/UnityEngine.HoloLens.dll" afterPath="$PROJECT_DIR$/MapMakerTester/bin/Debug/UnityEngine.HoloLens.dll" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MapMakerTester/bin/Debug/UnityEngine.Networking.dll" afterPath="$PROJECT_DIR$/MapMakerTester/bin/Debug/UnityEngine.Networking.dll" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MapMakerTester/bin/Debug/UnityEngine.PlaymodeTestsRunner.dll" afterPath="$PROJECT_DIR$/MapMakerTester/bin/Debug/UnityEngine.PlaymodeTestsRunner.dll" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MapMakerTester/bin/Debug/UnityEngine.UI.dll" afterPath="$PROJECT_DIR$/MapMakerTester/bin/Debug/UnityEngine.UI.dll" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MapMakerTester/bin/Debug/UnityEngine.VR.dll" afterPath="$PROJECT_DIR$/MapMakerTester/bin/Debug/UnityEngine.VR.dll" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MapMakerTester/obj/Debug/MapMakerTester.dll" afterPath="$PROJECT_DIR$/MapMakerTester/obj/Debug/MapMakerTester.dll" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/RunnableOSX.app/Contents/Frameworks/MonoEmbedRuntime/osx/libMonoPosixHelper.dylib" afterPath="$PROJECT_DIR$/RunnableOSX.app/Contents/Frameworks/MonoEmbedRuntime/osx/libMonoPosixHelper.dylib" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/RunnableOSX.app/Contents/Frameworks/MonoEmbedRuntime/osx/libmono.0.dylib" afterPath="$PROJECT_DIR$/RunnableOSX.app/Contents/Frameworks/MonoEmbedRuntime/osx/libmono.0.dylib" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/RunnableOSX.app/Contents/MacOS/RunnableOSX" afterPath="$PROJECT_DIR$/RunnableOSX.app/Contents/MacOS/RunnableOSX" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/RunnableOSX.app/Contents/Resources/Data/Managed/Assembly-CSharp.dll" afterPath="$PROJECT_DIR$/RunnableOSX.app/Contents/Resources/Data/Managed/Assembly-CSharp.dll" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/RunnableOSX.app/Contents/Resources/Data/Managed/Mono.Security.dll" afterPath="$PROJECT_DIR$/RunnableOSX.app/Contents/Resources/Data/Managed/Mono.Security.dll" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/RunnableOSX.app/Contents/Resources/Data/Managed/System.Core.dll" afterPath="$PROJECT_DIR$/RunnableOSX.app/Contents/Resources/Data/Managed/System.Core.dll" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/RunnableOSX.app/Contents/Resources/Data/Managed/System.dll" afterPath="$PROJECT_DIR$/RunnableOSX.app/Contents/Resources/Data/Managed/System.dll" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/RunnableOSX.app/Contents/Resources/Data/Managed/UnityEngine.Analytics.dll" afterPath="$PROJECT_DIR$/RunnableOSX.app/Contents/Resources/Data/Managed/UnityEngine.Analytics.dll" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/RunnableOSX.app/Contents/Resources/Data/Managed/UnityEngine.Networking.dll" afterPath="$PROJECT_DIR$/RunnableOSX.app/Contents/Resources/Data/Managed/UnityEngine.Networking.dll" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/RunnableOSX.app/Contents/Resources/Data/Managed/UnityEngine.PlaymodeTestsRunner.dll" afterPath="$PROJECT_DIR$/RunnableOSX.app/Contents/Resources/Data/Managed/UnityEngine.PlaymodeTestsRunner.dll" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/RunnableOSX.app/Contents/Resources/Data/Managed/UnityEngine.UI.dll" afterPath="$PROJECT_DIR$/RunnableOSX.app/Contents/Resources/Data/Managed/UnityEngine.UI.dll" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/RunnableOSX.app/Contents/Resources/Data/Managed/mscorlib.dll" afterPath="$PROJECT_DIR$/RunnableOSX.app/Contents/Resources/Data/Managed/mscorlib.dll" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/.idea.TrollsAndGods/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/.idea.TrollsAndGods/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assembly-CSharp.csproj" afterPath="$PROJECT_DIR$/Assembly-CSharp.csproj" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Resources/Sprites/Buildings/Resource/Ore Smelters Camp.png.meta" afterPath="$PROJECT_DIR$/Assets/Resources/Sprites/Buildings/Resource/Ore Smelters Camp.png.meta" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/.idea.TrollsAndGods/riderModule.iml" afterPath="$PROJECT_DIR$/.idea/.idea.TrollsAndGods/riderModule.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/Combat/GraphicalBattlefield.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/Combat/GraphicalBattlefield.cs" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/GameManager.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/GameManager.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/HandyMethods.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/HandyMethods.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/MapGeneration/Filter/AverageFilter.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/MapGeneration/Filter/AverageFilter.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/MapGeneration/MapMaker.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/MapGeneration/MapMaker.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Buildings/Resource/OreMine.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Buildings/Resource/OreMine.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Environment/Mountain.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Environment/Mountain.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/Heroes/Hero.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/Heroes/Hero.cs" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/OverworldObjects/IngameObjectLibrary.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/OverworldObjects/IngameObjectLibrary.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/Point.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/Point.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MapMakerTester/MapMakerTester.csproj" afterPath="$PROJECT_DIR$/MapMakerTester/MapMakerTester.csproj" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Placement.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Placement.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Rating.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Rating.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Reactions/ArtifactReaction.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Reactions/ArtifactReaction.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Reactions/CastleReact.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Reactions/CastleReact.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Reactions/DwellingReact.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Reactions/DwellingReact.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Reactions/HeroMeetReact.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Reactions/HeroMeetReact.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Reactions/Reaction.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Reactions/Reaction.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Reactions/ResourceReaction.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Reactions/ResourceReaction.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Reactions/UnitReaction.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Reactions/UnitReaction.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Shapes.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Shapes.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/Player/Resources.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/Player/Resources.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/Town/Building.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/Town/Building.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/Town/BuildingOnClick.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/Town/BuildingOnClick.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/Town/BuyButtonOnClick.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/Town/BuyButtonOnClick.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/Town/ResourceBuilding.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/Town/ResourceBuilding.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/Town/VikingTown/VikingBuildings/DragonTower.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/Town/VikingTown/VikingBuildings/DragonTower.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/Town/VikingTown/VikingBuildings/Pallisade.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/Town/VikingTown/VikingBuildings/Pallisade.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/Town/VikingTown/VikingBuildings/Temple.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/Town/VikingTown/VikingBuildings/Temple.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/Town/VikingTown/VikingBuildings/TownHall.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/Town/VikingTown/VikingBuildings/TownHall.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/Town/VikingTown/VikingBuildings/TrollCave.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/Town/VikingTown/VikingBuildings/TrollCave.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/Town/VikingTown/VikingTown.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/Town/VikingTown/VikingTown.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/libs/delunay/Delaunay/Edge.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/libs/delunay/Delaunay/Edge.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/libs/delunay/Delaunay/EdgeList.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/libs/delunay/Delaunay/EdgeList.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/libs/delunay/Delaunay/EdgeReorderer.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/libs/delunay/Delaunay/EdgeReorderer.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/libs/delunay/Delaunay/Halfedge.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/libs/delunay/Delaunay/Halfedge.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/libs/delunay/Delaunay/HalfedgePriorityQueue.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/libs/delunay/Delaunay/HalfedgePriorityQueue.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/libs/delunay/Delaunay/ICoord.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/libs/delunay/Delaunay/ICoord.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/libs/delunay/Delaunay/LR.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/libs/delunay/Delaunay/LR.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/libs/delunay/Delaunay/Site.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/libs/delunay/Delaunay/Site.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/libs/delunay/Delaunay/SiteList.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/libs/delunay/Delaunay/SiteList.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/libs/delunay/Delaunay/Triangle.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/libs/delunay/Delaunay/Triangle.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/libs/delunay/Delaunay/Vertex.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/libs/delunay/Delaunay/Vertex.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/libs/delunay/Delaunay/Voronoi.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/libs/delunay/Delaunay/Voronoi.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/libs/delunay/Geom/Circle.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/libs/delunay/Geom/Circle.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/libs/delunay/Geom/LineSegment.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/libs/delunay/Geom/LineSegment.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/libs/delunay/Geom/Polygon.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/libs/delunay/Geom/Polygon.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/libs/delunay/Geom/Rectf.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/libs/delunay/Geom/Rectf.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/libs/delunay/Geom/Vector2f.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/libs/delunay/Geom/Vector2f.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/libs/delunay/Geom/Winding.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/libs/delunay/Geom/Winding.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/libs/delunay/LICENSE" afterPath="$PROJECT_DIR$/Assets/Scripts/libs/delunay/LICENSE" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/libs/delunay/README.md" afterPath="$PROJECT_DIR$/Assets/Scripts/libs/delunay/README.md" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ProjectSettings/ProjectVersion.txt" afterPath="$PROJECT_DIR$/ProjectSettings/ProjectVersion.txt" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -34,63 +132,157 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="DatabaseView">
+    <option name="GROUP_SCHEMA" value="true" />
+    <option name="GROUP_CONTENTS" value="false" />
+    <option name="SORT_POSITIONED" value="false" />
+    <option name="SHOW_TABLE_DETAILS" value="true" />
+    <option name="SHOW_EMPTY_GROUPS" value="false" />
+    <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
+  </component>
   <component name="ErrorTreeViewConfiguration">
     <option name="hideWarnings" value="true" />
     <option name="HIDE_WARNINGS" value="true" />
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="Placement.cs" pinned="false" current-in-tab="true">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="Placement.cs" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Placement.cs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="194">
-              <caret line="24" column="59" lean-forward="true" selection-start-line="24" selection-start-column="59" selection-end-line="24" selection-end-column="59" />
+            <state relative-caret-position="368">
+              <caret line="116" column="11" lean-forward="false" selection-start-line="116" selection-start-column="11" selection-end-line="116" selection-end-column="11" />
               <folding>
-                <marker date="1490110035000" expanded="true" signature="6:157" ph="..." />
-                <marker date="1490110035000" expanded="true" signature="185:6101" ph="{...}" />
-                <marker date="1490110035000" expanded="true" signature="214:6099" ph="{...}" />
-                <marker date="1490110035000" expanded="true" signature="512:664" ph="{...}" />
-                <marker date="1490110035000" expanded="true" signature="674:1038" ph="/// Finds a placement for a given building inside a given region. ... " />
-                <marker date="1490110035000" expanded="true" signature="1107:2107" ph="{...}" />
-                <marker date="1490110035000" expanded="true" signature="1364:2015" ph="{...}" />
-                <marker date="1490110035000" expanded="true" signature="1803:2001" ph="{...}" />
-                <marker date="1490110035000" expanded="true" signature="2117:2450" ph="/// Generates a placementmap out of a real map containing all available placements, as ... " />
-                <marker date="1490110035000" expanded="true" signature="2506:3956" ph="{...}" />
-                <marker date="1490110035000" expanded="true" signature="2774:3742" ph="{...}" />
-                <marker date="1490110035000" expanded="true" signature="2847:3728" ph="{...}" />
-                <marker date="1490110035000" expanded="true" signature="3082:3537" ph="{...}" />
-                <marker date="1490110035000" expanded="true" signature="3167:3329" ph="{...}" />
-                <marker date="1490110035000" expanded="true" signature="3358:3515" ph="{...}" />
-                <marker date="1490110035000" expanded="true" signature="3562:3710" ph="{...}" />
-                <marker date="1490110035000" expanded="true" signature="3966:4172" ph="/// Markes the placementmap tiles occupied for ... " />
-                <marker date="1490110035000" expanded="true" signature="4236:4737" ph="{...}" />
-                <marker date="1490110035000" expanded="true" signature="4306:4727" ph="{...}" />
-                <marker date="1490110035000" expanded="true" signature="4384:4713" ph="{...}" />
-                <marker date="1490110035000" expanded="true" signature="4591:4695" ph="{...}" />
-                <marker date="1490110035000" expanded="true" signature="4747:4953" ph="/// Tests if there is a possibillity of a mine here. ... " />
-                <marker date="1490110035000" expanded="true" signature="5008:6093" ph="{...}" />
-                <marker date="1490110035000" expanded="true" signature="5131:6056" ph="{...}" />
-                <marker date="1490110035000" expanded="true" signature="5187:5601" ph="{...}" />
-                <marker date="1490110035000" expanded="true" signature="5629:6042" ph="{...}" />
+                <marker date="1490176548000" expanded="true" signature="6:157" ph="..." />
+                <marker date="1490176548000" expanded="true" signature="185:7570" ph="{...}" />
+                <marker date="1490176548000" expanded="true" signature="214:7568" ph="{...}" />
+                <marker date="1490176548000" expanded="true" signature="512:664" ph="{...}" />
+                <marker date="1490176548000" expanded="true" signature="674:1007" ph="/// Generates a placementmap out of a real map containing all available placements, as ... " />
+                <marker date="1490176548000" expanded="true" signature="1063:2492" ph="{...}" />
+                <marker date="1490176548000" expanded="true" signature="1331:2299" ph="{...}" />
+                <marker date="1490176548000" expanded="true" signature="1404:2285" ph="{...}" />
+                <marker date="1490176548000" expanded="true" signature="1639:2094" ph="{...}" />
+                <marker date="1490176548000" expanded="true" signature="1724:1886" ph="{...}" />
+                <marker date="1490176548000" expanded="true" signature="1915:2072" ph="{...}" />
+                <marker date="1490176548000" expanded="true" signature="2119:2267" ph="{...}" />
+                <marker date="1490176548000" expanded="true" signature="2502:3178" ph="/// Finds a placement for a given building inside a region. Uses a rating system ... " />
+                <marker date="1490176548000" expanded="true" signature="3247:5425" ph="{...}" />
+                <marker date="1490176548000" expanded="true" signature="3513:5013" ph="{...}" />
+                <marker date="1490176548000" expanded="true" signature="4017:4999" ph="{...}" />
+                <marker date="1490176548000" expanded="true" signature="4209:4799" ph="{...}" />
+                <marker date="1490176548000" expanded="true" signature="4493:4637" ph="{...}" />
+                <marker date="1490176548000" expanded="true" signature="4687:4777" ph="{...}" />
+                <marker date="1490176548000" expanded="true" signature="4847:4981" ph="{...}" />
+                <marker date="1490176548000" expanded="true" signature="5090:5333" ph="{...}" />
+                <marker date="1490176548000" expanded="true" signature="5435:5641" ph="/// Markes the placementmap tiles occupied for ... " />
+                <marker date="1490176548000" expanded="true" signature="5705:6206" ph="{...}" />
+                <marker date="1490176548000" expanded="true" signature="5775:6196" ph="{...}" />
+                <marker date="1490176548000" expanded="true" signature="5853:6182" ph="{...}" />
+                <marker date="1490176548000" expanded="true" signature="6060:6164" ph="{...}" />
+                <marker date="1490176548000" expanded="true" signature="6216:6422" ph="/// Tests if there is a possibillity of a mine here. ... " />
+                <marker date="1490176548000" expanded="true" signature="6477:7562" ph="{...}" />
+                <marker date="1490176548000" expanded="true" signature="6600:7525" ph="{...}" />
+                <marker date="1490176548000" expanded="true" signature="6656:7070" ph="{...}" />
+                <marker date="1490176548000" expanded="true" signature="7098:7511" ph="{...}" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Rating.cs" pinned="false" current-in-tab="false">
+      <file leaf-file-name="ResourceBuilding.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Buildings/ResourceBuilding.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-156">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding>
+                <marker date="1490085457000" expanded="true" signature="26:1657" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="82:1655" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="273:453" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="299:362" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="379:443" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="483:578" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="615:805" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="641:709" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="726:795" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="841:1031" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="867:935" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="952:1021" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="1296:1485" ph="{...}" />
+                <marker date="1490085457000" expanded="true" signature="1534:1649" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Shapes.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Shapes.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="75">
+              <caret line="34" column="43" lean-forward="false" selection-start-line="34" selection-start-column="29" selection-end-line="34" selection-end-column="43" />
+              <folding>
+                <marker date="1490172873000" expanded="true" signature="47:7318" ph="{...}" />
+                <marker date="1490172873000" expanded="true" signature="70:7316" ph="{...}" />
+                <marker date="1490172873000" expanded="true" signature="788:1019" ph="/// Tests if the building fits inside the grid. ... " />
+                <marker date="1490172873000" expanded="true" signature="1092:1546" ph="{...}" />
+                <marker date="1490172873000" expanded="true" signature="1351:1505" ph="{...}" />
+                <marker date="1490172873000" expanded="true" signature="1553:1831" ph="/// Fits a building within the area. ... " />
+                <marker date="1490172873000" expanded="true" signature="1914:2469" ph="{...}" />
+                <marker date="1490172873000" expanded="true" signature="2014:2440" ph="{...}" />
+                <marker date="1490172873000" expanded="true" signature="2076:2429" ph="{...}" />
+                <marker date="1490172873000" expanded="true" signature="2479:2958" ph="/// Determines whether a shape can fit over the specified Environment in a given map. ... " />
+                <marker date="1490172873000" expanded="true" signature="3059:3773" ph="{...}" />
+                <marker date="1490172873000" expanded="true" signature="3129:3738" ph="{...}" />
+                <marker date="1490172873000" expanded="true" signature="3207:3724" ph="{...}" />
+                <marker date="1490172873000" expanded="true" signature="3458:3706" ph="{...}" />
+                <marker date="1490172873000" expanded="true" signature="3528:3684" ph="{...}" />
+                <marker date="1490172873000" expanded="true" signature="3777:3975" ph="/// Gets the shape from the &quot;ALL SHAPES&quot; table using a given index. ... " />
+                <marker date="1490172873000" expanded="true" signature="4022:4314" ph="{...}" />
+                <marker date="1490172873000" expanded="true" signature="4117:4225" ph="{...}" />
+                <marker date="1490172873000" expanded="true" signature="4164:4220" ph="{...}" />
+                <marker date="1490172873000" expanded="true" signature="4366:4627" ph="{...}" />
+                <marker date="1490172873000" expanded="true" signature="4509:4607" ph="{...}" />
+                <marker date="1490172873000" expanded="true" signature="4549:4602" ph="{...}" />
+                <marker date="1490172873000" expanded="true" signature="4686:7312" ph="{...}" />
+                <marker date="1490172873000" expanded="true" signature="4704:4897" ph="{...}" />
+                <marker date="1490172873000" expanded="true" signature="4898:5097" ph="{...}" />
+                <marker date="1490172873000" expanded="true" signature="5098:5296" ph="{...}" />
+                <marker date="1490172873000" expanded="true" signature="5298:5489" ph="{...}" />
+                <marker date="1490172873000" expanded="true" signature="5491:5684" ph="{...}" />
+                <marker date="1490172873000" expanded="true" signature="5686:5888" ph="{...}" />
+                <marker date="1490172873000" expanded="true" signature="5890:6091" ph="{...}" />
+                <marker date="1490172873000" expanded="true" signature="6093:6295" ph="{...}" />
+                <marker date="1490172873000" expanded="true" signature="6297:6498" ph="{...}" />
+                <marker date="1490172873000" expanded="true" signature="6500:6696" ph="{...}" />
+                <marker date="1490172873000" expanded="true" signature="6698:6895" ph="{...}" />
+                <marker date="1490172873000" expanded="true" signature="6897:7097" ph="{...}" />
+                <marker date="1490172873000" expanded="true" signature="7099:7298" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Rating.cs" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Rating.cs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="405">
-              <caret line="27" column="9" lean-forward="true" selection-start-line="27" selection-start-column="9" selection-end-line="27" selection-end-column="9" />
+            <state relative-caret-position="490">
+              <caret line="69" column="72" lean-forward="false" selection-start-line="69" selection-start-column="72" selection-end-line="69" selection-end-column="72" />
               <folding>
-                <marker date="1490109970000" expanded="true" signature="26:1125" ph="{...}" />
-                <marker date="1490109970000" expanded="true" signature="52:1123" ph="{...}" />
-                <marker date="1490109970000" expanded="true" signature="188:537" ph="/// Rates the distance from region center. ... " />
-                <marker date="1490109970000" expanded="true" signature="598:756" ph="{...}" />
-                <marker date="1490109970000" expanded="true" signature="796:845" ph="{...}" />
-                <marker date="1490109970000" expanded="true" signature="877:952" ph="{...}" />
-                <marker date="1490109970000" expanded="true" signature="993:1117" ph="{...}" />
+                <marker date="1490177098000" expanded="true" signature="26:3076" ph="{...}" />
+                <marker date="1490177098000" expanded="true" signature="52:3074" ph="{...}" />
+                <marker date="1490177098000" expanded="true" signature="227:325" ph="/// Default constructor. Sets all rating values to 0. ... " />
+                <marker date="1490177098000" expanded="true" signature="349:471" ph="{...}" />
+                <marker date="1490177098000" expanded="true" signature="481:830" ph="/// Rates the distance from region center. ... " />
+                <marker date="1490177098000" expanded="true" signature="891:1046" ph="{...}" />
+                <marker date="1490177098000" expanded="true" signature="1056:1432" ph="/// Counts the possible buildings to get a rating. Gives ... " />
+                <marker date="1490177098000" expanded="true" signature="1487:1717" ph="{...}" />
+                <marker date="1490177098000" expanded="true" signature="1728:1900" ph="/// Gets the total rating for this element. ... " />
+                <marker date="1490177098000" expanded="true" signature="1931:2026" ph="{...}" />
+                <marker date="1490177098000" expanded="true" signature="2036:2188" ph="///Tests if the other Rating is higher than this one. ... " />
+                <marker date="1490177098000" expanded="true" signature="2229:2303" ph="{...}" />
+                <marker date="1490177098000" expanded="true" signature="2313:2469" ph="/// TODO: Make this use morphology to rate the tiles around the shape. ... " />
+                <marker date="1490177098000" expanded="true" signature="2508:2557" ph="{...}" />
+                <marker date="1490177098000" expanded="true" signature="2567:2712" ph="/// Creates a JSON formatted string of the ratings. ... " />
+                <marker date="1490177098000" expanded="true" signature="2754:3068" ph="{...}" />
               </folding>
             </state>
           </provider>
@@ -114,7 +306,6 @@
         <option value="$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Environment/Environment.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Environment/Grass.cs" />
         <option value="$PROJECT_DIR$/MapMakerTester/PlacementTester.cs" />
-        <option value="$PROJECT_DIR$/TrollsAndGods.sln" />
         <option value="$PROJECT_DIR$/Assets/Scripts/GameManager.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/HandyMethods.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Environment/Mountain.cs" />
@@ -127,16 +318,17 @@
         <option value="$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Buildings/Resource/CrystalMine.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/OverworldObjects/IngameObjectLibrary.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/MapGeneration/MapMaker.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Shapes.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/OverworldObjects/BuildingRating.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Rating.cs" />
+        <option value="$PROJECT_DIR$/Debug/Run.cs" />
+        <option value="$PROJECT_DIR$/TrollsAndGods.sln" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Shapes.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Placement.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Rating.cs" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-1771" />
-    <option name="y" value="-679" />
+    <option name="y" value="23" />
     <option name="width" value="1680" />
     <option name="height" value="1027" />
   </component>
@@ -221,6 +413,36 @@
               <option name="myItemId" value="Assembly-CSharp" />
               <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNodeRider" />
             </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Assets" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNodeRider" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Scripts" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNodeRider" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="OverworldObjects" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNodeRider" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Buildings" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNodeRider" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerViewPane$ProjectViewPaneTreeStructure$createRoot$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="TrollsAndGods (1 project)" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNodeRider" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Assembly-CSharp" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNodeRider" />
+            </PATH_ELEMENT>
           </PATH>
         </subPane>
         <option name="show-file-system" value="false" />
@@ -230,7 +452,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="SearchEverywhereHistoryKey" value="game&#9;FILE&#9;file:///Users/MagnusPoppe/Desktop/TrollsAndGods/Assets/Scripts/GameManager.cs" />
-    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Font" />
   </component>
   <component name="RunManager" selected=".NET Project.Default">
     <configuration default="true" type="DotNetProject" factoryName=".NET Project">
@@ -288,7 +510,9 @@
       <updated>1490087078006</updated>
       <workItem from="1490087080132" duration="98000" />
       <workItem from="1490088028055" duration="15482000" />
-      <workItem from="1490109404136" duration="675000" />
+      <workItem from="1490109404136" duration="1893000" />
+      <workItem from="1490111343291" duration="427000" />
+      <workItem from="1490170809924" duration="5204000" />
     </task>
     <task id="LOCAL-00001" summary="Added support for multiple mountain-sprites.">
       <created>1490090765364</created>
@@ -301,7 +525,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="16255000" />
+    <option name="totallyTimeSpent" value="23104000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -313,14 +537,14 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1771" y="-679" width="1680" height="1027" extended-state="0" />
+    <frame x="0" y="23" width="1680" height="1027" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Errors In Solution" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32985386" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Unit Tests" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32985386" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Run Dashboard" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Run Dashboard" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32985386" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
@@ -329,6 +553,7 @@
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Build" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32985386" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32985386" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -336,7 +561,6 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32985386" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -349,11 +573,239 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="3" />
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Shapes.cs</url>
+          <line>67</line>
+          <properties startOffset="2317" endOffset="2414" documentPath="$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Shapes.cs" />
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+      <option name="time" value="6" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Placement.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="780">
+          <caret line="52" column="56" lean-forward="false" selection-start-line="52" selection-start-column="42" selection-end-line="52" selection-end-column="56" />
+          <folding>
+            <marker date="1490176548000" expanded="true" signature="6:157" ph="..." />
+            <marker date="1490176548000" expanded="true" signature="185:7570" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="214:7568" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="512:664" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="674:1007" ph="/// Generates a placementmap out of a real map containing all available placements, as ... " />
+            <marker date="1490176548000" expanded="true" signature="1063:2492" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="1331:2299" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="1404:2285" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="1639:2094" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="1724:1886" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="1915:2072" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="2119:2267" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="2502:3178" ph="/// Finds a placement for a given building inside a region. Uses a rating system ... " />
+            <marker date="1490176548000" expanded="true" signature="3247:5425" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="3513:5013" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="4017:4999" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="4209:4799" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="4493:4637" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="4687:4777" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="4847:4981" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="5090:5333" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="5435:5641" ph="/// Markes the placementmap tiles occupied for ... " />
+            <marker date="1490176548000" expanded="true" signature="5705:6206" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="5775:6196" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="5853:6182" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="6060:6164" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="6216:6422" ph="/// Tests if there is a possibillity of a mine here. ... " />
+            <marker date="1490176548000" expanded="true" signature="6477:7562" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="6600:7525" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="6656:7070" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="7098:7511" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Rating.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="450">
+          <caret line="30" column="0" lean-forward="false" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
+          <folding>
+            <marker date="1490177098000" expanded="true" signature="26:3076" ph="{...}" />
+            <marker date="1490177098000" expanded="true" signature="52:3074" ph="{...}" />
+            <marker date="1490177098000" expanded="true" signature="227:325" ph="/// Default constructor. Sets all rating values to 0. ... " />
+            <marker date="1490177098000" expanded="true" signature="349:471" ph="{...}" />
+            <marker date="1490177098000" expanded="true" signature="481:830" ph="/// Rates the distance from region center. ... " />
+            <marker date="1490177098000" expanded="true" signature="891:1046" ph="{...}" />
+            <marker date="1490177098000" expanded="true" signature="1056:1432" ph="/// Counts the possible buildings to get a rating. Gives ... " />
+            <marker date="1490177098000" expanded="true" signature="1487:1717" ph="{...}" />
+            <marker date="1490177098000" expanded="true" signature="1728:1900" ph="/// Gets the total rating for this element. ... " />
+            <marker date="1490177098000" expanded="true" signature="1931:2026" ph="{...}" />
+            <marker date="1490177098000" expanded="true" signature="2036:2188" ph="///Tests if the other Rating is higher than this one. ... " />
+            <marker date="1490177098000" expanded="true" signature="2229:2303" ph="{...}" />
+            <marker date="1490177098000" expanded="true" signature="2313:2469" ph="/// TODO: Make this use morphology to rate the tiles around the shape. ... " />
+            <marker date="1490177098000" expanded="true" signature="2508:2557" ph="{...}" />
+            <marker date="1490177098000" expanded="true" signature="2567:2712" ph="/// Creates a JSON formatted string of the ratings. ... " />
+            <marker date="1490177098000" expanded="true" signature="2754:3068" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Shapes.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="990">
+          <caret line="66" column="58" lean-forward="false" selection-start-line="66" selection-start-column="58" selection-end-line="66" selection-end-column="58" />
+          <folding>
+            <marker date="1490172873000" expanded="true" signature="47:7318" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="70:7316" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="788:1019" ph="/// Tests if the building fits inside the grid. ... " />
+            <marker date="1490172873000" expanded="true" signature="1092:1546" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="1351:1505" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="1553:1831" ph="/// Fits a building within the area. ... " />
+            <marker date="1490172873000" expanded="true" signature="1914:2469" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="2014:2440" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="2076:2429" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="2479:2958" ph="/// Determines whether a shape can fit over the specified Environment in a given map. ... " />
+            <marker date="1490172873000" expanded="true" signature="3059:3773" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="3129:3738" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="3207:3724" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="3458:3706" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="3528:3684" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="3777:3975" ph="/// Gets the shape from the &quot;ALL SHAPES&quot; table using a given index. ... " />
+            <marker date="1490172873000" expanded="true" signature="4022:4314" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="4117:4225" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="4164:4220" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="4366:4627" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="4509:4607" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="4549:4602" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="4686:7312" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="4704:4897" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="4898:5097" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="5098:5296" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="5298:5489" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="5491:5684" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="5686:5888" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="5890:6091" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="6093:6295" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="6297:6498" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="6500:6696" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="6698:6895" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="6897:7097" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="7099:7298" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Placement.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="765">
+          <caret line="51" column="61" lean-forward="true" selection-start-line="51" selection-start-column="0" selection-end-line="52" selection-end-column="0" />
+          <folding>
+            <marker date="1490176548000" expanded="true" signature="6:157" ph="..." />
+            <marker date="1490176548000" expanded="true" signature="185:7570" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="214:7568" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="512:664" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="674:1007" ph="/// Generates a placementmap out of a real map containing all available placements, as ... " />
+            <marker date="1490176548000" expanded="true" signature="1063:2492" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="1331:2299" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="1404:2285" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="1639:2094" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="1724:1886" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="1915:2072" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="2119:2267" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="2502:3178" ph="/// Finds a placement for a given building inside a region. Uses a rating system ... " />
+            <marker date="1490176548000" expanded="true" signature="3247:5425" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="3513:5013" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="4017:4999" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="4209:4799" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="4493:4637" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="4687:4777" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="4847:4981" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="5090:5333" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="5435:5641" ph="/// Markes the placementmap tiles occupied for ... " />
+            <marker date="1490176548000" expanded="true" signature="5705:6206" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="5775:6196" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="5853:6182" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="6060:6164" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="6216:6422" ph="/// Tests if there is a possibillity of a mine here. ... " />
+            <marker date="1490176548000" expanded="true" signature="6477:7562" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="6600:7525" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="6656:7070" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="7098:7511" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Rating.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="450">
+          <caret line="30" column="0" lean-forward="false" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
+          <folding>
+            <marker date="1490177098000" expanded="true" signature="26:3076" ph="{...}" />
+            <marker date="1490177098000" expanded="true" signature="52:3074" ph="{...}" />
+            <marker date="1490177098000" expanded="true" signature="227:325" ph="/// Default constructor. Sets all rating values to 0. ... " />
+            <marker date="1490177098000" expanded="true" signature="349:471" ph="{...}" />
+            <marker date="1490177098000" expanded="true" signature="481:830" ph="/// Rates the distance from region center. ... " />
+            <marker date="1490177098000" expanded="true" signature="891:1046" ph="{...}" />
+            <marker date="1490177098000" expanded="true" signature="1056:1432" ph="/// Counts the possible buildings to get a rating. Gives ... " />
+            <marker date="1490177098000" expanded="true" signature="1487:1717" ph="{...}" />
+            <marker date="1490177098000" expanded="true" signature="1728:1900" ph="/// Gets the total rating for this element. ... " />
+            <marker date="1490177098000" expanded="true" signature="1931:2026" ph="{...}" />
+            <marker date="1490177098000" expanded="true" signature="2036:2188" ph="///Tests if the other Rating is higher than this one. ... " />
+            <marker date="1490177098000" expanded="true" signature="2229:2303" ph="{...}" />
+            <marker date="1490177098000" expanded="true" signature="2313:2469" ph="/// TODO: Make this use morphology to rate the tiles around the shape. ... " />
+            <marker date="1490177098000" expanded="true" signature="2508:2557" ph="{...}" />
+            <marker date="1490177098000" expanded="true" signature="2567:2712" ph="/// Creates a JSON formatted string of the ratings. ... " />
+            <marker date="1490177098000" expanded="true" signature="2754:3068" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Shapes.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="705">
+          <caret line="47" column="0" lean-forward="true" selection-start-line="47" selection-start-column="0" selection-end-line="47" selection-end-column="0" />
+          <folding>
+            <marker date="1490172873000" expanded="true" signature="47:7318" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="70:7316" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="788:1019" ph="/// Tests if the building fits inside the grid. ... " />
+            <marker date="1490172873000" expanded="true" signature="1092:1546" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="1351:1505" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="1553:1831" ph="/// Fits a building within the area. ... " />
+            <marker date="1490172873000" expanded="true" signature="1914:2469" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="2014:2440" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="2076:2429" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="2479:2958" ph="/// Determines whether a shape can fit over the specified Environment in a given map. ... " />
+            <marker date="1490172873000" expanded="true" signature="3059:3773" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="3129:3738" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="3207:3724" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="3458:3706" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="3528:3684" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="3777:3975" ph="/// Gets the shape from the &quot;ALL SHAPES&quot; table using a given index. ... " />
+            <marker date="1490172873000" expanded="true" signature="4022:4314" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="4117:4225" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="4164:4220" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="4366:4627" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="4509:4607" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="4549:4602" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="4686:7312" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="4704:4897" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="4898:5097" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="5098:5296" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="5298:5489" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="5491:5684" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="5686:5888" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="5890:6091" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="6093:6295" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="6297:6498" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="6500:6696" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="6698:6895" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="6897:7097" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="7099:7298" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Assets/Scripts/GameManager.cs">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -365,13 +817,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
           <caret line="10" column="81" lean-forward="false" selection-start-line="10" selection-start-column="81" selection-end-line="10" selection-end-column="81" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/TrollsAndGods.sln">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" column="86" lean-forward="false" selection-start-line="6" selection-start-column="86" selection-end-line="6" selection-end-column="86" />
         </state>
       </provider>
     </entry>
@@ -417,13 +862,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Assets/Scripts/GameManager.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="929">
-          <caret line="145" column="55" lean-forward="false" selection-start-line="145" selection-start-column="55" selection-end-line="145" selection-end-column="55" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Assets/Scripts/CameraMovement.cs">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -442,13 +880,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="860">
           <caret line="164" column="65" lean-forward="false" selection-start-line="164" selection-start-column="65" selection-end-line="164" selection-end-column="65" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Shapes.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="682">
-          <caret line="121" column="19" lean-forward="false" selection-start-line="121" selection-start-column="19" selection-end-line="121" selection-end-column="19" />
         </state>
       </provider>
     </entry>
@@ -487,53 +918,319 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Rating.cs">
+    <entry file="file://$PROJECT_DIR$/Debug/Run.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="405">
-          <caret line="27" column="9" lean-forward="true" selection-start-line="27" selection-start-column="9" selection-end-line="27" selection-end-column="9" />
+        <state relative-caret-position="0">
+          <caret line="5" column="5" lean-forward="false" selection-start-line="5" selection-start-column="5" selection-end-line="5" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TrollsAndGods.sln">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="66">
+          <caret line="3" column="70" lean-forward="false" selection-start-line="3" selection-start-column="70" selection-end-line="3" selection-end-column="70" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Debug/Debug.csproj">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/Scripts/GameManager.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-3063">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1490109970000" expanded="true" signature="26:1125" ph="{...}" />
-            <marker date="1490109970000" expanded="true" signature="52:1123" ph="{...}" />
-            <marker date="1490109970000" expanded="true" signature="188:537" ph="/// Rates the distance from region center. ... " />
-            <marker date="1490109970000" expanded="true" signature="598:756" ph="{...}" />
-            <marker date="1490109970000" expanded="true" signature="796:845" ph="{...}" />
-            <marker date="1490109970000" expanded="true" signature="877:952" ph="{...}" />
-            <marker date="1490109970000" expanded="true" signature="993:1117" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="6:180" ph="..." />
+            <marker date="1490110205000" expanded="true" signature="222:40078" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="2515:5197" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="3604:4289" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="3670:4279" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="3849:4085" ph="/* if (lr.GetCastle() != null) ... */" />
+            <marker date="1490110205000" expanded="true" signature="5250:17829" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="5279:17823" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="5484:5588" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="5718:9098" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="6331:7004" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="6393:6910" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="6581:6888" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="7209:8392" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="7264:7351" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="7485:7641" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="7792:8374" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="8060:8158" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="8236:8352" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="8626:9084" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="8800:9066" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="9210:9602" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="9284:9424" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="9445:9588" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="9690:9746" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="9872:16255" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="10115:11303" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="10222:11285" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="10415:11263" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="10530:10805" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="10950:11237" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="11566:16016" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="11803:15998" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="12527:14999" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="12814:13098" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="13276:14817" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="13486:13633" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="13734:13881" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="13977:14276" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="14374:14522" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="14631:14787" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="14850:14973" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="15438:15975" ph="/* Set origin tile's canWalk 0 or 2 if no reaction there ... */" />
+            <marker date="1490110205000" expanded="true" signature="16082:16241" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="16362:17813" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="16715:17799" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="16812:17146" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="16978:17124" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="17232:17562" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="17402:17540" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="17647:17781" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="17835:17967" ph="/// Removes visual marker and the Vector2 in activehero's pathtable, and increments stepnumber. ... " />
+            <marker date="1490110205000" expanded="true" signature="18003:18212" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="18218:18493" ph="/// Prepares movement variables,  ... " />
+            <marker date="1490110205000" expanded="true" signature="18543:19036" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="19042:19186" ph="/// Graphically draw the path objects ... " />
+            <marker date="1490110205000" expanded="true" signature="19231:20688" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="19610:20682" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="20111:20292" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="20694:20851" ph="/// Creates a position with animationspeed and returns it ... " />
+            <marker date="1490110205000" expanded="true" signature="20888:21229" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="20960:21171" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="21235:21381" ph="/// Destroy the tile gameobjects and refresh list ... " />
+            <marker date="1490110205000" expanded="true" signature="21432:21584" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="21476:21521" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="21628:21740" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="21777:21811" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="21841:21877" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="21913:21946" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="21978:22017" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="22057:22094" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="22134:22177" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="22180:22266" ph="/// Generates the map. This replaces the &quot;map.cs&quot; file. ... " />
+            <marker date="1490110205000" expanded="true" signature="22294:23064" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="22937:22976" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="22983:23008" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="23074:23154" ph="/// Setting up UI buttons, text and images. ... " />
+            <marker date="1490110205000" expanded="true" signature="23184:23716" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="23530:23680" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="23722:23822" ph="/// Setting resourcepanel's textboxes to the players resources. ... " />
+            <marker date="1490110205000" expanded="true" signature="23859:24029" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="23919:24023" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="24032:24179" ph="/// Draws a given map using the IngameObjectLibrary sprites. ... " />
+            <marker date="1490110205000" expanded="true" signature="24215:27515" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="25148:27512" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="25188:27477" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="25366:25473" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="25574:25813" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="25931:26167" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="26303:26547" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="26658:26871" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="26984:27218" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="27335:27446" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="27518:27654" ph="/// Draws the debug map. ... " />
+            <marker date="1490110205000" expanded="true" signature="27701:30518" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="28412:30514" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="28452:30479" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="28462:28526" ph="/* gets tile value ... */" />
+            <marker date="1490110205000" expanded="true" signature="28689:28822" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="28940:29174" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="29310:29553" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="29664:29888" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="30001:30234" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="30352:30473" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="30524:30975" ph="/// Configures a game object to the board. ... " />
+            <marker date="1490110205000" expanded="true" signature="31073:31584" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="31590:31850" ph="/// Adjusts the position relative to odd or par placement. ... " />
+            <marker date="1490110205000" expanded="true" signature="31930:32118" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="32124:32191" ph="/// Called by UI click on town ... " />
+            <marker date="1490110205000" expanded="true" signature="32228:32714" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="32269:32486" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="32499:32708" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="32742:32931" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="32937:33033" ph="/// Draws the town view ... " />
+            <marker date="1490110205000" expanded="true" signature="33069:33898" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="33576:33638" ph="/* town.BuildAll(town); ... */" />
+            <marker date="1490110205000" expanded="true" signature="33694:33891" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="33795:33881" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="33965:35109" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="35152:35316" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="35221:35310" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="35322:35392" ph="/// Called by next turn UI button ... " />
+            <marker date="1490110205000" expanded="true" signature="35419:37405" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="35482:35533" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="35546:37399" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="35686:35812" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="35916:36171" ph="/* Set active hero and active hero object to the upcoming players first hero ... */" />
+            <marker date="1490110205000" expanded="true" signature="36354:36891" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="36603:36711" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="36908:37219" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="37411:37537" ph="/// Increment turn, reset turn integer when last player has finished, and increment date ... " />
+            <marker date="1490110205000" expanded="true" signature="37570:37753" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="37620:37747" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="37788:38010" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="37843:38004" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="37911:37994" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="38092:38236" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="38134:38230" ph="/* todo add canvas ... */" />
+            <marker date="1490110205000" expanded="true" signature="38322:38466" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="38364:38460" ph="/* todo add canvas ... */" />
+            <marker date="1490110205000" expanded="true" signature="38507:38897" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="38533:38769" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="38632:38759" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="38782:38865" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="38903:39039" ph="/// Changes owner of castle to Player whose turn it is ... " />
+            <marker date="1490110205000" expanded="true" signature="39089:39306" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="39313:39419" ph="/// Removes a hero ... " />
+            <marker date="1490110205000" expanded="true" signature="39454:40076" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="39549:39796" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="39596:39786" ph="{...}" />
+            <marker date="1490110205000" expanded="true" signature="39666:39749" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Buildings/ResourceBuilding.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-156">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <marker date="1490085457000" expanded="true" signature="26:1657" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="82:1655" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="273:453" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="299:362" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="379:443" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="483:578" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="615:805" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="641:709" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="726:795" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="841:1031" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="867:935" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="952:1021" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="1296:1485" ph="{...}" />
+            <marker date="1490085457000" expanded="true" signature="1534:1649" ph="{...}" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Placement.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="194">
-          <caret line="24" column="59" lean-forward="true" selection-start-line="24" selection-start-column="59" selection-end-line="24" selection-end-column="59" />
+        <state relative-caret-position="368">
+          <caret line="116" column="11" lean-forward="false" selection-start-line="116" selection-start-column="11" selection-end-line="116" selection-end-column="11" />
           <folding>
-            <marker date="1490110035000" expanded="true" signature="6:157" ph="..." />
-            <marker date="1490110035000" expanded="true" signature="185:6101" ph="{...}" />
-            <marker date="1490110035000" expanded="true" signature="214:6099" ph="{...}" />
-            <marker date="1490110035000" expanded="true" signature="512:664" ph="{...}" />
-            <marker date="1490110035000" expanded="true" signature="674:1038" ph="/// Finds a placement for a given building inside a given region. ... " />
-            <marker date="1490110035000" expanded="true" signature="1107:2107" ph="{...}" />
-            <marker date="1490110035000" expanded="true" signature="1364:2015" ph="{...}" />
-            <marker date="1490110035000" expanded="true" signature="1803:2001" ph="{...}" />
-            <marker date="1490110035000" expanded="true" signature="2117:2450" ph="/// Generates a placementmap out of a real map containing all available placements, as ... " />
-            <marker date="1490110035000" expanded="true" signature="2506:3956" ph="{...}" />
-            <marker date="1490110035000" expanded="true" signature="2774:3742" ph="{...}" />
-            <marker date="1490110035000" expanded="true" signature="2847:3728" ph="{...}" />
-            <marker date="1490110035000" expanded="true" signature="3082:3537" ph="{...}" />
-            <marker date="1490110035000" expanded="true" signature="3167:3329" ph="{...}" />
-            <marker date="1490110035000" expanded="true" signature="3358:3515" ph="{...}" />
-            <marker date="1490110035000" expanded="true" signature="3562:3710" ph="{...}" />
-            <marker date="1490110035000" expanded="true" signature="3966:4172" ph="/// Markes the placementmap tiles occupied for ... " />
-            <marker date="1490110035000" expanded="true" signature="4236:4737" ph="{...}" />
-            <marker date="1490110035000" expanded="true" signature="4306:4727" ph="{...}" />
-            <marker date="1490110035000" expanded="true" signature="4384:4713" ph="{...}" />
-            <marker date="1490110035000" expanded="true" signature="4591:4695" ph="{...}" />
-            <marker date="1490110035000" expanded="true" signature="4747:4953" ph="/// Tests if there is a possibillity of a mine here. ... " />
-            <marker date="1490110035000" expanded="true" signature="5008:6093" ph="{...}" />
-            <marker date="1490110035000" expanded="true" signature="5131:6056" ph="{...}" />
-            <marker date="1490110035000" expanded="true" signature="5187:5601" ph="{...}" />
-            <marker date="1490110035000" expanded="true" signature="5629:6042" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="6:157" ph="..." />
+            <marker date="1490176548000" expanded="true" signature="185:7570" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="214:7568" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="512:664" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="674:1007" ph="/// Generates a placementmap out of a real map containing all available placements, as ... " />
+            <marker date="1490176548000" expanded="true" signature="1063:2492" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="1331:2299" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="1404:2285" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="1639:2094" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="1724:1886" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="1915:2072" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="2119:2267" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="2502:3178" ph="/// Finds a placement for a given building inside a region. Uses a rating system ... " />
+            <marker date="1490176548000" expanded="true" signature="3247:5425" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="3513:5013" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="4017:4999" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="4209:4799" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="4493:4637" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="4687:4777" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="4847:4981" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="5090:5333" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="5435:5641" ph="/// Markes the placementmap tiles occupied for ... " />
+            <marker date="1490176548000" expanded="true" signature="5705:6206" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="5775:6196" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="5853:6182" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="6060:6164" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="6216:6422" ph="/// Tests if there is a possibillity of a mine here. ... " />
+            <marker date="1490176548000" expanded="true" signature="6477:7562" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="6600:7525" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="6656:7070" ph="{...}" />
+            <marker date="1490176548000" expanded="true" signature="7098:7511" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Shapes.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="34" column="43" lean-forward="false" selection-start-line="34" selection-start-column="29" selection-end-line="34" selection-end-column="43" />
+          <folding>
+            <marker date="1490172873000" expanded="true" signature="47:7318" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="70:7316" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="788:1019" ph="/// Tests if the building fits inside the grid. ... " />
+            <marker date="1490172873000" expanded="true" signature="1092:1546" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="1351:1505" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="1553:1831" ph="/// Fits a building within the area. ... " />
+            <marker date="1490172873000" expanded="true" signature="1914:2469" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="2014:2440" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="2076:2429" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="2479:2958" ph="/// Determines whether a shape can fit over the specified Environment in a given map. ... " />
+            <marker date="1490172873000" expanded="true" signature="3059:3773" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="3129:3738" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="3207:3724" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="3458:3706" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="3528:3684" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="3777:3975" ph="/// Gets the shape from the &quot;ALL SHAPES&quot; table using a given index. ... " />
+            <marker date="1490172873000" expanded="true" signature="4022:4314" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="4117:4225" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="4164:4220" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="4366:4627" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="4509:4607" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="4549:4602" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="4686:7312" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="4704:4897" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="4898:5097" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="5098:5296" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="5298:5489" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="5491:5684" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="5686:5888" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="5890:6091" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="6093:6295" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="6297:6498" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="6500:6696" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="6698:6895" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="6897:7097" ph="{...}" />
+            <marker date="1490172873000" expanded="true" signature="7099:7298" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/Scripts/OverworldObjects/Rating.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="490">
+          <caret line="69" column="72" lean-forward="false" selection-start-line="69" selection-start-column="72" selection-end-line="69" selection-end-column="72" />
+          <folding>
+            <marker date="1490177098000" expanded="true" signature="26:3076" ph="{...}" />
+            <marker date="1490177098000" expanded="true" signature="52:3074" ph="{...}" />
+            <marker date="1490177098000" expanded="true" signature="227:325" ph="/// Default constructor. Sets all rating values to 0. ... " />
+            <marker date="1490177098000" expanded="true" signature="349:471" ph="{...}" />
+            <marker date="1490177098000" expanded="true" signature="481:830" ph="/// Rates the distance from region center. ... " />
+            <marker date="1490177098000" expanded="true" signature="891:1046" ph="{...}" />
+            <marker date="1490177098000" expanded="true" signature="1056:1432" ph="/// Counts the possible buildings to get a rating. Gives ... " />
+            <marker date="1490177098000" expanded="true" signature="1487:1717" ph="{...}" />
+            <marker date="1490177098000" expanded="true" signature="1728:1900" ph="/// Gets the total rating for this element. ... " />
+            <marker date="1490177098000" expanded="true" signature="1931:2026" ph="{...}" />
+            <marker date="1490177098000" expanded="true" signature="2036:2188" ph="///Tests if the other Rating is higher than this one. ... " />
+            <marker date="1490177098000" expanded="true" signature="2229:2303" ph="{...}" />
+            <marker date="1490177098000" expanded="true" signature="2313:2469" ph="/// TODO: Make this use morphology to rate the tiles around the shape. ... " />
+            <marker date="1490177098000" expanded="true" signature="2508:2557" ph="{...}" />
+            <marker date="1490177098000" expanded="true" signature="2567:2712" ph="/// Creates a JSON formatted string of the ratings. ... " />
+            <marker date="1490177098000" expanded="true" signature="2754:3068" ph="{...}" />
           </folding>
         </state>
       </provider>

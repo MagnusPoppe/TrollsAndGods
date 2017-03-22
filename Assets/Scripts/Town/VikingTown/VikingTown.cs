@@ -25,13 +25,14 @@
         /// <returns>Array of buildings for the building tree.</returns>
         public Building[] InitializeTownBuildings()
         {
-            Building[] buildings = new Building[5];
+            Building[] buildings = new Building[6];
 
             buildings[0] = new TownHall();
             buildings[1] = new Pallisade();
             buildings[2] = new Temple();
             buildings[3] = new DragonTower();
             buildings[4] = new TrollCave();
+            buildings[5] = new Marketplace();
 
             return buildings;
         }

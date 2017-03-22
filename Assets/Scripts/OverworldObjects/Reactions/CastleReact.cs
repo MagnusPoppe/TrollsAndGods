@@ -34,19 +34,29 @@ public class CastleReact : Reaction {
     /// Hero either visits or attacks castle
     /// </summary>
     /// <param name="h">Hero interacting with castle</param>
-    /// <returns>returns false if visiting, true if attacking</returns>
+    /// <returns>returns false</returns>
     public override bool React(Hero h)
     {
         if (castle.Player.Equals(h.Player))
         {
             gm.EnterTown(castle.Town);
-            return false;
         }
         else
         {
-            //Todo battle
+            if (castle.Town.VisitingUnits != null)
+            {
+                //todo combine with stationed units and battle
+                return false;
+            }
+            else if (castle.Town.StationedUnits != null)
+            {
+                //battle
+                gm.enterCombat(15, 11, h, castle.Town.StationedUnits);
+                return false;
+            }
+            return true;
         }
-        return true;
+        return false;
     }
 
     /// <summary>

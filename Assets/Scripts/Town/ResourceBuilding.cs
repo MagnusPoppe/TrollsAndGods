@@ -10,8 +10,8 @@
             set { earnings = value;  }
         }
 
-        public ResourceBuilding( string name, bool[] requirements, Cost cost, int localID, int LOCAL_SPRITEID_BLUEPRINT, Earn earnings)
-            : base (name, requirements, cost, localID, LOCAL_SPRITEID_BLUEPRINT)
+        public ResourceBuilding( string name, string description, bool[] requirements, Cost cost, int localID, int LOCAL_SPRITEID_BLUEPRINT, Earn earnings)
+            : base (name, description, requirements, cost, localID, LOCAL_SPRITEID_BLUEPRINT)
         {
             this.earnings = earnings;
         }
