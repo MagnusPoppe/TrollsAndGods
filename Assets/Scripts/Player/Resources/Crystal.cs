@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-class Crystal : SpriteSystem
+class Crystal : ResourceSprite
 {
-    private int LOCAL_SPRITE_ID = 3;
-    private IngameObjectLibrary.Category CATEGORY = IngameObjectLibrary.Category.Resources;
+    const int LOCAL_SPRITE_ID = 3;
 
-    public Crystal(int localID, IngameObjectLibrary.Category category) : base(localID, category)
+    public Crystal() : base(LOCAL_SPRITE_ID)
     {
     }
 }

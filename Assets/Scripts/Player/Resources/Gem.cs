@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-class Gem : SpriteSystem
+class Gem : ResourceSprite
 {
-    private int LOCAL_SPRITE_ID = 4;
-    private IngameObjectLibrary.Category CATEGORY = IngameObjectLibrary.Category.Resources;
+    const int LOCAL_SPRITE_ID = 4;
 
-    public Gem(int localID, IngameObjectLibrary.Category category) : base(localID, category)
+    public Gem() : base(LOCAL_SPRITE_ID)
     {
     }
 }

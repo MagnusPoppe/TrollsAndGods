@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-class Ore : SpriteSystem
+class Ore : ResourceSprite
 {
-    private int LOCAL_SPRITE_ID = 2;
-    private IngameObjectLibrary.Category CATEGORY = IngameObjectLibrary.Category.Resources;
+    const int LOCAL_SPRITE_ID = 2;
 
-    public Ore(int localID, IngameObjectLibrary.Category category) : base(localID, category)
+    public Ore() : base(LOCAL_SPRITE_ID)
     {
     }
 }
