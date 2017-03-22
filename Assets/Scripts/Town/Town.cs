@@ -56,7 +56,7 @@ namespace TownView
             }
         }
 
-        protected Hero StationedHero
+        public Hero StationedHero
         {
             get
             {
@@ -69,7 +69,7 @@ namespace TownView
             }
         }
 
-        protected Hero VisitingHero
+        public Hero VisitingHero
         {
             get
             {
