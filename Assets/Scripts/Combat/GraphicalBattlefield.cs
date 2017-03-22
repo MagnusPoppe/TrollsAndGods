@@ -19,12 +19,15 @@ public class GraphicalBattlefield : MonoBehaviour {
     int whoseTurn;
     int livingAttackers, livingDefenders;
     private PossibleMovement possibleMovement;
+    private Sprite hexagon;
 
     // Use this for initialization
     void Start () {
         InCombat = false;
         IsWalking = finishedWalking = false;
-	}
+        hexagon = UnityEngine.Resources.Load<Sprite>("Sprites/Combat/HexagonTrimmed");
+        parent = GameObject.Find("Combat");
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -118,14 +121,16 @@ public class GraphicalBattlefield : MonoBehaviour {
                 go.AddComponent<GroundGameObject>();
                 go.AddComponent<SpriteRenderer>();
                 SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
-                //todo set sprite
+                sr.sprite = hexagon;
                 go.AddComponent<PolygonCollider2D>();
                 PolygonCollider2D pc = go.GetComponent<PolygonCollider2D>();
                 //todo set polygon collider
                 GroundGameObject ggo = go.GetComponent<GroundGameObject>();
                 ggo.GraphicalBattlefield = this;
                 ggo.LogicalPos = new Point(x, y);
-                //todo set gameobjects position
+                go.transform.position = new Vector2(x,y);
+                field[x, y] = go;
+                go.transform.SetParent(parent.transform);
             }
         }
     }
@@ -196,7 +201,8 @@ public class GraphicalBattlefield : MonoBehaviour {
             place += increment;
         }
         // Sorts initative in descending order
-        Initative = Initative.OrderByDescending(UnitGameObject => UnitGameObject.Initative).ToArray();
+        // todo fix sort
+        //Initative = Initative.OrderByDescending(UnitGameObject => UnitGameObject.Initative).ToArray();
         WhoseTurn = 0;
         initative[whoseTurn].ItsTurn = true;
     }

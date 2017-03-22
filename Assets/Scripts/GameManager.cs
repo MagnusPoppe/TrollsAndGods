@@ -6,6 +6,7 @@ using System;
 using TownView;
 using MapGenerator;
 using OverworldObjects;
+using Units;
 
 public class GameManager : MonoBehaviour
 {
@@ -103,6 +104,9 @@ public class GameManager : MonoBehaviour
     //currentReaction
     private Reaction curReaction;
 
+    //Comabt
+    private GraphicalBattlefield graphicalBattlefield;
+    private GameObject combatWindow;
 
     // Use this for initialization
     void Start ()
@@ -173,6 +177,10 @@ public class GameManager : MonoBehaviour
         overWorld = true;
         GenerateUI();
 
+        //fetch Combat references
+        combatWindow = GameObject.Find("Combat");
+        combatWindow.SetActive(false);
+        graphicalBattlefield = combatWindow.GetComponent<GraphicalBattlefield>();
     }
 
 	// Update is called once per frame
@@ -270,6 +278,17 @@ public class GameManager : MonoBehaviour
             else if (Input.GetKeyDown(KeyCode.Return))
             {
                 nextTurn();
+            }
+            //rightclick for combat for testing
+            else if (Input.GetMouseButtonDown(1))
+            {
+                if (activeHero.Units.GetUnits()[0] == null)
+                {
+                    activeHero.Units.setUnit(new StoneTroll(), 5, 0);
+                }
+                UnitTree defendingTest = new UnitTree();
+                defendingTest.setUnit(new StoneTroll(), 5,0);
+                enterCombat(15,11,activeHero,defendingTest);
             }
             // Upon every update, activedhero will be moved in a direction if walking is enabled
             if (IsWalking())
@@ -1036,8 +1055,8 @@ public class GameManager : MonoBehaviour
     public void enterCombat(int width, int height, Hero attacker, UnitTree defender)
     {
         overWorld = false;
-        //todo add canvas
-        // graphicalBattlefield.beginCombat(width, height, attacker, defender)
+        graphicalBattlefield.beginCombat(width, height, attacker, defender);
+        combatWindow.SetActive(true);
     }
 
     public void exitCombat(bool winner)

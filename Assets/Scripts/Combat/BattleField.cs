@@ -38,6 +38,7 @@ public class BattleField {
 
         int increment = height / UnitTree.TREESIZE;
         int place = 0;
+        unitsPos = new UnitAndAmount[width, height];
         for (int i = 0; i < UnitTree.TREESIZE; i++)
         {
             if (attackingUnitsTab[i] != null)
@@ -77,6 +78,7 @@ public class BattleField {
 
         int increment = height / UnitTree.TREESIZE;
         int place = 0;
+        unitsPos = new UnitAndAmount[width,height];
         for (int i = 0; i < UnitTree.TREESIZE; i++)
         {
             if (attackingUnits[i] != null)
