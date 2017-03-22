@@ -41,5 +41,6 @@ public class AttackDirection : MonoBehaviour
     private void OnMouseDown()
     {
         unitGameObject.MouseDown(direction);
+        Debug.Log("Cliked on");
     }
 }

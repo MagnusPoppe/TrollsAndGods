@@ -108,6 +108,16 @@ public class GraphicalBattlefield : MonoBehaviour {
 
         populateField();
         populateInitative(attacker, defender);
+        Unit unitWhoseTurnItIs = getUnitWhoseTurnItIs().UnitTree.GetUnits()[getUnitWhoseTurnItIs().PosInUnitTree];
+        possibleMovement.flipReachable(Initative[whoseTurn].LogicalPos, unitWhoseTurnItIs.Unitstats.Speed);
+        if (unitWhoseTurnItIs.IsRanged)
+        {
+            Ranged ranged = (Ranged)unitWhoseTurnItIs;
+            if (ranged.Ammo > 0 && !ranged.Threatened)
+            {
+                flipAttackable();
+            }
+        }
     }
 
     /// <summary>
@@ -281,6 +291,7 @@ public class GraphicalBattlefield : MonoBehaviour {
             if (activeUnit.AttackingSide) livingAttackers--;
             else livingDefenders--;
         }
+        Debug.Log(livingAttackers + " " + livingDefenders);
     }
 
     /// <summary>
@@ -301,6 +312,9 @@ public class GraphicalBattlefield : MonoBehaviour {
     public void BeginWalking(List<Vector2> path)
     {
         //todo begin walking
+        Vector3 destination = field[(int)path[path.Count - 1].x, (int)path[path.Count - 1].y].transform.localPosition;
+        getUnitWhoseTurnItIs().transform.localPosition = destination;
+        getUnitWhoseTurnItIs().LogicalPos = new Point(path[path.Count-1]);
     }
 
     /// <summary>
