@@ -26,50 +26,51 @@ namespace OverworldObjects
 
 		const int FILTER_SIZE = 5;
 
-		/// <summary>
-		/// Tests if the building fits inside the grid.
-		/// </summary>
-		/// <returns>The building fit.</returns>
-		/// <param name="Position">Position.</param>
-		/// <param name="canWalk">Can walk.</param>
-		public static bool[] GetBuildingFit(Point Position, int[,] canWalk)
-		{
-			bool[] BuildingTypesFit = new bool[SHAPE_COUNT];
+	    /// <summary>
+	    /// Tests if the building fits inside the grid.
+	    /// </summary>
+	    /// <returns>The building fit.</returns>
+	    /// <param name="Position">Position.</param>
+	    /// <param name="canWalk">Can walk.</param>
+	    public static bool[] GetBuildingFit(Point Position, int[,] canWalk)
+	    {
+	        bool[] BuildingTypesFit = new bool[SHAPE_COUNT];
 
-			if ((Position.x >= FILTER_SIZE/2 && Position.x < canWalk.GetLength(1)-FILTER_SIZE/2) 
-			&&  (Position.y >= FILTER_SIZE/2 && Position.y < canWalk.GetLength(0)-FILTER_SIZE/2))
-			{
-				for (int i = 0; i < SHAPE_COUNT; i++)
-					BuildingTypesFit[i] = fits(i, Position.x, Position.y, canWalk);
-			}
-			return BuildingTypesFit;
-		}
+	        if ((Position.x >= FILTER_SIZE/2 && Position.x < canWalk.GetLength(1)-FILTER_SIZE/2)
+	            &&  (Position.y >= FILTER_SIZE/2 && Position.y < canWalk.GetLength(0)-FILTER_SIZE/2))
+	        {
+	            for (int i = 0; i < SHAPE_COUNT; i++)
+	                BuildingTypesFit[i] = fits(i, Position.x, Position.y, canWalk);
+	        }
+	        return BuildingTypesFit;
+	    }
 
-		/// <summary>
-		/// Fits a building within the area.
-		/// </summary>
-		/// <param name="shapeType">The index.</param>
-		/// <param name="x">The x coordinate.</param>
-		/// <param name="y">The y coordinate.</param>
-		/// <param name="canWalk">Can walk.</param>
-        private static bool fits(int shapeType, int ekteX, int ekteY, int[,] canWalk)
-		{
-			int[,] shape = GetShape(shapeType);
+	    /// <summary>
+	    /// Fits a building within the area.
+	    /// </summary>
+	    /// <param name="shapeType">The index.</param>
+	    /// <param name="x">The x coordinate.</param>
+	    /// <param name="y">The y coordinate.</param>
+	    /// <param name="canWalk">Can walk.</param>
+	    private static bool fits(int shapeType, int ekteX, int ekteY, int[,] canWalk)
+	    {
+	        int[,] shape = GetShape(shapeType);
 
-			for (int y = 0; y < FILTER_SIZE; y++)
-			{
-				for (int x = 0; x < FILTER_SIZE; x++)
-				{
-					int dxx = ekteX + dx[x];
-					int dyy = ekteY + dy[y];
+	        for (int y = 0; y < FILTER_SIZE; y++)
+	        {
+	            for (int x = 0; x < FILTER_SIZE; x++)
+	            {
+	                int dxx = ekteX + dx[x];
+	                int dyy = ekteY + dy[y];
+                    Point dxdy = new Point(dxx, dyy);
 
-					if (shape[x, y] == 1)
-						if (canWalk[dxx, dyy] == MapGenerator.MapMaker.CANNOTWALK)
-							return false;
-				}
-			}
-			return true;
-		}
+	                if (dxdy.InBounds(canWalk) && shape[x, y] == 1)
+	                    if (canWalk[dxx, dyy] == MapGenerator.MapMaker.CANNOTWALK)
+	                        return false;
+	            }
+	        }
+	        return true;
+	    }
 
         /// <summary>
         /// Determines whether a shape can fit over the specified Environment in a given map.

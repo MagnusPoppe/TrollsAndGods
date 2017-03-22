@@ -44,7 +44,7 @@ public class IngameObjectLibrary
             return ENVIRONMENT_START;
 
         else if (category == Category.ResourceBuildings)
-            return DWELLINGS_START;
+            return RESOURCE_BUILDING_START;
 
         else if (category == Category.Dwellings)
             return DWELLINGS_START;
@@ -79,7 +79,7 @@ public class IngameObjectLibrary
     /// </summary>
     /// <param name="spriteID">Lokal spriteID</param>
     /// <returns>Enum category</returns>
-    public Category GetCategory(int spriteID)
+    public static Category GetCategory(int spriteID)
     {
         if (spriteID < GROUND_START) // TODO: TA VEKK.
         {
@@ -154,7 +154,7 @@ public class IngameObjectLibrary
 
     // Ground-variabler. ground[] holder alle sprites, GROUND_START er global startverdi for ground sprites, GROUND_COUNT er antall ground sprites
     Sprite[] ground;
-    public const int GROUND_START = 3;
+    public const int GROUND_START = DEBUG_SPRITES_START + DEBUG_SPRITES_COUNT;
     public const int GROUND_COUNT = 17;
 
     /// <summary>
@@ -193,7 +193,7 @@ public class IngameObjectLibrary
     // Environment-variabler. environment[] holder alle sprites, ENVIRONMENT_START er global startverdi for environment sprites, ENVIRONMENT_COUNT er antall environment sprites
     Sprite[] environment;
     public const int ENVIRONMENT_START = GROUND_START + GROUND_COUNT;
-    public const int ENVIRONMENT_COUNT = 6;
+    public const int ENVIRONMENT_COUNT = 7;
 
     /// <summary>
     /// Initialiserer et array for å holde på alle environment sprites
@@ -209,6 +209,7 @@ public class IngameObjectLibrary
         sprites[3] = UnityEngine.Resources.Load<Sprite>(path + "Mountains/Mountain3");
         sprites[4] = UnityEngine.Resources.Load<Sprite>(path + "Mountains/Mountain4");
         sprites[5] = UnityEngine.Resources.Load<Sprite>(path + "Mountains/Mountain5");
+        sprites[6] = UnityEngine.Resources.Load<Sprite>(path + "Mountains/Below");
 
         return sprites;
     }
@@ -233,7 +234,7 @@ public class IngameObjectLibrary
     // resourceBuildings-variabler. resourceBuildings[] holder alle sprites, RESOURCE_BUILDING_START er global startverdi for resourceBuildings sprites, RESOURCE_BUILDING_COUNT er antall resourceBuildings sprites
     Sprite[] resourceBuildings;
     public const int RESOURCE_BUILDING_START = DWELLINGS_START + DWELLINGS_COUNT;
-    public const int RESOURCE_BUILDING_COUNT = 1;
+    public const int RESOURCE_BUILDING_COUNT = 4;
 
     /// <summary>
     /// Initialiserer et array for å holde på alle dwellings sprites
@@ -244,6 +245,9 @@ public class IngameObjectLibrary
         Sprite[] sprites = new Sprite[RESOURCE_BUILDING_COUNT];
         String path = "Sprites/Buildings/Resource/";
         sprites[0] = UnityEngine.Resources.Load<Sprite>(path + "Ore Smelters Camp");
+        sprites[1] = UnityEngine.Resources.Load<Sprite>(path + "Gold Mine Grass");
+        sprites[2] = UnityEngine.Resources.Load<Sprite>(path + "Gem Mine Grass");
+        sprites[3] = UnityEngine.Resources.Load<Sprite>(path + "Crystal Mine Grass");
         return sprites;
     }
 

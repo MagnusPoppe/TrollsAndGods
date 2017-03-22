@@ -5,7 +5,7 @@ namespace Filter
 	public class AverageFilter
 	{
 
-		static int[,] DEFAULT_FILTER =
+		public static int[,] DEFAULT_FILTER =
 		{
 			{ 1, 1, 1 },
 			{ 1, 1, 1 },

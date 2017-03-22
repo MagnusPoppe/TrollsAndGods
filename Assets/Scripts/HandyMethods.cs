@@ -80,6 +80,25 @@ public class HandyMethods
     }
 
     /// <summary>
+    /// Debug method for 2D arrays.
+    /// </summary>
+    /// <param name="map"></param>
+    static public void print2DArray(int[,] map)
+    {
+        string msg = "";
+        for (int y = 0; y < map.GetLength(1); y++)
+        {
+            for (int x = 0; x < map.GetLength(0); x++)
+            {
+                msg += map[x, y] +" ";
+            }
+            msg += "\n";
+        }
+        Debug.Log(msg);
+    }
+
+
+    /// <summary>
     /// Returns distance to target in a offset grid, ignoring obstacles
     /// </summary>
     /// <param name="a">Start pos</param>

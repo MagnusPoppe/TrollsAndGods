@@ -14,6 +14,13 @@
             get { return shape; }
         }
 
+        private int below = 6;
+
+        public int Below
+        {
+            get { return IngameObjectLibrary.GetOffset(category) + below; }
+        }
+
 
         /// <summary>
         /// Creates a sprite out of a set of spriteIDs.

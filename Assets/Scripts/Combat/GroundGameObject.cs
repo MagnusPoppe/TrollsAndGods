@@ -16,12 +16,12 @@ public class GroundGameObject : MonoBehaviour {
         isOccupied = reachable = false;
 	}
 	
-	void onMouseOver()
+	void OnMouseOver()
     {
         //todo highlight if you can walk
     }
 
-    void onMouseDown()
+    void OnMouseDown()
     {
         //moves unit if space is not occupied
         if (!isOccupied)
