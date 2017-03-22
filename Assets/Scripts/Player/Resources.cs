@@ -65,9 +65,15 @@ public class Resources
     {
         return resourceTab[i];
     }
+
     public void adjustResource(type i, int amount)
     {
         resourceTab[(int)i] += amount;
+    }
+    
+    public void adjustResource(int i, int amount)
+    {
+        resourceTab[i] += amount;
     }
 
     public override string ToString()

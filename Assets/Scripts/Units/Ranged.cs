@@ -2,8 +2,20 @@
 
 public class Ranged : Unit
 {
-    int ammo;
-    bool meleePenalty;
+    int ammo, maxAmmo;
+    bool meleePenalty, threatened;
+
+    public int MaxAmmo
+    {
+        get { return maxAmmo; }
+        set { maxAmmo = value; }
+    }
+
+    public bool Threatened
+    {
+        get { return threatened; }
+        set { threatened = value; }
+    }
 
     public int Ammo
     {
@@ -35,9 +47,10 @@ public class Ranged : Unit
         Move[] moves, Ability[] abilities,int ammo, bool meleePenalty
         ) : base(name, element, tier, faction, unitstats,moves,abilities)
     {
-        Ammo = ammo;
+        Ammo = maxAmmo = ammo;
         IsRanged = true;
         MeleePenalty = meleePenalty;
+        threatened = false;
     }
 
     public Ranged()

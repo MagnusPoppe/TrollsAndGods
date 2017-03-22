@@ -41,6 +41,17 @@
     }
 
     /// <summary>
+    /// Checks if you can pay an amount of a specific resource index
+    /// </summary>
+    /// <param name="i">index</param>
+    /// <param name="amount">amount to pay</param>
+    /// <returns>true if you can pay for it</returns>
+    public bool CanPay(int i, int amount)
+    {
+        return ResourceTab[i] >= amount;
+    }
+
+    /// <summary>
     /// Method that checks if parameter values is lower or equal to the objects resource values
     /// </summary>
     /// <returns><c>true</c> if this instance can pay the specified cost; otherwise, <c>false</c>.</returns>

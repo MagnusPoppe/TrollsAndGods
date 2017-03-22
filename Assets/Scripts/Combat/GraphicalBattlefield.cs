@@ -19,7 +19,7 @@ public class GraphicalBattlefield : MonoBehaviour {
     int whoseTurn;
     int livingAttackers, livingDefenders;
     private PossibleMovement possibleMovement;
-    private GameObject hexagon;
+    private GameObject hexagon, unit;
     private const int OFFSETX = -4, OFFSETY = -3;
     private const float ODDOFFSETX = 0.25f, ODDOFFSETY = -0.0f;
 
@@ -29,6 +29,7 @@ public class GraphicalBattlefield : MonoBehaviour {
         IsWalking = finishedWalking = false;
         hexagon = UnityEngine.Resources.Load<GameObject>("Sprites/Combat/HexagonPrefab");
         parent = GameObject.Find("Combat");
+        unit = UnityEngine.Resources.Load<GameObject>("Sprites/Combat/Unit");
     }
 	
 	// Update is called once per frame
@@ -161,9 +162,11 @@ public class GraphicalBattlefield : MonoBehaviour {
         {
             if (units.GetUnits()[i] != null)
             {
-                GameObject go = new GameObject("a" + i);
-                //todo add sprite
-                go.AddComponent<UnitGameObject>();
+                GameObject go = Instantiate(unit, parent.transform);
+                go.name = "a" + i;
+                SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
+                sr.sprite = UnityEngine.Resources.Load<Sprite>("Sprites/Heroes/hero1");
+                sr.sortingLayerName = "CombatUnits";
                 UnitGameObject ugo = go.GetComponent<UnitGameObject>();
                 ugo.UnitTree = units;
                 ugo.PosInUnitTree = i;
@@ -173,7 +176,7 @@ public class GraphicalBattlefield : MonoBehaviour {
                 ugo.LogicalPos = new Point(0, place);
                 Initative[logPos++] = ugo;
                 //set correct graphical pos
-                gameObject.transform.position = new Vector2(0, place);
+                go.transform.localPosition = field[0, place].transform.localPosition;
                 UnitsOnField[0, place] = go;
                 field[0, place].GetComponent<GroundGameObject>().IsOccupied = true;
                 livingAttackers++;
@@ -188,9 +191,11 @@ public class GraphicalBattlefield : MonoBehaviour {
         {
             if (units.GetUnits()[i] != null)
             {
-                GameObject go = new GameObject("d" + i);
-                //todo add sprite
-                go.AddComponent<UnitGameObject>();
+                GameObject go = Instantiate(unit, parent.transform);
+                go.name = "d" + i;
+                SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
+                sr.sprite = UnityEngine.Resources.Load<Sprite>("Sprites/Heroes/hero1");
+                sr.sortingLayerName = "CombatUnits";
                 UnitGameObject ugo = go.GetComponent<UnitGameObject>();
                 ugo.UnitTree = units;
                 ugo.PosInUnitTree = i;
@@ -200,7 +205,7 @@ public class GraphicalBattlefield : MonoBehaviour {
                 ugo.LogicalPos = new Point(width-1, place);
                 Initative[logPos++] = ugo;
                 //set correct graphical pos
-                gameObject.transform.position = new Vector2(Width - 1, place);
+                go.transform.localPosition = field[width - 1, place].transform.localPosition;
                 UnitsOnField[Width-1, place] = go;
                 field[width-1, place].GetComponent<GroundGameObject>().IsOccupied = true;
                 livingDefenders++;
@@ -315,7 +320,27 @@ public class GraphicalBattlefield : MonoBehaviour {
         whoseTurn++;
         if (whoseTurn == initative.Length) whoseTurn = 0;
         initative[whoseTurn].ItsTurn = true;
-        possibleMovement.flipReachable(Initative[whoseTurn].LogicalPos, Initative[whoseTurn].UnitTree.GetUnits()[Initative[whoseTurn].PosInUnitTree].Unitstats.Speed);
+        Unit unitWhoseTurnItIs = Initative[whoseTurn].UnitTree.GetUnits()[Initative[whoseTurn].PosInUnitTree];
+        possibleMovement.flipReachable(Initative[whoseTurn].LogicalPos, unitWhoseTurnItIs.Unitstats.Speed);
+        if (unitWhoseTurnItIs.IsRanged)
+        {
+            Ranged ranged = (Ranged)unitWhoseTurnItIs;
+            if (ranged.Ammo > 0 && !ranged.Threatened)
+            {
+                flipAttackable();
+            }
+        }
+    }
+
+    private void flipAttackable()
+    {
+        for (int i = 0; i < initative.Length; i++)
+        {
+            if (initative[i] != null && initative[i].AttackingSide != getUnitWhoseTurnItIs().AttackingSide)
+            {
+                initative[i].Attackable = true;
+            }
+        }
     }
 
     public UnitGameObject getUnitWhoseTurnItIs()
