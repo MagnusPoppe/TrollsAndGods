@@ -204,10 +204,7 @@ namespace TownView
             {
                 CreateBuildingView();
             }
-            else if(windowType == WindowTypes.MARKETPLACE_CARD)
-            {
-                CreateMarketplaceView();
-            }
+
 
             CreateExitButton();
             frame.transform.parent = GameObject.Find("TownCardPanel").transform;
@@ -575,7 +572,6 @@ namespace TownView
         /// </summary>
         void CreateBuyButton()
         {
-
             // gets the positions for exit button and buy button if the window type requires it
             buyButtonObject = Instantiate(UnityEngine.Resources.Load<GameObject>("Prefabs/Button"));
             buyButtonObject.transform.parent = cardWindow.transform;
