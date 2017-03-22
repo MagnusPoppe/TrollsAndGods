@@ -36,6 +36,31 @@ public class UnitTree
         unitAmount[amount2] = tmpAmount;
     }
 
+    public bool addUnit(Unit unit, int amount)
+    {
+         // checks for a unit of the same type to stack onto, choosing the first it finds
+        for (int i = 0; i < units.Length; i++)
+        {
+            if (units[i].GetType() == unit.GetType())
+            {
+                changeAmount(amount, i);
+                return true;
+            }
+        }
+
+        // if it fails to find a stack, look for empty spot
+        for (int i = 0; i < units.Length; i++)
+        {
+            if (units[i] == null)
+            {
+                setUnit(unit, amount, i);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /// <summary>
     /// Changes amount of units at position
     /// </summary>

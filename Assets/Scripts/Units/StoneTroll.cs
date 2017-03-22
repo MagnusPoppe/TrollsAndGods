@@ -3,7 +3,7 @@
     public class StoneTroll : Ranged
     {
 
-        public StoneTroll(string name, Element element, int tier, int faction, UnitStats unitstats, int ammo, bool meleePenalty, Move[] moves, Ability[] abilities) : base(name, element, tier, faction, unitstats,moves,abilities, ammo, meleePenalty)
+        public StoneTroll(string name, Element element, int tier, int faction, UnitStats unitstats, int ammo, bool meleePenalty, Move[] moves, Ability[] abilities, Cost price) : base(name, element, tier, faction, unitstats,moves,abilities, ammo, meleePenalty, price)
         {
         }
 
@@ -30,6 +30,7 @@
             Ammo = 3;
             MeleePenalty = false;
             Moves = new Move[] { new TreeSwing(), new BoulderThrow()};
+            Price = new Cost(100, 10, 5, 0, 0);
             //ability = new StoneSkin(); TODO: make ability
         }
     }
