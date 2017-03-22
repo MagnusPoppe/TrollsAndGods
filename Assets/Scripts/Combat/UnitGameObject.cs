@@ -3,7 +3,8 @@
 /// <summary>
 /// Represents a unit on battlefield
 /// </summary>
-public class UnitGameObject : MonoBehaviour {
+public class UnitGameObject : MonoBehaviour
+{
 
     bool itsTurn, attackingSide, attackable;
     int initative;
@@ -12,37 +13,56 @@ public class UnitGameObject : MonoBehaviour {
     GraphicalBattlefield graphicalBattlefield;
     Point logicalPos;
 
+    private readonly Point[] HEXDIRSEVEN =
+    {
+        new Point(-1,-1), new Point(0,-1),
+        new Point(-1,0), new Point(1,0),
+        new Point(-1,1), new Point(0,1)      
+    };
+
+    private readonly Point[] HEXDIRSODD =
+    {
+        new Point(0,-1), new Point(1,-1),
+        new Point(-1,0), new Point(1,0),
+        new Point(0,1), new Point(1,1)
+    };
+
     // Use this for initialization
     void Start () {
         AttackingSide = ItsTurn = attackable = false;
 	}
 	
-	void OnMouseOver()
+	public void MouseOver(int direction)
     {
         if (ItsTurn)
         {
             //Todo change cursor to defend
         }
-        else if (AttackingSide != GraphicalBattlefield.getUnitWhoseTurnItIs().AttackingSide)
+        else if (AttackingSide != GraphicalBattlefield.getUnitWhoseTurnItIs().AttackingSide && attackable)
         {
-            //todo determine wich direction attack is coming from
+            //todo show wich side your attacking from visually
         }
 
     }
 
-    void onMouseDown()
+    public void MouseDown(int direction)
     {
         if (ItsTurn)
         {
             //todo defend
         }
-        else
+        else if(Attackable)
         {
-            //todo determine direction
-            Point goal = logicalPos;
-            goal.x -= 1;
-            if (goal.x < 0) goal.x += 2;
-            graphicalBattlefield.attackUnit(this,goal);
+            Point destination;
+            if (logicalPos.y % 2 == 0)
+            {
+                destination = logicalPos.addition(HEXDIRSEVEN[direction]);
+            }
+            else
+            {
+                destination = logicalPos.addition(HEXDIRSODD[direction]);
+            }
+            graphicalBattlefield.attackUnit(this, destination);
         }
     }
 
