@@ -1057,6 +1057,8 @@ public class GameManager : MonoBehaviour
         overWorld = false;
         graphicalBattlefield.beginCombat(width, height, attacker, defender);
         combatWindow.SetActive(true);
+        cameraMovement.enabled = false;
+        combatWindow.transform.localPosition = new Vector3(0,0,10);
     }
 
     public void exitCombat(bool winner)
@@ -1076,6 +1078,7 @@ public class GameManager : MonoBehaviour
             removeHero(activeHero);
         }
         overWorld = true;
+        cameraMovement.enabled = true;
     }
 
     /// <summary>

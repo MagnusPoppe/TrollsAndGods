@@ -19,13 +19,15 @@ public class GraphicalBattlefield : MonoBehaviour {
     int whoseTurn;
     int livingAttackers, livingDefenders;
     private PossibleMovement possibleMovement;
-    private Sprite hexagon;
+    private GameObject hexagon;
+    private const int OFFSETX = -4, OFFSETY = -3;
+    private const float ODDOFFSETX = 0.25f, ODDOFFSETY = -0.0f;
 
     // Use this for initialization
     void Start () {
         InCombat = false;
         IsWalking = finishedWalking = false;
-        hexagon = UnityEngine.Resources.Load<Sprite>("Sprites/Combat/HexagonTrimmed");
+        hexagon = UnityEngine.Resources.Load<GameObject>("Sprites/Combat/HexagonPrefab");
         parent = GameObject.Find("Combat");
     }
 	
@@ -113,25 +115,30 @@ public class GraphicalBattlefield : MonoBehaviour {
     public void populateField()
     {
         field = new GameObject[width,height];
+        float gx = 0, gy = 0;
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
-                GameObject go = new GameObject("ground x=" + x + ", y=" + y);
-                go.AddComponent<GroundGameObject>();
-                go.AddComponent<SpriteRenderer>();
-                SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
-                sr.sprite = hexagon;
-                go.AddComponent<PolygonCollider2D>();
-                PolygonCollider2D pc = go.GetComponent<PolygonCollider2D>();
-                //todo set polygon collider
+                GameObject go = Instantiate(hexagon);
+                go.name = "Ground x=" + x + " y=" + y;
                 GroundGameObject ggo = go.GetComponent<GroundGameObject>();
                 ggo.GraphicalBattlefield = this;
                 ggo.LogicalPos = new Point(x, y);
-                go.transform.position = new Vector2(x,y);
                 field[x, y] = go;
                 go.transform.SetParent(parent.transform);
+                if (y % 2 == 0)
+                {
+                    go.transform.localPosition = new Vector2(gx+OFFSETX, gy+OFFSETY);
+                }
+                else
+                {
+                    go.transform.localPosition = new Vector2(gx + OFFSETX + ODDOFFSETX, gy + OFFSETY + ODDOFFSETY);
+                }
+                gy += 0.43f;
             }
+            gx += 0.5f;
+            gy = 0;
         }
     }
 
