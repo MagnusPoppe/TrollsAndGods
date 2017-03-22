@@ -130,7 +130,7 @@ namespace OverworldObjects
 
             if (bestPossible != null) // PLACING AT BEST POSSIBLE LOCATION:
             {
-                Debug.Log("Best placement: " + bestPossible+",  score="+highest);
+                //Debug.Log("Best placement: " + bestPossible+",  score="+highest);
                 realMap[bestPossible.x, bestPossible.y] = building.GetSpriteID();
                 markOccupied(bestPossible, shape);
             }
