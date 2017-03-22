@@ -86,5 +86,15 @@ public class Point
         int range = filter.GetLength(1) / 2;
         return (0 <= x-range && x+range < map.GetLength(0) && 0 <= y-range && y+range < map.GetLength(0));
     }
+
+    /// <summary>
+    /// Adds to points together
+    /// </summary>
+    /// <param name="p">Point to be added</param>
+    /// <returns>The two points added together</returns>
+    public Point addition(Point p)
+    {
+        return new Point(x+p.x,y+p.y);
+    }
 }
 
