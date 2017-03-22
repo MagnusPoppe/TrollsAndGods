@@ -315,7 +315,27 @@ public class GraphicalBattlefield : MonoBehaviour {
         whoseTurn++;
         if (whoseTurn == initative.Length) whoseTurn = 0;
         initative[whoseTurn].ItsTurn = true;
-        possibleMovement.flipReachable(Initative[whoseTurn].LogicalPos, Initative[whoseTurn].UnitTree.GetUnits()[Initative[whoseTurn].PosInUnitTree].Unitstats.Speed);
+        Unit unitWhoseTurnItIs = Initative[whoseTurn].UnitTree.GetUnits()[Initative[whoseTurn].PosInUnitTree];
+        possibleMovement.flipReachable(Initative[whoseTurn].LogicalPos, unitWhoseTurnItIs.Unitstats.Speed);
+        if (unitWhoseTurnItIs.IsRanged)
+        {
+            Ranged ranged = (Ranged)unitWhoseTurnItIs;
+            if (ranged.Ammo > 0 && !ranged.Threatened)
+            {
+                flipAttackable();
+            }
+        }
+    }
+
+    private void flipAttackable()
+    {
+        for (int i = 0; i < initative.Length; i++)
+        {
+            if (initative[i] != null && initative[i].AttackingSide != getUnitWhoseTurnItIs().AttackingSide)
+            {
+                initative[i].Attackable = true;
+            }
+        }
     }
 
     public UnitGameObject getUnitWhoseTurnItIs()
