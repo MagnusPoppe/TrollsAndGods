@@ -48,6 +48,7 @@ public class GameManager : MonoBehaviour
     // Generated from mapmaker class:
     Region[] regions;
     int[,] canWalk;
+    Placement placement;
     Reaction[,] reactions;
 
     // Graphical elements
@@ -601,13 +602,19 @@ public class GameManager : MonoBehaviour
         mapmaker.initializePlayers(map, canWalk, players);
 
 	    // Placeing all buildings within the regions.
-	    mapmaker.PlaceBuildings(players);
+	    placement = mapmaker.PlaceBuildings(players);
+        PlaceBuildings();
 
         if (CanWalkDebugMode) DrawDebugMap(map, canWalk); else DrawMap(map);
 
         // Kaster mapmaker
         mapmaker = null;
 	}
+
+    private void PlaceBuildings()
+    {
+        HandyMethods.print2DArray(Shapes.GetOutlineOfShape(Shapes.GetShape(Shapes.DOUBLE_LEFT)));
+    }
     
     /// <summary>
     /// Setting up UI buttons, text and images.
@@ -945,7 +952,6 @@ public class GameManager : MonoBehaviour
         buildingsInActiveTown[i].GetComponent<BuildingOnClick>().Town = town;
         buildingsInActiveTown[i].GetComponent<BuildingOnClick>().Player = getPlayer(whoseTurn);
     }
-
 
     public void DestroyBuildingsInTown()
     {
