@@ -2,37 +2,46 @@
 using TownView;
 using UI;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 namespace TownView
 {
 
     public class BuildingOnClick : MonoBehaviour
     {
-        public Building building;
+        GameManager gm;
+
         private Town town;
         Player player;
+        Building building;
         SpriteRenderer spriteRenderer;
         float add = 1f;
+        
+        GameObject canvas;
 
-        GameObject[] frames;
+        GameObject frame;
+        GameObject resourceFrame;
+        SpriteRenderer frameImage;
+        SpriteRenderer resourceFrameImage;
 
         IngameObjectLibrary libs;
         SpriteSystem spriteSystem;
         SpriteRenderer cardSpriteRenderer;
-        Vector2 exitBtnPosition;
-        Vector2 buyBtnPosition;
-        TownHallOnClick townHallOnClick;
         GameObject cardWindow;
-        GameObject exitButton;
+        GameObject exitButtonObject;
         GameObject buyButtonObject;
-        BuyButtonOnClick buyButton;
-        PortraitOnClick portraitOnClick;
         GameObject[] buildingObjects;
-        GameManager gm;
-        int[] ratio = { 1, 100, 100, 200, 200 };
+
+        // Selected actions in town
+        System.Object toBuyObject;
+        Text[] textResource;
+        int[] ratio = {1, 100, 100, 200, 200};
+        Slider slider;
+        int payAmount;
+        int earnAmount;
         Text textLeftResource, textRightResource;
-        int selectedPayResource = 0;
-        int selectedEarnResource = 1;
+        int selectedPayResource;
+        int selectedEarnResource;
 
         public GameObject[] BuildingObjects
         {
@@ -133,13 +142,24 @@ namespace TownView
         {
             // Gets the type of window associated with the given building
             int windowType = b.UIType();
+            
+            // Default set resources to nothing
+            selectedEarnResource = selectedPayResource = -1;
+
+            // Initialize frame
+            frame = new GameObject();
+            frame.name = "frame";
+            frameImage = frame.AddComponent<SpriteRenderer>();
+            frameImage.sortingLayerName = "TownInteractive";
 
             // TODO: Make less specific
             BuildingCard card = new BuildingCard(windowType, IngameObjectLibrary.Category.UI);
 
+            canvas = GameObject.Find("Canvas");
+
             // Creates a building card game ojbect with a spriterenderer, sets its position, layer, name and parent
             cardWindow = new GameObject();
-            cardWindow.transform.parent = GameObject.Find("Canvas").transform;
+            cardWindow.transform.parent = canvas.transform;
             cardWindow.name = "TownCardPanel";
             cardWindow.tag = "toDestroy";
             cardWindow.transform.position = cardWindow.transform.parent.position;
@@ -155,33 +175,28 @@ namespace TownView
                     BuildingObjects[i].GetComponent<PolygonCollider2D>().enabled = false;
             }
 
-            // gets the positions for exit button and buy button if the window type requires it
-            exitBtnPosition = getUpRightCorner(cardSpriteRenderer);
-            buyBtnPosition = getDownRightCorner(cardSpriteRenderer);
-
-
             // Creates a town hall view if the building type matches it
             if (windowType == WindowTypes.TOWN_HALL_CARD)
             {
-                CreateBuyButton(buyBtnPosition);
+                CreateBuyButton();
                 CreateTownHallView();
             }
             // Creates a tavern view if the building type matches it
             else if (windowType == WindowTypes.TAVERN_CARD)
             {
-                CreateBuyButton(buyBtnPosition);
+                CreateBuyButton();
                 CreateTavernView();
             }
             // Creates a marketplace view if the building type matches it
             else if (windowType == WindowTypes.MARKETPLACE_CARD)
             {
-                CreateBuyButton(buyBtnPosition);
+                CreateBuyButton();
                 CreateMarketplaceView();
             }
             // Creates a dwelling view if the building type matches it
             else if (windowType == WindowTypes.DWELLING_CARD)
             {
-                CreateBuyButton(buyBtnPosition);
+                CreateBuyButton();
                 CreateDwellingView();
             }
             // Creates a general building view if the building type matches it
@@ -194,7 +209,8 @@ namespace TownView
                 CreateMarketplaceView();
             }
 
-            CreateExitButton(exitBtnPosition);
+            CreateExitButton();
+            frame.transform.parent = GameObject.Find("TownCardPanel").transform;
         }
 
         /// <summary>
@@ -205,7 +221,7 @@ namespace TownView
             // Add text below building
             GameObject textObject = new GameObject();
             textObject.transform.parent = GameObject.Find("TownCardPanel").transform;
-            textObject.transform.localScale = GameObject.Find("Canvas").transform.localScale;
+            textObject.transform.localScale = canvas.transform.localScale;
             textObject.name = Building.Name + " text";
             Text text = textObject.AddComponent<Text>();
             text.font = UnityEngine.Resources.Load<Font>("Fonts/ARIAL");
@@ -221,6 +237,9 @@ namespace TownView
 
         }
 
+        /// <summary>
+        /// Creates the marketplace view for trading resources
+        /// </summary>
         private void CreateMarketplaceView()
         {
             Vector2 nextPositionPay = new Vector2(cardSpriteRenderer.transform.position.x, cardSpriteRenderer.transform.position.y + (cardSpriteRenderer.bounds.size.y / 4));
@@ -229,144 +248,90 @@ namespace TownView
 
             float leftX = startX;
             float rightX = startX;
-            // Add each hero that you can buy in Tavern
-
-            // holds all the frames to be disabled
-            GameObject[] resourceFramesPay = new GameObject[System.Enum.GetNames(typeof(Resources.type)).Length];
-            GameObject[] resourceFramesEarn = new GameObject[System.Enum.GetNames(typeof(Resources.type)).Length];
             
+            resourceFrame = new GameObject();
+            resourceFrameImage = resourceFrame.AddComponent<SpriteRenderer>();
+            resourceFrameImage.sortingLayerName = "TownInteractive";
+            resourceFrameImage.sprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/resource_frame");
+            resourceFrame.name = "frame";
+            resourceFrame.tag = "toDestroy";
+
+            // Prepare global text for your resources, if you trade they will be updated
+            textResource = new Text[5];
+
             for (int i = 0; i < System.Enum.GetNames(typeof(Resources.type)).Length; i++)
             {
 
-                GameObject resourceFrameObjectPay = new GameObject();
-                resourceFrameObjectPay.transform.parent = GameObject.Find("TownCardPanel").transform;
-                resourceFrameObjectPay.name = player.Wallet.GetResourceName(i) + " pay frame";
-                SpriteRenderer frameImagePay = resourceFrameObjectPay.AddComponent<SpriteRenderer>();
-                frameImagePay.sprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/resource_frame");
-                frameImagePay.sortingLayerName = "TownInteractive";
-                resourceFramesPay[i] = resourceFrameObjectPay;
-                resourceFrameObjectPay.SetActive(false);
-                
-
-                // Create the gameobject to see and click on
-                GameObject resourceObjectPay = new GameObject();
+                // Top resource imagebutton with listener
+                GameObject resourceObjectPay = Instantiate(UnityEngine.Resources.Load<GameObject>("Prefabs/Button"));
                 resourceObjectPay.transform.parent = GameObject.Find("TownCardPanel").transform;
-                resourceObjectPay.name = "heroName";
+                resourceObjectPay.transform.position = nextPositionPay;
+                resourceObjectPay.name = player.Wallet.GetResourceName(i);
                 resourceObjectPay.tag = "toDestroy";
-
-                // Add the picture of the resource
-                SpriteRenderer sprPay = resourceObjectPay.AddComponent<SpriteRenderer>();
-
+                int selectedResource = i;
+                //resourceObjectPay.GetComponent<Image>().sprite = libs.GetPortrait(selectedHero.GetPortraitID());
+                Button buttonPay = resourceObjectPay.GetComponent<Button>();
+                buttonPay.onClick.AddListener(() => setTrade(true, selectedResource, resourceObjectPay.transform.position));
+                
                 // Quick and dirty switch
                 switch (i)
                 {
-                    case 0: sprPay.sprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/gold"); break;
-                    case 1: sprPay.sprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/wood"); break;
-                    case 2: sprPay.sprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/ore"); break;
-                    case 3: sprPay.sprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/crystal"); break;
-                    case 4: sprPay.sprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/gem"); break;
+                    case 0: resourceObjectPay.GetComponent<Image>().sprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/gold"); break;
+                    case 1: resourceObjectPay.GetComponent<Image>().sprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/wood"); break;
+                    case 2: resourceObjectPay.GetComponent<Image>().sprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/ore"); break;
+                    case 3: resourceObjectPay.GetComponent<Image>().sprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/crystal"); break;
+                    case 4: resourceObjectPay.GetComponent<Image>().sprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/gem"); break;
                 }
-
-                sprPay.sortingLayerName = "GUI";
-
-                // Add the collider to click on to build a building
-                BoxCollider2D colliderPay = resourceObjectPay.AddComponent<BoxCollider2D>();
-                colliderPay.size = sprPay.bounds.size;
-
-
-
-
+                RectTransform rectPay = resourceObjectPay.GetComponent<RectTransform>();
+                rectPay.sizeDelta = new Vector2(resourceObjectPay.GetComponent<Image>().sprite.bounds.size.x, resourceObjectPay.GetComponent<Image>().sprite.bounds.size.y) * 2;
 
                 GameObject textNameObject = new GameObject();
                 textNameObject.transform.parent = resourceObjectPay.transform;
-                textNameObject.transform.localScale = GameObject.Find("Canvas").transform.localScale;
+                textNameObject.transform.localScale = canvas.transform.localScale;
                 textNameObject.name = player.Wallet.GetResource(i) + ", " + player.Wallet.GetResourceName(i);
-                Text textResource = textNameObject.AddComponent<Text>();
-                textResource.font = UnityEngine.Resources.Load<Font>("Fonts/ARIAL");
-                textResource.fontSize = 18;
-                textResource.text = player.Wallet.GetResource(i) + "";
-                textResource.color = Color.black;
-                textResource.alignment = TextAnchor.LowerCenter;
+                textResource[i] = textNameObject.AddComponent<Text>();
+                textResource[i].font = UnityEngine.Resources.Load<Font>("Fonts/ARIAL");
+                textResource[i].fontSize = 16;
+                textResource[i].text = player.Wallet.GetResource(i) + "";
+                textResource[i].color = Color.black;
+                textResource[i].alignment = TextAnchor.LowerCenter;
+                textNameObject.transform.position = nextPositionPay;
 
 
-
-
-
-
-
-                GameObject resourceFrameObjectEarn = new GameObject();
-                resourceFrameObjectEarn.transform.parent = GameObject.Find("TownCardPanel").transform;
-                resourceFrameObjectEarn.name = player.Wallet.GetResourceName(i) + " earn frame";
-                SpriteRenderer frameImageEarn = resourceFrameObjectEarn.AddComponent<SpriteRenderer>();
-                frameImageEarn.sprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/resource_frame");
-                frameImageEarn.sortingLayerName = "TownInteractive";
-                resourceFramesEarn[i] = resourceFrameObjectEarn;
-                resourceFrameObjectEarn.SetActive(false);
-
-                // Create the gameobject to see and click on
-                GameObject resourceObjectEarn = new GameObject();
+                // Bottom resource with listener
+                GameObject resourceObjectEarn = Instantiate(UnityEngine.Resources.Load<GameObject>("Prefabs/Button"));
                 resourceObjectEarn.transform.parent = GameObject.Find("TownCardPanel").transform;
-                resourceObjectEarn.name = "heroName";
-                resourceObjectEarn.tag = "toDestroy";
-
-                // Add the picture of the resource
-                SpriteRenderer sprEarn = resourceObjectEarn.AddComponent<SpriteRenderer>();
-                sprEarn.sprite = sprPay.sprite;
-                sprEarn.sortingLayerName = "GUI";
-
-                // Add the collider to click on to build a building
-                BoxCollider2D colliderEarn = resourceObjectEarn.AddComponent<BoxCollider2D>();
-                colliderEarn.size = sprEarn.bounds.size;
-                
-
-
-
-
-                resourceObjectPay.transform.position = nextPositionPay;
                 resourceObjectEarn.transform.position = nextPositionEarn;
-                resourceFrameObjectPay.transform.position = nextPositionPay;
-                resourceFrameObjectEarn.transform.position = nextPositionEarn;
-                //textNameObject.transform.position = new Vector2(nextPosition.x, (nextPosition.y - spr.bounds.size.y));
-                //textDescriptionObject.transform.position = new Vector2(startX, (nextPosition.y - (spr.bounds.size.y*1.5f)));
-
+                resourceObjectEarn.name = resourceObjectPay.name;
+                resourceObjectEarn.tag = "toDestroy";
+                //resourceObjectPay.GetComponent<Image>().sprite = libs.GetPortrait(selectedHero.GetPortraitID());
+                RectTransform rectEarn = resourceObjectEarn.GetComponent<RectTransform>();
+                rectEarn.sizeDelta = rectPay.sizeDelta;
+                Button buttonEarn = resourceObjectEarn.GetComponent<Button>();
+                buttonEarn.onClick.AddListener(() => setTrade(false, selectedResource, resourceObjectEarn.transform.position));
+                resourceObjectEarn.GetComponent<Image>().sprite = resourceObjectPay.GetComponent<Image>().sprite;
+                
                 // Calculate the position for the next gameobject
                 float newX = nextPositionPay.x;
                 float newY = nextPositionPay.y;
 
                 if (i % 2 == 0)
                 {
-                    newX = leftX -= (sprPay.bounds.size.x * 4f);
+                    newX = leftX -= (resourceObjectEarn.GetComponent<Image>().sprite.bounds.size.x * 4f);
                 }
                 else
                 {
-                    newX = rightX += (sprPay.bounds.size.x * 4f);
+                    newX = rightX += (resourceObjectEarn.GetComponent<Image>().sprite.bounds.size.x * 4f);
                 }
                 nextPositionPay = new Vector2(newX, newY);
                 nextPositionEarn = new Vector2(newX, nextPositionEarn.y);
-
-                // Attaches onclick
-                /*portraitOnClick = heroObject.AddComponent<PortraitOnClick>();
-                portraitOnClick.BuyButton = buyButton;
-                portraitOnClick.Hero = gm.heroes[i];
-                portraitOnClick.NewHeroFrame = resourceFrameObject;
-                portraitOnClick.AllFrames = heroFrames;*/
-
-                // Turns last hero active
-                if (i == 0)
-                    resourceFrameObjectPay.SetActive(true);
-                if(i == 1)
-                    resourceFrameObjectEarn.SetActive(true);
+                
             }
-
-
-
-
-
 
             string prefabPath = "Prefabs/Slider";
             GameObject sliderObject = Instantiate(UnityEngine.Resources.Load<GameObject>(prefabPath));
             sliderObject.transform.parent = cardSpriteRenderer.transform;
-            sliderObject.transform.localScale = GameObject.Find("Canvas").transform.localScale;
+            sliderObject.transform.localScale = canvas.transform.localScale;
             
             float bottomY = cardSpriteRenderer.transform.position.y * 0.5f;
 
@@ -375,11 +340,11 @@ namespace TownView
 
             GameObject textLeftObject = new GameObject();
             textLeftObject.transform.parent = cardSpriteRenderer.transform;
-            textLeftObject.transform.localScale = GameObject.Find("Canvas").transform.localScale;
+            textLeftObject.transform.localScale = canvas.transform.localScale;
             textLeftResource = textLeftObject.AddComponent<Text>();
             textLeftResource.font = UnityEngine.Resources.Load<Font>("Fonts/ARIAL");
             textLeftResource.fontSize = 16;
-            textLeftResource.text = ratio[0] * ratio[1] + "";
+            //textLeftResource.text = ratio[0] * ratio[1] + "";
             textLeftResource.color = Color.black;
             textLeftResource.alignment = TextAnchor.MiddleRight;
             textLeftObject.transform.position = new Vector2((cardSpriteRenderer.transform.position.x * 0.92f), bottomY);
@@ -387,25 +352,20 @@ namespace TownView
 
             GameObject textRightObject = new GameObject();
             textRightObject.transform.parent = cardSpriteRenderer.transform;
-            textRightObject.transform.localScale = GameObject.Find("Canvas").transform.localScale;
+            textRightObject.transform.localScale = canvas.transform.localScale;
             textRightResource = textRightObject.AddComponent<Text>();
             textRightResource.font = UnityEngine.Resources.Load<Font>("Fonts/ARIAL");
             textRightResource.fontSize = 16;
-            textRightResource.text = 1 + "";
+            //textRightResource.text = 1 + "";
             textRightResource.color = Color.black;
             textRightResource.alignment = TextAnchor.MiddleLeft;
             textRightResource.transform.position = new Vector2((cardSpriteRenderer.transform.position.x * 1.08f), bottomY);
             
-            Slider slider = sliderObject.GetComponent<Slider>();
+            slider = sliderObject.GetComponent<Slider>();
+            slider.enabled = false;
             slider.maxValue = player.Wallet.GetResource(0) / ratio[1];
 
             slider.onValueChanged.AddListener(adjustTradeAmount);
-        }
-
-        public void adjustTradeAmount(float value)
-        {
-            textRightResource.text = value + "";
-            textLeftResource.text = value * ratio[selectedEarnResource] + "";
         }
 
         /// <summary>
@@ -426,37 +386,6 @@ namespace TownView
             GameObject[] buildingFrames = new GameObject[town.Buildings.Length];
             for (int i = 0; i < town.Buildings.Length; i++)
             {
-
-                // sets teh fram behind the object
-                GameObject heroFrameObject = new GameObject();
-                heroFrameObject.transform.parent = GameObject.Find("TownCardPanel").transform;
-                heroFrameObject.name = town.Buildings[i].Name;
-                SpriteRenderer frameImage = heroFrameObject.AddComponent<SpriteRenderer>();
-                frameImage.sprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/building_frame");
-                frameImage.sortingLayerName = "TownInteractive";
-                frameImage.sortingOrder = 1;
-                buildingFrames[i] = heroFrameObject;
-                if (i != 0)
-                    heroFrameObject.SetActive(false);
-
-                // Create the gameobject to see and click on
-                GameObject buildingObject = new GameObject();
-                buildingObject.transform.parent = GameObject.Find("TownCardPanel").transform;
-                buildingObject.transform.position = GameObject.Find("TownCardPanel").transform.position;
-                buildingObject.name = town.Buildings[i].Name;
-                buildingObject.tag = "toDestroy";
-
-
-                // Add components to the gameobject window
-                townHallOnClick = buildingObject.AddComponent<TownHallOnClick>();
-                townHallOnClick.BuyButton = buyButton;
-                townHallOnClick.Building = town.Buildings[i];
-                townHallOnClick.Town = Town;
-                townHallOnClick.Player = Player;
-                townHallOnClick.AllFrames = buildingFrames;
-                townHallOnClick.NewHeroFrame = heroFrameObject;
-
-
                 // If it's already purchased or you can't build it, use another sprite, set by an offset
                 int offset = 0;
                 if (town.Buildings[i].Built)
@@ -464,20 +393,25 @@ namespace TownView
                 else if (!Player.Wallet.CanPay(town.Buildings[i].Cost) || town.HasBuiltThisRound || !town.Buildings[i].MeetsRequirements(town))
                     offset = town.Buildings.Length * 2;
 
-                // Add the picture of the building
-                SpriteRenderer spr = buildingObject.AddComponent<SpriteRenderer>();
-                spr.sprite = libs.GetTown(town.Buildings[i].GetSpriteBlueprintID() + offset);
-                spr.sortingLayerName = "GUI";
-
-                // Add the collider to click on to build a building
-                BoxCollider2D collider = buildingObject.AddComponent<BoxCollider2D>();
-                collider.size = spr.bounds.size;
+                // Building imagebutton with listener
+                GameObject buildingObject = Instantiate(UnityEngine.Resources.Load<GameObject>("Prefabs/Button"));
+                buildingObject.transform.parent = GameObject.Find("TownCardPanel").transform;
+                buildingObject.transform.position = nextPosition;
+                buildingObject.name = town.Buildings[i].Name;
+                buildingObject.tag = "toDestroy";
+                Building selectedBuilding = town.Buildings[i];
+                buildingObject.GetComponent<Image>().sprite = libs.GetTown(selectedBuilding.GetSpriteBlueprintID() + offset);
+                RectTransform rect = buildingObject.GetComponent<RectTransform>();
+                rect.sizeDelta = new Vector2(buildingObject.GetComponent<Image>().sprite.bounds.size.x, buildingObject.GetComponent<Image>().sprite.bounds.size.y);
+                Button button = buildingObject.GetComponent<Button>();
+                button.onClick.AddListener(() => setBuy(selectedBuilding, buildingObject.transform.position));
 
                 // Add text below building
                 GameObject textObject = new GameObject();
                 textObject.transform.parent = GameObject.Find(town.Buildings[i].Name).transform;
-                textObject.transform.localScale = GameObject.Find("Canvas").transform.localScale;
+                textObject.transform.localScale = canvas.transform.localScale;
                 textObject.name = town.Buildings[i].Name + " text";
+                textObject.tag = "toDestroy";
                 Text text = textObject.AddComponent<Text>();
                 text.font = UnityEngine.Resources.Load<Font>("Fonts/ARIAL");
                 text.fontSize = 18;
@@ -487,12 +421,11 @@ namespace TownView
 
                 // Position icon and text
                 buildingObject.transform.position = nextPosition;
-                heroFrameObject.transform.position = buildingObject.transform.position;
-                textObject.transform.position = new Vector2(buildingObject.transform.position.x, buildingObject.transform.position.y - spr.bounds.size.y);
+                textObject.transform.position = new Vector2(buildingObject.transform.position.x, buildingObject.transform.position.y - buildingObject.GetComponent<Image>().sprite.bounds.size.y);
 
 
                 // Create text and image for every resource next to the icon
-                Vector2 position = new Vector2(buildingObject.transform.position.x + (spr.bounds.size.x / 1.6f), nextPosition.y + spr.bounds.size.y / 2);
+                Vector2 position = new Vector2(buildingObject.transform.position.x + (buildingObject.GetComponent<Image>().sprite.bounds.size.x / 1.6f), nextPosition.y + buildingObject.GetComponent<Image>().sprite.bounds.size.y / 2);
                 for (int j = 0; j < town.Buildings[i].Cost.GetResourceTab().Length; j++)
                 {
                     if (town.Buildings[i].Cost.GetResourceTab()[j] != 0)
@@ -515,7 +448,7 @@ namespace TownView
 
                         GameObject textCostObject = new GameObject();
                         textCostObject.transform.parent = GameObject.Find(town.Buildings[i].Name).transform;
-                        textCostObject.transform.localScale = GameObject.Find("Canvas").transform.localScale;
+                        textCostObject.transform.localScale = canvas.transform.localScale;
                         textCostObject.name = town.Buildings[i].Cost.ToString(j);
                         Text textCost = textCostObject.AddComponent<Text>();
                         textCost.font = UnityEngine.Resources.Load<Font>("Fonts/ARIAL");
@@ -525,7 +458,7 @@ namespace TownView
 
                         imageObject.transform.position = position;
                         textCostObject.transform.position = new Vector2(position.x + (sprResource.bounds.size.x * 2.3f), position.y);
-                        position = new Vector2(buildingObject.transform.position.x + (spr.bounds.size.x / 1.6f), position.y - sprResource.bounds.size.y);
+                        position = new Vector2(buildingObject.transform.position.x + (buildingObject.GetComponent<Image>().sprite.bounds.size.x / 1.6f), position.y - sprResource.bounds.size.y);
 
                     }
                 }
@@ -533,17 +466,20 @@ namespace TownView
                 float newX = nextPosition.x;
                 float newY = nextPosition.y;
 
-                if (nextPosition.x > cardSpriteRenderer.transform.position.x + spr.bounds.size.x * 1.3f)
+                if (nextPosition.x > cardSpriteRenderer.transform.position.x + buildingObject.GetComponent<Image>().sprite.bounds.size.x * 1.3f)
                 {
                     newX = startX;
-                    newY -= (spr.bounds.size.y * 1.5f);
+                    newY -= (buildingObject.GetComponent<Image>().sprite.bounds.size.y * 1.5f);
                 }
                 else
-                    newX += (spr.bounds.size.x * 1.45f);
+                    newX += (buildingObject.GetComponent<Image>().sprite.bounds.size.x * 1.45f);
                 nextPosition = new Vector2(newX, newY);
             }
         }
 
+        /// <summary>
+        /// Creates the tavern view for buying heroes
+        /// </summary>
         public void CreateTavernView()
         {
             Vector2 nextPosition = new Vector2(cardSpriteRenderer.transform.position.x, cardSpriteRenderer.transform.position.y + (cardSpriteRenderer.bounds.size.y / 4));
@@ -553,97 +489,44 @@ namespace TownView
             float rightX = startX;
             // Add each hero that you can buy in Tavern
             int count = 0;
-
-            // holds all the frames to be disabled
-            GameObject[] heroFrames = new GameObject[gm.heroes.Length];
-
             for (int i = 0; i < gm.heroes.Length; i++)
             {
                 if (gm.heroes[i] != null && !gm.heroes[i].Alive)
                 {
-
-                    GameObject heroFrameObject = new GameObject();
-                    heroFrameObject.transform.parent = GameObject.Find("TownCardPanel").transform;
-                    heroFrameObject.name = gm.heroes[i].Name + "'s frame";
-                    SpriteRenderer frameImage = heroFrameObject.AddComponent<SpriteRenderer>();
-                    frameImage.sprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/hero_frame");
-                    frameImage.sortingLayerName = "TownInteractive";
-                    heroFrames[count] = heroFrameObject;
-                    heroFrameObject.SetActive(false);
-
-                    // Create the gameobject to see and click on
-                    GameObject heroObject = new GameObject();
-                    heroObject.transform.parent = GameObject.Find("TownCardPanel").transform;
-                    heroObject.name = "heroName";
+                    // Hero imagebutton with listener
+                    GameObject heroObject = Instantiate(UnityEngine.Resources.Load<GameObject>("Prefabs/Button"));
+                    heroObject.transform.parent = canvas.transform;
+                    heroObject.transform.position = nextPosition;
+                    Hero selectedHero = gm.heroes[i];
+                    heroObject.GetComponent<Image>().sprite = libs.GetPortrait(selectedHero.GetPortraitID());
+                    RectTransform rect = heroObject.GetComponent<RectTransform>();
+                    rect.sizeDelta = new Vector2(heroObject.GetComponent<Image>().sprite.bounds.size.x, heroObject.GetComponent<Image>().sprite.bounds.size.y);
+                    Button button = heroObject.GetComponent<Button>();
+                    button.onClick.AddListener(() => setBuy(selectedHero, heroObject.transform.position));
                     heroObject.tag = "toDestroy";
 
-                    // Add the picture of the building
-                    SpriteRenderer spr = heroObject.AddComponent<SpriteRenderer>();
-                    spr.sprite = libs.GetPortrait(gm.heroes[i].GetPortraitID());// TODO libs.GetPortrait(town.Owner.Heroes[0].GetPortraitID());
-                    spr.sortingLayerName = "GUI";
-
-                    // Add the collider to click on to build a building
-                    BoxCollider2D collider = heroObject.AddComponent<BoxCollider2D>();
-                    collider.size = spr.bounds.size;
-
+                    // Hero name Text
                     GameObject textNameObject = new GameObject();
                     textNameObject.transform.parent = heroObject.transform;
-                    textNameObject.transform.localScale = GameObject.Find("Canvas").transform.localScale;
+                    textNameObject.transform.localScale = canvas.transform.localScale;
                     textNameObject.name = gm.heroes[i].Name;
+                    textNameObject.tag = "toDestroy";
                     Text textName = textNameObject.AddComponent<Text>();
                     textName.font = UnityEngine.Resources.Load<Font>("Fonts/ARIAL");
                     textName.fontSize = 18;
                     textName.text = gm.heroes[i].Name;
                     textName.color = Color.black;
-                    //textCost.alignment = TextAnchor.MiddleCenter;
-
-
-                    /*
-                    GameObject textDescriptionObject = new GameObject();
-                    textDescriptionObject.transform.parent = heroObject.transform;
-                    textDescriptionObject.transform.localScale = GameObject.Find("Canvas").transform.localScale;
-                    textDescriptionObject.name = gm.heroes[i].Name + "'s description";
-                    Text textDescription = textDescriptionObject.AddComponent<Text>();
-                    textDescription.font = UnityEngine.Resources.Load<Font>("Fonts/ARIAL");
-                    textDescription.fontSize = 18;
-                    textDescription.text = gm.heroes[i].Description;
-                    textDescription.color = Color.black;
-                    */
-
-                    // Sets the first hero as the active hero
-
-
-
-
-                    heroObject.transform.position = nextPosition;
-                    heroFrameObject.transform.position = nextPosition;
-                    textNameObject.transform.position = new Vector2(nextPosition.x, (nextPosition.y - spr.bounds.size.y));
-                    //textDescriptionObject.transform.position = new Vector2(startX, (nextPosition.y - (spr.bounds.size.y*1.5f)));
+                    textNameObject.transform.position = new Vector2(nextPosition.x, (nextPosition.y - heroObject.GetComponent<Image>().sprite.bounds.size.y));
 
                     // Calculate the position for the next gameobject
                     float newX = nextPosition.x;
                     float newY = nextPosition.y;
 
                     if (count % 2 == 0)
-                        newX = leftX -= (spr.bounds.size.x * 1.2f);
+                        newX = leftX -= (heroObject.GetComponent<Image>().sprite.bounds.size.x * 1.2f);
                     else
-                        newX = rightX += (spr.bounds.size.x * 1.2f);
+                        newX = rightX += (heroObject.GetComponent<Image>().sprite.bounds.size.x * 1.2f);
                     nextPosition = new Vector2(newX, newY);
-
-                    // Attaches onclick
-                    portraitOnClick = heroObject.AddComponent<PortraitOnClick>();
-                    portraitOnClick.BuyButton = buyButton;
-                    portraitOnClick.Hero = gm.heroes[count];
-                    portraitOnClick.NewHeroFrame = heroFrameObject;
-                    portraitOnClick.AllFrames = heroFrames;
-
-                    // Turns last hero active
-                    if (i == gm.heroes.Length)
-                    {
-                        heroFrameObject.SetActive(true);
-                        buyButton.Hero = gm.heroes[count];
-                    }
-
                     count++;
                 }
             }
@@ -672,75 +555,188 @@ namespace TownView
         /// <summary>
         /// Creates a gameobject exitbutton to exit the building screen
         /// </summary>
-        void CreateExitButton(Vector2 position)
+        void CreateExitButton()
         {
-            // creates object and sets its name and position
-            exitButton = new GameObject();
-            exitButton.name = "ExitButton";
-            exitButton.tag = "toDestroy";
-            exitButton.transform.position = position;
 
-            // Attaches a sprite renderer, sets spriet, sorting layer and sorting order
-            SpriteRenderer sr = exitButton.AddComponent<SpriteRenderer>();
-            ExitButton button = new ExitButton();
-            sr.sprite = libs.GetUI(button.GetSpriteID());
-            sr.sortingLayerName = "GUI";
-            sr.sortingOrder = cardWindow.GetComponent<SpriteRenderer>().sortingOrder + 1;
-
-            // sets a box collider trigger around the button
-            BoxCollider2D collider = exitButton.AddComponent<BoxCollider2D>();
-            collider.isTrigger = true;
-
-            // sends game objects through to the button so it knows what to destroy
-            exitButton.AddComponent<ExitButtonOnClick>();
-            exitButton.GetComponent<ExitButtonOnClick>().CardWindow = cardWindow;
-            exitButton.GetComponent<ExitButtonOnClick>().ExitButton = exitButton;
-            exitButton.GetComponent<ExitButtonOnClick>().BuildingObjects = buildingObjects;
+            exitButtonObject = Instantiate(UnityEngine.Resources.Load<GameObject>("Prefabs/Button"));
+            exitButtonObject.transform.parent = cardWindow.transform;
+            exitButtonObject.GetComponent<Image>().sprite = libs.GetUI(new ExitButton().GetSpriteID());
+            exitButtonObject.name = "ExitButton";
+            exitButtonObject.tag = "toDestroy";
+            RectTransform rect = exitButtonObject.GetComponent<RectTransform>();
+            rect.sizeDelta = new Vector2(exitButtonObject.GetComponent<Image>().sprite.bounds.size.x, exitButtonObject.GetComponent<Image>().sprite.bounds.size.y);
+            Button button = exitButtonObject.GetComponent<Button>();
+            button.onClick.AddListener(DestroyObjects);
+            exitButtonObject.transform.position = getUpRightCorner(cardSpriteRenderer);
         }
 
         /// <summary>
         /// Creates a gameobject exitbutton to exit the building screen
         /// </summary>
-        void CreateBuyButton(Vector2 position)
+        void CreateBuyButton()
         {
-            // creates object and sets its name and position
-            buyButtonObject = new GameObject();
+
+            // gets the positions for exit button and buy button if the window type requires it
+            buyButtonObject = Instantiate(UnityEngine.Resources.Load<GameObject>("Prefabs/Button"));
+            buyButtonObject.transform.parent = cardWindow.transform;
+            buyButtonObject.GetComponent<Image>().sprite = libs.GetUI(new ExitButton().GetSpriteID() + 1);
             buyButtonObject.name = "BuyButton";
             buyButtonObject.tag = "toDestroy";
-            buyButtonObject.transform.position = position;
-
-            // Attaches a sprite renderer, sets spriet, sorting layer and sorting order
-            SpriteRenderer sr = buyButtonObject.AddComponent<SpriteRenderer>();
-            ExitButton button = new ExitButton();
-            sr.sprite = libs.GetUI(button.GetSpriteID() + 1);
-            sr.sortingLayerName = "GUI";
-            sr.sortingOrder = cardWindow.GetComponent<SpriteRenderer>().sortingOrder + 1;
-
-            // sets a box collider trigger around the button
-            BoxCollider2D collider = buyButtonObject.AddComponent<BoxCollider2D>();
-            collider.isTrigger = true;
-
-            // sends game objects through to the button so it knows what to destroy
-            buyButton = buyButtonObject.AddComponent<BuyButtonOnClick>();
-            buyButton.CardWindow = cardWindow;
-            buyButton.BuyButton = buyButtonObject;
-            buyButton.BuildingObjects = buildingObjects;
-
-
-            buyButton.Town = Town;
-            buyButton.Parent = this;
-            buyButton.Player = Player;
+            RectTransform rect = buyButtonObject.GetComponent<RectTransform>();
+            rect.sizeDelta = new Vector2(buyButtonObject.GetComponent<Image>().sprite.bounds.size.x, buyButtonObject.GetComponent<Image>().sprite.bounds.size.y);
+            Button button = buyButtonObject.GetComponent<Button>();
+            button.onClick.AddListener(purchase);
+            buyButtonObject.transform.position = getDownRightCorner(cardSpriteRenderer);
         }
 
-        private void updateFrames(GameObject frame)
+        /// <summary>
+        /// Sets which object to be bought by buybutton.
+        /// </summary>
+        /// <param name="obj"></param>
+        private void setBuy(System.Object obj, Vector2 position)
         {
-            foreach (GameObject t in frames)
+            toBuyObject = obj;
+            
+            if (toBuyObject.GetType().BaseType.Name.Equals("Hero"))
+                frameImage.sprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/hero_frame");
+            else if (toBuyObject.GetType().BaseType.Name.Equals("Building"))
+                frameImage.sprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/building_frame");
+
+            frame.transform.position = position;
+        }
+
+
+        /// <summary>
+        /// Sets which object to be bought by buybutton.
+        /// </summary>
+        /// <param name="obj"></param>
+        private void setTrade(bool top, int type, Vector2 position)
+        {
+            if((top && type != selectedEarnResource) || (!top && type != selectedPayResource))
             {
-                if (t != null)
-                    t.SetActive(false);
+                frameImage.sprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/resource_frame");
+                if (top)
+                {
+                    selectedPayResource = type;
+                    frame.transform.position = position;
+                }
+                else
+                {
+                    selectedEarnResource = type;
+                    resourceFrame.transform.position = position;
+                }
+                if(selectedEarnResource >= 0 && selectedPayResource >= 0)
+                {
+                    if(!slider.isActiveAndEnabled)
+                        slider.enabled = true;
+                    slider.maxValue = (player.Wallet.GetResource(selectedPayResource) * ratio[selectedPayResource]) / ratio[selectedEarnResource];
+                    Debug.Log(player.Wallet.GetResource(selectedPayResource));
+                    adjustTradeAmount(1);
+                    slider.value = 1;
+                }
             }
-            frame.SetActive(true);
-            //buyButton.Hero = frame.hero;
+        }
+
+        /// <summary>
+        /// Sets the amount to be traded and the texts of what you must pay for it
+        /// </summary>
+        /// <param name="value"></param>
+        private void adjustTradeAmount(float value)
+        {
+            payAmount = (int)(value * ratio[selectedEarnResource]) / ratio[selectedPayResource];
+            earnAmount = (int)value;
+            textLeftResource.text = payAmount + "";
+            textRightResource.text = earnAmount + "";
+        }
+
+
+        /// <summary>
+        /// When clicked on buybutton, try to purchase active object
+        /// </summary>
+        private void purchase()
+        {
+            if(toBuyObject != null)
+            {
+                if (toBuyObject.GetType().BaseType.Name.Equals("Hero"))
+                {
+                    Hero buyHero = (Hero)toBuyObject;
+                    // checks if the player can afford the hero and if the hero is alive
+                    if (Player.Wallet.CanPay(buyHero.Cost) && Player.addHero(buyHero))
+                    {
+                        Player.Wallet.Pay(buyHero.Cost);
+                        Debug.Log("Bought the hero" + buyHero.Name); // TODO remove
+                        DestroyObjects();
+                    }
+                    else
+                        Debug.Log("Not enough gold");
+                    return;
+                }
+                else if (toBuyObject.GetType().BaseType.Name.Equals("Building"))
+                {
+                    Building buyBuilding = (Building)toBuyObject;
+
+                    // Build building if town has not already built that day, player can pay, and building is not built already
+                    if (!Town.HasBuiltThisRound && Player.Wallet.CanPay(buyBuilding.Cost) && !buyBuilding.Built && buyBuilding.MeetsRequirements(town))
+                    {
+                        // Player pays
+                        Player.Wallet.Pay(buyBuilding.Cost);
+                        town.HasBuiltThisRound = true;
+                        gm.updateResourceText();
+
+                        // Find the building in the town's list, build it and draw it in the view
+                        for (int i = 0; i < town.Buildings.Length; i++)
+                        {
+                            if (town.Buildings[i].Equals(buyBuilding))
+                            {
+                                Debug.Log("YOU BOUGHT: " + buyBuilding.Name); // TODO remove
+                                town.Buildings[i].Build();
+                                gm.DrawBuilding(town, buyBuilding, i);
+                                DestroyObjects();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Debug.Log("YOU DO NOT HAVE THE SUFFICIENT ECONOMICAL WEALTH TO PRODUCE THE STRUCTURE OF CHOICE: " + buyBuilding.Name); // TODO remove
+                        return;
+                        // TODO: what's the graphic feedback for trying to purchase something unpurchasable?
+                    }
+                }
+            }
+            else if(selectedPayResource >= 0 && selectedEarnResource >= 0)
+            {
+                if(Player.Wallet.CanPay(selectedPayResource, payAmount))
+                {
+                    Player.Wallet.adjustResource(selectedPayResource, -payAmount);
+                    Player.Wallet.adjustResource(selectedEarnResource, earnAmount);
+                    gm.updateResourceText();
+
+                    for(int i=0; i<5; i++)
+                    {
+                        textResource[i].text = player.Wallet.GetResource(i) + "";
+                        slider.maxValue = player.Wallet.GetResource(selectedPayResource) / ratio[selectedEarnResource];
+                        //textLeftResource.text = "";
+                        //textRightResource.text = "";
+                        //slider.value = 1;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Remove all gameobjects that has the tag "toDestroy"
+        /// </summary>
+        private void DestroyObjects()
+        {
+            foreach (GameObject t in BuildingObjects)
+            {
+                // TODO: make into list so we dont have to check for null?
+                if (t != null)
+                    t.GetComponent<PolygonCollider2D>().enabled = true;
+            }
+
+            foreach (GameObject go in GameObject.FindGameObjectsWithTag("toDestroy"))
+                Destroy(go);
         }
     }
 
