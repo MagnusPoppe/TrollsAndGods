@@ -38,11 +38,11 @@ public class Player
     {
         string debug = "PLAYER "+playerID + " WAS : " + wallet;
 
-        Debug.Log("Size of player's Resourcebuildings when collecting: " + ResourceBuildings.Count);
+        //Debug.Log("Size of player's Resourcebuildings when collecting: " + ResourceBuildings.Count);
 
         foreach (ResourceBuilding building in ResourceBuildings)
         {
-            Debug.Log("Gathering resources from ResourceBuilding: " + building);
+            //Debug.Log("Gathering resources from ResourceBuilding: " + building);
             wallet = building.Earnings.adjustResources(wallet);
             // TODO: EVERYONE GETS EVERYONES RESOURCES... MAYBE JUST GIVE IT TO THE PLAYER WHO OWNS THE MINE?
         }
@@ -54,7 +54,7 @@ public class Player
                 {
                     TownView.ResourceBuilding b = (TownView.ResourceBuilding) building;
                     wallet = b.Earnings.adjustResources(wallet);
-                    Debug.Log("Gathering resources from TownBuilding " + b);
+                    //Debug.Log("Gathering resources from TownBuilding " + b);
                 }
             }
         }
