@@ -30,8 +30,6 @@ namespace TownView
             StationedUnits = new UnitTree();
             RelatedDwellings = new List<Dwelling>();
             Owner = owner;
-
-
         }
 
         // Builds all buildings in a given town
@@ -40,6 +38,34 @@ namespace TownView
             for(int i = 0; i < t.buildings.Length; i++)
             {
                 buildings[i].Build();
+            }
+        }
+
+        // When in town window, activated by clicking on the heroes
+        public void swapHeroes()
+        {
+            Hero tmp;
+            if(StationedHero != null)
+            {
+                tmp = StationedHero;
+                // Both is found, swap them
+                if(VisitingHero != null)
+                {
+                    StationedHero = VisitingHero;
+                    VisitingHero = tmp;
+                }
+                // Only stationed hero is found, move him
+                else
+                {
+                    VisitingHero = StationedHero;
+                    stationedHero = null;
+                }
+            }
+            // Only visitingHero is found, move him
+            else if (VisitingHero != null)
+            {
+                StationedHero = VisitingHero;
+                VisitingHero = null;
             }
         }
 
@@ -56,7 +82,7 @@ namespace TownView
             }
         }
 
-        protected Hero StationedHero
+        public Hero StationedHero
         {
             get
             {
@@ -69,7 +95,7 @@ namespace TownView
             }
         }
 
-        protected Hero VisitingHero
+        public Hero VisitingHero
         {
             get
             {

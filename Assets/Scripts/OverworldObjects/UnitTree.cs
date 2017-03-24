@@ -35,6 +35,35 @@ public class UnitTree
         unitAmount[amount1] = amount2;
         unitAmount[amount2] = tmpAmount;
     }
+    /// <summary>
+    /// Swaps the two units in the positions
+    /// </summary>
+    /// <param name="pos1">position of first unit</param>
+    /// <param name="pos2">position of second unit</param>
+    public void swapUnits(int pos1, int pos2)
+    {
+        Unit tmp;
+        // Swap or move one of them if any unit is found (dont do anything if first one isnt found)
+        if(units[pos1] != null)
+        {
+            tmp = units[pos1];
+            if(units[pos2] != null)
+            {
+                // If same unit, merge troops
+                if(units[pos1].Name.Equals(units[pos2].Name))
+                {
+                    unitAmount[2] += unitAmount[1];
+                    units[1] = null;
+                }
+                // Else swap
+                else
+                {
+                    units[pos1] = units[pos2];
+                    units[pos2] = tmp;
+                }
+            }
+        }
+    }
 
     public bool addUnit(Unit unit, int amount)
     {
