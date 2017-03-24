@@ -81,7 +81,7 @@ public class GraphicalBattlefield : MonoBehaviour {
         populateField();
         populateInitative(attacker, defender.Units);
         possibleMovement = new PossibleMovement(field,unitsOnField,canwalk,width,height);
-        possibleMovement.flipReachable(Initative[whoseTurn].LogicalPos, Initative[whoseTurn].UnitTree.GetUnits()[Initative[whoseTurn].PosInUnitTree].Unitstats.Speed);
+        flipReachableAndAttackable();
     }
 
     /// <summary>
@@ -108,16 +108,8 @@ public class GraphicalBattlefield : MonoBehaviour {
 
         populateField();
         populateInitative(attacker, defender);
-        Unit unitWhoseTurnItIs = getUnitWhoseTurnItIs().UnitTree.GetUnits()[getUnitWhoseTurnItIs().PosInUnitTree];
-        possibleMovement.flipReachable(Initative[whoseTurn].LogicalPos, unitWhoseTurnItIs.Unitstats.Speed);
-        if (unitWhoseTurnItIs.IsRanged)
-        {
-            Ranged ranged = (Ranged)unitWhoseTurnItIs;
-            if (ranged.Ammo > 0 && !ranged.Threatened)
-            {
-                flipAttackable();
-            }
-        }
+        possibleMovement = new PossibleMovement(field, unitsOnField, canwalk, width, height);
+        flipReachableAndAttackable();
     }
 
     /// <summary>
@@ -315,6 +307,7 @@ public class GraphicalBattlefield : MonoBehaviour {
         Vector3 destination = field[(int)path[path.Count - 1].x, (int)path[path.Count - 1].y].transform.localPosition;
         getUnitWhoseTurnItIs().transform.localPosition = destination;
         getUnitWhoseTurnItIs().LogicalPos = new Point(path[path.Count-1]);
+        nextTurn();
     }
 
     /// <summary>
@@ -332,8 +325,13 @@ public class GraphicalBattlefield : MonoBehaviour {
         }
         initative[whoseTurn].ItsTurn = false;
         whoseTurn++;
-        if (whoseTurn == initative.Length) whoseTurn = 0;
+        if (whoseTurn == initative.Length || initative[whoseTurn] == null) whoseTurn = 0;
         initative[whoseTurn].ItsTurn = true;
+        flipReachableAndAttackable();
+    }
+
+    private void flipReachableAndAttackable()
+    {
         Unit unitWhoseTurnItIs = Initative[whoseTurn].UnitTree.GetUnits()[Initative[whoseTurn].PosInUnitTree];
         possibleMovement.flipReachable(Initative[whoseTurn].LogicalPos, unitWhoseTurnItIs.Unitstats.Speed);
         if (unitWhoseTurnItIs.IsRanged)

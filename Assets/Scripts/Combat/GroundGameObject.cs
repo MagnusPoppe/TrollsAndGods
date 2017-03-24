@@ -12,7 +12,7 @@ public class GroundGameObject : MonoBehaviour {
     GraphicalBattlefield graphicalBattlefield;
 
     // Use this for initialization
-    void Start () {
+    void Awake () {
         isOccupied = reachable = false;
 	}
 	

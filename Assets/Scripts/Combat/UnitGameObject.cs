@@ -28,7 +28,7 @@ public class UnitGameObject : MonoBehaviour
     };
 
     // Use this for initialization
-    void Start () {
+    void Awake () {
         AttackingSide = ItsTurn = attackable = false;
 	}
 	

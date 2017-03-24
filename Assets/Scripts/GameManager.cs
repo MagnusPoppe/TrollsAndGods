@@ -1074,8 +1074,8 @@ public class GameManager : MonoBehaviour
     public void enterCombat(int width, int height, Hero attacker, UnitTree defender)
     {
         overWorld = false;
-        graphicalBattlefield.beginCombat(width, height, attacker, defender);
         combatWindow.SetActive(true);
+        graphicalBattlefield.beginCombat(width, height, attacker, defender);
         cameraMovement.enabled = false;
         combatWindow.transform.localPosition = new Vector3(0,0,10);
     }

@@ -66,7 +66,6 @@ public class PossibleMovement
             if (cur.Ggo.IsOccupied && units[cur.Pos.x, cur.Pos.y] != null && cur.WalkedSteps <= speed+1)
                 units[cur.Pos.x, cur.Pos.y].GetComponent<UnitGameObject>().Attackable = true;
             else if (cur.WalkedSteps <= speed) cur.Ggo.Reachable = true;
-
             //Finds walkable neighbours
             Node[] neighbours = findNeighboursHex(cur.Pos);
 
@@ -101,7 +100,7 @@ public class PossibleMovement
                 }
             }
             //Breaks loop if next node to be checked is unreachable
-            if (openSet[0].WalkedSteps == speed + 2) break;
+            if (cur.WalkedSteps == speed + 2) break;
         }
         //Readies for new run
         for (int x = 0; x < width; x++)
