@@ -167,7 +167,7 @@ public class GraphicalBattlefield : MonoBehaviour {
                 GameObject go = Instantiate(unit, parent.transform);
                 go.name = "a" + i;
                 SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
-                sr.sprite = UnityEngine.Resources.Load<Sprite>("Sprites/Heroes/hero1");
+                sr.sprite = UnityEngine.Resources.Load<Sprite>("Sprites/Units/Troll/Frame 1");
                 sr.sortingLayerName = "CombatUnits";
                 UnitGameObject ugo = go.GetComponent<UnitGameObject>();
                 ugo.UnitTree = units;
@@ -196,7 +196,7 @@ public class GraphicalBattlefield : MonoBehaviour {
                 GameObject go = Instantiate(unit, parent.transform);
                 go.name = "d" + i;
                 SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
-                sr.sprite = UnityEngine.Resources.Load<Sprite>("Sprites/Heroes/hero1");
+                sr.sprite = UnityEngine.Resources.Load<Sprite>("Sprites/Units/Troll/Frame 1");
                 sr.sortingLayerName = "CombatUnits";
                 UnitGameObject ugo = go.GetComponent<UnitGameObject>();
                 ugo.UnitTree = units;
