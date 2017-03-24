@@ -21,7 +21,7 @@ namespace TownView
 
         public int GetImage()
         {
-            throw new System.NotImplementedException();
+            return Unit.GetSpriteID();
         }
 
         public int GetAttack()
