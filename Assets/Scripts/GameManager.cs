@@ -1170,6 +1170,7 @@ public class GameManager : MonoBehaviour
 
             // Gather income for the upcoming player
             getPlayer(whoseTurn).GatherIncome();
+            
 
             // Update wallet UI
             updateResourceText();
@@ -1186,6 +1187,8 @@ public class GameManager : MonoBehaviour
             whoseTurn = 0;
             dateText.text = date.incrementDay();
             updateCanBuild();
+            getPlayer(whoseTurn).PopulateDwellings();
+
 
         }
     }
@@ -1276,75 +1279,141 @@ public class GameManager : MonoBehaviour
         reactions[h.Position.x, h.Position.y] = null;
     }
 
+    /// <summary>
+    /// Writes a units details on top of a unit playing card
+    /// </summary>
+    /// <param name="parent">The parent of the unit card</param>
+    /// <param name="canvas">The canvas the unit card is attached to</param>
+    /// <param name="unitBuilding">The unit building which has all the information on the unit to display</param>
+    // TODO: extend method so that this method creates teh unit card backgrounda s well
     public void CreateUnitCard(GameObject parent, GameObject canvas, UnitBuilding unitBuilding)
     {
+
+        int pos = 0;
+
         string unitName = unitBuilding.GetUnitName();
         string unitAttack = unitBuilding.GetAttack() + "";
         string unitDefense = unitBuilding.GetDefense() + "";
         string unitMagic = unitBuilding.GetMagic() + "";
         string unitSpeed = unitBuilding.GetSpeed() + "";
+        Ability unitAbility = unitBuilding.GetAbility();
+        Move[] moves = unitBuilding.GetMoves();
 
-        // TODO: moves
-
-
+        // Name of unit
         GameObject unitNameObject = new GameObject();
-        unitNameObject.transform.parent = parent.transform;
-        unitNameObject.transform.position = new Vector2(parent.transform.position.x + 0.11f, parent.transform.position.y + 2.34f);
-        unitNameObject.transform.localScale = canvas.transform.localScale;
-        unitNameObject.name = unitName + " name text";
-        Text unitNameText = unitNameObject.AddComponent<Text>();
-        unitNameText.text = unitName;
-        unitNameText.font = UnityEngine.Resources.Load<Font>("Fonts/ARIAL");
-        unitNameText.fontSize = 18;
-        unitNameText.color = Color.black;
+        SetUnitCardText(unitNameObject, parent, canvas, unitName, pos++, BIG_FONT);
 
+        // attack of unit
         GameObject unitAttackObject = new GameObject();
-        unitAttackObject.transform.parent = parent.transform;
-        unitAttackObject.transform.position = new Vector2(parent.transform.position.x + 2.14f, parent.transform.position.y - 1.25f);
-        unitAttackObject.transform.localScale = canvas.transform.localScale;
-        unitAttackObject.name = unitName + " attack text";
-        Text unitAttackText = unitAttackObject.AddComponent<Text>();
-        unitAttackText.text = unitAttack;
-        unitAttackText.font = UnityEngine.Resources.Load<Font>("Fonts/ARIAL");
-        unitAttackText.fontSize = 18;
-        unitAttackText.color = Color.black;
+        SetUnitCardText(unitAttackObject, parent, canvas, unitAttack, pos++, BIG_FONT);
 
+        // defence of unut
         GameObject unitDefenseObject = new GameObject();
-        unitDefenseObject.transform.parent = parent.transform;
-        unitDefenseObject.transform.position = new Vector2(parent.transform.position.x + 2.14f, parent.transform.position.y - 1.9f);
-        unitDefenseObject.transform.localScale = canvas.transform.localScale;
-        unitDefenseObject.name = unitName + " defense text"; ;
-        Text unitDefenseText = unitDefenseObject.AddComponent<Text>();
-        unitDefenseText.text = unitDefense;
-        unitDefenseText.font = UnityEngine.Resources.Load<Font>("Fonts/ARIAL");
-        unitDefenseText.fontSize = 18;
-        unitDefenseText.color = Color.black;
+        SetUnitCardText(unitDefenseObject, parent, canvas, unitDefense, pos++, BIG_FONT);
 
+        // magic of unit
         GameObject unitMagicObject = new GameObject();
-        unitMagicObject.transform.parent = parent.transform;
-        unitMagicObject.transform.position = new Vector2(parent.transform.position.x + 2.14f, parent.transform.position.y - 2.5f);
-        unitMagicObject.transform.localScale = canvas.transform.localScale;
-        unitMagicObject.name = unitName + " magic text";
-        Text unitMagicText = unitMagicObject.AddComponent<Text>();
-        unitMagicText.text = unitMagic;
-        unitMagicText.font = UnityEngine.Resources.Load<Font>("Fonts/ARIAL");
-        unitMagicText.fontSize = 18;
-        unitMagicText.color = Color.black;
+        SetUnitCardText(unitMagicObject, parent, canvas, unitMagic, pos++, BIG_FONT);
 
+        // speed of unit
         GameObject unitSpeedObject = new GameObject();
-        unitSpeedObject.transform.parent = parent.transform;
-        unitSpeedObject.transform.position = new Vector2(parent.transform.position.x + 2.14f, parent.transform.position.y - 3f);
-        unitSpeedObject.transform.localScale = canvas.transform.localScale;
-        unitSpeedObject.name = unitName + " speed text";
-        Text unitSpeedText = unitSpeedObject.AddComponent<Text>();
-        unitSpeedText.text = unitSpeed;
-        unitSpeedText.font = UnityEngine.Resources.Load<Font>("Fonts/ARIAL");
-        unitSpeedText.fontSize = 18;
-        unitSpeedText.color = Color.black;
+        SetUnitCardText(unitSpeedObject, parent, canvas, unitSpeed, pos++, BIG_FONT);
+
+        // ability name and description of unit
+        GameObject unitAbilityNameObject = new GameObject();
+        SetUnitCardText(unitAbilityNameObject, parent, canvas, unitAbility.Name, pos++, BIG_FONT);
+        GameObject unitAbilityDescriptionObject = new GameObject();
+        SetUnitCardText(unitAbilityDescriptionObject, parent, canvas, unitAbility.Description, pos++, SMALL_FONT);
+
+        // move 1 name, description and dmg of unit
+        string moveName = moves[0].Name;
+        string moveDesc = moves[0].Description;
+        string moveDamage = moves[0].MinDamage + "-" + moves[0].MaxDamage;
+
+        GameObject unitMove1NameObject = new GameObject();
+        SetUnitCardText(unitMove1NameObject, parent, canvas, moveName, pos++, BIG_FONT);
+        GameObject unitMove1DescriptionObject = new GameObject();
+        SetUnitCardText(unitMove1DescriptionObject, parent, canvas, moveDesc, pos++, SMALL_FONT);
+        GameObject unitMove1DamageObject = new GameObject();
+        SetUnitCardText(unitMove1DamageObject, parent, canvas, moveDamage, pos++, BIG_FONT);
+
+        // move 2 name, description and dmg of unit
+        moveName = moves[1].Name;
+        moveDesc = moves[1].Description;
+        moveDamage = moves[1].MinDamage + "-" + moves[1].MaxDamage;
+
+        GameObject unitMove2NameObject = new GameObject();
+        SetUnitCardText(unitMove2NameObject, parent, canvas, moveName, pos++, BIG_FONT);
+        GameObject unitMove2DescriptionObject = new GameObject();
+        SetUnitCardText(unitMove2DescriptionObject, parent, canvas, moveDesc, pos++, SMALL_FONT);
+        GameObject unitMove2DamageObject = new GameObject();
+        SetUnitCardText(unitMove2DamageObject, parent, canvas, moveDamage, pos++, BIG_FONT);
+
     }
 
-    public void SetUnitCardText(GameObject toAttach, GameObject parent, string text, int pos)
+
+    private static float UNIT_CARD_TEXT_MIDDLE = 0.11f;
+    private static float UNIT_CARD_TEXT_RIGHT = -0.9f;
+    private static float UNIT_CARD_TEXT_LEFT = 2.14f;
+    private static float UNIT_CARD_MIDDLE_LEFT = 1f;
+    /// <summary>
+    /// Text positions relative to its parent object
+    /// </summary>
+    private readonly Vector2[] unitCardTextPos =
     {
-        
+        // TODO: polish the positioning of text
+        new Vector2(UNIT_CARD_TEXT_MIDDLE, 2.34f), // 0, name
+        new Vector2(UNIT_CARD_TEXT_LEFT, -1.25f), // 1, attack
+        new Vector2(UNIT_CARD_TEXT_LEFT, -1.9f), // 2, defense
+        new Vector2(UNIT_CARD_TEXT_LEFT, -2.5f), // 3, magic
+        new Vector2(UNIT_CARD_TEXT_LEFT, -3.1f), // 4, speed
+        new Vector2(UNIT_CARD_TEXT_RIGHT, -3f), // 5, ability name
+        new Vector2(UNIT_CARD_TEXT_RIGHT, -3.4f), // 6, ability desc
+        new Vector2(UNIT_CARD_TEXT_RIGHT, -1f), // 7, move1 name 
+        new Vector2(UNIT_CARD_TEXT_RIGHT, -1.2f), // 8, move1 desc
+        new Vector2(UNIT_CARD_MIDDLE_LEFT, -1.25f), // 9, move1 dmg
+        new Vector2(UNIT_CARD_TEXT_RIGHT, -1.8f), // 10, move2 name 
+        new Vector2(UNIT_CARD_TEXT_RIGHT, -2f), // 11, move2 desc
+        new Vector2(UNIT_CARD_MIDDLE_LEFT, -2.2f), // 12, move2 dmg
+    };
+
+    private int BIG_FONT = 16;
+    private int SMALL_FONT = 11;
+
+    /// <summary>
+    /// Method to attach text to a unit playing card
+    /// </summary>
+    /// <param name="toAttach">The game object to attach text to</param>
+    /// <param name="parent">The parent of toAttach</param>
+    /// <param name="canvas">The canvas toAttach is a part of</param>
+    /// <param name="text">The text to write</param>
+    /// <param name="pos">The position of the text relative to its parent, taken from unitCardTextPos</param>
+    /// <param name="fontSize">The size of the font displayed</param>
+    public void SetUnitCardText(GameObject toAttach, GameObject parent, GameObject canvas, string text, int pos, int fontSize)
+    {
+        toAttach.transform.parent = parent.transform;
+        toAttach.transform.position = (Vector2) parent.transform.position + unitCardTextPos[pos];
+        toAttach.transform.localScale = canvas.transform.localScale;
+        toAttach.name = text + " text";
+        Text unitText = toAttach.AddComponent<Text>();
+        unitText.text = text;
+        unitText.font = UnityEngine.Resources.Load<Font>("Fonts/ARIAL");
+        unitText.fontSize = fontSize;
+        unitText.color = Color.black;
+
+
+        // TODO: fix rect tansform for long texts
+        /*
+        // Alternativ 2
+        HorizontalLayoutGroup layout = toAttach.AddComponent<HorizontalLayoutGroup>();
+        layout.preferredWidth = 100f;
+        ContentSizeFitter fitter = toAttach.AddComponent<ContentSizeFitter>();
+        fitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+       
+
+        // Alternativ 1
+        unitText.alignment = TextAnchor.UpperLeft;
+        RectTransform rectTransform = toAttach.GetComponent<RectTransform>();
+        rectTransform.sizeDelta = new Vector2(200f, 200f); */
     }
 }

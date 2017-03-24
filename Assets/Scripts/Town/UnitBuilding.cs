@@ -1,22 +1,21 @@
-﻿using UI;
+﻿using OverworldObjects;
+using UI;
 using Units;
 
 namespace TownView
 {
-    public class UnitBuilding : Building, UnitPlayingCard
+    public class UnitBuilding : Building, UnitPlayingCard, Dwelling
     {
+
         private Unit unit;
+        private int unitsPresent;
+        private int unitsPerWeek;
 
-        public Unit Unit
-        {
-            get { return unit; }
-            set { unit = value; }
-        }
-
-        public UnitBuilding(string name, string description, bool[] requirements, Cost cost, int localID, int LOCAL_SPRITEID_BLUEPRINT)
+        public UnitBuilding(string name, string description, bool[] requirements, Cost cost, int localID,
+            int LOCAL_SPRITEID_BLUEPRINT)
             : base(name, description, requirements, cost, localID, LOCAL_SPRITEID_BLUEPRINT)
         {
-            Unit = unit;
+            
         }
 
 
@@ -60,9 +59,46 @@ namespace TownView
             return Unit.Moves;
         }
 
-        public string GetAbility()
+        public Ability GetAbility()
         {
-            return "Not yet implemented, buddy. :-)";        }
+            return Unit.Ability;
+        }
+
+        public Unit Unit
+        {
+            get
+            {
+                return unit;
+            }
+            set
+            {
+                unit = value;
+            }
+        }
+
+        public int UnitsPresent
+        {
+            get
+            {
+                return unitsPresent;
+            }
+            set
+            {
+                unitsPresent = value;
+            }
+        }
+
+        public int UnitsPerWeek
+        {
+            get
+            {
+                return unitsPerWeek;
+            }
+            set
+            {
+                unitsPerWeek = value;
+            }
+        }
     }
 }
 

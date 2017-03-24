@@ -1,4 +1,5 @@
 ﻿using System;
+using OverworldObjects;
 using Units;
 using UI;
 using Units;
@@ -11,6 +12,8 @@ namespace TownView
     /// </summary>
     public class TrollCave : UnitBuilding
     {
+
+
         // Required values for building:
         const string name = "Troll Cave";
         const string description = "Stone trolls are famed for their cunning business sense. It's not rare to find their market caves floating in the sky.";
@@ -29,7 +32,10 @@ namespace TownView
         // This needs no indata since it knows its values.
         public TrollCave() : base(name, description, requirements, new Cost(GOLD_COST, WOOD_COST, ORE_COST, CRYSTAL_COST, GEM_COST), LOCAL_SPRITEID, LOCAL_SPRITEID_BLUEPRINT)
         {
+            // Default starting values when building is built
             Unit = new StoneTroll();
+            UnitsPerWeek = 5;
+            UnitsPresent = 10; 
         }
 
 
@@ -41,5 +47,6 @@ namespace TownView
         {
             return UI.WindowTypes.DWELLING_CARD;
         }
+
     }
 }

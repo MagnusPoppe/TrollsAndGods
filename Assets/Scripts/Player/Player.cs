@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using OverworldObjects;
+using TownView;
 using UnityEngine;
+using ResourceBuilding = OverworldObjects.ResourceBuilding;
 
 /// <summary>
 /// Player class that holds everything corresponding to the players values and actions.
@@ -15,7 +17,7 @@ public class Player
     private bool[,] fogOfWar;
     private const int MAXHEROES = 8;
     private List<ResourceBuilding> resourceBuildings;
-    private List<Dwelling> dwellingsOwned;
+    private List<DwellingBuilding> dwellingsOwned;
 
     /// <summary>
     /// Constructor that creates a new hero for the player, prepares fog of war, resources and towns
@@ -29,9 +31,34 @@ public class Player
         Castle = new List<Castle>();
         PlayerID = playerID;
         FogOfWar = new bool[32, 32]; // todo, link to map objects x y size
-        DwellingsOwned = new List<Dwelling>();
+        DwellingsOwned = new List<DwellingBuilding>();
         ResourceBuildings = new List<ResourceBuilding>();
         nextEmptyHero = 0;
+    }
+
+    /// <summary>
+    /// Populates dwellings with a dwellings unitsPerWeek
+    /// </summary>
+    public void PopulateDwellings()
+    {
+        // Populates overworld dwellings
+        foreach (DwellingBuilding building in DwellingsOwned)
+        {
+            building.UnitsPresent += building.UnitsPerWeek;
+        }
+
+        // populates town dwellings
+        foreach (Castle c in Castle)
+        {
+            for (int i = 0; i < c.Town.Buildings.Length; i++)
+                {
+                    if (c.Town.Buildings[i].Built && c.Town.Buildings[i].GetType().BaseType == typeof(UnitBuilding))
+                    {
+                        UnitBuilding unitBuilding = (UnitBuilding) c.Town.Buildings[i];
+                        unitBuilding.UnitsPresent += unitBuilding.UnitsPerWeek;
+                    }
+                }
+        }
     }
 
     public void GatherIncome()
@@ -160,7 +187,7 @@ public class Player
         }
     }
 
-    public List<Dwelling> DwellingsOwned
+    public List<DwellingBuilding> DwellingsOwned
     {
         get
         {

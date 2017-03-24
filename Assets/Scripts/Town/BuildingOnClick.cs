@@ -240,9 +240,6 @@ namespace TownView
 
             gm.CreateUnitCard(cardWindow, canvas, unitBuilding);
 
-           
-
-
             string prefabPath = "Prefabs/Slider";
             GameObject sliderObject = Instantiate(UnityEngine.Resources.Load<GameObject>(prefabPath));
             sliderObject.transform.parent = cardSpriteRenderer.transform;
@@ -250,7 +247,7 @@ namespace TownView
             float bottomY = cardSpriteRenderer.bounds.size.y / 4;
             sliderObject.transform.position = new Vector2(cardSpriteRenderer.transform.position.x, bottomY);
             slider = sliderObject.GetComponent<Slider>();
-            slider.maxValue = 100; // TODO: max is how many units available in stack
+            slider.maxValue = unitBuilding.UnitsPresent; // TODO: max is how many units available in stack
             slider.onValueChanged.AddListener(adjustUnits);
         }
 

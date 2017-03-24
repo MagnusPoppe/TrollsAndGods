@@ -13,7 +13,7 @@ namespace TownView
     {
         private bool hasBuiltThisRound;
         private Building[] buildings;
-        private List<Dwelling> relatedDwellings;
+        private List<DwellingBuilding> relatedDwellings;
         private Hero stationedHero;
         private Hero visitingHero;
         private UnitTree stationedUnits;
@@ -28,7 +28,7 @@ namespace TownView
         public Town(Player owner, int localSpriteID) :base(localSpriteID, category )
         {
             StationedUnits = new UnitTree();
-            RelatedDwellings = new List<Dwelling>();
+            RelatedDwellings = new List<DwellingBuilding>();
             Owner = owner;
         }
 
@@ -121,7 +121,7 @@ namespace TownView
             }
         }
 
-        public List<Dwelling> RelatedDwellings
+        public List<DwellingBuilding> RelatedDwellings
         {
             get
             {

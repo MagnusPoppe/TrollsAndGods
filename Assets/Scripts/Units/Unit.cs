@@ -11,7 +11,14 @@ public class Unit : SpriteSystem	{
     bool isRanged = false;
     int currentHealth;
     private Move[] moves;
-    private Ability[] abilities;
+    private Ability ability;
+
+    public Ability Ability
+    {
+        get { return ability; }
+        set { ability = value; }
+    }
+
     Cost price;
 
     private const IngameObjectLibrary.Category CATEGORY = IngameObjectLibrary.Category.Unit;
@@ -22,11 +29,6 @@ public class Unit : SpriteSystem	{
         set { moves = value; }
     }
 
-    public Ability[] Abilities
-    {
-        get { return abilities; }
-        set { abilities = value; }
-    }
 
     public Element Element
     {
@@ -144,7 +146,7 @@ public class Unit : SpriteSystem	{
         Tier = tier;
         Faction = faction;
         HaveNotRetaliated = true;
-        CurrentHealth = unitstats.Health;
+        //CurrentHealth = unitstats.Health; // TODO: dont crash when this happens
         Price = price;
     }
 

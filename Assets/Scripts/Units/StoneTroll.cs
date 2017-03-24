@@ -1,4 +1,5 @@
-﻿using UnityEngine.Rendering;
+﻿using Assets.Scripts.Abilities;
+using UnityEngine.Rendering;
 
 namespace Units
 {
@@ -36,7 +37,7 @@ namespace Units
 
             Moves = new Move[] { new TreeSwing(), new BoulderThrow()};
             Price = new Cost(100, 10, 5, 0, 0);
-            //ability = new StoneSkin(); TODO: make ability
+            Ability = new StoneSkin();
         }
     }
 }
