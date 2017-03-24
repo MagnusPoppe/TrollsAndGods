@@ -6,8 +6,9 @@ using MapGenerator;
 /// <summary>
 /// Class handles the graphical side of combat
 /// </summary>
-public class GraphicalBattlefield : MonoBehaviour {
-
+public class GraphicalBattlefield : MonoBehaviour
+{
+    private GameManager gm;
     BattleField battleField;
     int[,] canwalk;
     int width, height;
@@ -35,6 +36,7 @@ public class GraphicalBattlefield : MonoBehaviour {
         hexagon = UnityEngine.Resources.Load<GameObject>("Sprites/Combat/HexagonPrefab");
         parent = GameObject.Find("Combat");
         unit = UnityEngine.Resources.Load<GameObject>("Sprites/Combat/Unit");
+        gm = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 	
 	// Update is called once per frame
@@ -253,6 +255,7 @@ public class GraphicalBattlefield : MonoBehaviour {
     {
         battleField.endCombat();
         InCombat = false;
+        gm.exitCombat(livingAttackers != 0);
     }
 
     /// <summary>

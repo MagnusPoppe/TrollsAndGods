@@ -1096,6 +1096,7 @@ public class GameManager : MonoBehaviour
             //defender won
             removeHero(activeHero);
         }
+        combatWindow.SetActive(false);
         overWorld = true;
         cameraMovement.enabled = true;
     }
