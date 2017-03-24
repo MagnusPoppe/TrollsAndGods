@@ -22,6 +22,10 @@ public class GraphicalBattlefield : MonoBehaviour {
     private GameObject hexagon, unit;
     private const int OFFSETX = -4, OFFSETY = -3;
     private const float ODDOFFSETX = 0.25f, ODDOFFSETY = -0.0f;
+    private List<Vector2> path;
+    private int step;
+    public float animationSpeed = 0.1f;
+    private float towardNextStep;
 
     // Use this for initialization
     void Start () {
@@ -38,15 +42,34 @@ public class GraphicalBattlefield : MonoBehaviour {
         {
             if (IsWalking)
             {
-                //Todo keep moving
+                if (towardNextStep >= 1)
+                {
+                    towardNextStep = 0;
+                    step++;
+                    if (step == path.Count)
+                    {
+                        finishedWalking = true;
+                        isWalking = false;
+                    }
+                }
+                else
+                {
+                    Vector3 destination = field[(int)path[step].x, (int)path[step].y].transform.localPosition;
+                    getUnitWhoseTurnItIs().transform.localPosition = Vector2.MoveTowards(getUnitWhoseTurnItIs().transform.localPosition, destination, animationSpeed);
+                    towardNextStep += animationSpeed;
+                }
             }
             else if (finishedWalking)
             {
+                getUnitWhoseTurnItIs().LogicalPos = new Point(path[step-1]);
+                field[getUnitWhoseTurnItIs().LogicalPos.x, getUnitWhoseTurnItIs().LogicalPos.y]
+                    .GetComponent<GroundGameObject>().IsOccupied = true;
                 if (attacking)
                 {
                     //todo attack animation
                 }
                 nextTurn();
+                finishedWalking = false;
             }
             else if (livingAttackers == 0 || livingDefenders == 0)
             {
@@ -237,53 +260,56 @@ public class GraphicalBattlefield : MonoBehaviour {
     /// <param name="goal">Place on field attacking unit is going to</param>
     public void attackUnit(UnitGameObject defender, Point goal)
     {
-        UnitGameObject activeUnit = initative[whoseTurn];
-        Unit attackingUnit = activeUnit.UnitTree.GetUnits()[activeUnit.PosInUnitTree];
-        //If unit does not need to move, call on method for attacking without moving
-        if (activeUnit.LogicalPos.Equals(goal))
+        if (!isWalking && !finishedWalking)
         {
-            battleField.attackWithoutMoving(activeUnit.LogicalPos, defender.LogicalPos, false);
-            //todo trigger animation
-            nextTurn();
-        }
-        else
-        {
-            //checks if unit is ranged, and if it has ammo. if not move and attack
-            if (attackingUnit.IsRanged)
+            UnitGameObject activeUnit = initative[whoseTurn];
+            Unit attackingUnit = activeUnit.UnitTree.GetUnits()[activeUnit.PosInUnitTree];
+            //If unit does not need to move, call on method for attacking without moving
+            if (activeUnit.LogicalPos.Equals(goal))
             {
-                Ranged r = (Ranged)attackingUnit;
-                if (r.Ammo > 0)
-                {
-                    battleField.attackWithoutMoving(activeUnit.LogicalPos, defender.LogicalPos, true);
-                    //todo trigger animation
-                    nextTurn();
-                }
-                else
-                {
-                    List<Vector2> path = battleField.UnitMoveAndAttack(activeUnit.LogicalPos, goal, defender.LogicalPos);
-                    BeginWalking(path);
-                    attacking = true;
-                }
+                battleField.attackWithoutMoving(activeUnit.LogicalPos, defender.LogicalPos, false);
+                //todo trigger animation
+                nextTurn();
             }
             else
             {
-                List<Vector2> path = battleField.UnitMoveAndAttack(activeUnit.LogicalPos, goal, defender.LogicalPos);
-                BeginWalking(path);
-                attacking = true;
+                //checks if unit is ranged, and if it has ammo. if not move and attack
+                if (attackingUnit.IsRanged)
+                {
+                    Ranged r = (Ranged) attackingUnit;
+                    if (r.Ammo > 0)
+                    {
+                        battleField.attackWithoutMoving(activeUnit.LogicalPos, defender.LogicalPos, true);
+                        //todo trigger animation
+                        nextTurn();
+                    }
+                    else
+                    {
+                        path = battleField.UnitMoveAndAttack(activeUnit.LogicalPos, goal, defender.LogicalPos);
+                        BeginWalking();
+                        attacking = true;
+                    }
+                }
+                else
+                {
+                    path = battleField.UnitMoveAndAttack(activeUnit.LogicalPos, goal, defender.LogicalPos);
+                    BeginWalking();
+                    attacking = true;
+                }
             }
+            //Updates living units counts
+            if (defender.UnitTree.getUnitAmount(defender.PosInUnitTree) == 0)
+            {
+                if (defender.AttackingSide) livingAttackers--;
+                else livingDefenders--;
+            }
+            if (activeUnit.UnitTree.getUnitAmount(activeUnit.PosInUnitTree) == 0)
+            {
+                if (activeUnit.AttackingSide) livingAttackers--;
+                else livingDefenders--;
+            }
+            Debug.Log(livingAttackers + " " + livingDefenders);
         }
-        //Updates living units counts
-        if (defender.UnitTree.getUnitAmount(defender.PosInUnitTree) == 0)
-        {
-            if (defender.AttackingSide) livingAttackers--;
-            else livingDefenders--;
-        }
-        if (activeUnit.UnitTree.getUnitAmount(activeUnit.PosInUnitTree) == 0)
-        {
-            if (activeUnit.AttackingSide) livingAttackers--;
-            else livingDefenders--;
-        }
-        Debug.Log(livingAttackers + " " + livingDefenders);
     }
 
     /// <summary>
@@ -292,22 +318,24 @@ public class GraphicalBattlefield : MonoBehaviour {
     /// <param name="goal">Destination</param>
     public void moveUnit(Point goal)
     {
-        UnitGameObject activeUnit = initative[whoseTurn];
-        List<Vector2> path = battleField.unitMove(activeUnit.LogicalPos, goal);
-        BeginWalking(path);
+        if (!finishedWalking && !isWalking)
+        {
+            UnitGameObject activeUnit = initative[whoseTurn];
+            path = battleField.unitMove(activeUnit.LogicalPos, goal);
+            BeginWalking();
+        }
     }
 
     /// <summary>
     /// Begins walking animation
     /// </summary>
     /// <param name="path">Path</param>
-    public void BeginWalking(List<Vector2> path)
+    public void BeginWalking()
     {
-        //todo begin walking
-        Vector3 destination = field[(int)path[path.Count - 1].x, (int)path[path.Count - 1].y].transform.localPosition;
-        getUnitWhoseTurnItIs().transform.localPosition = destination;
-        getUnitWhoseTurnItIs().LogicalPos = new Point(path[path.Count-1]);
-        nextTurn();
+        field[initative[whoseTurn].LogicalPos.x, initative[whoseTurn].LogicalPos.y].GetComponent<GroundGameObject>()
+            .IsOccupied = false;
+        isWalking = true;
+        step = 0;
     }
 
     /// <summary>
