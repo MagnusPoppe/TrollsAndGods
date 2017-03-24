@@ -30,6 +30,7 @@ namespace TownView
             StationedUnits = new UnitTree();
             RelatedDwellings = new List<Dwelling>();
             Owner = owner;
+            StationedUnits = VisitingUnits = new UnitTree();
         }
 
         // Builds all buildings in a given town
@@ -41,7 +42,7 @@ namespace TownView
             }
         }
 
-        // When in town window, activated by clicking on the heroes
+        // When in town window, activated by clicking on first and then second hero
         public void swapHeroes()
         {
             Hero tmp;
@@ -53,20 +54,43 @@ namespace TownView
                 {
                     StationedHero = VisitingHero;
                     VisitingHero = tmp;
+                    VisitingUnits = visitingHero.Units;
+                    StationedUnits = StationedHero.Units;
                 }
                 // Only stationed hero is found, move him
                 else
                 {
                     VisitingHero = StationedHero;
+                    VisitingUnits = VisitingHero.Units;
                     stationedHero = null;
+                    StationedUnits = null;
                 }
             }
-            // Only visitingHero is found, move him
+            // Only visitingHero is found, move him - but also check if you can merge him into the stationed garrison - if so, perform merge
             else if (VisitingHero != null)
             {
-                StationedHero = VisitingHero;
-                VisitingHero = null;
+                // TODO only swap him if theres room for his army there
+                if(StationedUnits.CanMerge(VisitingUnits))
+                {
+                    // Merges visitingUnits into StationedUnits
+                    StationedUnits.Merge(VisitingUnits);
+                    // Sets the new stationed heroes' army to the newly merged army
+                    StationedHero = VisitingHero;
+                    StationedHero.Units = stationedUnits;
+                    VisitingHero = null;
+                    VisitingUnits = null;
+                }
             }
+        }
+
+        public void swapUnits(Unit unit1, Unit Unit2)
+        {
+            //TODO cannot swap if one of them is visitingunit without visitinghero
+
+            //TODO merge unit2 into unit1 if the same
+
+
+            //TODO swap unit2 and unit1
         }
 
         public bool HasBuiltThisRound
