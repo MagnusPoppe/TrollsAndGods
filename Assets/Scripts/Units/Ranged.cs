@@ -32,8 +32,8 @@ public class Ranged : Unit
     }
 
     public Ranged(string name, Element element, int tier, int faction, UnitStats unitstats,
-        Move[] moves, Ability[] abilities,int ammo, bool meleePenalty
-        ) : base(name, element, tier, faction, unitstats,moves,abilities)
+        Move[] moves, Ability[] abilities,int ammo, bool meleePenalty, Cost price
+        ) : base(name, element, tier, faction, unitstats,moves,abilities, price)
     {
         Ammo = ammo;
         IsRanged = true;

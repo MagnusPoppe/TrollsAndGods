@@ -12,6 +12,7 @@ public class Unit	{
     int currentHealth;
     private Move[] moves;
     private Ability[] abilities;
+    private Cost price;
 
     public Move[] Moves
     {
@@ -129,7 +130,13 @@ public class Unit	{
         }
     }
 
-    public Unit(string name,Element element, int tier, int faction, UnitStats unitstats, Move[] moves, Ability[] abilities)
+    public Cost Price
+    {
+        get { return price; }
+        set { price = value; }
+    }
+
+    public Unit(string name,Element element, int tier, int faction, UnitStats unitstats, Move[] moves, Ability[] abilities, Cost price)
     {
         Name = name;
         Element = element;
@@ -140,6 +147,7 @@ public class Unit	{
         CurrentHealth = unitstats.Health;
         Moves = moves;
         Abilities = abilities;
+        Price = price;
     }
 
     public Unit()

@@ -3,6 +3,7 @@ using TownView;
 using UI;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using Units;
 
 namespace TownView
 {
@@ -42,6 +43,7 @@ namespace TownView
         Text textLeftResource, textRightResource;
         int selectedPayResource;
         int selectedEarnResource;
+        int unitAmount;
 
         public GameObject[] BuildingObjects
         {
@@ -203,10 +205,7 @@ namespace TownView
             {
                 CreateBuildingView();
             }
-            else if(windowType == WindowTypes.MARKETPLACE_CARD)
-            {
-                CreateMarketplaceView();
-            }
+
 
             CreateExitButton();
             frame.transform.parent = cardWindow.transform;
@@ -233,7 +232,90 @@ namespace TownView
 
         private void CreateDwellingView()
         {
+            UnitBuilding unitBuilding = (UnitBuilding) building;
 
+            toBuyObject = unitBuilding.Unit;
+            unitAmount = -1;
+
+            string unitName = unitBuilding.GetUnitName();
+            string unitAttack = unitBuilding.GetAttack() + "";
+            string unitDefense = unitBuilding.GetDefense() + "";
+            string unitMagic = unitBuilding.GetMagic() + "";
+            string unitSpeed = unitBuilding.GetSpeed() + "";
+
+            // TODO: moves
+
+
+            GameObject unitNameObject = new GameObject();
+            unitNameObject.transform.parent = cardWindow.transform;
+            unitNameObject.transform.position = new Vector2(cardWindow.transform.position.x + 0.11f, cardWindow.transform.position.y + 2.34f);
+            unitNameObject.transform.localScale = canvas.transform.localScale;
+            unitNameObject.name = unitName + " name text";
+            Text unitNameText = unitNameObject.AddComponent<Text>();
+            unitNameText.text = unitName;
+            unitNameText.font = UnityEngine.Resources.Load<Font>("Fonts/ARIAL");
+            unitNameText.fontSize = 18;
+            unitNameText.color = Color.black;
+
+            GameObject unitAttackObject = new GameObject();
+            unitAttackObject.transform.parent = cardWindow.transform;
+            unitAttackObject.transform.position = new Vector2(cardWindow.transform.position.x + 2.14f, cardWindow.transform.position.y - 1.25f);
+            unitAttackObject.transform.localScale = canvas.transform.localScale;
+            unitAttackObject.name = unitName + " attack text";
+            Text unitAttackText = unitAttackObject.AddComponent<Text>();
+            unitAttackText.text = unitAttack;
+            unitAttackText.font = UnityEngine.Resources.Load<Font>("Fonts/ARIAL");
+            unitAttackText.fontSize = 18;
+            unitAttackText.color = Color.black;
+
+            GameObject unitDefenseObject = new GameObject();
+            unitDefenseObject.transform.parent = cardWindow.transform;
+            unitDefenseObject.transform.position = new Vector2(cardWindow.transform.position.x + 2.14f, cardWindow.transform.position.y - 1.9f);
+            unitDefenseObject.transform.localScale = canvas.transform.localScale;
+            unitDefenseObject.name = unitName + " defense text"; ;
+            Text unitDefenseText = unitDefenseObject.AddComponent<Text>();
+            unitDefenseText.text = unitDefense;
+            unitDefenseText.font = UnityEngine.Resources.Load<Font>("Fonts/ARIAL");
+            unitDefenseText.fontSize = 18;
+            unitDefenseText.color = Color.black;
+
+            GameObject unitMagicObject = new GameObject();
+            unitMagicObject.transform.parent = cardWindow.transform;
+            unitMagicObject.transform.position = new Vector2(cardWindow.transform.position.x + 2.14f, cardWindow.transform.position.y - 2.5f);
+            unitMagicObject.transform.localScale = canvas.transform.localScale;
+            unitMagicObject.name = unitName + " magic text";
+            Text unitMagicText = unitMagicObject.AddComponent<Text>();
+            unitMagicText.text = unitMagic;
+            unitMagicText.font = UnityEngine.Resources.Load<Font>("Fonts/ARIAL");
+            unitMagicText.fontSize = 18;
+            unitMagicText.color = Color.black;
+
+            GameObject unitSpeedObject = new GameObject();
+            unitSpeedObject.transform.parent = cardWindow.transform;
+            unitSpeedObject.transform.position = new Vector2(cardWindow.transform.position.x + 2.14f, cardWindow.transform.position.y - 3f);
+            unitSpeedObject.transform.localScale = canvas.transform.localScale;
+            unitSpeedObject.name = unitName + " speed text";
+            Text unitSpeedText = unitSpeedObject.AddComponent<Text>();
+            unitSpeedText.text = unitSpeed;
+            unitSpeedText.font = UnityEngine.Resources.Load<Font>("Fonts/ARIAL");
+            unitSpeedText.fontSize = 18;
+            unitSpeedText.color = Color.black;
+
+
+            string prefabPath = "Prefabs/Slider";
+            GameObject sliderObject = Instantiate(UnityEngine.Resources.Load<GameObject>(prefabPath));
+            sliderObject.transform.parent = cardSpriteRenderer.transform;
+            sliderObject.transform.localScale = canvas.transform.localScale;
+            float bottomY = cardSpriteRenderer.bounds.size.y / 4;
+            sliderObject.transform.position = new Vector2(cardSpriteRenderer.transform.position.x, bottomY);
+            slider = sliderObject.GetComponent<Slider>();
+            slider.maxValue = 100; // TODO: max is how many units available in stack
+            slider.onValueChanged.AddListener(adjustUnits);
+        }
+
+        private void adjustUnits(float value)
+        {
+            unitAmount = (int) value;
         }
 
         /// <summary>
@@ -574,7 +656,6 @@ namespace TownView
         /// </summary>
         void CreateBuyButton()
         {
-
             // gets the positions for exit button and buy button if the window type requires it
             buyButtonObject = Instantiate(UnityEngine.Resources.Load<GameObject>("Prefabs/Button"));
             buyButtonObject.transform.parent = cardWindow.transform;
@@ -707,6 +788,15 @@ namespace TownView
                         return;
                         // TODO: what's the graphic feedback for trying to purchase something unpurchasable?
                     }
+                }
+            }
+            else if (toBuyObject.GetType().BaseType.BaseType.Name.Equals("Unit"))
+            {
+                Unit unit = (Unit) toBuyObject;
+
+                if (Player.Wallet.CanPay(unit.Price) && town.StationedUnits.addUnit(unit, unitAmount))
+                {
+                    Player.Wallet.Pay(unit.Price);
                 }
             }
             else if(selectedPayResource >= 0 && selectedEarnResource >= 0)
