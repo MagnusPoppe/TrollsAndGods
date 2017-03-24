@@ -1275,4 +1275,76 @@ public class GameManager : MonoBehaviour
         heroLayer[h.Position.x, h.Position.y] = null;
         reactions[h.Position.x, h.Position.y] = null;
     }
+
+    public void CreateUnitCard(GameObject parent, GameObject canvas, UnitBuilding unitBuilding)
+    {
+        string unitName = unitBuilding.GetUnitName();
+        string unitAttack = unitBuilding.GetAttack() + "";
+        string unitDefense = unitBuilding.GetDefense() + "";
+        string unitMagic = unitBuilding.GetMagic() + "";
+        string unitSpeed = unitBuilding.GetSpeed() + "";
+
+        // TODO: moves
+
+
+        GameObject unitNameObject = new GameObject();
+        unitNameObject.transform.parent = parent.transform;
+        unitNameObject.transform.position = new Vector2(parent.transform.position.x + 0.11f, parent.transform.position.y + 2.34f);
+        unitNameObject.transform.localScale = canvas.transform.localScale;
+        unitNameObject.name = unitName + " name text";
+        Text unitNameText = unitNameObject.AddComponent<Text>();
+        unitNameText.text = unitName;
+        unitNameText.font = UnityEngine.Resources.Load<Font>("Fonts/ARIAL");
+        unitNameText.fontSize = 18;
+        unitNameText.color = Color.black;
+
+        GameObject unitAttackObject = new GameObject();
+        unitAttackObject.transform.parent = parent.transform;
+        unitAttackObject.transform.position = new Vector2(parent.transform.position.x + 2.14f, parent.transform.position.y - 1.25f);
+        unitAttackObject.transform.localScale = canvas.transform.localScale;
+        unitAttackObject.name = unitName + " attack text";
+        Text unitAttackText = unitAttackObject.AddComponent<Text>();
+        unitAttackText.text = unitAttack;
+        unitAttackText.font = UnityEngine.Resources.Load<Font>("Fonts/ARIAL");
+        unitAttackText.fontSize = 18;
+        unitAttackText.color = Color.black;
+
+        GameObject unitDefenseObject = new GameObject();
+        unitDefenseObject.transform.parent = parent.transform;
+        unitDefenseObject.transform.position = new Vector2(parent.transform.position.x + 2.14f, parent.transform.position.y - 1.9f);
+        unitDefenseObject.transform.localScale = canvas.transform.localScale;
+        unitDefenseObject.name = unitName + " defense text"; ;
+        Text unitDefenseText = unitDefenseObject.AddComponent<Text>();
+        unitDefenseText.text = unitDefense;
+        unitDefenseText.font = UnityEngine.Resources.Load<Font>("Fonts/ARIAL");
+        unitDefenseText.fontSize = 18;
+        unitDefenseText.color = Color.black;
+
+        GameObject unitMagicObject = new GameObject();
+        unitMagicObject.transform.parent = parent.transform;
+        unitMagicObject.transform.position = new Vector2(parent.transform.position.x + 2.14f, parent.transform.position.y - 2.5f);
+        unitMagicObject.transform.localScale = canvas.transform.localScale;
+        unitMagicObject.name = unitName + " magic text";
+        Text unitMagicText = unitMagicObject.AddComponent<Text>();
+        unitMagicText.text = unitMagic;
+        unitMagicText.font = UnityEngine.Resources.Load<Font>("Fonts/ARIAL");
+        unitMagicText.fontSize = 18;
+        unitMagicText.color = Color.black;
+
+        GameObject unitSpeedObject = new GameObject();
+        unitSpeedObject.transform.parent = parent.transform;
+        unitSpeedObject.transform.position = new Vector2(parent.transform.position.x + 2.14f, parent.transform.position.y - 3f);
+        unitSpeedObject.transform.localScale = canvas.transform.localScale;
+        unitSpeedObject.name = unitName + " speed text";
+        Text unitSpeedText = unitSpeedObject.AddComponent<Text>();
+        unitSpeedText.text = unitSpeed;
+        unitSpeedText.font = UnityEngine.Resources.Load<Font>("Fonts/ARIAL");
+        unitSpeedText.fontSize = 18;
+        unitSpeedText.color = Color.black;
+    }
+
+    public void SetUnitCardText(GameObject toAttach, GameObject parent, string text, int pos)
+    {
+        
+    }
 }

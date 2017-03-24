@@ -31,17 +31,12 @@ public class Ranged : Unit
         }
     }
 
-    public Ranged(string name, Element element, int tier, int faction, UnitStats unitstats,
-        Move[] moves, Ability[] abilities,int ammo, bool meleePenalty, Cost price
-        ) : base(name, element, tier, faction, unitstats,moves,abilities, price)
+    public Ranged(string name, int tier, int faction,int ammo, bool meleePenalty, int localID
+        ) : base(name, tier, faction, localID)
     {
         Ammo = ammo;
         IsRanged = true;
         MeleePenalty = meleePenalty;
     }
 
-    public Ranged()
-    {
-        IsRanged = true;
-    }
 }

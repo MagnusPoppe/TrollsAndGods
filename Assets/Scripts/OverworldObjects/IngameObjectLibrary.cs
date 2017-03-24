@@ -20,6 +20,7 @@ public class IngameObjectLibrary
         ui = InitializeUI();
         portraits = InitializePortraits();
         resources = InitializeResources();
+        units = InitializeUnits();
     }
 
     /// <summary>
@@ -27,7 +28,7 @@ public class IngameObjectLibrary
     /// </summary>
     public enum Category
     {
-        Debug, Ground, Environment, Dwellings, ResourceBuildings, Heroes, Castle, Town, UI, Portraits, Resources, NOT_FOUND
+        Debug, Ground, Environment, Dwellings, ResourceBuildings, Heroes, Castle, Town, UI, Portraits, Resources, Unit, NOT_FOUND
     }
 
     /// <summary>
@@ -66,6 +67,10 @@ public class IngameObjectLibrary
 
         else if (category == Category.Resources)
             return RESOURCES_START;
+
+        else if (category == Category.Unit)
+            return UNIT_START;
+
 
         else if (category == Category.Debug)
             return DEBUG_SPRITES_START;
@@ -418,6 +423,23 @@ public class IngameObjectLibrary
         return sprites;
     }
 
+    // resources-variabler. resources[] holder alle sprites, resources_START er global startverdi for heroes sprites, resources_COUNT er antall resources sprites
+    Sprite[] units;
+    public const int UNIT_START = UI_START + UI_COUNT;
+    public const int UNIT_COUNT = 0;
+
+    /// <summary>
+    /// Initialiserer et array for å holde på alle resources sprites
+    /// </summary>
+    /// <returns>Array med resources sprites</returns>
+    private Sprite[] InitializeUnits()
+    {
+        Sprite[] sprites = new Sprite[PORTRAIT_COUNT];
+        String path = "Sprites/Unit/";
+
+        return sprites;
+    }
+
     /// <summary>
     /// Gjør global spriteID til lokal spriteID for ground tiles
     /// </summary>
@@ -491,6 +513,11 @@ public class IngameObjectLibrary
     public Sprite GetResources(int spriteID)
     {
         return resources[spriteID - RESOURCES_START];
+    }
+
+    public Sprite GetUnit(int spriteID)
+    {
+        return units[spriteID - UNIT_START];
     }
 
     public Sprite GetDebugSprite(int spriteID)

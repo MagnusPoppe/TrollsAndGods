@@ -1,6 +1,6 @@
 ﻿using Units;
 
-public class Unit	{
+public class Unit : SpriteSystem	{
 
     string name;
     Element element;
@@ -12,7 +12,9 @@ public class Unit	{
     int currentHealth;
     private Move[] moves;
     private Ability[] abilities;
-    private Cost price;
+    Cost price;
+
+    private const IngameObjectLibrary.Category CATEGORY = IngameObjectLibrary.Category.Unit;
 
     public Move[] Moves
     {
@@ -136,24 +138,16 @@ public class Unit	{
         set { price = value; }
     }
 
-    public Unit(string name,Element element, int tier, int faction, UnitStats unitstats, Move[] moves, Ability[] abilities, Cost price)
+    public Unit(string name,int tier, int faction, int localID) : base(localID, CATEGORY)
     {
         Name = name;
-        Element = element;
         Tier = tier;
         Faction = faction;
-        Unitstats = unitstats;
         HaveNotRetaliated = true;
         CurrentHealth = unitstats.Health;
-        Moves = moves;
-        Abilities = abilities;
         Price = price;
     }
 
-    public Unit()
-    {
-        HaveNotRetaliated = true;
-    }
 
     public bool equals(Unit u)
     {
