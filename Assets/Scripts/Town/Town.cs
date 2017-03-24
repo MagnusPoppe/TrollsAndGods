@@ -69,8 +69,16 @@ namespace TownView
             // Only visitingHero is found, move him - but also check if you can merge him into the stationed garrison - if so, perform merge
             else if (VisitingHero != null)
             {
+                if(StationedUnits == null)
+                {
+                    // Sets the new stationed hero and army
+                    StationedHero = VisitingHero;
+                    StationedUnits = StationedHero.Units;
+                    VisitingHero = null;
+                    VisitingUnits = null;
+                }
                 // TODO only swap him if theres room for his army there
-                if(StationedUnits.CanMerge(VisitingUnits))
+                else if(stationedUnits.CanMerge(VisitingUnits))
                 {
                     // Merges visitingUnits into StationedUnits
                     StationedUnits.Merge(VisitingUnits);
