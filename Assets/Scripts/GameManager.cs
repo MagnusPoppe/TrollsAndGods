@@ -94,7 +94,7 @@ public class GameManager : MonoBehaviour
     GameObject[] armyInActiveTown;
     GameObject townArmyCanvas;
     GameObject townWindow;
-    GameObject swapObject;
+    public GameObject swapObject;
     bool overWorld;
 
     // UI
@@ -973,11 +973,11 @@ public class GameManager : MonoBehaviour
         armyInActiveTown[count].transform.parent = townArmyCanvas.transform;
         armyInActiveTown[count].transform.position = topPosition;
         armyInActiveTown[count].transform.localScale /= 4;
-        armyInActiveTown[count].name = "StationaryHero";
         Sprite sprite = defaultsprite;
         if (town.VisitingHero != null)
         {
             sprite = libs.GetPortrait(town.VisitingHero.GetPortraitID());
+            armyInActiveTown[count].name = "StationaryHero";
         }
         Button visitingHeroButton = armyInActiveTown[count].GetComponent<Button>();
         visitingHeroButton.GetComponent<Image>().sprite = sprite;
@@ -996,10 +996,10 @@ public class GameManager : MonoBehaviour
             armyInActiveTown[count].transform.position = topPosition;
             armyInActiveTown[count].transform.localScale /= 4;
             sprite = defaultsprite;
-            armyInActiveTown[count].name = i + "";
             if (town.VisitingUnits.GetUnits()[i] != null)
             {
-                //sprite = libs.GetPortrait(town.VisitingUnits.GetUnits()[i].GetPortraitID()); TODO uncomment
+                sprite = libs.GetUnit(town.VisitingUnits.GetUnits()[i].GetSpriteID());
+                armyInActiveTown[count].name = i + "";
             }
             Button visitingUnitButton = armyInActiveTown[count].GetComponent<Button>();
             visitingUnitButton.GetComponent<Image>().sprite = sprite;
@@ -1016,11 +1016,11 @@ public class GameManager : MonoBehaviour
         armyInActiveTown[count].transform.parent = townArmyCanvas.transform;
         armyInActiveTown[count].transform.position = bottomPosition;
         armyInActiveTown[count].transform.localScale /= 4;
-        armyInActiveTown[count].name = "VisitingHero";
         sprite = defaultsprite;
         if (town.StationedHero != null)
         {
             sprite = libs.GetPortrait(town.StationedHero.GetPortraitID());
+            armyInActiveTown[count].name = "VisitingHero";
         }
         Button stationaryHeroButton = armyInActiveTown[count].GetComponent<Button>();
         stationaryHeroButton.GetComponent<Image>().sprite = sprite;
@@ -1038,11 +1038,11 @@ public class GameManager : MonoBehaviour
             armyInActiveTown[count].transform.parent = townArmyCanvas.transform;
             armyInActiveTown[count].transform.position = bottomPosition;
             armyInActiveTown[count].transform.localScale /= 4;
-            armyInActiveTown[count].name = i+7 + "";
             sprite = defaultsprite;
             if (town.StationedUnits.GetUnits()[i] != null)
             {
-                //sprite = libs.GetPortrait(town.StationedUnits.GetUnits()[i].GetPortraitID()); TODO uncomment
+                sprite = libs.GetUnit(town.StationedUnits.GetUnits()[i].GetSpriteID());
+                armyInActiveTown[count].name = i + 7 + "";
             }
             Button visitingUnitButton = armyInActiveTown[count].GetComponent<Button>();
             visitingUnitButton.GetComponent<Image>().sprite = sprite;
@@ -1064,8 +1064,8 @@ public class GameManager : MonoBehaviour
             armyInActiveTown[count++].GetComponent<Button>().GetComponent<Image>().sprite = defaultsprite;
         for (int i=0; i<7; i++)
         {
-            if (town.StationedUnits.GetUnits()[i] != null)
-                armyInActiveTown[count++].GetComponent<Button>().GetComponent<Image>().sprite = defaultsprite; //libs.GetPortrait(town.StationedUnits.GetUnits()[i].GetPortraitID()); //TODO uncomment
+            if (town.StationedUnits != null && town.StationedUnits.GetUnits()[i] != null)
+                armyInActiveTown[count++].GetComponent<Button>().GetComponent<Image>().sprite = libs.GetUnit(town.StationedUnits.GetUnits()[i].GetSpriteID());
             else
                 armyInActiveTown[count++].GetComponent<Button>().GetComponent<Image>().sprite = defaultsprite;
         }
@@ -1075,8 +1075,8 @@ public class GameManager : MonoBehaviour
             armyInActiveTown[count++].GetComponent<Button>().GetComponent<Image>().sprite = defaultsprite;
         for (int i=0; i<7; i++)
         {
-            if (town.VisitingUnits.GetUnits()[i] != null)
-                armyInActiveTown[count++].GetComponent<Button>().GetComponent<Image>().sprite = defaultsprite; // libs.GetPortrait(town.StationedUnits.GetUnits()[i].GetPortraitID()); //TODO uncomment
+            if (town.VisitingUnits != null && town.VisitingUnits.GetUnits()[i] != null)
+                armyInActiveTown[count++].GetComponent<Button>().GetComponent<Image>().sprite = libs.GetUnit(town.StationedUnits.GetUnits()[i].GetSpriteID());
             else
                 armyInActiveTown[count++].GetComponent<Button>().GetComponent<Image>().sprite = defaultsprite;
         }
@@ -1092,17 +1092,21 @@ public class GameManager : MonoBehaviour
         // If there is a unit or hero there, check if you can swap it
         if (swapObject != null)
         {
-            if(swapObject.Equals(gameObject))
+            if (gameObject.name != null && swapObject != null && swapObject.Equals(gameObject))
             {
+                Debug.Log("Open unit or hero menu for " + gameObject.name);
+                swapObject = null;
                 // Open the units/heroes menu
             }
             else
             {
+                Debug.Log("a");
                 // Check if a hero was chicked or hero was already activated
-                if(gameObject.name.Equals("VisitingHero") || gameObject.name.Equals("StationaryHero") || swapObject.name.Equals("VisitingHero") || swapObject.name.Equals("StationaryHero"))
+                if (gameObject.name.Equals("VisitingHero") || gameObject.name.Equals("StationaryHero") || swapObject.name.Equals("VisitingHero") || swapObject.name.Equals("StationaryHero"))
                 {
+                    Debug.Log("b");
                     // Check if a hero was activated and another hero was clicked
-                    if((gameObject.name.Equals("VisitingHero") && swapObject.name.Equals("StationaryHero")) || (gameObject.name.Equals("StationaryHero") && swapObject.name.Equals("VisitingHero")))
+                    if ((gameObject.name.Equals("VisitingHero") && swapObject.name.Equals("StationaryHero")) || (gameObject.name.Equals("StationaryHero") && swapObject.name.Equals("VisitingHero")))
                     {
                         // Swap heroes logically (also swaps the towns.unittree's)
                         town.swapHeroes();
@@ -1113,13 +1117,14 @@ public class GameManager : MonoBehaviour
                     // If not hero swap, just activate the newly clicked gameobject
                     else
                     {
-                        swapObject = gameObject;
+                        if (gameObject.name != null)
+                            swapObject = gameObject;
                     }
                 }
                 else
                 {
-                    int unitPos1 = Int32.Parse(swapObject.name);
-                    int unitPos2 = Int32.Parse(gameObject.name);
+                    //int unitPos1 = Int32.Parse(swapObject.name);
+                    //int unitPos2 = Int32.Parse(gameObject.name);
                     //town.swapUnits(unitPos1, unitPos2);
                     // TODO Swap two units, også ta for seg swapping mellom stationared og visitingunits, med forbehold om at det finnes en hero i visiting
                 }
@@ -1127,7 +1132,12 @@ public class GameManager : MonoBehaviour
         }
         // If there wasn't a unit or hero there, just activate the one pressed
         else
-            swapObject = gameObject;
+        {
+            if (gameObject.name != null)
+            {
+                swapObject = gameObject;
+            }
+        }
     }
 
     /// <summary>

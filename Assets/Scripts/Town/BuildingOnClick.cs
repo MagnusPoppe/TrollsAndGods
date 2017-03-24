@@ -145,6 +145,8 @@ namespace TownView
             // Gets the type of window associated with the given building
             int windowType = b.UIType();
             
+            gm.swapObject = null;
+            
             // Default set resources to nothing
             selectedEarnResource = selectedPayResource = -1;
 
@@ -168,6 +170,8 @@ namespace TownView
             cardSpriteRenderer = cardWindow.AddComponent<SpriteRenderer>();
             cardSpriteRenderer.sprite = libs.GetUI(card.GetSpriteID());
             cardSpriteRenderer.sortingLayerName = "TownInteractive";
+
+            frame.transform.parent = cardWindow.transform;
 
             // disables colliders in other layers when window is open
             for (int i = 0; i < BuildingObjects.Length; i++)
@@ -269,6 +273,7 @@ namespace TownView
             float rightX = startX;
             
             resourceFrame = new GameObject();
+            resourceFrame.transform.parent = cardWindow.transform;
             resourceFrameImage = resourceFrame.AddComponent<SpriteRenderer>();
             resourceFrameImage.sortingLayerName = "TownInteractive";
             resourceFrameImage.sprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/resource_frame");
@@ -514,9 +519,10 @@ namespace TownView
                 {
                     // Hero imagebutton with listener
                     GameObject heroObject = Instantiate(UnityEngine.Resources.Load<GameObject>("Prefabs/Button"));
-                    heroObject.transform.parent = canvas.transform;
+                    heroObject.transform.parent = cardWindow.transform;
                     heroObject.transform.position = nextPosition;
                     Hero selectedHero = gm.heroes[i];
+                    heroObject.name = gm.heroes[i].Name;
                     heroObject.GetComponent<Image>().sprite = libs.GetPortrait(selectedHero.GetPortraitID());
                     RectTransform rect = heroObject.GetComponent<RectTransform>();
                     rect.sizeDelta = new Vector2(heroObject.GetComponent<Image>().sprite.bounds.size.x, heroObject.GetComponent<Image>().sprite.bounds.size.y);
@@ -720,14 +726,14 @@ namespace TownView
                         // TODO: what's the graphic feedback for trying to purchase something unpurchasable?
                     }
                 }
-            }
-            else if (toBuyObject.GetType().BaseType.BaseType.Name.Equals("Unit"))
-            {
-                Unit unit = (Unit) toBuyObject;
-
-                if (Player.Wallet.CanPay(unit.Price) && town.StationedUnits.addUnit(unit, unitAmount))
+                else if (toBuyObject.GetType().BaseType.BaseType.Name.Equals("Unit"))
                 {
-                    Player.Wallet.Pay(unit.Price);
+                    Unit unit = (Unit)toBuyObject;
+
+                    if (Player.Wallet.CanPay(unit.Price) && town.StationedUnits.addUnit(unit, unitAmount))
+                    {
+                        Player.Wallet.Pay(unit.Price);
+                    }
                 }
             }
             else if(selectedPayResource >= 0 && selectedEarnResource >= 0)
@@ -762,8 +768,9 @@ namespace TownView
                     t.GetComponent<PolygonCollider2D>().enabled = true;
             }
 
-            foreach (GameObject go in GameObject.FindGameObjectsWithTag("toDestroy"))
-                Destroy(go);
+            //foreach (GameObject go in GameObject.FindGameObjectsWithTag("toDestroy"))
+            //    Destroy(go);
+            Destroy(cardWindow);
         }
     }
 
