@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
+using MapGenerator;
 
 /// <summary>
 /// Class handles the graphical side of combat
@@ -64,6 +65,7 @@ public class GraphicalBattlefield : MonoBehaviour {
                 getUnitWhoseTurnItIs().LogicalPos = new Point(path[step-1]);
                 field[getUnitWhoseTurnItIs().LogicalPos.x, getUnitWhoseTurnItIs().LogicalPos.y]
                     .GetComponent<GroundGameObject>().IsOccupied = true;
+                canwalk[getUnitWhoseTurnItIs().LogicalPos.x, getUnitWhoseTurnItIs().LogicalPos.y] = MapMaker.CANNOTWALK;
                 if (attacking)
                 {
                     //todo attack animation
@@ -334,6 +336,7 @@ public class GraphicalBattlefield : MonoBehaviour {
     {
         field[initative[whoseTurn].LogicalPos.x, initative[whoseTurn].LogicalPos.y].GetComponent<GroundGameObject>()
             .IsOccupied = false;
+        canwalk[initative[whoseTurn].LogicalPos.x, initative[whoseTurn].LogicalPos.y] = MapMaker.CANWALK;
         isWalking = true;
         step = 0;
     }
