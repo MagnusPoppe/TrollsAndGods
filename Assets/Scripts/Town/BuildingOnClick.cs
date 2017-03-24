@@ -223,7 +223,7 @@ namespace TownView
         {
             // Add text below building
             GameObject textObject = new GameObject();
-            textObject.transform.parent = GameObject.Find("TownCardPanel").transform;
+            textObject.transform.parent = cardWindow.transform;
             textObject.transform.localScale = canvas.transform.localScale;
             textObject.name = Building.Name + " text";
             Text text = textObject.AddComponent<Text>();
@@ -288,7 +288,7 @@ namespace TownView
 
                 // Top resource imagebutton with listener
                 GameObject resourceObjectPay = Instantiate(UnityEngine.Resources.Load<GameObject>("Prefabs/Button"));
-                resourceObjectPay.transform.parent = GameObject.Find("TownCardPanel").transform;
+                resourceObjectPay.transform.parent = cardWindow.transform;
                 resourceObjectPay.transform.position = nextPositionPay;
                 resourceObjectPay.name = player.Wallet.GetResourceName(i);
                 resourceObjectPay.tag = "toDestroy";
@@ -328,7 +328,6 @@ namespace TownView
                 resourceObjectEarn.transform.position = nextPositionEarn;
                 resourceObjectEarn.name = resourceObjectPay.name;
                 resourceObjectEarn.tag = "toDestroy";
-                //resourceObjectPay.GetComponent<Image>().sprite = libs.GetPortrait(selectedHero.GetPortraitID());
                 RectTransform rectEarn = resourceObjectEarn.GetComponent<RectTransform>();
                 rectEarn.sizeDelta = rectPay.sizeDelta;
                 Button buttonEarn = resourceObjectEarn.GetComponent<Button>();
@@ -419,7 +418,7 @@ namespace TownView
 
                 // Building imagebutton with listener
                 GameObject buildingObject = Instantiate(UnityEngine.Resources.Load<GameObject>("Prefabs/Button"));
-                buildingObject.transform.parent = GameObject.Find("TownCardPanel").transform;
+                buildingObject.transform.parent = cardWindow.transform;
                 buildingObject.transform.position = nextPosition;
                 buildingObject.name = town.Buildings[i].Name;
                 buildingObject.tag = "toDestroy";
@@ -432,13 +431,13 @@ namespace TownView
 
                 // Add text below building
                 GameObject textObject = new GameObject();
-                textObject.transform.parent = GameObject.Find(town.Buildings[i].Name).transform;
+                textObject.transform.parent = buildingObject.transform;
                 textObject.transform.localScale = canvas.transform.localScale;
                 textObject.name = town.Buildings[i].Name + " text";
                 textObject.tag = "toDestroy";
                 Text text = textObject.AddComponent<Text>();
                 text.font = UnityEngine.Resources.Load<Font>("Fonts/ARIAL");
-                text.fontSize = 18;
+                text.fontSize = 16;
                 text.text = town.Buildings[i].Name;
                 text.alignment = TextAnchor.UpperCenter;
                 text.color = Color.black;
@@ -455,7 +454,7 @@ namespace TownView
                     if (town.Buildings[i].Cost.GetResourceTab()[j] != 0)
                     {
                         GameObject imageObject = new GameObject();
-                        imageObject.transform.parent = GameObject.Find(town.Buildings[i].Name).transform;
+                        imageObject.transform.parent = buildingObject.transform;
                         imageObject.name = town.Buildings[i].Cost.ResourceToString(i) + "image";
                         SpriteRenderer sprResource = imageObject.AddComponent<SpriteRenderer>();
                         string spritePath = "Sprites/UI/gold"; // TODO add to IngameObjectLibrary
@@ -468,7 +467,7 @@ namespace TownView
                         else if (j == 4)
                             spritePath = "Sprites/UI/gem";
                         sprResource.sprite = UnityEngine.Resources.Load<Sprite>(spritePath);
-                        sprResource.sortingLayerName = "GUI";
+                        sprResource.sortingLayerName = "TownGUI";
 
                         GameObject textCostObject = new GameObject();
                         textCostObject.transform.parent = GameObject.Find(town.Buildings[i].Name).transform;
@@ -478,10 +477,11 @@ namespace TownView
                         textCost.font = UnityEngine.Resources.Load<Font>("Fonts/ARIAL");
                         textCost.text = town.Buildings[i].Cost.CostToString(j);
                         textCost.color = Color.black;
+                        textCost.fontSize = 12;
                         textCost.alignment = TextAnchor.MiddleLeft;
 
                         imageObject.transform.position = position;
-                        textCostObject.transform.position = new Vector2(position.x + (sprResource.bounds.size.x * 2.3f), position.y);
+                        textCostObject.transform.position = new Vector2(position.x + (sprResource.bounds.size.x * 2.2f), position.y);
                         position = new Vector2(buildingObject.transform.position.x + (buildingObject.GetComponent<Image>().sprite.bounds.size.x / 1.6f), position.y - sprResource.bounds.size.y);
 
                     }
@@ -685,11 +685,20 @@ namespace TownView
                 {
                     Hero buyHero = (Hero)toBuyObject;
                     // checks if the player can afford the hero and if the hero is alive
-                    if (Player.Wallet.CanPay(buyHero.Cost) && Player.addHero(buyHero))
+                    if (Player.Wallet.CanPay(buyHero.Cost) && (town.StationedHero == null || town.VisitingHero == null) && Player.addHero(buyHero))
                     {
                         Player.Wallet.Pay(buyHero.Cost);
-                        Debug.Log("Bought the hero" + buyHero.Name); // TODO remove
+                        Debug.Log("Bought the hero" + buyHero.Name);
+                        
+                        if (town.StationedHero == null)
+                            town.StationedHero = buyHero;
+                        else if (town.VisitingHero == null)
+                            town.VisitingHero = buyHero;
+                        // TODO PLACE HERO ON MAP
                         DestroyObjects();
+
+                        gm.ReDrawArmyInTown(town);
+                        gm.updateResourceText();
                     }
                     else
                         Debug.Log("Not enough gold");
