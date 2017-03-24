@@ -104,6 +104,7 @@ namespace TownView
             libs = GameManager.libs;
             GameObject go = GameObject.Find("GameManager");
             gm = go.GetComponent<GameManager>();
+
         }
 
         // Fade effet when hovering a building in the town view
@@ -208,7 +209,7 @@ namespace TownView
 
 
             CreateExitButton();
-            frame.transform.parent = cardWindow.transform;
+            frame.transform.parent = GameObject.Find("TownCardPanel").transform;
         }
 
         /// <summary>
@@ -218,7 +219,7 @@ namespace TownView
         {
             // Add text below building
             GameObject textObject = new GameObject();
-            textObject.transform.parent = cardWindow.transform;
+            textObject.transform.parent = GameObject.Find("TownCardPanel").transform;
             textObject.transform.localScale = canvas.transform.localScale;
             textObject.name = Building.Name + " text";
             Text text = textObject.AddComponent<Text>();
@@ -246,7 +247,7 @@ namespace TownView
             float bottomY = cardSpriteRenderer.bounds.size.y / 4;
             sliderObject.transform.position = new Vector2(cardSpriteRenderer.transform.position.x, bottomY);
             slider = sliderObject.GetComponent<Slider>();
-            slider.maxValue = unitBuilding.UnitsPresent; // TODO: max is how many units available in stack
+            slider.maxValue = unitBuilding.UnitsPresent; // 
             slider.onValueChanged.AddListener(adjustUnits);
         }
 
@@ -282,7 +283,7 @@ namespace TownView
 
                 // Top resource imagebutton with listener
                 GameObject resourceObjectPay = Instantiate(UnityEngine.Resources.Load<GameObject>("Prefabs/Button"));
-                resourceObjectPay.transform.parent = cardWindow.transform;
+                resourceObjectPay.transform.parent = GameObject.Find("TownCardPanel").transform;
                 resourceObjectPay.transform.position = nextPositionPay;
                 resourceObjectPay.name = player.Wallet.GetResourceName(i);
                 resourceObjectPay.tag = "toDestroy";
@@ -318,10 +319,11 @@ namespace TownView
 
                 // Bottom resource with listener
                 GameObject resourceObjectEarn = Instantiate(UnityEngine.Resources.Load<GameObject>("Prefabs/Button"));
-                resourceObjectEarn.transform.parent = cardWindow.transform;
+                resourceObjectEarn.transform.parent = GameObject.Find("TownCardPanel").transform;
                 resourceObjectEarn.transform.position = nextPositionEarn;
                 resourceObjectEarn.name = resourceObjectPay.name;
                 resourceObjectEarn.tag = "toDestroy";
+                //resourceObjectPay.GetComponent<Image>().sprite = libs.GetPortrait(selectedHero.GetPortraitID());
                 RectTransform rectEarn = resourceObjectEarn.GetComponent<RectTransform>();
                 rectEarn.sizeDelta = rectPay.sizeDelta;
                 Button buttonEarn = resourceObjectEarn.GetComponent<Button>();
@@ -412,7 +414,7 @@ namespace TownView
 
                 // Building imagebutton with listener
                 GameObject buildingObject = Instantiate(UnityEngine.Resources.Load<GameObject>("Prefabs/Button"));
-                buildingObject.transform.parent = cardWindow.transform;
+                buildingObject.transform.parent = GameObject.Find("TownCardPanel").transform;
                 buildingObject.transform.position = nextPosition;
                 buildingObject.name = town.Buildings[i].Name;
                 buildingObject.tag = "toDestroy";
@@ -425,13 +427,13 @@ namespace TownView
 
                 // Add text below building
                 GameObject textObject = new GameObject();
-                textObject.transform.parent = buildingObject.transform;
+                textObject.transform.parent = GameObject.Find(town.Buildings[i].Name).transform;
                 textObject.transform.localScale = canvas.transform.localScale;
                 textObject.name = town.Buildings[i].Name + " text";
                 textObject.tag = "toDestroy";
                 Text text = textObject.AddComponent<Text>();
                 text.font = UnityEngine.Resources.Load<Font>("Fonts/ARIAL");
-                text.fontSize = 16;
+                text.fontSize = 18;
                 text.text = town.Buildings[i].Name;
                 text.alignment = TextAnchor.UpperCenter;
                 text.color = Color.black;
@@ -448,7 +450,7 @@ namespace TownView
                     if (town.Buildings[i].Cost.GetResourceTab()[j] != 0)
                     {
                         GameObject imageObject = new GameObject();
-                        imageObject.transform.parent = buildingObject.transform;
+                        imageObject.transform.parent = GameObject.Find(town.Buildings[i].Name).transform;
                         imageObject.name = town.Buildings[i].Cost.ResourceToString(i) + "image";
                         SpriteRenderer sprResource = imageObject.AddComponent<SpriteRenderer>();
                         string spritePath = "Sprites/UI/gold"; // TODO add to IngameObjectLibrary
@@ -461,21 +463,20 @@ namespace TownView
                         else if (j == 4)
                             spritePath = "Sprites/UI/gem";
                         sprResource.sprite = UnityEngine.Resources.Load<Sprite>(spritePath);
-                        sprResource.sortingLayerName = "TownGUI";
+                        sprResource.sortingLayerName = "GUI";
 
                         GameObject textCostObject = new GameObject();
-                        textCostObject.transform.parent = buildingObject.transform;
+                        textCostObject.transform.parent = GameObject.Find(town.Buildings[i].Name).transform;
                         textCostObject.transform.localScale = canvas.transform.localScale;
                         textCostObject.name = town.Buildings[i].Cost.ToString(j);
                         Text textCost = textCostObject.AddComponent<Text>();
                         textCost.font = UnityEngine.Resources.Load<Font>("Fonts/ARIAL");
                         textCost.text = town.Buildings[i].Cost.CostToString(j);
-                        textCost.fontSize = 12;
                         textCost.color = Color.black;
                         textCost.alignment = TextAnchor.MiddleLeft;
 
                         imageObject.transform.position = position;
-                        textCostObject.transform.position = new Vector2(position.x + (sprResource.bounds.size.x * 2.2f), position.y);
+                        textCostObject.transform.position = new Vector2(position.x + (sprResource.bounds.size.x * 2.3f), position.y);
                         position = new Vector2(buildingObject.transform.position.x + (buildingObject.GetComponent<Image>().sprite.bounds.size.x / 1.6f), position.y - sprResource.bounds.size.y);
 
                     }
@@ -678,18 +679,11 @@ namespace TownView
                 {
                     Hero buyHero = (Hero)toBuyObject;
                     // checks if the player can afford the hero and if the hero is alive
-                    if (Player.Wallet.CanPay(buyHero.Cost) && (town.StationedHero == null || town.VisitingHero == null))
+                    if (Player.Wallet.CanPay(buyHero.Cost) && Player.addHero(buyHero))
                     {
                         Player.Wallet.Pay(buyHero.Cost);
                         Debug.Log("Bought the hero" + buyHero.Name); // TODO remove
-                        Player.addHero(buyHero);
-                        if (town.StationedHero == null)
-                            town.StationedHero = buyHero;
-                        else if (town.VisitingHero == null)
-                            town.VisitingHero = buyHero;
                         DestroyObjects();
-                        gm.ReDrawArmyInTown(town);
-                        gm.updateResourceText();
                     }
                     else
                         Debug.Log("Not enough gold");
