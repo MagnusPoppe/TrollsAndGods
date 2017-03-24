@@ -92,6 +92,7 @@ public class GameManager : MonoBehaviour
     // Town
     GameObject[] buildingsInActiveTown;
     GameObject[] armyInActiveTown;
+    GameObject townArmyCanvas;
     GameObject townWindow;
     GameObject swapObject;
     bool overWorld;
@@ -118,6 +119,10 @@ public class GameManager : MonoBehaviour
         heroes[2] = new JackMcBlackwell();
         heroes[3] = new JohnyMudbone();
         heroes[4] = new Mantooth();
+
+        // 7 + 7 units + 2 heroes in town view
+        armyInActiveTown = new GameObject[16];
+        townArmyCanvas = GameObject.Find("ArmyCanvas");
         swapObject = null;
 
         parentToMarkers = new GameObject();
@@ -912,8 +917,6 @@ public class GameManager : MonoBehaviour
 
         // Creates a GameObject array for the new building
         buildingsInActiveTown = new GameObject[town.Buildings.Length];
-        // 7 + 7 units + 2 heroes in town view
-        armyInActiveTown = new GameObject[16];
 
        town.BuildAll(town);
 
@@ -928,7 +931,7 @@ public class GameManager : MonoBehaviour
         }
 
         // Draw bar for town's heroes and units
-        DrawTownArmy(town, sr);
+        DrawTownArmy(town);
     }
 
     public void DrawBuilding(Town town, Building building, int i)
@@ -958,40 +961,48 @@ public class GameManager : MonoBehaviour
     /// </summary>
     /// <param name="town">The town from which to get the heroes and towns</param>
     /// <param name="sr">The spriterenderer of the town, used to find positioning of objects</param>
-    public void DrawTownArmy(Town town, SpriteRenderer sr)
+    public void DrawTownArmy(Town town)
     {
-        Vector2 startPosition = new Vector2(sr.transform.position.x * 0.9f, sr.transform.position.y * 1.85f);
+        Sprite defaultsprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/NoUnit");
+        Vector2 startPosition = new Vector2(townArmyCanvas.transform.position.x * 0.9f, townArmyCanvas.transform.position.y * 1.85f);
 
         Vector2 topPosition = startPosition;
 
-        GameObject canvas = GameObject.Find("Canvas");
         int count = 0;
         armyInActiveTown[count] = Instantiate(UnityEngine.Resources.Load<GameObject>("Prefabs/Button"));
-        armyInActiveTown[count].transform.parent = canvas.transform;
+        armyInActiveTown[count].transform.parent = townArmyCanvas.transform;
         armyInActiveTown[count].transform.position = topPosition;
         armyInActiveTown[count].transform.localScale /= 4;
-        //armyInActiveTown[count].name = heroes[0].Name; //TODO
         armyInActiveTown[count].name = "StationaryHero";
+        Sprite sprite = defaultsprite;
+        if (town.VisitingHero != null)
+        {
+            sprite = libs.GetPortrait(town.VisitingHero.GetPortraitID());
+        }
         Button visitingHeroButton = armyInActiveTown[count].GetComponent<Button>();
-        visitingHeroButton.GetComponent<Image>().sprite = libs.GetPortrait(heroes[0].GetPortraitID());  //TODO town.VisitingHero.GetSpriteID() 
-        visitingHeroButton.GetComponent<Image>().sprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/NoUnit"); // TODO EMPTY IMAGE WHEN NO HERO OR UNIT
+        visitingHeroButton.GetComponent<Image>().sprite = sprite;
         GameObject swapVisitingHero = armyInActiveTown[count];
         visitingHeroButton.onClick.AddListener(() => SwapArmy(swapVisitingHero, town));
         RectTransform rectVisitingHero = armyInActiveTown[count].GetComponent<RectTransform>();
         rectVisitingHero.sizeDelta = new Vector2(armyInActiveTown[count].GetComponent<Image>().sprite.bounds.size.x, armyInActiveTown[count].GetComponent<Image>().sprite.bounds.size.y) * 2;
         count++;
 
-        for (int i = 0; i < 7; i++) //foreach(Unit units in heroes[0].Units.GetUnits())
+        for (int i = 0; i < 7; i++)
         {
             topPosition = new Vector2(topPosition.x + (armyInActiveTown[0].GetComponent<Image>().sprite.bounds.size.x / 2), topPosition.y);
 
             armyInActiveTown[count] = Instantiate(UnityEngine.Resources.Load<GameObject>("Prefabs/Button"));
-            armyInActiveTown[count].transform.parent = canvas.transform;
+            armyInActiveTown[count].transform.parent = townArmyCanvas.transform;
             armyInActiveTown[count].transform.position = topPosition;
             armyInActiveTown[count].transform.localScale /= 4;
-            //visitingUnitObject.name = heroes[0].Units.GetUnits()[i].Name; //TODO
+            sprite = defaultsprite;
+            armyInActiveTown[count].name = i + "";
+            if (town.VisitingUnits.GetUnits()[i] != null)
+            {
+                //sprite = libs.GetPortrait(town.VisitingUnits.GetUnits()[i].GetPortraitID()); TODO uncomment
+            }
             Button visitingUnitButton = armyInActiveTown[count].GetComponent<Button>();
-            visitingUnitButton.GetComponent<Image>().sprite = libs.GetPortrait(heroes[2 + (i % 2)].GetPortraitID());  //TODO town.VisitingHero.Units.GetUnits()[i].GetSpriteId()
+            visitingUnitButton.GetComponent<Image>().sprite = sprite;
             GameObject swapObject = armyInActiveTown[count];
             visitingUnitButton.onClick.AddListener(() => SwapArmy(swapObject, town));
             RectTransform rectVisitingUnit = armyInActiveTown[count].GetComponent<RectTransform>();
@@ -1002,35 +1013,72 @@ public class GameManager : MonoBehaviour
         Vector2 bottomPosition = startPosition = new Vector2(startPosition.x, startPosition.y - (visitingHeroButton.GetComponent<Image>().sprite.bounds.size.y / 2));
 
         armyInActiveTown[count] = Instantiate(UnityEngine.Resources.Load<GameObject>("Prefabs/Button"));
-        armyInActiveTown[count].transform.parent = canvas.transform;
+        armyInActiveTown[count].transform.parent = townArmyCanvas.transform;
         armyInActiveTown[count].transform.position = bottomPosition;
         armyInActiveTown[count].transform.localScale /= 4;
-        //armyInActiveTown[count].name = heroes[1].Name;
         armyInActiveTown[count].name = "VisitingHero";
+        sprite = defaultsprite;
+        if (town.StationedHero != null)
+        {
+            sprite = libs.GetPortrait(town.StationedHero.GetPortraitID());
+        }
         Button stationaryHeroButton = armyInActiveTown[count].GetComponent<Button>();
-        stationaryHeroButton.GetComponent<Image>().sprite = libs.GetPortrait(heroes[1].GetPortraitID()); // TODO town.StationedHero.GetSpriteID() 
+        stationaryHeroButton.GetComponent<Image>().sprite = sprite;
         GameObject swapStationaryHero = armyInActiveTown[count];
         stationaryHeroButton.onClick.AddListener(() => SwapArmy(swapStationaryHero, town));
         RectTransform rectStationaryHero = armyInActiveTown[count].GetComponent<RectTransform>();
         rectStationaryHero.sizeDelta = new Vector2(armyInActiveTown[count].GetComponent<Image>().sprite.bounds.size.x, armyInActiveTown[count].GetComponent<Image>().sprite.bounds.size.y) * 2;
         count++;
 
-        for (int i = 0; i < 7; i++)//foreach(Unit units in heroes[0].Units.GetUnits())
+        for (int i = 0; i < 7; i++)
         {
             bottomPosition = new Vector2(bottomPosition.x + (armyInActiveTown[0].GetComponent<Image>().sprite.bounds.size.x / 2), bottomPosition.y);
 
             armyInActiveTown[count] = Instantiate(UnityEngine.Resources.Load<GameObject>("Prefabs/Button"));
-            armyInActiveTown[count].transform.parent = canvas.transform;
+            armyInActiveTown[count].transform.parent = townArmyCanvas.transform;
             armyInActiveTown[count].transform.position = bottomPosition;
             armyInActiveTown[count].transform.localScale /= 4;
-            //visitingUnitObject.name = heroes[0].Units.GetUnits()[i].Name; //TODO
+            armyInActiveTown[count].name = i+7 + "";
+            sprite = defaultsprite;
+            if (town.StationedUnits.GetUnits()[i] != null)
+            {
+                //sprite = libs.GetPortrait(town.StationedUnits.GetUnits()[i].GetPortraitID()); TODO uncomment
+            }
             Button visitingUnitButton = armyInActiveTown[count].GetComponent<Button>();
-            visitingUnitButton.GetComponent<Image>().sprite = libs.GetPortrait(heroes[3 + (i % 2)].GetPortraitID());  //TODO town.StationedHero.Units.GetUnits()[i].GetSpriteId()
+            visitingUnitButton.GetComponent<Image>().sprite = sprite;
             GameObject swapObject = armyInActiveTown[count];
             visitingUnitButton.onClick.AddListener(() => SwapArmy(swapObject, town));
             RectTransform rectVisitingUnit = armyInActiveTown[count].GetComponent<RectTransform>();
             rectVisitingUnit.sizeDelta = new Vector2(armyInActiveTown[count].GetComponent<Image>().sprite.bounds.size.x, armyInActiveTown[count].GetComponent<Image>().sprite.bounds.size.y) * 2;
             count++;
+        }
+    }
+
+    public void ReDrawArmyInTown(Town town)
+    {
+        Sprite defaultsprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/NoUnit");
+        int count = 0;
+        if (town.VisitingHero != null)
+            armyInActiveTown[count++].GetComponent<Button>().GetComponent<Image>().sprite = libs.GetPortrait(town.VisitingHero.GetPortraitID());
+        else
+            armyInActiveTown[count++].GetComponent<Button>().GetComponent<Image>().sprite = defaultsprite;
+        for (int i=0; i<7; i++)
+        {
+            if (town.StationedUnits.GetUnits()[i] != null)
+                armyInActiveTown[count++].GetComponent<Button>().GetComponent<Image>().sprite = defaultsprite; //libs.GetPortrait(town.StationedUnits.GetUnits()[i].GetPortraitID()); //TODO uncomment
+            else
+                armyInActiveTown[count++].GetComponent<Button>().GetComponent<Image>().sprite = defaultsprite;
+        }
+        if (town.StationedHero != null)
+            armyInActiveTown[count++].GetComponent<Button>().GetComponent<Image>().sprite = libs.GetPortrait(town.StationedHero.GetPortraitID());
+        else
+            armyInActiveTown[count++].GetComponent<Button>().GetComponent<Image>().sprite = defaultsprite;
+        for (int i=0; i<7; i++)
+        {
+            if (town.VisitingUnits.GetUnits()[i] != null)
+                armyInActiveTown[count++].GetComponent<Button>().GetComponent<Image>().sprite = defaultsprite; // libs.GetPortrait(town.StationedUnits.GetUnits()[i].GetPortraitID()); //TODO uncomment
+            else
+                armyInActiveTown[count++].GetComponent<Button>().GetComponent<Image>().sprite = defaultsprite;
         }
     }
 
@@ -1056,27 +1104,10 @@ public class GameManager : MonoBehaviour
                     // Check if a hero was activated and another hero was clicked
                     if((gameObject.name.Equals("VisitingHero") && swapObject.name.Equals("StationaryHero")) || (gameObject.name.Equals("StationaryHero") && swapObject.name.Equals("VisitingHero")))
                     {
-                        // Swap heroes visually
-                        Vector2 destination = gameObject.transform.position;
-                        gameObject.transform.position = swapObject.transform.position;
-                        swapObject.transform.position = destination;
-
-                        // Swap heroes logically
+                        // Swap heroes logically (also swaps the towns.unittree's)
                         town.swapHeroes();
-
-                        // Swap units in heroes armies
-                        for (int i=1; i<8; i++)
-                        {
-                            int toPos = i + 8;
-                            // Swap units visually
-                            destination = armyInActiveTown[toPos].transform.position;
-                            armyInActiveTown[toPos].transform.position = armyInActiveTown[i].transform.position;
-                            armyInActiveTown[i].transform.position = destination;
-
-                            // Swap units logically in town
-                            town.StationedUnits.swapUnits(i-1, toPos-1); // TODO SHOULD TOWN.STATIONEDUNITS BE THE HEROES.UNITS ? AND ALSO LATER ADD LOGIC FOR SWAPPING UNITS IN HERO MENU CANVAS
-                            // TODO CANT SWAP TO VISITING IF NO HERO
-                        }
+                        // Redraw visuals
+                        ReDrawArmyInTown(town);
                         swapObject = null;
                     }
                     // If not hero swap, just activate the newly clicked gameobject
@@ -1087,11 +1118,10 @@ public class GameManager : MonoBehaviour
                 }
                 else
                 {
-                    // Swap two units
-                    Vector2 destination = gameObject.transform.position;
-                    gameObject.transform.position = swapObject.transform.position;
-                    swapObject.transform.position = destination;
-                    swapObject = null;
+                    int unitPos1 = Int32.Parse(swapObject.name);
+                    int unitPos2 = Int32.Parse(gameObject.name);
+                    //town.swapUnits(unitPos1, unitPos2);
+                    // TODO Swap two units, også ta for seg swapping mellom stationared og visitingunits, med forbehold om at det finnes en hero i visiting
                 }
             }
         }
@@ -1105,12 +1135,22 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void DestroyGameObjectsInTown()
     {
+        DestroyBuildingsInTown();
+        DestroyArmyInTown();
+    }
+
+    public void DestroyBuildingsInTown()
+    {
         foreach (GameObject building in buildingsInActiveTown)
         {
             if (building != null)
                 Destroy(building);
         }
-        foreach(GameObject gameObject in armyInActiveTown)
+    }
+
+    public void DestroyArmyInTown()
+    {
+        foreach (GameObject gameObject in armyInActiveTown)
         {
             if (gameObject != null)
                 Destroy(gameObject);
