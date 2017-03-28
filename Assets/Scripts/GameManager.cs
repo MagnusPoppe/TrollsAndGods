@@ -87,6 +87,7 @@ public class GameManager : MonoBehaviour
     bool lastStep;
     int tilesWalking;
     bool newStep;
+    Point destination;
 
     public Hero[] heroes = new Hero[5];
 
@@ -134,34 +135,15 @@ public class GameManager : MonoBehaviour
         libs = new IngameObjectLibrary();
 
         // CREATING THE MAP USING MAPMAKER
-        amountOfPlayers = 5;
+        amountOfPlayers = 3;
         players = new Player[amountOfPlayers];
-        // CREATING THE MAP USING MAPMAKER
-        GenerateMap();
         reactions = new Reaction[width, height];
+        GenerateMap();
 
         pathDestYes = UnityEngine.Resources.Load<Sprite>("Sprites/Pointers/pointerDestYes");
         pathDestNo = UnityEngine.Resources.Load<Sprite>("Sprites/Pointers/pointerDestNo");
         pathYes = UnityEngine.Resources.Load<Sprite>("Sprites/Pointers/pointerPathYes");
         pathNo = UnityEngine.Resources.Load<Sprite>("Sprites/Pointers/pointerPathNo");
-
-        // Add reactions to buildings in regions
-        foreach (Region r in regions)
-        {
-            if (r.GetType().Equals(typeof(LandRegion)))
-            {
-                LandRegion lr = (LandRegion)r;
-                lr.makeReactions(reactions);
-
-                // Add reactions to castles and heroes
-                /*if (lr.GetCastle() != null)
-                {
-                    reactions[(int)lr.GetCastle().GetPosition().x, (int)lr.GetCastle().GetPosition().y] = new CastleReact(lr.GetCastle(), lr.GetCastle().GetPosition());
-                }*/
-                if (lr.GetHero() != null)
-                    reactions[lr.GetHero().Position.x, lr.GetHero().Position.y] = new HeroMeetReact(lr.GetHero(), lr.GetHero().Position);
-            }
-        }
 
         // Creating the camera game object and variables
         GameObject tempCameraObject = GameObject.Find("Main Camera");
@@ -171,7 +153,8 @@ public class GameManager : MonoBehaviour
         // Set active Hero
         heroActive = true;
         activeHero = getPlayer(0).Heroes[0];
-        activeHeroObject = heroLayer[(int)activeHero.Position.x, (int)activeHero.Position.y];
+        Debug.Log(activeHero.Position.x);
+        activeHeroObject = heroLayer[activeHero.Position.x, activeHero.Position.y];
 
         // Initialize turn based variables and date
         whoseTurn = 0;
@@ -249,6 +232,7 @@ public class GameManager : MonoBehaviour
                         if (pathMarked && posClicked.Equals(savedClickedPos) && activeHero.CurMovementSpeed > 0)
                         {
                             SetWalking(true);
+                            destination = new Point(activeHero.Path[tilesWalking - 1]);
                         }
                         // Activate clicked path
                         else
@@ -316,6 +300,16 @@ public class GameManager : MonoBehaviour
 
                         if(reactions[x, y] != null)
                         {
+                            if(reactions[x, y].GetType().Equals(typeof(DwellingReact)) || reactions[x, y].GetType().Equals(typeof(CastleReact)))
+                            {
+                                if(reactions[x,y].HasPreReact(activeHero))
+                                {
+                                    stop = true;
+                                }
+                            }
+                            else
+                                stop = true;
+                            /*
                             if (reactions[x, y].GetType().Equals(typeof(HeroMeetReact)))
                             {
                                 HeroMeetReact hmr = (HeroMeetReact)reactions[x, y];
@@ -327,7 +321,7 @@ public class GameManager : MonoBehaviour
                                 HeroMeetReact hmr = (HeroMeetReact)reactions[x, y].PreReaction;
                                 if (hmr.Hero.Player.equals(getPlayer(whoseTurn)))
                                     stop = true;
-                            }
+                            }*/
                         }
                     }
                 }
@@ -340,23 +334,25 @@ public class GameManager : MonoBehaviour
                     // Stop the movement when amount of tiles moved has reached the limit, or walking is disabled
                     if (IsLastStep(stepNumber))
                     {
-                        Vector2 fromPosition = activeHero.Position.ToVector2();
+                        Point fromPosition = activeHero.Position;
                         // Set hero position when he stops walking to his isometric position
                         activeHero.Position = HandyMethods.getIsoTilePos(activeHeroObject.transform.position);
                         activeHero.CurMovementSpeed -= stepNumber;
 
-                        int x = (int)activeHero.Position.x;
-                        int y = (int)activeHero.Position.y;
+                        int x = destination.x;
+                        int y = destination.y;
                         SetWalking(false);
                         SetPathMarked(false);
                         // objectcollision, when final destination is reached
                         if (canWalk[x, y] == MapMaker.TRIGGER)
                         {
+                            Debug.Log(reactions[x,y]);
                             bool heroNotDead = true;
                             
                             // If tile is threatened, perform the additional reaction before the main one
                             if (reactions[x, y].HasPreReact(activeHero))
                             {
+                                Debug.Log(reactions[x, y].PreReaction);
                                 reactions[x, y].PreReact(activeHero);
                                 curReaction = reactions[x, y];
                                 // Remove hero when false, opponent unit or hero when true
@@ -364,6 +360,7 @@ public class GameManager : MonoBehaviour
                             // Only perform the main reaction if the hero didn't die in previous reaction
                             else if (reactions[x, y].React(activeHero))
                             {
+                                Debug.Log(reactions[x, y]);
                                 //bool react = reactions[x, y].React(activeHero);
 
 
@@ -397,18 +394,49 @@ public class GameManager : MonoBehaviour
                         }
                         
                         // Clear the previous table reference to current gameobject
-                        heroLayer[(int)fromPosition.x, (int)fromPosition.y] = null;
+                        heroLayer[fromPosition.x, fromPosition.y] = null;
                         // Also move the gameobject's position in the heroLayer table
-                        heroLayer[(int)activeHero.Position.x, (int)activeHero.Position.y] = activeHeroObject;
+                        heroLayer[activeHero.Position.x, activeHero.Position.y] = activeHeroObject;
                         
-                        /*
-                        // Set origin tile's canWalk 0 or 2 if no reaction there
-                        if (reactions[(int)fromPosition.x, (int)fromPosition.y] == null)
+                        // If destination has reaction, set prereact
+                        if(reactions[(int)activeHero.Position.x, (int)activeHero.Position.y] != null)
+                        {
+                            // if you came from a prereact
+                            if (!reactions[fromPosition.x, fromPosition.y].GetType().Equals(typeof(HeroMeetReact)))
+                            {
+                                reactions[activeHero.Position.x, activeHero.Position.y].PreReaction = reactions[fromPosition.x, fromPosition.y].PreReaction;
+                            }
+                            else
+                                reactions[activeHero.Position.x, activeHero.Position.y].PreReaction = reactions[fromPosition.x, fromPosition.y];
+
+                        }
+                        // Else, set destination reaction to the heroreaction, and make the tile a triggertile
+                        else
+                        {
+
+                            // if you came from a prereact
+                            if(!reactions[fromPosition.x, fromPosition.y].GetType().Equals(typeof(HeroMeetReact)))
+                            {
+                                reactions[activeHero.Position.x, activeHero.Position.y] = reactions[fromPosition.x, fromPosition.y].PreReaction;
+                            }
+                            else
+                            {
+                                reactions[activeHero.Position.x, activeHero.Position.y] = reactions[fromPosition.x, fromPosition.y];
+                            }
+                            canWalk[activeHero.Position.x, activeHero.Position.y] = MapMaker.TRIGGER;
+                        }
+
+                        // If fromposition didn't have prereact, flip canwalk and remove 
+                        if (reactions[(int)fromPosition.x, (int)fromPosition.y].GetType().Equals(typeof(HeroMeetReact)))
+                        {
                             canWalk[(int)fromPosition.x, (int)fromPosition.y] = MapMaker.CANWALK;
-                        // Set destination tile's canWalk to 2
-                        canWalk[(int)activeHero.Position.x, (int)activeHero.Position.y] = MapMaker.TRIGGER;
-                        // TODO also set reactions frompos and topos
-                        */
+                            reactions[fromPosition.x, fromPosition.y] = null;
+                        }
+                        // Else, remove the prereact
+                        else
+                        {
+                            reactions[fromPosition.x, fromPosition.y].PreReaction = null;
+                        }
 
                     }
                 }
@@ -592,6 +620,7 @@ public class GameManager : MonoBehaviour
 	private void GenerateMap()
 	{
 
+
 		mapmaker = new MapMaker(
             players, width, height, 40,                     // Map Properites TODO: fjern parameter 40/length 
 			seed, fillpercentWalkable, smoothIterations,    // BinaryMap Properities
@@ -611,8 +640,27 @@ public class GameManager : MonoBehaviour
 
 	    // Placeing all buildings within the regions.
 	    mapmaker.PlaceBuildings(players);
+        
+        // Add reactions to buildings in regions
+        foreach (Region r in regions)
+        {
+            if (r.GetType().Equals(typeof(LandRegion)))
+            {
+                LandRegion lr = (LandRegion)r;
+                lr.makeReactions(reactions);
+            }
+        }
 
-        if (CanWalkDebugMode) DrawDebugMap(map, canWalk); else DrawMap(map);
+
+        if 
+            (CanWalkDebugMode) DrawDebugMap(map, canWalk);
+        else
+            DrawMap(map);
+        // TODO players shall be able to choose their heroes
+        foreach (Player p in players)
+        {
+            PlaceRandomHero(p, p.Castle[0].GetPosition());
+        }
 
         // Kaster mapmaker
         mapmaker = null;
@@ -1116,6 +1164,9 @@ public class GameManager : MonoBehaviour
                         town.swapHeroes();
                         // Redraw visuals
                         ReDrawArmyInTown(town);
+                        // Hide stationaryhero, show visitinghero
+                        //refreshTownHeroes(town);
+
                         swapObject = null;
                     }
                     // If not hero swap, just activate the newly clicked gameobject
@@ -1140,6 +1191,24 @@ public class GameManager : MonoBehaviour
             // TODO dont activate if no unit/hero at position of gameobject
             swapObject = gameObject;
         }
+    }
+
+    public void refreshTownHeroes(Town town)
+    {
+        if (town.StationedHero != null)
+            heroLayer[town.StationedHero.Position.x, town.StationedHero.Position.y].SetActive(false);
+        if (town.VisitingHero != null)
+            heroLayer[town.VisitingHero.Position.x, town.VisitingHero.Position.y].SetActive(true);
+    }
+    
+    public void showHero(Hero hero)
+    {
+        heroLayer[hero.Position.x, hero.Position.y].SetActive(true);
+    }
+
+    public void hideHero(Hero hero)
+    {
+        heroLayer[hero.Position.x, hero.Position.y].SetActive(false);
     }
 
     /// <summary>
@@ -1309,26 +1378,77 @@ public class GameManager : MonoBehaviour
     /// Removes a hero
     /// </summary>
     /// <param name="h">Hero to be removed</param>
-    public void removeHero(Hero h)
+    public void removeHero(Hero hero)
     {
-        Hero[] heroes = h.Player.Heroes;
-        for (int i = 0; i < heroes.Length; i++)
+        hero.Player.removeHero(hero);
+
+        // Find the hero in the games' herolist, set alive false
+        foreach(Hero h in heroes)
         {
-            if (h.Equals(heroes[i]))
-            {
-                for (int j = i; j < heroes.Length; j++)
-                {
-                    heroes[j] = heroes[j + 1];
-                }
-                break;
-            }
+            if (h.Equals(hero))
+                h.Alive = false;
         }
-        if (activeHero.Equals(h)) activeHero = null;
-        GameObject go = heroLayer[h.Position.x, h.Position.y];
+
+        if (activeHero.Equals(hero))
+            activeHero = null;
+
+        // Remove visually
+        GameObject go = heroLayer[hero.Position.x, hero.Position.y];
         go.SetActive(false);
         Destroy(go);
-        heroLayer[h.Position.x, h.Position.y] = null;
-        reactions[h.Position.x, h.Position.y] = null;
+        heroLayer[hero.Position.x, hero.Position.y] = null;
+
+        // Remove the reaction, either main reaction or prereaction
+        if (reactions[hero.Position.x, hero.Position.y].GetType().Equals((typeof(HeroMeetReact))))
+            reactions[hero.Position.x, hero.Position.y] = null;
+        else
+            reactions[hero.Position.x, hero.Position.y].PreReaction = null;
+    }
+
+    /// <summary>
+    /// Looks randomly through the hero table, finds a hero that is not alive and calls the placehero method, with the 
+    /// players first castle as position
+    /// </summary>
+    /// <param name="player">The player that gets the new hero</param>
+    public void PlaceRandomHero(Player player, Point position)
+    {
+        bool placed = false;
+        while (!placed)
+        {
+            int random = UnityEngine.Random.Range(0, heroes.Length);
+            if (!heroes[random].Alive)
+            {
+                PlaceHero(player, heroes[random], position);
+                placed = true;
+            }
+        }
+    }
+    
+    /// <summary>
+    /// Places the parameter hero logically and visually
+    /// </summary>
+    /// <param name="player">Player that gets the hero</param>
+    /// <param name="hero">The hero to place</param>
+    /// <param name="position">Where to place him</param>
+    public void PlaceHero(Player player, Hero hero, Point position)
+    {
+        // Create the visual object
+        GameObject heroObject = new GameObject();
+        heroObject.AddComponent<SpriteRenderer>().sprite = libs.GetHero(hero.GetSpriteID());
+        // Add the visual object to the game
+        heroObject.name = "Heroes";
+        Vector2 a = getIsometricPlacement(position.x, position.y, position.y);
+        Point isometricPosition = new Point((int)a.x, (int)a.y);
+        heroLayer[position.x, position.y] = placeSprite(position.x, position.y, isometricPosition.y, libs.GetHero(hero.GetSpriteID()), heroObject);
+        // Add hero to corresponding player
+        player.addHero(hero, position);
+        // Flip canwalk
+        canWalk[position.x, position.y] = 2;
+        // if there's already a castle at the position, place the heroreact under it, else place it normally in reaction tab
+        if (reactions[position.x, position.y] != null)
+            reactions[position.x, position.y].PreReaction = new HeroMeetReact(hero, position);
+        else
+            reactions[position.x, position.y] = new HeroMeetReact(hero, position);
     }
 
     /// <summary>
