@@ -378,6 +378,9 @@ public class GraphicalBattlefield : MonoBehaviour
         flipReachableAndAttackable();
     }
 
+    /// <summary>
+    /// method flips reachable and attackable bools in UnitGameObjects based on possibleMovement and ranged
+    /// </summary>
     private void flipReachableAndAttackable()
     {
         Unit unitWhoseTurnItIs = Initative[whoseTurn].UnitTree.GetUnits()[Initative[whoseTurn].PosInUnitTree];
@@ -392,6 +395,9 @@ public class GraphicalBattlefield : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Flips all enemy units to attackable
+    /// </summary>
     private void flipAttackable()
     {
         for (int i = 0; i < initative.Length; i++)
@@ -403,11 +409,19 @@ public class GraphicalBattlefield : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Updates unit amount text representation
+    /// </summary>
+    /// <param name="ugo">Unit to be updated</param>
     public void updateAmount(UnitGameObject ugo)
     {
         ugo.GetComponentInChildren<TextMesh>().text = ""+ugo.UnitTree.getUnitAmount(ugo.PosInUnitTree);
     }
 
+    /// <summary>
+    /// Gets the unit whose turn it is
+    /// </summary>
+    /// <returns>UnitGameObject whose turn it is</returns>
     public UnitGameObject getUnitWhoseTurnItIs()
     {
         return Initative[WhoseTurn];

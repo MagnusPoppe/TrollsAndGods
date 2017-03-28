@@ -1,7 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/// <summary>
+/// Knows wich compass direction it is from the center of the unit
+/// And can call upon the units method for handling mouseevents while
+/// Sending along the compass direction
+/// </summary>
 public class AttackDirection : MonoBehaviour
 {
     private int direction;
