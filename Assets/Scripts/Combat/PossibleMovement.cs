@@ -90,6 +90,8 @@ public class PossibleMovement
                 cur.Ggo.MarkReachable(! ATTACKABLE);
             }
 
+            if (cur.Ggo.IsOccupied && !cur.Pos.Equals(startingPoint)) continue;
+
             //Finds walkable neighbours
             Node[] neighbours = findNeighboursHex(cur.Pos);
 
