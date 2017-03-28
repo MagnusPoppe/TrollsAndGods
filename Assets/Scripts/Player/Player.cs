@@ -54,8 +54,9 @@ public class Player
                 {
                     if (c.Town.Buildings[i].Built && c.Town.Buildings[i].GetType().BaseType == typeof(UnitBuilding))
                     {
+
                         UnitBuilding unitBuilding = (UnitBuilding) c.Town.Buildings[i];
-                        unitBuilding.UnitsPresent += unitBuilding.UnitsPerWeek;
+                        unitBuilding.AdjustPresentUnits(unitBuilding.UnitsPerWeek);
                     }
                 }
         }

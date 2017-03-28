@@ -364,7 +364,7 @@ public class IngameObjectLibrary
         sprites[0] = UnityEngine.Resources.Load<Sprite>(path + "townhall_Card");
         sprites[1] = UnityEngine.Resources.Load<Sprite>(path + "tavern_card");
         sprites[2] = UnityEngine.Resources.Load<Sprite>(path + "tavern_card");
-        sprites[3] = UnityEngine.Resources.Load<Sprite>(path + "unit_card");
+        sprites[3] = UnityEngine.Resources.Load<Sprite>(path + "tavern_card");
         sprites[4] = UnityEngine.Resources.Load<Sprite>(path + "unit_card");
         sprites[5] = UnityEngine.Resources.Load<Sprite>(path + "building_card");
         sprites[6] = UnityEngine.Resources.Load<Sprite>(path + "exit");
@@ -435,7 +435,9 @@ public class IngameObjectLibrary
     private Sprite[] InitializeUnits()
     {
         Sprite[] sprites = new Sprite[PORTRAIT_COUNT];
-        String path = "Sprites/Unit/";
+        String path = "Sprites/Units/";
+
+        sprites[0] = UnityEngine.Resources.Load<Sprite>(path + "stone_troll_portrait");
 
         return sprites;
     }

@@ -83,12 +83,12 @@ namespace OverworldObjects
             UnitsPerWeek = unitsPerWeek;
         }
 
-        public void populate()
+        public void Populate()
         {
             unitsPresent += unitsPerWeek;
         }
 
-        public void populate(int more)
+        public void Populate(int more)
         {
             unitsPresent += unitsPerWeek * more;
         }
