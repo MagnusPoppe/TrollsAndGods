@@ -285,7 +285,7 @@ public class GraphicalBattlefield : MonoBehaviour
                 if (attackingUnit.IsRanged)
                 {
                     Ranged r = (Ranged) attackingUnit;
-                    if (r.Ammo > 0)
+                    if (r.Ammo > 0 && !r.Threatened)
                     {
                         battleField.attackWithoutMoving(activeUnit.LogicalPos, defender.LogicalPos, true);
                         //todo trigger animation

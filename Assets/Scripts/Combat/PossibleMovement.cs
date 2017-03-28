@@ -48,7 +48,13 @@ public class PossibleMovement
         List<Node> openSet = new List<Node>();
 
         UnitGameObject aktiveUnit = units[startingPoint.x, startingPoint.y].GetComponent<UnitGameObject>();
-
+        Unit u = aktiveUnit.UnitTree.GetUnits()[aktiveUnit.PosInUnitTree];
+        Ranged r = null;
+        if (u.IsRanged)
+        {
+            r = (Ranged)u;
+            r.Threatened = false;
+        }
         //Adds starting node to openSet
         Node s = field[startingPoint.x, startingPoint.y];
         s.WalkedSteps = 0;
@@ -70,6 +76,10 @@ public class PossibleMovement
                 && aktiveUnit.AttackingSide != units[cur.Pos.x, cur.Pos.y].GetComponent<UnitGameObject>().AttackingSide)
             {
                 units[cur.Pos.x, cur.Pos.y].GetComponent<UnitGameObject>().Attackable = true;
+                if (u.IsRanged && cur.WalkedSteps == 1)
+                {
+                    r.Threatened = true;
+                }
             } 
             else if (cur.WalkedSteps <= speed)
             {
