@@ -49,6 +49,8 @@ public class PossibleMovement
         // List for all nodes that are to be evaluvated
         List<Node> openSet = new List<Node>();
 
+        UnitGameObject aktiveUnit = units[startingPoint.x, startingPoint.y].GetComponent<UnitGameObject>();
+
         //Adds starting node to openSet
         Node s = field[startingPoint.x, startingPoint.y];
         s.WalkedSteps = 0;
@@ -64,17 +66,20 @@ public class PossibleMovement
             openSet.Remove(cur);
             cur.InOpenSet = false;
             cur.Evaluvated = true;
+
             //Flips bool for reachable or attackable if unit can reach cur
-            if (cur.Ggo.IsOccupied && units[cur.Pos.x, cur.Pos.y] != null && cur.WalkedSteps <= speed + 1)
+            if (cur.Ggo.IsOccupied && units[cur.Pos.x, cur.Pos.y] != null && cur.WalkedSteps <= speed + 1
+                && aktiveUnit.AttackingSide != units[cur.Pos.x, cur.Pos.y].GetComponent<UnitGameObject>().AttackingSide)
             {
                 units[cur.Pos.x, cur.Pos.y].GetComponent<UnitGameObject>().Attackable = true;
                 cur.Ggo.MarkReachable(ATTACKABLE);
-            }
+            } 
             else if (cur.WalkedSteps <= speed)
             {
                 cur.Ggo.Reachable = true;
                 cur.Ggo.MarkReachable(! ATTACKABLE);
             }
+
             //Finds walkable neighbours
             Node[] neighbours = findNeighboursHex(cur.Pos);
 
@@ -127,6 +132,7 @@ public class PossibleMovement
     /// This method finds neighbours in a hex grid
     /// </summary>
     /// <param name="pos">Current position</param>
+    /// <param name="goal">Goal</param>
     /// <returns>Array with neighbour nodes</returns>
     private Node[] findNeighboursHex(Point pos)
     {
@@ -147,10 +153,9 @@ public class PossibleMovement
                     continue;
                 else if (posY % 2 == 1 && x == 0 && (y == 0 || y == 2))
                     continue;
-                //adds neighbour if you can walk there
+                //adds neighbour if inside bounds
                 if (posX + x - 1 >= 0 && posX + x - 1 < width
-                    && posY + y - 1 >= 0 && posY + y - 1 < height
-                    && (canWalk[posX + x - 1, posY + y - 1] == MapGenerator.MapMaker.CANWALK))
+                    && posY + y - 1 >= 0 && posY + y - 1 < height)
                 {
                     neighbours[logPos] = field[posX + x - 1, posY + y - 1];
                     logPos++;

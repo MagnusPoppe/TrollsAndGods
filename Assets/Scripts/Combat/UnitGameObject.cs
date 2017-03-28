@@ -15,16 +15,16 @@ public class UnitGameObject : MonoBehaviour
 
     private readonly Point[] HEXDIRSEVEN =
     {
-        new Point(-1,-1), new Point(0,-1),
+        new Point(-1,1), new Point(0,1),
         new Point(-1,0), new Point(1,0),
-        new Point(-1,1), new Point(0,1)      
+        new Point(-1,-1), new Point(0,-1)      
     };
 
     private readonly Point[] HEXDIRSODD =
     {
-        new Point(0,-1), new Point(1,-1),
+        new Point(0,1), new Point(1,1),
         new Point(-1,0), new Point(1,0),
-        new Point(0,1), new Point(1,1)
+        new Point(0,-1), new Point(1,-1)
     };
 
     // Use this for initialization

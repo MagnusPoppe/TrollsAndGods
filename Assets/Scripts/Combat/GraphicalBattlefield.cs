@@ -64,10 +64,13 @@ public class GraphicalBattlefield : MonoBehaviour
             }
             else if (finishedWalking)
             {
+                unitsOnField[(int)path[step - 1].x, (int)path[step - 1].y] = unitsOnField[getUnitWhoseTurnItIs().LogicalPos.x, getUnitWhoseTurnItIs().LogicalPos.y];
+                unitsOnField[getUnitWhoseTurnItIs().LogicalPos.x, getUnitWhoseTurnItIs().LogicalPos.y] = null;
                 getUnitWhoseTurnItIs().LogicalPos = new Point(path[step-1]);
                 field[getUnitWhoseTurnItIs().LogicalPos.x, getUnitWhoseTurnItIs().LogicalPos.y]
                     .GetComponent<GroundGameObject>().IsOccupied = true;
                 canwalk[getUnitWhoseTurnItIs().LogicalPos.x, getUnitWhoseTurnItIs().LogicalPos.y] = MapMaker.CANNOTWALK;
+                
                 if (attacking)
                 {
                     //todo attack animation
