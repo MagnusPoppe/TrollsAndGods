@@ -38,7 +38,7 @@ public class GraphicalBattlefield : MonoBehaviour
         unit = UnityEngine.Resources.Load<GameObject>("Sprites/Combat/Unit");
         gm = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
-	
+
 	// Update is called once per frame
 	void Update () {
 		if (InCombat)
@@ -357,6 +357,7 @@ public class GraphicalBattlefield : MonoBehaviour
             for (int y = 0; y < height; y++)
             {
                 field[x, y].GetComponent<GroundGameObject>().Reachable = false;
+                field[x, y].GetComponent<GroundGameObject>().MarkReachable(false);
                 if (unitsOnField[x, y] != null) unitsOnField[x, y].GetComponent<UnitGameObject>().Attackable = false;
             }
         }

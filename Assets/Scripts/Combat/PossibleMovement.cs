@@ -8,6 +8,8 @@ using UnityEngine;
 /// </summary>
 public class PossibleMovement
 {
+    private const bool ATTACKABLE = true;
+
     private Node[,] field;
     private GameObject[,] units;
     private int[,] canWalk;
@@ -80,10 +82,12 @@ public class PossibleMovement
                 {
                     r.Threatened = true;
                 }
+                cur.Ggo.MarkReachable(ATTACKABLE);
             } 
             else if (cur.WalkedSteps <= speed)
             {
                 cur.Ggo.Reachable = true;
+                cur.Ggo.MarkReachable(! ATTACKABLE);
             }
 
             //Finds walkable neighbours
@@ -129,6 +133,7 @@ public class PossibleMovement
             {
                 field[x, y].Evaluvated = false;
                 field[x, y].InOpenSet = false;
+
             }
         }
     }

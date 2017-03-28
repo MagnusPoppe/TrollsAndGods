@@ -66,7 +66,6 @@ namespace OverworldObjects
                     }
                 }
             }
-            //Debug.Log("AVAILABLE=" + debug_numAvailable + ",   NOT_AVAILABLE=" + debug_numNotAvailable +",   MINE_AVAILABLE=" + debug_numMineAvailable);
             return tempMap;
         }
 
