@@ -66,6 +66,23 @@
     }
 
     /// <summary>
+    /// Checks canpay for multiples
+    /// </summary>
+    /// <param name="cost"></param>
+    /// <param name="amount"></param>
+    /// <returns></returns>
+    public bool CanPayForMultiple(Cost cost, int amount)
+    {
+        return this.ResourceTab[(int)type.GOLD] * amount >= cost.GetResource(type.GOLD)
+            && this.ResourceTab[(int)type.WOOD] * amount >= cost.GetResource(type.WOOD)
+            && this.ResourceTab[(int)type.ORE] * amount >= cost.GetResource(type.ORE)
+            && this.ResourceTab[(int)type.CRYSTAL] * amount >= cost.GetResource(type.CRYSTAL)
+            && this.ResourceTab[(int)type.GEM] * amount >= cost.GetResource(type.GEM);
+    }
+
+
+
+    /// <summary>
     /// Pays the specified cost.
     /// </summary>
     /// <param name="cost">Cost.</param>

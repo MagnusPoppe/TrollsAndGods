@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using OverworldObjects;
+using UnityEngine;
 
 namespace TownView
 {
@@ -30,7 +31,8 @@ namespace TownView
             StationedUnits = new UnitTree();
             RelatedDwellings = new List<DwellingBuilding>();
             Owner = owner;
-            StationedUnits = VisitingUnits = new UnitTree();
+            StationedUnits = new UnitTree();
+            VisitingUnits = new UnitTree();
         }
 
         // Builds all buildings in a given town

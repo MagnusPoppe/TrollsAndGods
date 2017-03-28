@@ -1,4 +1,8 @@
-﻿/// <summary>
+﻿using System;
+using System.Diagnostics;
+using Debug = UnityEngine.Debug;
+
+/// <summary>
 /// Class of the units that are kept in a town, or a hero
 /// </summary>
 public class UnitTree
@@ -17,7 +21,7 @@ public class UnitTree
     {
         this.units = units;
     }
-    
+
     /// <summary>
     /// Sets troop amount troop
     /// </summary>
@@ -59,7 +63,7 @@ public class UnitTree
 
         // Perform testMerge of tmp2 into tmp1
         Merge(tmp1, tmp2);
-        
+
         // Can merge if count in the second unittree is less or same as first unittree's openspots
         if (tmp1.OpenSpots() >= tmp2.CountUnits())
         {
@@ -75,7 +79,7 @@ public class UnitTree
     public int OpenSpots()
     {
         int count = 0;
-        for(int i=0; i<GetUnits().Length; i++)
+        for (int i = 0; i < GetUnits().Length; i++)
         {
             if (GetUnits()[i] == null)
                 count++;
@@ -90,14 +94,14 @@ public class UnitTree
     public int CountUnits()
     {
         int count = 0;
-        for(int i=0; i<GetUnits().Length; i++)
+        for (int i = 0; i < GetUnits().Length; i++)
         {
             if (GetUnits()[i] != null)
                 count++;
         }
         return count;
     }
-    
+
     /// <summary>
     /// Merges this army with parameter army
     /// </summary>
@@ -134,10 +138,11 @@ public class UnitTree
 
     public bool addUnit(Unit unit, int amount)
     {
-         // checks for a unit of the same type to stack onto, choosing the first it finds
+
+        // checks for a unit of the same type to stack onto, choosing the first it finds
         for (int i = 0; i < units.Length; i++)
         {
-            if (units[i].GetType() == unit.GetType())
+            if (units[i] != null && units[i].GetType() == unit.GetType())
             {
                 changeAmount(amount, i);
                 return true;
@@ -153,7 +158,6 @@ public class UnitTree
                 return true;
             }
         }
-
         return false;
     }
 
@@ -217,5 +221,24 @@ public class UnitTree
     public int getUnitAmount(int index)
     {
         return unitAmount[index];
+    }
+
+    public override string ToString()
+    {
+        string output = "";
+        for (int i = 0; i < TREESIZE; i++)
+        {
+            if (units[i] != null)
+            {
+                output += i + " {Name=" + units[i].Name + ";Amount=" + unitAmount[i] +
+                          "}";
+            }
+            else
+            {
+                output += i + "{NO UNIT FOUND}";
+            }
+        }
+           
+        return output;
     }
 }

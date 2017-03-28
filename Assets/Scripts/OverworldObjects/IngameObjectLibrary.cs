@@ -435,7 +435,9 @@ public class IngameObjectLibrary
     private Sprite[] InitializeUnits()
     {
         Sprite[] sprites = new Sprite[PORTRAIT_COUNT];
-        String path = "Sprites/Unit/";
+        String path = "Sprites/Units/";
+
+        sprites[0] = UnityEngine.Resources.Load<Sprite>(path + "stone_troll_portrait");
 
         return sprites;
     }

@@ -17,6 +17,8 @@ namespace TownView
         Building building;
         SpriteRenderer spriteRenderer;
         float add = 1f;
+
+        private UnitBuilding currentUnitBuilding; // Clear after exit dwelling screen;
         
         GameObject canvas;
 
@@ -237,12 +239,12 @@ namespace TownView
 
         private void CreateDwellingView()
         {
-            UnitBuilding unitBuilding = (UnitBuilding) building;
+            currentUnitBuilding = (UnitBuilding) building;
 
-            toBuyObject = unitBuilding.Unit;
+            toBuyObject = currentUnitBuilding.Unit;
             unitAmount = -1;
 
-            gm.CreateUnitCard(cardWindow, canvas, unitBuilding);
+            gm.CreateUnitCard(cardWindow, canvas, currentUnitBuilding);
 
             string prefabPath = "Prefabs/Slider";
             GameObject sliderObject = Instantiate(UnityEngine.Resources.Load<GameObject>(prefabPath));
@@ -251,7 +253,7 @@ namespace TownView
             float bottomY = cardSpriteRenderer.bounds.size.y / 4;
             sliderObject.transform.position = new Vector2(cardSpriteRenderer.transform.position.x, bottomY);
             slider = sliderObject.GetComponent<Slider>();
-            slider.maxValue = unitBuilding.UnitsPresent; // 
+            slider.maxValue = currentUnitBuilding.UnitsPresent;
             slider.onValueChanged.AddListener(adjustUnits);
         }
 
@@ -739,10 +741,20 @@ namespace TownView
                 {
                     Unit unit = (Unit)toBuyObject;
 
-                    if (Player.Wallet.CanPay(unit.Price) && town.StationedUnits.addUnit(unit, unitAmount))
+                    if (Player.Wallet.CanPayForMultiple(unit.Price, unitAmount) && town.StationedUnits.addUnit(unit, unitAmount) && currentUnitBuilding.AdjustPresentUnits((int)-slider.value))
                     {
-                        Player.Wallet.Pay(unit.Price);
+                        for (int i = 0; i < (int)slider.value; i++)
+                        {
+                            Player.Wallet.Pay(unit.Price);
+                        }
+                       
+                        gm.ReDrawArmyInTown(town);
+                        gm.updateResourceText();
                     }
+                    if (currentUnitBuilding.UnitsPresent == 0)
+                        slider.minValue = 0;
+                    slider.maxValue = currentUnitBuilding.UnitsPresent;
+                    
                 }
             }
             else if(selectedPayResource >= 0 && selectedEarnResource >= 0)

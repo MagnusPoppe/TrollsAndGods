@@ -1057,29 +1057,33 @@ public class GameManager : MonoBehaviour
 
     public void ReDrawArmyInTown(Town town)
     {
-        Sprite defaultsprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/NoUnit");
+        Sprite defaultSprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/NoUnit");
         int count = 0;
+
+        // Sets hero sprite depending on which hero is in town
         if (town.VisitingHero != null)
             armyInActiveTown[count++].GetComponent<Button>().GetComponent<Image>().sprite = libs.GetPortrait(town.VisitingHero.GetPortraitID());
         else
-            armyInActiveTown[count++].GetComponent<Button>().GetComponent<Image>().sprite = defaultsprite;
-        for (int i=0; i<7; i++)
+            armyInActiveTown[count++].GetComponent<Button>().GetComponent<Image>().sprite = defaultSprite;
+
+        
+        for (int i=0; i<UnitTree.TREESIZE; i++)
         {
             if (town.StationedUnits != null && town.StationedUnits.GetUnits()[i] != null)
                 armyInActiveTown[count++].GetComponent<Button>().GetComponent<Image>().sprite = libs.GetUnit(town.StationedUnits.GetUnits()[i].GetSpriteID());
             else
-                armyInActiveTown[count++].GetComponent<Button>().GetComponent<Image>().sprite = defaultsprite;
+                armyInActiveTown[count++].GetComponent<Button>().GetComponent<Image>().sprite = defaultSprite;
         }
         if (town.StationedHero != null)
             armyInActiveTown[count++].GetComponent<Button>().GetComponent<Image>().sprite = libs.GetPortrait(town.StationedHero.GetPortraitID());
         else
-            armyInActiveTown[count++].GetComponent<Button>().GetComponent<Image>().sprite = defaultsprite;
+            armyInActiveTown[count++].GetComponent<Button>().GetComponent<Image>().sprite = defaultSprite;
         for (int i=0; i<7; i++)
         {
             if (town.VisitingUnits != null && town.VisitingUnits.GetUnits()[i] != null)
-                armyInActiveTown[count++].GetComponent<Button>().GetComponent<Image>().sprite = libs.GetUnit(town.StationedUnits.GetUnits()[i].GetSpriteID());
+                armyInActiveTown[count++].GetComponent<Button>().GetComponent<Image>().sprite = libs.GetUnit(town.VisitingUnits.GetUnits()[i].GetSpriteID());
             else
-                armyInActiveTown[count++].GetComponent<Button>().GetComponent<Image>().sprite = defaultsprite;
+                armyInActiveTown[count++].GetComponent<Button>().GetComponent<Image>().sprite = defaultSprite;
         }
     }
 
@@ -1341,7 +1345,7 @@ public class GameManager : MonoBehaviour
 
         // Creates a building card game ojbect with a spriterenderer, sets its position, layer, name and parent
         GameObject cardWindow = new GameObject();
-        cardWindow.transform.parent = canvas.transform;
+        cardWindow.transform.parent = parent.transform;
         cardWindow.name = "TownCardPanel";
         cardWindow.tag = "toDestroy";
         cardWindow.transform.position = cardWindow.transform.parent.position;
@@ -1358,6 +1362,18 @@ public class GameManager : MonoBehaviour
         string unitSpeed = unitBuilding.GetSpeed() + "";
         Ability unitAbility = unitBuilding.GetAbility();
         Move[] moves = unitBuilding.GetMoves();
+        int unitPortrait = unitBuilding.GetImage();
+        
+        // Unit portrait
+        GameObject unitPortraitObject = new GameObject();
+        unitPortraitObject.name = unitName + " portrait";   
+        unitPortraitObject.transform.position = parent.transform.position;
+        unitPortraitObject.transform.localScale = canvas.transform.localScale;
+        unitPortraitObject.transform.parent = parent.transform;
+        SpriteRenderer sr = unitPortraitObject.AddComponent<SpriteRenderer>();
+        sr.sprite = libs.GetUnit(unitPortrait);
+        sr.sortingLayerName = "TownGUI";
+
 
         // Name of unit
         GameObject unitNameObject = new GameObject();
@@ -1437,8 +1453,8 @@ public class GameManager : MonoBehaviour
         new Vector2(UNIT_CARD_MIDDLE_LEFT, -2.2f), // 12, move2 dmg
     };
 
-    private int BIG_FONT = 16;
-    private int SMALL_FONT = 11;
+    private int BIG_FONT = 15;
+    private int SMALL_FONT = 10;
 
     /// <summary>
     /// Method to attach text to a unit playing card

@@ -1,6 +1,7 @@
 ﻿using OverworldObjects;
 using UI;
 using Units;
+using UnityEngine;
 
 namespace TownView
 {
@@ -98,6 +99,18 @@ namespace TownView
             {
                 unitsPerWeek = value;
             }
+        }
+
+        public bool AdjustPresentUnits(int change)
+        {
+            
+            if (UnitsPresent + change >= 0)
+            {
+                UnitsPresent += change;
+                return true;
+            }
+
+            return false;
         }
     }
 }
