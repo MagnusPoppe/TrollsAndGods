@@ -6,6 +6,7 @@ using System;
 using TownView;
 using MapGenerator;
 using OverworldObjects;
+using UI;
 using Units;
 
 public class GameManager : MonoBehaviour
@@ -1335,6 +1336,18 @@ public class GameManager : MonoBehaviour
     // TODO: extend method so that this method creates teh unit card backgrounda s well
     public void CreateUnitCard(GameObject parent, GameObject canvas, UnitBuilding unitBuilding)
     {
+
+        BuildingCard card = new BuildingCard(WindowTypes.UNIT_CARD, IngameObjectLibrary.Category.UI);
+
+        // Creates a building card game ojbect with a spriterenderer, sets its position, layer, name and parent
+        GameObject cardWindow = new GameObject();
+        cardWindow.transform.parent = canvas.transform;
+        cardWindow.name = "TownCardPanel";
+        cardWindow.tag = "toDestroy";
+        cardWindow.transform.position = cardWindow.transform.parent.position;
+        SpriteRenderer cardSpriteRenderer = cardWindow.AddComponent<SpriteRenderer>();
+        cardSpriteRenderer.sprite = libs.GetUI(card.GetSpriteID());
+        cardSpriteRenderer.sortingLayerName = "TownGUI";
 
         int pos = 0;
 
