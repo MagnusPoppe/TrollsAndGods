@@ -1133,8 +1133,8 @@ public class GameManager : MonoBehaviour
         
         for (int i=0; i<UnitTree.TREESIZE; i++)
         {
-            if (town.StationedUnits != null && town.StationedUnits.GetUnits()[i] != null)
-                armyInActiveTown[count++].GetComponent<Button>().GetComponent<Image>().sprite = libs.GetUnit(town.StationedUnits.GetUnits()[i].GetSpriteID());
+            if (town.VisitingUnits != null && town.VisitingUnits.GetUnits()[i] != null)
+                armyInActiveTown[count++].GetComponent<Button>().GetComponent<Image>().sprite = libs.GetUnit(town.VisitingUnits.GetUnits()[i].GetSpriteID());
             else
                 armyInActiveTown[count++].GetComponent<Button>().GetComponent<Image>().sprite = defaultSprite;
         }
@@ -1142,10 +1142,10 @@ public class GameManager : MonoBehaviour
             armyInActiveTown[count++].GetComponent<Button>().GetComponent<Image>().sprite = libs.GetPortrait(town.StationedHero.GetPortraitID());
         else
             armyInActiveTown[count++].GetComponent<Button>().GetComponent<Image>().sprite = defaultSprite;
-        for (int i=0; i<7; i++)
+        for (int i=0; i< UnitTree.TREESIZE; i++)
         {
-            if (town.VisitingUnits != null && town.VisitingUnits.GetUnits()[i] != null)
-                armyInActiveTown[count++].GetComponent<Button>().GetComponent<Image>().sprite = libs.GetUnit(town.VisitingUnits.GetUnits()[i].GetSpriteID());
+            if (town.StationedUnits != null && town.StationedUnits.GetUnits()[i] != null)
+                armyInActiveTown[count++].GetComponent<Button>().GetComponent<Image>().sprite = libs.GetUnit(town.StationedUnits.GetUnits()[i].GetSpriteID());
             else
                 armyInActiveTown[count++].GetComponent<Button>().GetComponent<Image>().sprite = defaultSprite;
         }
