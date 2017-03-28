@@ -697,9 +697,10 @@ namespace TownView
                         // TODO PLACE HERO LOGICALLY AND VISUALLY
                         gm.PlaceHero(Player, buyHero, town.Position);
                         DestroyObjects();
-
                         gm.ReDrawArmyInTown(town);
                         gm.updateResourceText();
+                        // Update herolist and townlist UI
+                        gm.updateOverworldUI(player);
                     }
                     else
                         Debug.Log("Not enough gold");
