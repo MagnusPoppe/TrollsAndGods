@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
 using MapGenerator;
@@ -246,7 +247,8 @@ public class GraphicalBattlefield : MonoBehaviour
         }
         // Sorts initative in descending order
         // todo fix sort
-        //Initative = Initative.OrderByDescending(UnitGameObject => UnitGameObject.Initative).ToArray();
+        Array.Sort(initative);
+        Array.Reverse(initative);
         WhoseTurn = 0;
         initative[whoseTurn].ItsTurn = true;
     }

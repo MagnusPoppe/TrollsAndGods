@@ -1,9 +1,10 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 /// <summary>
 /// Represents a unit on battlefield
 /// </summary>
-public class UnitGameObject : MonoBehaviour
+public class UnitGameObject : MonoBehaviour, IComparable<UnitGameObject>
 {
 
     bool itsTurn, attackingSide, attackable;
@@ -161,5 +162,10 @@ public class UnitGameObject : MonoBehaviour
         {
             logicalPos = value;
         }
+    }
+
+    public int CompareTo(UnitGameObject other)
+    {
+        return initative-other.Initative;
     }
 }
