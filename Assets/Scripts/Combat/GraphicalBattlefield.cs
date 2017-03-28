@@ -200,6 +200,9 @@ public class GraphicalBattlefield : MonoBehaviour
                 SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
                 sr.sprite = UnityEngine.Resources.Load<Sprite>("Sprites/Units/Troll/Frame 1");
                 sr.sortingLayerName = "CombatUnits";
+                TextMesh tm = go.GetComponentInChildren<TextMesh>();
+                tm.text = ""+units.getUnitAmount(i);
+                tm.GetComponent<Renderer>().sortingLayerName = "CombatUnits";
                 UnitGameObject ugo = go.GetComponent<UnitGameObject>();
                 ugo.UnitTree = units;
                 ugo.PosInUnitTree = i;
@@ -229,6 +232,9 @@ public class GraphicalBattlefield : MonoBehaviour
                 SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
                 sr.sprite = UnityEngine.Resources.Load<Sprite>("Sprites/Units/Troll/Frame 1");
                 sr.sortingLayerName = "CombatUnits";
+                TextMesh tm = go.GetComponentInChildren<TextMesh>();
+                tm.text = "" + units.getUnitAmount(i);
+                tm.GetComponent<Renderer>().sortingLayerName = "CombatUnits";
                 UnitGameObject ugo = go.GetComponent<UnitGameObject>();
                 ugo.UnitTree = units;
                 ugo.PosInUnitTree = i;
@@ -319,6 +325,8 @@ public class GraphicalBattlefield : MonoBehaviour
                 else livingDefenders--;
             }
             Debug.Log(livingAttackers + " " + livingDefenders);
+            updateAmount(defender);
+            updateAmount(getUnitWhoseTurnItIs());
         }
     }
 
@@ -393,6 +401,11 @@ public class GraphicalBattlefield : MonoBehaviour
                 initative[i].Attackable = true;
             }
         }
+    }
+
+    public void updateAmount(UnitGameObject ugo)
+    {
+        ugo.GetComponentInChildren<TextMesh>().text = ""+ugo.UnitTree.getUnitAmount(ugo.PosInUnitTree);
     }
 
     public UnitGameObject getUnitWhoseTurnItIs()
