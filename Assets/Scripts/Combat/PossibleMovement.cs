@@ -8,6 +8,8 @@ using UnityEngine;
 /// </summary>
 public class PossibleMovement
 {
+    private const bool ATTACKABLE = true;
+
     private Node[,] field;
     private GameObject[,] units;
     private int[,] canWalk;
@@ -63,9 +65,16 @@ public class PossibleMovement
             cur.InOpenSet = false;
             cur.Evaluvated = true;
             //Flips bool for reachable or attackable if unit can reach cur
-            if (cur.Ggo.IsOccupied && units[cur.Pos.x, cur.Pos.y] != null && cur.WalkedSteps <= speed+1)
+            if (cur.Ggo.IsOccupied && units[cur.Pos.x, cur.Pos.y] != null && cur.WalkedSteps <= speed + 1)
+            {
                 units[cur.Pos.x, cur.Pos.y].GetComponent<UnitGameObject>().Attackable = true;
-            else if (cur.WalkedSteps <= speed) cur.Ggo.Reachable = true;
+                cur.Ggo.MarkReachable(ATTACKABLE);
+            }
+            else if (cur.WalkedSteps <= speed)
+            {
+                cur.Ggo.Reachable = true;
+                cur.Ggo.MarkReachable(! ATTACKABLE);
+            }
             //Finds walkable neighbours
             Node[] neighbours = findNeighboursHex(cur.Pos);
 
@@ -109,6 +118,7 @@ public class PossibleMovement
             {
                 field[x, y].Evaluvated = false;
                 field[x, y].InOpenSet = false;
+
             }
         }
     }
