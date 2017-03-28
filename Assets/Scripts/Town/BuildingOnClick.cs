@@ -685,16 +685,17 @@ namespace TownView
                 {
                     Hero buyHero = (Hero)toBuyObject;
                     // checks if the player can afford the hero and if the hero is alive
-                    if (Player.Wallet.CanPay(buyHero.Cost) && (town.StationedHero == null || town.VisitingHero == null) && Player.addHero(buyHero))
+                    if (Player.Wallet.CanPay(buyHero.Cost) && (town.StationedHero == null || town.VisitingHero == null))
                     {
                         Player.Wallet.Pay(buyHero.Cost);
                         Debug.Log("Bought the hero" + buyHero.Name);
                         
-                        if (town.StationedHero == null)
+                        if (town.VisitingHero == null)
                             town.StationedHero = buyHero;
-                        else if (town.VisitingHero == null)
+                        else if (town.StationedHero == null)
                             town.VisitingHero = buyHero;
-                        // TODO PLACE HERO ON MAP
+                        // TODO PLACE HERO LOGICALLY AND VISUALLY
+                        gm.PlaceHero(Player, buyHero, town.Position);
                         DestroyObjects();
 
                         gm.ReDrawArmyInTown(town);

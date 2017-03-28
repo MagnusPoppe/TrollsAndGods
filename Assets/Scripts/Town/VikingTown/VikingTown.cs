@@ -13,7 +13,7 @@
         /// Default constructor:
         /// </summary>
         /// <param name="owner">Player that owns the building:</param>
-        public VikingTown(Player owner) : base(owner, spriteID)
+        public VikingTown(Player owner, Point position) : base(owner, spriteID, position)
         {
             Buildings = InitializeTownBuildings();
         }

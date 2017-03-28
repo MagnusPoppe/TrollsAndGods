@@ -87,7 +87,7 @@ public class Player
         }
 
         debug += ";  IS : " + wallet;
-        Debug.Log(debug);
+        //Debug.Log(debug);
     }
 
     // override object.Equals
@@ -200,10 +200,12 @@ public class Player
         }
     }
 
-    public bool addHero(Hero h)
+    public bool addHero(Hero h, Point position)
     {
         if(nextEmptyHero < MAXHEROES && !h.Alive)
         {
+            h.Position = position;
+            h.Player = this;
             h.Alive = true;
             heroes[nextEmptyHero++] = h;
             return true;
@@ -228,6 +230,23 @@ public class Player
                     heroes[MAXHEROES] = null;
             }
             return true;
+        }
+        return false;
+    }
+
+    public bool removeHero(Hero h)
+    {
+        for(int i=0; i<MAXHEROES; i++)
+        {
+            if (Heroes[i].Equals(h))
+            {
+                Heroes[i] = null;
+                for(int j=i; j<i-1; j++)
+                {
+                    Heroes[j] = heroes[j+1];
+                }
+                return true;
+            }
         }
         return false;
     }

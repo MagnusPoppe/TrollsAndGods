@@ -18,6 +18,7 @@ namespace TownView
         private Hero visitingHero;
         private UnitTree stationedUnits;
         private UnitTree visitingUnits;
+        private Point position;
         Player owner;
 
         const IngameObjectLibrary.Category category = IngameObjectLibrary.Category.Town;
@@ -25,8 +26,9 @@ namespace TownView
         /// Constructor that builds the buildingtree with corresponding town according to townId variable
         /// </summary>
         /// <param name="townId">which town shall be built</param>
-        public Town(Player owner, int localSpriteID) :base(localSpriteID, category )
+        public Town(Player owner, int localSpriteID, Point position) :base(localSpriteID, category )
         {
+            Position = position;
             StationedUnits = new UnitTree();
             RelatedDwellings = new List<DwellingBuilding>();
             Owner = owner;
@@ -202,6 +204,19 @@ namespace TownView
             set
             {
                 buildings = value;
+            }
+        }
+
+        public Point Position
+        {
+            get
+            {
+                return position;
+            }
+
+            set
+            {
+                position = value;
             }
         }
     }
