@@ -161,7 +161,6 @@ public class GameManager : MonoBehaviour
         // Set active Hero
         heroActive = true;
         activeHero = getPlayer(0).Heroes[0];
-        Debug.Log(activeHero.Position.x);
         activeHeroObject = heroLayer[activeHero.Position.x, activeHero.Position.y];
 
         // Initialize turn based variables and date

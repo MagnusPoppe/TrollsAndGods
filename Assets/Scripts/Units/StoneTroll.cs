@@ -36,7 +36,7 @@ namespace Units
             Unitstats = new UnitStats(attack,defence,speed,moral,luck,minDamage,maxDamage,health,initative,effectiveRange);
 
             Moves = new Move[] { new TreeSwing(), new BoulderThrow()};
-            Price = new Cost(100, 0, 0, 0, 0);
+            Price = new Cost(100, 1, 1, 1, 1);
             Ability = new StoneSkin();
         }
     }
