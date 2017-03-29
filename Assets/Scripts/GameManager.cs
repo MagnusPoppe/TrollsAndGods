@@ -108,7 +108,7 @@ public class GameManager : MonoBehaviour
     GameObject overworldInteractablePanel;
     Vector2 overworldInteractablePanelPosition;
     GameObject[] heroObjects;
-    List<GameObject> townObjects;
+    GameObject[] townObjects;
 
     //currentReaction
     private Reaction curReaction;
@@ -127,14 +127,13 @@ public class GameManager : MonoBehaviour
         heroes[4] = new Mantooth();
 
         heroObjects = new GameObject[8];
+        townObjects = new GameObject[8];
 
         // 7 + 7 units + 2 heroes in town view
         armyInActiveTown = new GameObject[16];
         townArmyCanvas = GameObject.Find("ArmyCanvas");
         swapObject = null;
         overworldInteractablePanel = GameObject.Find("OverworldInteractablePanel");
-        overworldInteractablePanelPosition = overworldInteractablePanel.transform.position;
-        townObjects = new List<GameObject>();
 
         parentToMarkers = new GameObject();
         parentToMarkers.name = "Path";
@@ -1318,7 +1317,7 @@ public class GameManager : MonoBehaviour
 
     private void setOverworldUI(Player player)
     {
-        Vector2 nextPosition = new Vector2(overworldInteractablePanelPosition.x - 0.9f, overworldInteractablePanelPosition.y + 1.5f);
+        Vector2 nextPosition = new Vector2(overworldInteractablePanelPosition.x + 6.6f, overworldInteractablePanelPosition.y + 5f);
         Vector2 nextTownPosition = new Vector2(nextPosition.x + 1.5f, nextPosition.y);
         // Heroes
         for (int i = 0; i < player.Heroes.Length; i++)
@@ -1353,30 +1352,27 @@ public class GameManager : MonoBehaviour
         // Towns
         for (int i = 0; i < player.Castle.Count; i++)
         {
-                GameObject townObject = Instantiate(UnityEngine.Resources.Load<GameObject>("Prefabs/Button"));
-                townObject.transform.parent = overworldInteractablePanel.transform;
-                townObject.transform.position = nextTownPosition;
-                townObject.transform.localScale /= 70;
-                townObject.name = player.PlayerID + ", overworldtownicon " + i;
-                Button townButton = townObject.GetComponent<Button>();
+                townObjects[i] = Instantiate(UnityEngine.Resources.Load<GameObject>("Prefabs/Button"));
+                townObjects[i].transform.parent = overworldInteractablePanel.transform;
+                townObjects[i].transform.position = nextTownPosition;
+                townObjects[i].transform.localScale /= 70;
+                townObjects[i].name = player.PlayerID + ", overworldtownicon " + i;
+                Button townButton = townObjects[i].GetComponent<Button>();
 
                 Sprite sprite = libs.GetTown(player.Castle[i].Town.GetSpriteID());
 
                 townButton.GetComponent<Image>().sprite = sprite;
                 Castle castle = player.Castle[i];
                 townButton.onClick.AddListener(() => EnterTown(castle.Town));
-                RectTransform rectTown = townObject.GetComponent<RectTransform>();
-                rectTown.sizeDelta = new Vector2(townObject.GetComponent<Image>().sprite.bounds.size.x, townObject.GetComponent<Image>().sprite.bounds.size.y) * 2;
+                RectTransform rectTown = townObjects[i].GetComponent<RectTransform>();
+                rectTown.sizeDelta = new Vector2(townObjects[i].GetComponent<Image>().sprite.bounds.size.x, townObjects[i].GetComponent<Image>().sprite.bounds.size.y) * 2;
 
                 nextTownPosition = new Vector2(nextTownPosition.x, nextTownPosition.y - (sprite.bounds.size.y * 0.5f));
-                townObjects.Add(townObject);
         }
     }
 
     public void updateOverworldUI(Player player)
     {
-        Vector2 nextPosition = new Vector2(overworldInteractablePanelPosition.x - 0.9f, overworldInteractablePanelPosition.y + 1.5f);
-        Vector2 nextTownPosition = new Vector2(nextPosition.x + 1.5f, nextPosition.y);
 
         // Heroes
         for (int i = 0; i < player.Heroes.Length; i++)
@@ -1398,37 +1394,26 @@ public class GameManager : MonoBehaviour
                 rectHero.sizeDelta = new Vector2(heroObjects[i].GetComponent<Image>().sprite.bounds.size.x, heroObjects[i].GetComponent<Image>().sprite.bounds.size.y) * 2;
             }
             else
-            {
                 heroObjects[i].SetActive(false);
-            }
         }
-
-        Vector2 newPosition = new Vector2(0,0);
-        if (townObjects[0] != null)
-            newPosition = townObjects[0].transform.position;
+        
         // Towns
-        foreach (GameObject go in townObjects)
-            Destroy(go);
-        townObjects.Clear();
         for (int i=0; i<player.Castle.Count; i++)
         {
-            GameObject townObject = Instantiate(UnityEngine.Resources.Load<GameObject>("Prefabs/Button"));
-            townObject.transform.parent = overworldInteractablePanel.transform;
-            townObject.transform.position = newPosition;
-            townObject.transform.localScale /= 70;
-            townObject.name = player.PlayerID + ", overworldtownicon " + i;
-            Button townButton = townObject.GetComponent<Button>();
+            if (player.Castle[i] != null)
+            {
+                heroObjects[i].SetActive(true);
+                Sprite sprite = libs.GetTown(player.Castle[i].Town.GetSpriteID());
 
-            Sprite sprite = libs.GetTown(player.Castle[i].Town.GetSpriteID());
-
-            townButton.GetComponent<Image>().sprite = sprite;
-            Castle castle = player.Castle[i];
-            townButton.onClick.AddListener(() => EnterTown(castle.Town));
-            RectTransform rectTown = townObject.GetComponent<RectTransform>();
-            rectTown.sizeDelta = new Vector2(townObject.GetComponent<Image>().sprite.bounds.size.x, townObject.GetComponent<Image>().sprite.bounds.size.y) * 2;
-
-            nextTownPosition = new Vector2(nextTownPosition.x, nextTownPosition.y - (sprite.bounds.size.y * 0.5f));
-            townObjects.Add(townObject);
+                Button townButton = townObjects[i].GetComponent<Button>();
+                townButton.GetComponent<Image>().sprite = sprite;
+                Castle castle = player.Castle[i];
+                townButton.onClick.AddListener(() => EnterTown(castle.Town));
+                RectTransform rectTown = townObjects[i].GetComponent<RectTransform>();
+                rectTown.sizeDelta = new Vector2(townObjects[i].GetComponent<Image>().sprite.bounds.size.x, townObjects[i].GetComponent<Image>().sprite.bounds.size.y) * 2;
+            }
+            else
+                heroObjects[i].SetActive(false);
         }
     }
 
