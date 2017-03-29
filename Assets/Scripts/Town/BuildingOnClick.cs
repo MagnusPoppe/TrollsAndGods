@@ -925,12 +925,12 @@ namespace TownView
 
                     // Stops trying to buy 0 units
                     {
-                        // Add to hero list if theres a stationed hero
-                        if(town.StationedHero != null)
-                            town.StationedHero.Units = town.StationedUnits;
-                        for (int i = 0; i < (int)slider.value; i++)
+                        if (Player.Wallet.CanPayForMultiple(unit.Price, unitAmount) && town.StationedUnits.addUnit(unit, unitAmount) && currentUnitBuilding.AdjustPresentUnits((int)-slider.value))
                         {
-                            for (int i = 0; i < (int) slider.value; i++)
+                            // Add to hero list if theres a stationed hero
+                            if (town.StationedHero != null)
+                                town.StationedHero.Units = town.StationedUnits;
+                            for (int i = 0; i < (int)slider.value; i++)
                             {
                                 Player.Wallet.Pay(unit.Price);
                             }

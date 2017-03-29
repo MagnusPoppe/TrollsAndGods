@@ -157,7 +157,9 @@ namespace TownView
 
                     // Update herostack to the new stack (not always a stationaryhero present)
                     if(stationedHero != null)
-                        stationedHero.Units = VisitingUnits;
+                        stationedHero.Units = StationedUnits;
+                    if (visitingHero != null)
+                        visitingHero.Units = VisitingUnits;
                 }
             }
         }
@@ -194,6 +196,8 @@ namespace TownView
 
                     // Update herostack to the new stack
                     visitingHero.Units = VisitingUnits;
+                    if(stationedHero != null)
+                        stationedHero.Units = stationedUnits;
                 }
             }
         }
