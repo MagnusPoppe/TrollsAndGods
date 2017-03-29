@@ -17,6 +17,24 @@ namespace Multiplayer
 
         public abstract void execute();
 
+        public int Dfrom
+        {
+            get { return IDfrom; }
+            set { IDfrom = value; }
+        }
+
+        public int Dto
+        {
+            get { return IDto; }
+            set { IDto = value; }
+        }
+
+        public string Description
+        {
+            get { return description; }
+            set { description = value; }
+        }
+
         /// <summary>
         /// Writes out the event to SQL
         /// </summary>
