@@ -1,8 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 
-public class Log
+namespace Multiplayer
 {
-    private Event[] eventTab;
+    public class Log
+    {
+        private List<Event> eventTab;
+    }
 }
