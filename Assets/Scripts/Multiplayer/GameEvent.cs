@@ -9,7 +9,7 @@ namespace Multiplayer
 
         }
 
-        public abstract String unpackJSON();
+        public abstract String unpackJSON( String JSON );
         public abstract String packJSON();
     }
 }
