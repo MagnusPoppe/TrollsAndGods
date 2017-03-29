@@ -6,8 +6,8 @@ namespace Multiplayer
 {
     public class SwitchStationedHero : GameEvent
     {
-        private Point pos;
-        private bool stationed;
+        public Point pos;
+        public bool stationed;
 
         public SwitchStationedHero(int id, string description, Point pos, bool stationed) : base(id, description)
         {
