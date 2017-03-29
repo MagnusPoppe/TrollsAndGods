@@ -49,60 +49,153 @@ namespace TownView
         // When in town window, activated by clicking on first and then second hero
         public void swapHeroes()
         {
-            Hero tmp;
-            if(StationedHero != null)
+            // Only swap if there is a hero in on eof the spots
+            if (visitingHero != null || stationedHero != null)
             {
-                tmp = StationedHero;
-                // Both is found, swap them
-                if(VisitingHero != null)
+                // TODO check merge, and merge - if there's not an hero in stationedarmy
+                if (stationedHero == null)
                 {
-                    StationedHero = VisitingHero;
-                    VisitingHero = tmp;
-                    VisitingUnits = visitingHero.Units;
-                    StationedUnits = StationedHero.Units;
+                    if (stationedUnits != null && visitingHero.Units.CanMerge(StationedUnits))
+                    {
+                        visitingHero.Units.Merge(stationedUnits);
+                    }
                 }
-                // Only stationed hero is found, move him
+
+                // Swap heroes
+                Hero tmpHero = visitingHero;
+                visitingHero = stationedHero;
+                stationedHero = tmpHero;
+
+                // Swap town's armies to the new heroes armies
+                if (visitingHero == null)
+                    visitingUnits = new UnitTree();
+                else
+                    visitingUnits = visitingHero.Units;
+                if (StationedHero == null)
+                    stationedUnits = new UnitTree();
+                else
+                    stationedUnits = stationedHero.Units;
+            }
+        }
+
+        public void SwapStationaryUnits(int unitpos1, int unitpos2)
+        {
+            // Merge if alike
+            if (stationedUnits.GetUnits()[unitpos1] != null && stationedUnits.GetUnits()[unitpos2] != null && stationedUnits.GetUnits()[unitpos1].equals(stationedUnits.GetUnits()[unitpos2]))
+            {
+                int newAmount = stationedUnits.getUnitAmount(unitpos1) + stationedUnits.getUnitAmount(unitpos2);
+                stationedUnits.SetUnitAmount(unitpos2, newAmount);
+                stationedUnits.GetUnits()[unitpos1] = null;
+            }
+            // Swap
+            else
+            {
+                int tmpAmount = stationedUnits.getUnitAmount(unitpos1);
+                stationedUnits.SetUnitAmount(unitpos1, stationedUnits.getUnitAmount(unitpos2));
+                stationedUnits.SetUnitAmount(unitpos2, tmpAmount);
+
+                Unit tmp = StationedUnits.GetUnits()[unitpos1];
+                stationedUnits.GetUnits()[unitpos1] = stationedUnits.GetUnits()[unitpos2];
+                stationedUnits.GetUnits()[unitpos2] = tmp;
+            }
+        }
+
+        public void SwapVisitingUnits(int unitpos1, int unitpos2)
+        {
+            // Only swap visiting if there's an hero there
+            if (visitingHero != null)
+            {
+                // Merge if alike
+                if (visitingUnits.GetUnits()[unitpos1] != null && visitingUnits.GetUnits()[unitpos2] != null && visitingUnits.GetUnits()[unitpos1].equals(visitingUnits.GetUnits()[unitpos2]))
+                {
+                    int newAmount = visitingUnits.getUnitAmount(unitpos1) + visitingUnits.getUnitAmount(unitpos2);
+                    visitingUnits.SetUnitAmount(unitpos2, newAmount);
+                    visitingUnits.GetUnits()[unitpos1] = null;
+                }
+                // Swap
                 else
                 {
-                    VisitingHero = StationedHero;
-                    VisitingUnits = VisitingHero.Units;
-                    stationedHero = null;
-                    StationedUnits = null;
-                }
-            }
-            // Only visitingHero is found, move him - but also check if you can merge him into the stationed garrison - if so, perform merge
-            else if (VisitingHero != null)
-            {
-                if(StationedUnits == null)
-                {
-                    // Sets the new stationed hero and army
-                    StationedHero = VisitingHero;
-                    StationedUnits = StationedHero.Units;
-                    VisitingHero = null;
-                    VisitingUnits = null;
-                }
-                // TODO only swap him if theres room for his army there
-                else if(stationedUnits.CanMerge(VisitingUnits))
-                {
-                    // Merges visitingUnits into StationedUnits
-                    StationedUnits.Merge(VisitingUnits);
-                    // Sets the new stationed heroes' army to the newly merged army
-                    StationedHero = VisitingHero;
-                    StationedHero.Units = stationedUnits;
-                    VisitingHero = null;
-                    VisitingUnits = null;
+                    int tmpAmount = visitingUnits.getUnitAmount(unitpos1);
+                    visitingUnits.SetUnitAmount(unitpos1, visitingUnits.getUnitAmount(unitpos2));
+                    visitingUnits.SetUnitAmount(unitpos2, tmpAmount);
+
+                    Unit tmp = visitingUnits.GetUnits()[unitpos1];
+                    visitingUnits.GetUnits()[unitpos1] = visitingUnits.GetUnits()[unitpos2];
+                    visitingUnits.GetUnits()[unitpos2] = tmp;
                 }
             }
         }
 
-        public void swapUnits(Unit unit1, Unit Unit2)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="unitpos1">visiting position</param>
+        /// <param name="unitpos2">stationed position</param>
+        public void SwapVisitingStationaryUnits(int unitpos1, int unitpos2)
         {
-            //TODO cannot swap if one of them is visitingunit without visitinghero
+            // Only swap visiting if there's an hero there
+            if(visitingHero != null && visitingUnits.GetUnits()[unitpos1] != null)
+            {
+                // Merge if alike
+                if (visitingUnits.GetUnits()[unitpos1] != null && stationedUnits.GetUnits()[unitpos2] != null && visitingUnits.GetUnits()[unitpos1].equals(stationedUnits.GetUnits()[unitpos2]))
+                {
+                    int newAmount = visitingUnits.getUnitAmount(unitpos1) + stationedUnits.getUnitAmount(unitpos2);
+                    StationedUnits.SetUnitAmount(unitpos2, newAmount);
+                    VisitingUnits.GetUnits()[unitpos1] = null;
+                }
+                // Swap
+                else
+                {
+                    Unit tmp = visitingUnits.GetUnits()[unitpos1];
+                    visitingUnits.GetUnits()[unitpos1] = stationedUnits.GetUnits()[unitpos2];
+                    stationedUnits.GetUnits()[unitpos2] = tmp;
 
-            //TODO merge unit2 into unit1 if the same
+
+                    int tmpAmount = visitingUnits.getUnitAmount(unitpos1);
+                    visitingUnits.SetUnitAmount(unitpos1, stationedUnits.getUnitAmount(unitpos2));
+                    stationedUnits.SetUnitAmount(unitpos2, tmpAmount);
+
+                    // Update herostack to the new stack (not always a stationaryhero present)
+                    if(stationedHero != null)
+                        stationedHero.Units = VisitingUnits;
+                }
+            }
+        }
 
 
-            //TODO swap unit2 and unit1
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="unitpos1">stationed position</param>
+        /// <param name="unitpos2">visiting position</param>
+        public void SwapStationedVisitingUnits(int unitpos1, int unitpos2)
+        {
+            // Only swap visiting if there's an hero there
+            if (visitingHero != null && stationedUnits.GetUnits()[unitpos1] != null)
+            {
+                // Merge if alike
+                if (stationedUnits.GetUnits()[unitpos1] != null && visitingUnits.GetUnits()[unitpos2] != null && stationedUnits.GetUnits()[unitpos1].equals(visitingUnits.GetUnits()[unitpos2]))
+                {
+                    int newAmount = visitingUnits.getUnitAmount(unitpos1) + stationedUnits.getUnitAmount(unitpos2);
+                    visitingUnits.SetUnitAmount(unitpos2, newAmount);
+                    stationedUnits.GetUnits()[unitpos1] = null;
+                }
+                // Swap
+                else
+                {
+                    Unit tmp = StationedUnits.GetUnits()[unitpos1];
+                    stationedUnits.GetUnits()[unitpos1] = visitingUnits.GetUnits()[unitpos2];
+                    visitingUnits.GetUnits()[unitpos2] = tmp;
+
+
+                    int tmpAmount = stationedUnits.getUnitAmount(unitpos1);
+                    stationedUnits.SetUnitAmount(unitpos1, visitingUnits.getUnitAmount(unitpos2));
+                    visitingUnits.SetUnitAmount(unitpos2, tmpAmount);
+
+                    // Update herostack to the new stack
+                    visitingHero.Units = VisitingUnits;
+                }
+            }
         }
 
         public bool HasBuiltThisRound

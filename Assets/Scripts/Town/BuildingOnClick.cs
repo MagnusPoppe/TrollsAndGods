@@ -850,20 +850,36 @@ namespace TownView
                     // checks if the player can afford the hero and if the hero is alive
                     if (Player.Wallet.CanPay(buyHero.Cost) && (town.StationedHero == null || town.VisitingHero == null))
                     {
-                        Player.Wallet.Pay(buyHero.Cost);
-                        Debug.Log("Bought the hero" + buyHero.Name);
+                        // If theres stationed and visitingunits there, check if you can merge with the existing troops
+                        if ((town.StationedUnits == null || buyHero.Units.CanMerge(town.StationedUnits)) || (town.VisitingUnits == null || buyHero.Units.CanMerge(town.VisitingUnits)))
+                        {
 
-                        if (town.VisitingHero == null)
-                            town.StationedHero = buyHero;
-                        else if (town.StationedHero == null)
-                            town.VisitingHero = buyHero;
-                        // TODO PLACE HERO LOGICALLY AND VISUALLY
-                        gm.PlaceHero(Player, buyHero, town.Position);
-                        DestroyObjects();
-                        gm.ReDrawArmyInTown(town);
-                        gm.updateResourceText();
-                        // Update herolist and townlist UI
-                        gm.updateOverworldUI(player);
+                            if (town.VisitingHero == null)
+                            {
+                                town.VisitingHero = buyHero;
+                                town.VisitingHero.Units.Merge(town.VisitingUnits);
+                                town.VisitingUnits = town.VisitingHero.Units;
+                            }
+                            else if (town.StationedHero == null)
+                            {
+                                town.StationedHero = buyHero;
+                                town.StationedHero.Units.Merge(town.StationedUnits);
+                                town.StationedUnits = town.StationedHero.Units;
+                            }
+
+                            Player.Wallet.Pay(buyHero.Cost);
+                            Debug.Log("Bought the hero" + buyHero.Name);
+
+                            // TODO PLACE HERO LOGICALLY AND VISUALLY
+                            gm.PlaceHero(Player, buyHero, town.Position);
+                            DestroyObjects();
+                            gm.ReDrawArmyInTown(town);
+                            gm.updateResourceText();
+                            // Update herolist and townlist UI
+                            gm.updateOverworldUI(player);
+                        }
+                        else
+                            Debug.Log("Could not merge with existing troops");
                     }
                     else
                         Debug.Log("Not enough gold");
@@ -905,9 +921,10 @@ namespace TownView
                     
                     Unit unit = (Unit) toBuyObject;
                     {
-                        if (Player.Wallet.CanPayForMultiple(unit.Price, unitAmount) &&
-                            town.StationedUnits.addUnit(unit, unitAmount) &&
-                            currentUnitBuilding.AdjustPresentUnits((int) -slider.value))
+                        // Add to hero list if theres a stationed hero
+                        if(town.StationedHero != null)
+                            town.StationedHero.Units = town.StationedUnits;
+                        for (int i = 0; i < (int)slider.value; i++)
                         {
                             for (int i = 0; i < (int) slider.value; i++)
                             {

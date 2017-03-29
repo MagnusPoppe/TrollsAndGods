@@ -420,8 +420,8 @@ namespace MapGenerator
                         // Also place a corresponding hero.
                         players[i] = new Player(i, 0);
                         lr.GetCastle().Player = players[i];
+                        lr.GetCastle().Town.Owner = players[i];
                         players[i].Castle.Add(lr.GetCastle());
-                        //lr.PlaceHero(players[i], map, canWalk); // TODO dont do here?
                         i++;
                     }
                 }

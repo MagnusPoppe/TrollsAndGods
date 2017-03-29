@@ -29,6 +29,8 @@ public class UnitTree
     /// <param name="amount">New stack amount</param>
     public void SetUnitAmount(int pos, int amount)
     {
+        unitAmount[pos] = amount;
+        /*
         // Remove unit if it's reduced to 0
         if (amount == 0)
             units[pos] = null;
@@ -37,6 +39,7 @@ public class UnitTree
         {
             unitAmount[pos] = amount;
         }
+        */
     }
 
     /// <summary>
@@ -57,6 +60,9 @@ public class UnitTree
     /// <returns></returns>
     public bool CanMerge(UnitTree units)
     {
+        if (units == null || units.units == null)
+            return true;
+
         // Check if merge can be done
         UnitTree tmp1 = this;
         UnitTree tmp2 = units;
@@ -108,12 +114,12 @@ public class UnitTree
     /// <param name="units2">input army</param>
     public void Merge(UnitTree units2)
     {
-        // Merge units2 into units1
+        // Merge duplicates units2 into units1
         for (int i = 0; i < GetUnits().Length; i++)
         {
             for (int j = 0; j < GetUnits().Length; j++)
             {
-                if (units2.GetUnits()[i].equals(this.GetUnits()[j]))
+                if (this.GetUnits()[i] != null && units2.GetUnits()[i] != null && units2.GetUnits()[i].equals(this.GetUnits()[j]))
                 {
                     // Duplicate found in a bar, put one of them into the other one, and add amount
                     this.unitAmount[i] += this.unitAmount[j];
@@ -121,16 +127,38 @@ public class UnitTree
                 }
             }
         }
-        // Merge duplicates
+        // Merge duplicates in same bar
         for (int i = 0; i < GetUnits().Length; i++)
         {
             for (int j = 0; j < GetUnits().Length; j++)
             {
-                if (this.GetUnits()[i].equals(this.GetUnits()[j]))
+                if (this.GetUnits()[i] != null && units2.GetUnits()[i] != null && this.GetUnits()[i].equals(this.GetUnits()[j]))
                 {
                     // Duplicate found in a bar, put one of them into the other one, and add amount
                     this.unitAmount[i] += this.unitAmount[j];
                     this.units[j] = null;
+                }
+            }
+        }
+
+        // Merge units2 into units1
+        if(units2 != null)
+        {
+            for (int i = 0; i < GetUnits().Length; i++)
+            {
+                // If unit is found in units2
+                if (units2.GetUnits()[i] != null)
+                {
+                    // Check the units1 row to find next open spot to put it
+                    for (int j = 0; j < GetUnits().Length; j++)
+                    {
+                        if (this.GetUnits()[j] == null)
+                        {
+                            this.GetUnits()[j] = units2.GetUnits()[i];
+                            this.unitAmount[j] += units2.getUnitAmount(j);
+                            units2.GetUnits()[i] = null;
+                        }
+                    }
                 }
             }
         }
@@ -177,7 +205,7 @@ public class UnitTree
         {
             for (int j = 0; j < GetUnits().Length; j++)
             {
-                if (units1.GetUnits()[i].equals(units2.GetUnits()[j]))
+                if (units1.GetUnits()[i] != null && units2.GetUnits()[i] != null && units1.GetUnits()[i].equals(units2.GetUnits()[j]))
                 {
                     // Duplicate found in a bar, put one of them into the other one, and add amount
                     units2.unitAmount[i] += units2.unitAmount[j];
@@ -190,7 +218,7 @@ public class UnitTree
         {
             for (int j = 0; j < GetUnits().Length; j++)
             {
-                if (units2.GetUnits()[i].equals(units2.GetUnits()[j]))
+                if (units1.GetUnits()[i] != null && units2.GetUnits()[i] != null && units2.GetUnits()[i].equals(units2.GetUnits()[j]))
                 {
                     // Duplicate found in a bar, put one of them into the other one, and add amount
                     units2.unitAmount[i] += units2.unitAmount[j];
