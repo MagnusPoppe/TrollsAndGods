@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace Multiplayer
@@ -9,9 +10,9 @@ namespace Multiplayer
         private const int ID_TO = 0;
         private const String DESCRIPTION = "Player moves from one (x,y) to another (x,y) in the map.";
 
-        private int playerID;
-        private Point from;
-        private Point to;
+        public int playerID;
+        public Point from;
+        public Point to;
 
         public PlayerMoved(int id, string description, int playerId, Point from, Point to) : base(id, description)
         {
@@ -25,18 +26,17 @@ namespace Multiplayer
             throw new System.NotImplementedException();
         }
 
-        public override string unpackJSON( String JSON )
+        public override void unpackJSON( String JSON )
         {
-            
+            PlayerMoved  obj = JsonUtility.FromJson<PlayerMoved>(JSON);
+            this.playerID = obj.playerID;
+            this.from = obj.from;
+            this.to = obj.to;
         }
 
         public override string packJSON()
         {
-            return "move:{ " +
-                       "player:" + playerID + "," +
-                       "from:{x:" + from.x + ",y: " + from.y + "}," +
-                       "to:{x:" + to.x + ",y:" + to.y + "}" +
-                    "}";
+            return JsonUtility.ToJson(this);
         }
     }
 }

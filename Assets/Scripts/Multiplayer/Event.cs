@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 
 namespace Multiplayer
 {
@@ -26,6 +27,19 @@ namespace Multiplayer
         {
             get { return description; }
             set { description = value; }
+        }
+
+        /// <summary>
+        /// Writes out the event to SQL
+        /// </summary>
+        /// <returns> SQL INSERT SENTENCES. </returns>
+        public string toSQLInsert()
+        {
+            string output = "";
+            
+            output = "INSERT INTO GameEvent VALUES (" + id + "," + description + ");";
+            
+            return output;
         }
     }
 }
