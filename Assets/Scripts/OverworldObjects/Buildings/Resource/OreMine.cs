@@ -9,6 +9,7 @@ namespace OverworldObjects
         private const int LOCAL_SPRITE_ID = 0;
         const IngameObjectLibrary.Category SPRITE_CATEGORY = IngameObjectLibrary.Category.ResourceBuildings;
 
+	    private static Environment sceneryType = new Grass();
 
 	    // RESOURCE VALUES:
         const Resources.type RESOURCE_ID = Resources.type.ORE;
@@ -23,9 +24,10 @@ namespace OverworldObjects
 		const int MINIMUM_PREFERED_DISTANCE_FROM_TOWN = 10;
 		const int MAXIMUM_PREFERED_DISTANCE_FROM_TOWN = 15;
 
-		public OreMine(Player owner) 
-            : base(SHAPE, owner, LOCAL_SPRITE_ID, SPRITE_CATEGORY, RESOURCE_ID, AMOUNT_PER_WEEK, MINIMUM_PREFERED_DISTANCE_FROM_TOWN, MAXIMUM_PREFERED_DISTANCE_FROM_TOWN)
+	    public OreMine(Player owner)
+	        : base(SHAPE, owner, LOCAL_SPRITE_ID, SPRITE_CATEGORY, sceneryType, RESOURCE_ID, AMOUNT_PER_WEEK, MINIMUM_PREFERED_DISTANCE_FROM_TOWN, MAXIMUM_PREFERED_DISTANCE_FROM_TOWN)
 		{
+
 		}
 	}
 }

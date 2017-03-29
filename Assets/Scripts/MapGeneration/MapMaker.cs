@@ -102,24 +102,15 @@ namespace MapGenerator
             if (coast)
                 CreateTransitions();
 
-            /*
-            Reaction[,] reactions = new Reaction[width, height];
-            canWalk = CreateWalkableArea(initialMap);
-
             int i = 0;
             foreach (Region r in regions)
             {
                 if (r.GetType().Equals(typeof(LandRegion)))
                 {
                     LandRegion lr = (LandRegion)r;
-                    lr.SetRegionGroundTileType(lr.GetCastle().EnvironmentTileType, map);
-
-
-                    map[r.getX(), r.getY()] = lr.GetCastle().GetSpriteID();
                     InitBuildings(lr);
                 }
             }
-            */
 
         QuailtyAssurance quality = new QuailtyAssurance();
 
@@ -145,7 +136,7 @@ namespace MapGenerator
         // TODO: Include mountains
         private void replaceWalls()
         {
-
+            Mountain mountain = new Mountain();
             // Trying mountains first:
             for (int y = 0; y < height; y++)
             {
@@ -155,16 +146,8 @@ namespace MapGenerator
                     {
                         if (Shapes.CanFitShapeOver(WALL, new Point(x, y), Shapes.GetShape(Shapes.TRIPLEx3_LEFT), map))
                         {
-                            int[,] mountain = // TRIPLE x3 LEFT SPECIAL VERSION.
-                            {
-                                // ORIGO = 1, OTHER SPACE = 2, ELSE = UNTOUCHED.
-                                { 0, 0, 0, 2, 0 },
-                                { 0, 0, 2, 2, 0 },
-                                { 0, 0, 2, 1, 2 },
-                                { 0, 0, 2, 2, 0 },
-                                { 0, 0, 0, 2, 0 }
-                            };
-                            PlaceMountain(new Point(x, y), MOUNTAIN1_SPRITEID, GRASS_SPRITEID, mountain);
+
+                            PlaceMountain(new Point(x, y), mountain.GetSpriteID(), GRASS_SPRITEID, mountain.Shape);
                         }
                     }
                 }
@@ -181,17 +164,25 @@ namespace MapGenerator
             }
         }
 
+        /// <summary>
+        /// Places a mountain using a filtering algoritm. Places mountain at
+        /// the origo point of the shape, and environment tiles everywhere else.
+        /// </summary>
+        /// <param name="pos"> Position to place mountain</param>
+        /// <param name="spriteID"> ID of mountain sprite</param>
+        /// <param name="environment"> ID of environment underneath the mountain</param>
+        /// <param name="shape"> Shape of the mountain</param>
         void PlaceMountain(Point pos, int spriteID, int environment, int[,] shape)
         {
             for (int iy = 0; iy < shape.GetLength(0); iy++)
             {
                 for (int ix = 0; ix < shape.GetLength(1); ix++)
                 {
-                    
+
                     int x = pos.x + (ix - (shape.GetLength(1)/2));
                     int y = pos.y + (iy - (shape.GetLength(0)/2));
 
-                    if (0 <= x && x < map.GetLength(0) && 0 <= y && y < map.GetLength(0))
+                    if (pos.inBounds(map))
                     {
                         if (shape[ix, iy] == 1) map[x, y] = spriteID;
                         else if (shape[ix, iy] == 2) map[x, y] = environment;
@@ -200,10 +191,16 @@ namespace MapGenerator
             }
         }
 
-        private void FloodFillWall( Point initial, int spriteID )
+        /// <summary>
+        /// Fills a given region consisting of only WALL values, and
+        /// fills them with a given spriteID
+        /// </summary>
+        /// <param name="seed"></param>
+        /// <param name="spriteID"></param>
+        private void FloodFillWall( Point seed, int spriteID )
         {
             Queue<Point> queue = new Queue<Point>();
-            queue.Enqueue(initial);
+            queue.Enqueue(seed);
 
             Point center = queue.Peek();
 
@@ -212,7 +209,7 @@ namespace MapGenerator
                 Point here = queue.Dequeue();
 
                 // Checking if inbounds
-                if (here.x >= 0 && here.x < width && here.y >= 0 && here.y < height)
+                if(here.inBounds(map))
                 {
                     // Checking if wall
                     if (map[here.x, here.y] == WALL)
@@ -232,7 +229,7 @@ namespace MapGenerator
 
 		private void InitBuildings(LandRegion r)
 		{
-			r.createEconomy(canWalk, new Economy(Economy.POOR));
+			r.createEconomy(map, canWalk, new Economy(Economy.ABUNDANT));
 
 			foreach (OverworldBuilding building in r.GetBuildings())
 			{

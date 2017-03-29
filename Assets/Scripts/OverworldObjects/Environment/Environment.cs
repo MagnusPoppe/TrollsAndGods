@@ -5,11 +5,14 @@ namespace OverworldObjects
     public class Environment : SpriteSystem
     {
         private int[] localIDs;
-        private static IngameObjectLibrary.Category category = IngameObjectLibrary.Category.Ground;
+        private IngameObjectLibrary.Category category;
+        private Environment below; // -1 means nothing to add.
 
-        public Environment( int[] localIDs ) : base(localIDs[0], category)
+        public Environment( int[] localIDs, IngameObjectLibrary.Category category, Environment below ) : base(localIDs[0], category)
         {
             this.localIDs = localIDs;
+            this.category = category;
+            this.below = below;
         }
 
         /// <summary>
@@ -18,10 +21,17 @@ namespace OverworldObjects
         /// <returns>Valid Sprite ID</returns>
         public new int GetSpriteID()
         {
-            Debug.Log("GETTING SPRITE: " +
-                      localIDs[UnityEngine.Random.Range(0, localIDs.Length-1)] + IngameObjectLibrary.GetOffset(category)
-            );
             return localIDs[UnityEngine.Random.Range(0, localIDs.Length-1)] + IngameObjectLibrary.GetOffset(category);
+        }
+
+        /// <summary>
+        /// Gets what environment type should be below the given game object.
+        /// this is not shown, but is used in placement algoritms.
+        /// </summary>
+        /// <returns> what sprite should be below the game object.</returns>
+        public Environment GetBelow()
+        {
+            return below;
         }
     }
 }

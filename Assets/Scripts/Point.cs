@@ -64,5 +64,10 @@ public class Point
     {
         return "(" + x + ", " + y + ")";
     }
+
+    public bool inBounds(int[,] map)
+    {
+        return (0 <= x && x < map.GetLength(0) && 0 <= y && y < map.GetLength(0));
+    }
 }
 

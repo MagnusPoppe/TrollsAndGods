@@ -20,7 +20,7 @@ namespace MapGenerator
         /// </summary>
         /// <param name="coordinateList">Coordinate list.</param>
         /// <param name="regionCenter">Castle position.</param>
-        public LandRegion(List<Point> coordinateList, Point regionCenter) 
+        public LandRegion(List<Point> coordinateList, Point regionCenter)
             :base(coordinateList, regionCenter)
         {
             // TODO: alt skal ikke være viking town
@@ -98,13 +98,15 @@ namespace MapGenerator
         /// </summary>
         /// <param name="canWalk"></param>
         /// <param name="economy"></param>
-		public void createEconomy(int[,] canWalk, Economy economy)
+		public void createEconomy(int[,] map, int[,] canWalk, Economy economy)
         {
             this.economy = economy;
             for (int i = 0; i < economy.oreMineCount; i++)
             {
                 OreMine mine = new OreMine(null);
-                PlaceResourceBuilding(mine, canWalk);
+                mine.Place(this, map, canWalk);
+                buildings.Add(mine);
+                UnityEngine.Debug.Log("Building was placed at " + mine.Origo);
             }
 
             // TODO: COPY FOR ALL OTHER MINETYPES.
@@ -125,58 +127,58 @@ namespace MapGenerator
             return false;
         }
 
-        /// <summary>
-        /// TODO! 
-        /// SHOULD GIVE EACH TILE IN REGION A NEW RATING.
-        /// </summary>
-        /// <param name="canWalk"></param>
-        /// <returns></returns>
-		private Block[] RateRegionTiles(int[,] canWalk)
-        {
-            Block[] blocks = new Block[GetArea()];
-            for (int i = 0; i < GetArea(); i++)
-            {
-                blocks[i] = new Block(GetCastle().GetPosition(), coordinates[i], canWalk);
-            }
-            return blocks;
-        }
-
-        /// <summary>
-        /// Places a resource building inside the region.
-        /// </summary>
-        /// <param name="building"></param>
-        /// <param name="canWalk"></param>
-		public void PlaceResourceBuilding(ResourceBuilding building, int[,] canWalk)
-        {
-            Block[] blocks = RateRegionTiles(canWalk);
-
-            // DEFINERER BYGGNINGSTYPEN TIL HVER TILE:
-            for (int i = 0; i < economy.woodMineCount; i++)
-            {
-                float minDistance = building.MinDistFromTown;
-                float maxDistance = building.MaxDistFromTown;
-
-                for (int j = 0; j < GetArea(); j++)
-                {
-                    float distance = blocks[j].GetDistanceFromCastle();
-
-                    if (blocks[j].CanPlaceBuilding(building.ShapeType))
-                    {
-                        if (distance >= minDistance && distance <= maxDistance)
-                        {
-                            // KLAR TIL Å PLASSERE
-                            building.Origo = (blocks[j].GetPosition());
-                            building.FlipCanWalk(canWalk);
-
-                            // Plasserer bygning.
-                            buildings.Add(building);
-							break;
-                        }
-                        // TODO: CANT PLACE.
-                    }
-                }
-            }
-        }
+//        /// <summary>
+//        /// TODO!
+//        /// SHOULD GIVE EACH TILE IN REGION A NEW RATING.
+//        /// </summary>
+//        /// <param name="canWalk"></param>
+//        /// <returns></returns>
+//		private Block[] RateRegionTiles(int[,] canWalk)
+//        {
+//            Block[] blocks = new Block[GetArea()];
+//            for (int i = 0; i < GetArea(); i++)
+//            {
+//                blocks[i] = new Block(GetCastle().GetPosition(), coordinates[i], canWalk);
+//            }
+//            return blocks;
+//        }
+//
+//        /// <summary>
+//        /// Places a resource building inside the region.
+//        /// </summary>
+//        /// <param name="building"></param>
+//        /// <param name="canWalk"></param>
+//		public void PlaceResourceBuilding(ResourceBuilding building, int[,] canWalk)
+//        {
+//            Block[] blocks = RateRegionTiles(canWalk);
+//
+//            // DEFINERER BYGGNINGSTYPEN TIL HVER TILE:
+//            for (int i = 0; i < economy.woodMineCount; i++)
+//            {
+//                float minDistance = building.MinDistFromTown;
+//                float maxDistance = building.MaxDistFromTown;
+//
+//                for (int j = 0; j < GetArea(); j++)
+//                {
+//                    float distance = blocks[j].GetDistanceFromCastle();
+//
+//                    if (blocks[j].CanPlaceBuilding(building.ShapeType))
+//                    {
+//                        if (distance >= minDistance && distance <= maxDistance)
+//                        {
+//                            // KLAR TIL Å PLASSERE
+//                            building.Origo = (blocks[j].GetPosition());
+//                            building.FlipCanWalk(canWalk);
+//
+//                            // Plasserer bygning.
+//                            buildings.Add(building);
+//							break;
+//                        }
+//                        // TODO: CANT PLACE.
+//                    }
+//                }
+//            }
+//        }
 
         public Reaction[,] makeReactions(Reaction[,] reaction)
         {

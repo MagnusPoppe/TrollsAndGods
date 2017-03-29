@@ -18,13 +18,21 @@ namespace OverworldObjects
 		public const int QUAD_RIGHT 	= 10;
 		public const int QUADx2_RIGHT 	= 11;
 		public const int QUADx2_LEFT 	= 12;
+	    public const int SPECIAL_DOUBLE_RIGHT = 13;
+	    public const int SPECIAL_DOUBLE_LEFT = 14;
 
-		public const int SHAPE_COUNT = 12;
+		public const int SHAPE_COUNT = 13;
+	    public const int SPECIAL_SHAPE_COUNT = 2;
 
 		public static int[] dx = { -2, -1, 0, 1, 2 };
 		public static int[] dy = { -1, 0, 1, 2, 3 };
 
 		const int FILTER_SIZE = 5;
+
+	    public static bool isSpecialShape(int shapeType)
+	    {
+	        return shapeType >= SHAPE_COUNT;
+	    }
 
 		/// <summary>
 		/// Tests if the building fits inside the grid.
@@ -39,7 +47,8 @@ namespace OverworldObjects
 			if ((Position.x >= FILTER_SIZE/2 && Position.x < canWalk.GetLength(1)-FILTER_SIZE/2) 
 			&&  (Position.y >= FILTER_SIZE/2 && Position.y < canWalk.GetLength(0)-FILTER_SIZE/2))
 			{
-				for (int i = 0; i < SHAPE_COUNT; i++)
+			    int i;
+				for (i = 0; i < SHAPE_COUNT; i++)
 					BuildingTypesFit[i] = fits(i, Position.x, Position.y, canWalk);
 			}
 			return BuildingTypesFit;
@@ -63,13 +72,45 @@ namespace OverworldObjects
 					int dxx = ekteX + dx[x];
 					int dyy = ekteY + dy[y];
 
-					if (shape[x, y] == 1)
+					if (shape[x, y] > 0)
 						if (canWalk[dxx, dyy] == MapGenerator.MapMaker.CANNOTWALK)
 							return false;
 				}
 			}
 			return true;
 		}
+
+
+	    /// <summary>
+	    /// </summary>
+	    /// <param name="pos"> Position to place mountain</param>
+	    /// <param name="spriteID"> ID of mountain sprite</param>
+	    /// <param name="environment"> ID of environment underneath the mountain</param>
+	    /// <param name="shape"> Shape of the mountain</param>
+	    public static bool  FitSpecial(Point pos, int spriteID, int otherID, int[,] shape, int[,] map, int[,] canWalk)
+	    {
+	        for (int iy = 0; iy < shape.GetLength(0); iy++)
+	        {
+	            for (int ix = 0; ix < shape.GetLength(1); ix++)
+	            {
+
+	                int x = pos.x + (ix - (shape.GetLength(1)/2));
+	                int y = pos.y + (iy - (shape.GetLength(0)/2));
+
+	                if (pos.inBounds(canWalk))
+	                {
+	                    if (shape[ix, iy] == 1)
+	                        if (canWalk[x, y] == MapMaker.CANNOTWALK)
+	                            return false;
+
+	                    if (shape[ix, iy] == 2)
+                            if (map[x, y] != otherID)
+                                return false;
+	                }
+	            }
+	        }
+	        return true;
+	    }
 
         /// <summary>
         /// Determines whether a shape can fit over the specified Environment in a given map.
@@ -220,7 +261,20 @@ namespace OverworldObjects
                     {0,0,1,1,0},
                     {0,1,1,0,0},
                     {0,0,1,0,0}
+                },{ // SPECIAL DOUBLE RIGHT
+                    {0,0,0,0,0},
+                    {0,0,1,0,0},
+                    {0,0,0,2,0},
+                    {0,0,0,0,0},
+                    {0,0,0,0,0}
+                },{ // SPECIAL DOUBLE LEFT
+                    {0,0,0,0,0},
+                    {0,0,1,0,0},
+                    {0,0,2,0,0},
+                    {0,0,0,0,0},
+                    {0,0,0,0,0}
                 }
+
             };
 	}
 }

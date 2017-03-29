@@ -1,77 +1,71 @@
 ﻿using System;
 using OverworldObjects;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace MapGenerator
 {
-	public class Block
+	public class Block : IComparable
 	{
-        Point position;
-		bool[] possibleBuildings;
-		float rating;
-		float distanceFromCastle;
+	    public const int MIN_DISTANCE = 0;
+	    public const int MAX_DISTANCE = 1;
 
-        public Block(Point origin, Point position, int[,] canWalk)
-		{
-			this.position = position;
-			possibleBuildings = Shapes.GetBuildingFit(position, canWalk);
-			rating = 0.0f;
+	    public Point Position { get; private set; }
+	    private int[,] shape;
+	    private int shapeType;
+	    private Rating rating;
 
-			distanceFromCastle = origin.DistanceTo(position);
+	    public Rating Rate
+	    {
+	        get { return rating; }
+	    }
 
-			for (int i = 0; i < possibleBuildings.Length; i++)
-				if (possibleBuildings[i])
-					rating++;
+	    public Block(Point position, int shapeType, int[] distances)
+	    {
+	        this.Position = position;
+	        this.shape = Shapes.GetShape(shapeType);
+	    }
 
-			rating = (float)Math.Pow(rating/13, 3)*13;
-			//TODO Debug.Log("RATING: " + rating);
-		}
+	    public bool isSuitable(int[,] canWalk)
+	    {
+	        return Shapes.GetBuildingFit(Position, canWalk)[shapeType];
+	    }
 
-		public float GetDistanceFromCastle()
-		{
-			return distanceFromCastle;
-		}
+	    public class Rating
+	    {
+	        // ALL FACTORS; RANGING FROM 0 - 10;
+	        private int distanceFromRegionCenter;
+	        private int scenery;
 
-		public Point GetPosition()
-		{
-			return position;
-		}
+	        /// <summary>
+	        /// Rates the distance from region center.
+	        /// Ratings go from 0 - 10.
+	        /// </summary>
+	        /// <param name="min"> Minimum distance from region center</param>
+	        /// <param name="actual">Actual distance from region center</param>
+	        /// <param name="max"> Maximum distance from region center</param>
+	        public void Distance(int min, float actual, int max)
+	        {
+	            float rating = actual / (max - min); // GETTING THE SCALED NUMBER;
+	            distanceFromRegionCenter = (int)(rating * 10);
+	        }
 
-		public float GetRating()
-		{
-			return rating;
-		}
+	        public void Scenery(int score)
+	        {
+	            scenery = score;
+	        }
 
-		public bool CanPlaceBuilding(int buildingType)
-		{
-			return possibleBuildings[buildingType];
-		}
+	        public int rating()
+	        {
+	            return distanceFromRegionCenter + scenery;
+	        }
+	    }
 
-        public Point[] GetOccupiedTiles(int buildingType)
-		{
-			int x = position.x;
-			int y = position.y;
+	    public int CompareTo(object obj)
+	    {
+            Block other = (Block) obj;
 
-			int[,] shape = Shapes.GetShape(buildingType);
-            List<Point> occupiedArea = new List<Point>();
-
-			for (int iy = 0; iy < shape.GetLength(0); iy++)
-			{
-				for (int ix = 0; ix < shape.GetLength(1); ix++)
-				{
-					int dx = Shapes.dx[ix];
-					int dy = Shapes.dy[iy];
-
-					if (shape[ix, iy] == 1)
-                        occupiedArea.Add(new Point(x + dx, y + dy));
-				}
-			}
-			if (occupiedArea.Count > 0)
-				return occupiedArea.ToArray();
-
-			return null;
-		}
-		
-
+	        return (int) (this.Rate.rating() - other.Rate.rating());
+	    }
 	}
 }
