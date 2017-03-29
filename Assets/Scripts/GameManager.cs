@@ -111,6 +111,8 @@ public class GameManager : MonoBehaviour
     GameObject[] townObjects;
     Button[] heroButton;
     Button[] townButton;
+    private Font FONT;
+    GameObject[] stackText;
 
     //currentReaction
     private Reaction curReaction;
@@ -132,12 +134,14 @@ public class GameManager : MonoBehaviour
         townObjects = new GameObject[8];
         heroButton = new Button[8];
         townButton = new Button[8];
+        stackText = new GameObject[14];
 
         // 7 + 7 units + 2 heroes in town view
         armyInActiveTown = new GameObject[16];
         townArmyCanvas = GameObject.Find("ArmyCanvas");
         swapObject = null;
         overworldInteractablePanel = GameObject.Find("OverworldInteractablePanel");
+        FONT = UnityEngine.Resources.Load<Font>("Fonts/ARIAL");
 
         parentToMarkers = new GameObject();
         parentToMarkers.name = "Path";
@@ -1057,21 +1061,40 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < 7; i++)
         {
             topPosition = new Vector2(topPosition.x + (armyInActiveTown[0].GetComponent<Image>().sprite.bounds.size.x / 2), topPosition.y);
-
+            
             armyInActiveTown[count] = Instantiate(UnityEngine.Resources.Load<GameObject>("Prefabs/Button"));
             armyInActiveTown[count].transform.parent = townArmyCanvas.transform;
             armyInActiveTown[count].transform.position = topPosition;
             armyInActiveTown[count].transform.localScale /= 4;
             armyInActiveTown[count].name = i + "";
+
             Button visitingUnitButton = armyInActiveTown[count].GetComponent<Button>();
             visitingUnitButton.GetComponent<Image>().sprite = defaultsprite;
             GameObject swapObject = armyInActiveTown[count];
             visitingUnitButton.onClick.AddListener(() => SwapArmy(swapObject, town));
             RectTransform rectVisitingUnit = armyInActiveTown[count].GetComponent<RectTransform>();
             rectVisitingUnit.sizeDelta = new Vector2(armyInActiveTown[count].GetComponent<Image>().sprite.bounds.size.x, armyInActiveTown[count].GetComponent<Image>().sprite.bounds.size.y) * 2;
-            count++;
+            stackText[i] = new GameObject();
+            stackText[i].transform.parent = townArmyCanvas.transform;
+            stackText[i].transform.localScale = townArmyCanvas.transform.localScale;
+            stackText[i].transform.localScale /= 2f;
+            Text text = stackText[i].AddComponent<Text>();
+            text.font = FONT;
+            text.fontSize = 25;
+            text.text = town.VisitingUnits.getUnitAmount(i) + "";
+            text.color = Color.black;
+            text.alignment = TextAnchor.LowerRight;
+            text.raycastTarget = false;
+            stackText[i].transform.position = new Vector2(armyInActiveTown[count].transform.position.x, (armyInActiveTown[count].transform.position.y) - (defaultsprite.bounds.size.y * 0.05f));
             if (town.VisitingUnits.GetUnits()[i] != null)
+            {
+                stackText[i].SetActive(true);
                 visitingUnitButton.GetComponent<Image>().sprite = libs.GetUnit(town.VisitingUnits.GetUnits()[i].GetSpriteID());
+            }
+            else
+                stackText[i].SetActive(false);
+            count++;
+
         }
 
         Vector2 bottomPosition = startPosition = new Vector2(startPosition.x, startPosition.y - (visitingHeroButton.GetComponent<Image>().sprite.bounds.size.y / 2));
@@ -1108,9 +1131,26 @@ public class GameManager : MonoBehaviour
             visitingUnitButton.onClick.AddListener(() => SwapArmy(swapObject, town));
             RectTransform rectVisitingUnit = armyInActiveTown[count].GetComponent<RectTransform>();
             rectVisitingUnit.sizeDelta = new Vector2(armyInActiveTown[count].GetComponent<Image>().sprite.bounds.size.x, armyInActiveTown[count].GetComponent<Image>().sprite.bounds.size.y) * 2;
-            count++;
+            stackText[i + 7] = new GameObject();
+            stackText[i + 7].transform.parent = townArmyCanvas.transform;
+            stackText[i + 7].transform.localScale = townArmyCanvas.transform.localScale;
+            stackText[i + 7].transform.localScale /= 2f;
+            Text text = stackText[i + 7].AddComponent<Text>();
+            text.font = FONT;
+            text.fontSize = 25;
+            text.text = town.StationedUnits.getUnitAmount(i) + "";
+            text.color = Color.black;
+            text.alignment = TextAnchor.LowerRight;
+            text.raycastTarget = false;
+            stackText[i + 7].transform.position = new Vector2(armyInActiveTown[count].transform.position.x, (armyInActiveTown[count].transform.position.y) - (defaultsprite.bounds.size.y * 0.05f));
             if (town.StationedUnits.GetUnits()[i] != null)
+            {
+                stackText[i + 7].SetActive(true);
                 visitingUnitButton.GetComponent<Image>().sprite = libs.GetUnit(town.StationedUnits.GetUnits()[i].GetSpriteID());
+            }
+            else
+                stackText[i + 7].SetActive(false);
+            count++;
         }
     }
 
@@ -1134,9 +1174,16 @@ public class GameManager : MonoBehaviour
         for (int i=0; i<UnitTree.TREESIZE; i++)
         {
             if (town.VisitingUnits != null && town.VisitingUnits.GetUnits()[i] != null)
+            {
+                stackText[i].SetActive(true);
+                stackText[i].GetComponent<Text>().text = town.VisitingUnits.getUnitAmount(i) + "";
                 armyInActiveTown[count++].GetComponent<Button>().GetComponent<Image>().sprite = libs.GetUnit(town.VisitingUnits.GetUnits()[i].GetSpriteID());
+            }
             else
+            {
+                stackText[i].SetActive(false);
                 armyInActiveTown[count++].GetComponent<Button>().GetComponent<Image>().sprite = defaultSprite;
+            }
         }
         if (town.StationedHero != null)
             armyInActiveTown[count++].GetComponent<Button>().GetComponent<Image>().sprite = libs.GetPortrait(town.StationedHero.GetPortraitID());
@@ -1145,9 +1192,16 @@ public class GameManager : MonoBehaviour
         for (int i=0; i< UnitTree.TREESIZE; i++)
         {
             if (town.StationedUnits != null && town.StationedUnits.GetUnits()[i] != null)
+            {
+                stackText[i + 7].SetActive(true);
+                stackText[i + 7].GetComponent<Text>().text = town.StationedUnits.getUnitAmount(i) + "";
                 armyInActiveTown[count++].GetComponent<Button>().GetComponent<Image>().sprite = libs.GetUnit(town.StationedUnits.GetUnits()[i].GetSpriteID());
+            }
             else
+            {
+                stackText[i + 7].SetActive(false);
                 armyInActiveTown[count++].GetComponent<Button>().GetComponent<Image>().sprite = defaultSprite;
+            }
         }
     }
 
@@ -1359,6 +1413,7 @@ public class GameManager : MonoBehaviour
     /// <param name="player">The player the UI will fetch information from</param>
     private void setOverworldUI(Player player)
     {
+
         Vector2 nextPosition = new Vector2(overworldInteractablePanelPosition.x + 6.6f, overworldInteractablePanelPosition.y + 5f);
         Vector2 nextTownPosition = new Vector2(nextPosition.x + 1.5f, nextPosition.y);
         // Heroes
