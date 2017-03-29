@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class Log
 {
-    private Events[] eventTab;
+    private Event[] eventTab;
 }
