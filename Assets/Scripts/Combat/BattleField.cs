@@ -157,6 +157,9 @@ public class BattleField {
         if (defendingUnits.Amount < 0) defendingUnits.Amount = 0;
     }
 
+    /// <summary>
+    /// Cleans up dead units when combat is ended
+    /// </summary>
     public void endCombat()
     {
         for (int i = 0; i<UnitTree.TREESIZE; i++)

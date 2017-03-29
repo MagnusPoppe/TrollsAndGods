@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
 using MapGenerator;
@@ -216,6 +217,9 @@ public class GraphicalBattlefield : MonoBehaviour
                 SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
                 sr.sprite = UnityEngine.Resources.Load<Sprite>("Sprites/Units/Troll/Frame 1");
                 sr.sortingLayerName = "CombatUnits";
+                TextMesh tm = go.GetComponentInChildren<TextMesh>();
+                tm.text = ""+units.getUnitAmount(i);
+                tm.GetComponent<Renderer>().sortingLayerName = "CombatUnits";
                 UnitGameObject ugo = go.GetComponent<UnitGameObject>();
                 ugo.UnitTree = units;
                 ugo.PosInUnitTree = i;
@@ -245,6 +249,9 @@ public class GraphicalBattlefield : MonoBehaviour
                 SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
                 sr.sprite = UnityEngine.Resources.Load<Sprite>("Sprites/Units/Troll/Frame 1");
                 sr.sortingLayerName = "CombatUnits";
+                TextMesh tm = go.GetComponentInChildren<TextMesh>();
+                tm.text = "" + units.getUnitAmount(i);
+                tm.GetComponent<Renderer>().sortingLayerName = "CombatUnits";
                 UnitGameObject ugo = go.GetComponent<UnitGameObject>();
                 ugo.UnitTree = units;
                 ugo.PosInUnitTree = i;
@@ -263,7 +270,8 @@ public class GraphicalBattlefield : MonoBehaviour
         }
         // Sorts initative in descending order
         // todo fix sort
-        //Initative = Initative.OrderByDescending(UnitGameObject => UnitGameObject.Initative).ToArray();
+        Array.Sort(initative);
+        Array.Reverse(initative);
         WhoseTurn = 0;
         initative[whoseTurn].ItsTurn = true;
     }
@@ -302,7 +310,7 @@ public class GraphicalBattlefield : MonoBehaviour
                 if (attackingUnit.IsRanged)
                 {
                     Ranged r = (Ranged) attackingUnit;
-                    if (r.Ammo > 0)
+                    if (r.Ammo > 0 && !r.Threatened)
                     {
                         battleField.attackWithoutMoving(activeUnit.LogicalPos, defender.LogicalPos, true);
                         //todo trigger animation
@@ -334,6 +342,8 @@ public class GraphicalBattlefield : MonoBehaviour
                 else livingDefenders--;
             }
             Debug.Log(livingAttackers + " " + livingDefenders);
+            updateAmount(defender);
+            updateAmount(getUnitWhoseTurnItIs());
         }
     }
 
@@ -385,6 +395,9 @@ public class GraphicalBattlefield : MonoBehaviour
         flipReachableAndAttackable();
     }
 
+    /// <summary>
+    /// method flips reachable and attackable bools in UnitGameObjects based on possibleMovement and ranged
+    /// </summary>
     private void flipReachableAndAttackable()
     {
         Unit unitWhoseTurnItIs = Initative[whoseTurn].UnitTree.GetUnits()[Initative[whoseTurn].PosInUnitTree];
@@ -399,6 +412,9 @@ public class GraphicalBattlefield : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Flips all enemy units to attackable
+    /// </summary>
     private void flipAttackable()
     {
         for (int i = 0; i < initative.Length; i++)
@@ -410,6 +426,19 @@ public class GraphicalBattlefield : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Updates unit amount text representation
+    /// </summary>
+    /// <param name="ugo">Unit to be updated</param>
+    public void updateAmount(UnitGameObject ugo)
+    {
+        ugo.GetComponentInChildren<TextMesh>().text = ""+ugo.UnitTree.getUnitAmount(ugo.PosInUnitTree);
+    }
+
+    /// <summary>
+    /// Gets the unit whose turn it is
+    /// </summary>
+    /// <returns>UnitGameObject whose turn it is</returns>
     public UnitGameObject getUnitWhoseTurnItIs()
     {
         return Initative[WhoseTurn];

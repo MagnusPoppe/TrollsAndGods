@@ -1,9 +1,10 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 /// <summary>
 /// Represents a unit on battlefield
 /// </summary>
-public class UnitGameObject : MonoBehaviour
+public class UnitGameObject : MonoBehaviour, IComparable<UnitGameObject>
 {
 
     bool itsTurn, attackingSide, attackable;
@@ -13,6 +14,7 @@ public class UnitGameObject : MonoBehaviour
     GraphicalBattlefield graphicalBattlefield;
     Point logicalPos;
 
+    //Arrays for hexdirections
     private readonly Point[] HEXDIRSEVEN =
     {
         new Point(-1,1), new Point(0,1),
@@ -32,6 +34,10 @@ public class UnitGameObject : MonoBehaviour
         AttackingSide = ItsTurn = attackable = false;
 	}
 	
+    /// <summary>
+    /// Decides what happens when you mouseOver unit
+    /// </summary>
+    /// <param name="direction">The direction your approaching from</param>
 	public void MouseOver(int direction)
     {
         if (ItsTurn)
@@ -45,6 +51,10 @@ public class UnitGameObject : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Decides what happens when you click on unit
+    /// </summary>
+    /// <param name="direction">What direction your approaching from</param>
     public void MouseDown(int direction)
     {
         if (ItsTurn)
@@ -161,5 +171,10 @@ public class UnitGameObject : MonoBehaviour
         {
             logicalPos = value;
         }
+    }
+
+    public int CompareTo(UnitGameObject other)
+    {
+        return initative-other.Initative;
     }
 }
