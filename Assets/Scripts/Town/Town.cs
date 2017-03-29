@@ -55,9 +55,9 @@ namespace TownView
                 // TODO check merge, and merge - if there's not an hero in stationedarmy
                 if (stationedHero == null)
                 {
-                    if (stationedUnits != null && visitingHero.Units.CanMerge(StationedUnits))
+                    if (VisitingHero.Units.CanMerge(stationedUnits))
                     {
-                        visitingHero.Units.Merge(stationedUnits);
+                        VisitingHero.Units.Merge(stationedUnits);
                     }
                 }
 

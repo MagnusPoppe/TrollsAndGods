@@ -56,19 +56,20 @@ public class UnitTree
     /// <summary>
     /// Called upon when a hero tries to enter a stationedTown
     /// </summary>
-    /// <param name="units"></param>
+    /// <param name="units1">first army to check into</param>
+    /// <param name="units2">the other army</param>
     /// <returns></returns>
-    public bool CanMerge(UnitTree units)
+    public bool CanMerge(UnitTree units2)
     {
-        if (units == null || units.units == null)
+        if (this == null || units2 == null)
             return true;
 
-        // Check if merge can be done
         UnitTree tmp1 = this;
-        UnitTree tmp2 = units;
+        UnitTree tmp2 = units2;
+        // Check if merge can be done
 
         // Perform testMerge of tmp2 into tmp1
-        Merge(tmp1, tmp2);
+        tmp1.Merge(tmp2);
 
         // Can merge if count in the second unittree is less or same as first unittree's openspots
         if (tmp1.OpenSpots() >= tmp2.CountUnits())
@@ -109,55 +110,59 @@ public class UnitTree
     }
 
     /// <summary>
-    /// Merges this army with parameter army
+    /// Merges input army2 into army1
     /// </summary>
-    /// <param name="units2">input army</param>
+    /// <param name="units2">Second input army</param>
     public void Merge(UnitTree units2)
     {
         // Merge duplicates units2 into units1
         for (int i = 0; i < GetUnits().Length; i++)
         {
-            for (int j = 0; j < GetUnits().Length; j++)
+            if(GetUnits()[i] != null)
             {
-                if (this.GetUnits()[i] != null && units2.GetUnits()[i] != null && units2.GetUnits()[i].equals(this.GetUnits()[j]))
+                for (int j = 0; j < GetUnits().Length; j++)
                 {
-                    // Duplicate found in a bar, put one of them into the other one, and add amount
-                    this.unitAmount[i] += this.unitAmount[j];
-                    units2.GetUnits()[i] = null;
+                    if (units2.GetUnits()[j] != null && units2.GetUnits()[j].equals(GetUnits()[i]))
+                    {
+                        // Duplicate found in a bar, put one of them into the other one, and add amount
+                        unitAmount[i] += units2.unitAmount[j];
+                        units2.GetUnits()[j] = null;
+                    }
                 }
             }
         }
+
         // Merge duplicates in same bar
         for (int i = 0; i < GetUnits().Length; i++)
         {
-            for (int j = 0; j < GetUnits().Length; j++)
+            if(GetUnits()[i] != null)
             {
-                if (this.GetUnits()[i] != null && units2.GetUnits()[i] != null && this.GetUnits()[i].equals(this.GetUnits()[j]))
+                for (int j = i+1; j < GetUnits().Length; j++)
                 {
-                    // Duplicate found in a bar, put one of them into the other one, and add amount
-                    this.unitAmount[i] += this.unitAmount[j];
-                    this.units[j] = null;
+                    if (GetUnits()[j] != null && GetUnits()[i].equals(GetUnits()[j]))
+                    {
+                        // Duplicate found in a bar, put one of them into the other one, and add amount
+                        unitAmount[i] += unitAmount[j];
+                        units[j] = null;
+                    }
                 }
             }
         }
 
         // Merge units2 into units1
-        if(units2 != null)
+        for (int i = 0; i < GetUnits().Length; i++)
         {
-            for (int i = 0; i < GetUnits().Length; i++)
+            // If unit is found in units2
+            if (units2.GetUnits()[i] != null)
             {
-                // If unit is found in units2
-                if (units2.GetUnits()[i] != null)
+                // Check the units1 row to find next open spot to put it
+                for (int j = 0; j < GetUnits().Length; j++)
                 {
-                    // Check the units1 row to find next open spot to put it
-                    for (int j = 0; j < GetUnits().Length; j++)
+                    if (GetUnits()[j] == null)
                     {
-                        if (this.GetUnits()[j] == null)
-                        {
-                            this.GetUnits()[j] = units2.GetUnits()[i];
-                            this.unitAmount[j] += units2.getUnitAmount(j);
-                            units2.GetUnits()[i] = null;
-                        }
+                        GetUnits()[j] = units2.GetUnits()[i];
+                        unitAmount[j] = units2.getUnitAmount(i);
+                        units2.GetUnits()[i] = null;
                     }
                 }
             }
@@ -193,6 +198,7 @@ public class UnitTree
         return false;
     }
 
+    /*
     /// <summary>
     /// Merges input army2 into army1
     /// </summary>
@@ -200,6 +206,7 @@ public class UnitTree
     /// <param name="units2">Second input army</param>
     public void Merge(UnitTree units1, UnitTree units2)
     {
+        /*
         // Merge units1 into units2
         for (int i = 0; i < GetUnits().Length; i++)
         {
@@ -225,8 +232,8 @@ public class UnitTree
                     units2.units[j] = null;
                 }
             }
-        }
-    }
+        }*/
+    //}
 
     /// <summary>
     /// Sets unit at position
