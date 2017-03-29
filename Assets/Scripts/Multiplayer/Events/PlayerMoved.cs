@@ -13,9 +13,9 @@ namespace Multiplayer
         private Point from;
         private Point to;
 
-        public PlayerMoved(int playerID, Point from, Point to) : base(ID_FROM, ID_TO, DESCRIPTION)
+        public PlayerMoved(int id, string description, int playerId, Point from, Point to) : base(id, description)
         {
-            this.playerID = playerID;
+            playerID = playerId;
             this.from = from;
             this.to = to;
         }

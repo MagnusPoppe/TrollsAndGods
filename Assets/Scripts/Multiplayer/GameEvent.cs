@@ -4,9 +4,8 @@ namespace Multiplayer
 {
     public abstract class GameEvent : Event
     {
-        protected GameEvent(int IDFrom, int IDTo, string description) : base(IDFrom, IDTo, description)
+        protected GameEvent(int id, string description) : base(id, description)
         {
-
         }
 
         public abstract String unpackJSON( String JSON );

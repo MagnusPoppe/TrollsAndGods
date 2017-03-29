@@ -5,28 +5,21 @@ namespace Multiplayer
     public abstract class Event
     {
 
-        private int IDfrom, IDto;
+        private int id;
         private string description;
 
-        public Event(int IDFrom, int IDTo, string description)
+        public Event(int id,string description)
         {
-            this.IDfrom = IDFrom;
-            this.IDto = IDTo;
+            this.id = id;
             this.description = description;
         }
 
         public abstract void execute();
 
-        public int Dfrom
+        public int Id
         {
-            get { return IDfrom; }
-            set { IDfrom = value; }
-        }
-
-        public int Dto
-        {
-            get { return IDto; }
-            set { IDto = value; }
+            get { return id; }
+            set { id = value; }
         }
 
         public string Description
