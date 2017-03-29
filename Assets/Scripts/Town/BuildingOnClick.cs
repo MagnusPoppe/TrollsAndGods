@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using TownView;
 using UI;
 using UnityEngine.UI;
@@ -7,7 +8,6 @@ using Units;
 
 namespace TownView
 {
-
     public class BuildingOnClick : MonoBehaviour
     {
         GameManager gm;
@@ -19,7 +19,7 @@ namespace TownView
         float add = 1f;
 
         private UnitBuilding currentUnitBuilding; // Clear after exit dwelling screen;
-        
+
         GameObject canvas;
 
         GameObject frame;
@@ -47,56 +47,39 @@ namespace TownView
         int selectedEarnResource;
         int unitAmount;
 
+        private Font FONT;
+
+        private Text unitTotalCountText;
+        private Text unitToBuyCountText;
+        private Text textCost;
+        private Text[] totalCostTexts;
+
         public GameObject[] BuildingObjects
         {
-            get
-            {
-                return buildingObjects;
-            }
+            get { return buildingObjects; }
 
-            set
-            {
-                buildingObjects = value;
-            }
+            set { buildingObjects = value; }
         }
 
         public Building Building
         {
-            get
-            {
-                return building;
-            }
+            get { return building; }
 
-            set
-            {
-                building = value;
-            }
+            set { building = value; }
         }
 
         public Town Town
         {
-            get
-            {
-                return town;
-            }
+            get { return town; }
 
-            set
-            {
-                town = value;
-            }
+            set { town = value; }
         }
 
         public Player Player
         {
-            get
-            {
-                return player;
-            }
+            get { return player; }
 
-            set
-            {
-                player = value;
-            }
+            set { player = value; }
         }
 
         // Inits variables used throughout the onClick chain
@@ -106,7 +89,8 @@ namespace TownView
             libs = GameManager.libs;
             GameObject go = GameObject.Find("GameManager");
             gm = go.GetComponent<GameManager>();
-
+            FONT = UnityEngine.Resources.Load<Font>("Fonts/ARIAL");
+            totalCostTexts = new Text[5];
         }
 
         // Fade effet when hovering a building in the town view
@@ -115,6 +99,7 @@ namespace TownView
             if (add > 0.6f)
                 spriteRenderer.color = new Color(255, 255, 255, add -= 0.02f);
         }
+
         private void OnMouseExit()
         {
             add = 1f;
@@ -146,9 +131,9 @@ namespace TownView
         {
             // Gets the type of window associated with the given building
             int windowType = b.UIType();
-            
+
             gm.swapObject = null;
-            
+
             // Default set resources to nothing
             selectedEarnResource = selectedPayResource = -1;
 
@@ -229,7 +214,7 @@ namespace TownView
             textObject.transform.localScale = canvas.transform.localScale;
             textObject.name = Building.Name + " text";
             Text text = textObject.AddComponent<Text>();
-            text.font = UnityEngine.Resources.Load<Font>("Fonts/ARIAL");
+            text.font = FONT;
             text.fontSize = 18;
             text.text = Building.Description;
             text.alignment = TextAnchor.UpperCenter;
@@ -239,6 +224,7 @@ namespace TownView
 
         private void CreateDwellingView()
         {
+            // Gets the unit to create a view for 
             currentUnitBuilding = (UnitBuilding) building;
 
             toBuyObject = currentUnitBuilding.Unit;
@@ -246,20 +232,155 @@ namespace TownView
 
             gm.CreateUnitCard(cardWindow, canvas, currentUnitBuilding);
 
+            // Creates the purchase slider
             string prefabPath = "Prefabs/Slider";
             GameObject sliderObject = Instantiate(UnityEngine.Resources.Load<GameObject>(prefabPath));
             sliderObject.transform.parent = cardSpriteRenderer.transform;
             sliderObject.transform.localScale = canvas.transform.localScale;
-            float bottomY = cardSpriteRenderer.bounds.size.y / 4;
+            float bottomY = 1.5f;
             sliderObject.transform.position = new Vector2(cardSpriteRenderer.transform.position.x, bottomY);
             slider = sliderObject.GetComponent<Slider>();
-            slider.maxValue = currentUnitBuilding.UnitsPresent;
+            //slider.maxValue = currentUnitBuilding.UnitsPresent;
+            slider.maxValue = player.Wallet.CanAffordCount(currentUnitBuilding.Unit, currentUnitBuilding.UnitsPresent);
             slider.onValueChanged.AddListener(adjustUnits);
+
+            // Text for total available units
+            GameObject unitTotalCountObject = new GameObject();
+            unitTotalCountObject.name = "Units available object";
+            unitTotalCountObject.transform.parent = cardSpriteRenderer.transform;
+            unitTotalCountObject.transform.localScale = canvas.transform.localScale;
+            unitTotalCountObject.transform.position = new Vector2(sliderObject.transform.position.x + 1.8f,
+                sliderObject.transform.position.y - 1f);
+            unitTotalCountText = unitTotalCountObject.AddComponent<Text>();
+            unitTotalCountText.color = Color.black;
+            unitTotalCountText.alignment = TextAnchor.UpperLeft;
+            unitTotalCountText.font = FONT;
+
+            // Text for how many units to buy
+            GameObject unitToBuyCountObject = new GameObject();
+            unitToBuyCountObject.name = "Units to buy object";
+            unitToBuyCountObject.transform.parent = cardSpriteRenderer.transform;
+            unitToBuyCountObject.transform.localScale = canvas.transform.localScale;
+            unitToBuyCountObject.transform.position = new Vector2(sliderObject.transform.position.x - 0.3f,
+                sliderObject.transform.position.y - 1f);
+            unitToBuyCountText = unitToBuyCountObject.AddComponent<Text>();
+            unitToBuyCountText.color = Color.black;
+            unitToBuyCountText.alignment = TextAnchor.UpperLeft;
+            unitToBuyCountText.font = FONT;
+
+            unitTotalCountText.text = currentUnitBuilding.UnitsPresent + "";
+            unitToBuyCountText.text = slider.value + "";
+
+            // positions for resource images and text
+            Vector2 position = new Vector2(slider.transform.position.x - 3f, slider.transform.position.y + 2f);
+            float offset = 0.6f;
+
+            for (int i = 0; i < currentUnitBuilding.Unit.Price.GetResourceTab().Length; i++)
+            {
+                if (currentUnitBuilding.Unit.Price.GetResourceTab()[i] > 0)
+                {
+                    GameObject imageObject = new GameObject();
+                    imageObject.transform.parent = cardWindow.transform;
+                    imageObject.transform.position = position;
+                    imageObject.name = town.Buildings[i].Cost.ResourceToString(i) + "image";
+                    SpriteRenderer sprResource = imageObject.AddComponent<SpriteRenderer>();
+                    string spritePath = "Sprites/UI/gold"; // TODO add to IngameObjectLibrary
+                    if (i == 1)
+                        spritePath = "Sprites/UI/wood";
+                    else if (i == 2)
+                        spritePath = "Sprites/UI/ore";
+                    else if (i == 3)
+                        spritePath = "Sprites/UI/crystal";
+                    else if (i == 4)
+                        spritePath = "Sprites/UI/gem";
+                    sprResource.sprite = UnityEngine.Resources.Load<Sprite>(spritePath);
+                    sprResource.sortingLayerName = "TownGUI";
+
+                    position = new Vector2(position.x + offset, position.y);
+
+                    GameObject textCostObject = new GameObject();
+                    textCostObject.transform.parent = cardWindow.transform;
+                    textCostObject.transform.position = position;
+                    textCostObject.transform.localScale = canvas.transform.localScale;
+                    textCostObject.name = currentUnitBuilding.Unit.Price.ToString(i);
+                    Text textCost = textCostObject.AddComponent<Text>();
+                    textCost.font = FONT;
+                    textCost.text = currentUnitBuilding.Unit.Price.CostToString(i);
+                    textCost.color = Color.black;
+                    textCost.fontSize = 16;
+                    textCost.alignment = TextAnchor.MiddleCenter;
+
+                    position = new Vector2(position.x - offset, position.y - offset);
+                }
+            }
+
+            // resets positions
+            position = new Vector2(slider.transform.position.x + 2.5f, slider.transform.position.y + 2f);
+
+            for (int i = 0; i < currentUnitBuilding.Unit.Price.GetResourceTab().Length; i++)
+            {
+                if (currentUnitBuilding.Unit.Price.GetResourceTab()[i] > 0)
+                {
+                    GameObject imageObject = new GameObject();
+                    imageObject.transform.parent = cardWindow.transform;
+                    imageObject.transform.position = position;
+                    imageObject.name = town.Buildings[i].Cost.ResourceToString(i) + "image";
+                    SpriteRenderer sprResource = imageObject.AddComponent<SpriteRenderer>();
+                    string spritePath = "Sprites/UI/gold"; // TODO add to IngameObjectLibrary
+                    if (i == 1)
+                        spritePath = "Sprites/UI/wood";
+                    else if (i == 2)
+                        spritePath = "Sprites/UI/ore";
+                    else if (i == 3)
+                        spritePath = "Sprites/UI/crystal";
+                    else if (i == 4)
+                        spritePath = "Sprites/UI/gem";
+                    sprResource.sprite = UnityEngine.Resources.Load<Sprite>(spritePath);
+                    sprResource.sortingLayerName = "TownGUI";
+
+                    position = new Vector2(position.x + offset, position.y);
+
+                    GameObject textCostObject = new GameObject();
+                    textCostObject.transform.parent = cardWindow.transform;
+                    textCostObject.transform.localScale = canvas.transform.localScale;
+                    textCostObject.transform.position = position;
+                    textCostObject.name = currentUnitBuilding.Unit.Price.ToString(i);
+                    textCost = textCostObject.AddComponent<Text>();
+                    textCost.font = FONT;
+                    textCost.text = (currentUnitBuilding.Unit.Price.GetResourceTab()[i] * slider.value) + "";
+                    textCost.color = Color.black;
+                    textCost.fontSize = 16;
+                    textCost.alignment = TextAnchor.MiddleCenter;
+
+                    position = new Vector2(position.x - offset, position.y - offset);
+
+                    totalCostTexts[i] = textCost;
+                }
+            }
         }
 
+        /// <summary>
+        /// Function for unit slider to update the numbers on the UI
+        /// </summary>
+        /// <param name="value">Value of slider</param>
         private void adjustUnits(float value)
         {
             unitAmount = (int) value;
+            unitTotalCountText.text = (currentUnitBuilding.UnitsPresent - unitAmount) + "";
+            unitToBuyCountText.text = unitAmount + "";
+            AdjustTotalCost();
+        }
+
+        /// <summary>
+        /// Adjusts the texts for total price to pay
+        /// </summary>
+        private void AdjustTotalCost()
+        {
+            for (int i = 0; i < totalCostTexts.Length; i++)
+            {
+                if (currentUnitBuilding.Unit.Price.GetResourceTab()[i] > 0)
+                    totalCostTexts[i].text = (currentUnitBuilding.Unit.Price.GetResourceTab()[i] * slider.value) + "";
+            }
         }
 
         /// <summary>
@@ -267,13 +388,15 @@ namespace TownView
         /// </summary>
         private void CreateMarketplaceView()
         {
-            Vector2 nextPositionPay = new Vector2(cardSpriteRenderer.transform.position.x, cardSpriteRenderer.transform.position.y + (cardSpriteRenderer.bounds.size.y / 4));
-            Vector2 nextPositionEarn = new Vector2(nextPositionPay.x, (nextPositionPay.y - cardSpriteRenderer.bounds.size.y/5f));
+            Vector2 nextPositionPay = new Vector2(cardSpriteRenderer.transform.position.x,
+                cardSpriteRenderer.transform.position.y + (cardSpriteRenderer.bounds.size.y / 4));
+            Vector2 nextPositionEarn = new Vector2(nextPositionPay.x,
+                (nextPositionPay.y - cardSpriteRenderer.bounds.size.y / 5f));
             float startX = nextPositionPay.x;
 
             float leftX = startX;
             float rightX = startX;
-            
+
             resourceFrame = new GameObject();
             resourceFrame.transform.parent = cardWindow.transform;
             resourceFrameImage = resourceFrame.AddComponent<SpriteRenderer>();
@@ -287,7 +410,6 @@ namespace TownView
 
             for (int i = 0; i < System.Enum.GetNames(typeof(Resources.type)).Length; i++)
             {
-
                 // Top resource imagebutton with listener
                 GameObject resourceObjectPay = Instantiate(UnityEngine.Resources.Load<GameObject>("Prefabs/Button"));
                 resourceObjectPay.transform.parent = cardWindow.transform;
@@ -297,26 +419,44 @@ namespace TownView
                 int selectedResource = i;
                 //resourceObjectPay.GetComponent<Image>().sprite = libs.GetPortrait(selectedHero.GetPortraitID());
                 Button buttonPay = resourceObjectPay.GetComponent<Button>();
-                buttonPay.onClick.AddListener(() => setTrade(true, selectedResource, resourceObjectPay.transform.position));
-                
+                buttonPay.onClick.AddListener(
+                    () => setTrade(true, selectedResource, resourceObjectPay.transform.position));
+
                 // Quick and dirty switch
                 switch (i)
                 {
-                    case 0: resourceObjectPay.GetComponent<Image>().sprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/gold"); break;
-                    case 1: resourceObjectPay.GetComponent<Image>().sprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/wood"); break;
-                    case 2: resourceObjectPay.GetComponent<Image>().sprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/ore"); break;
-                    case 3: resourceObjectPay.GetComponent<Image>().sprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/crystal"); break;
-                    case 4: resourceObjectPay.GetComponent<Image>().sprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/gem"); break;
+                    case 0:
+                        resourceObjectPay.GetComponent<Image>().sprite =
+                            UnityEngine.Resources.Load<Sprite>("Sprites/UI/gold");
+                        break;
+                    case 1:
+                        resourceObjectPay.GetComponent<Image>().sprite =
+                            UnityEngine.Resources.Load<Sprite>("Sprites/UI/wood");
+                        break;
+                    case 2:
+                        resourceObjectPay.GetComponent<Image>().sprite =
+                            UnityEngine.Resources.Load<Sprite>("Sprites/UI/ore");
+                        break;
+                    case 3:
+                        resourceObjectPay.GetComponent<Image>().sprite =
+                            UnityEngine.Resources.Load<Sprite>("Sprites/UI/crystal");
+                        break;
+                    case 4:
+                        resourceObjectPay.GetComponent<Image>().sprite =
+                            UnityEngine.Resources.Load<Sprite>("Sprites/UI/gem");
+                        break;
                 }
                 RectTransform rectPay = resourceObjectPay.GetComponent<RectTransform>();
-                rectPay.sizeDelta = new Vector2(resourceObjectPay.GetComponent<Image>().sprite.bounds.size.x, resourceObjectPay.GetComponent<Image>().sprite.bounds.size.y) * 2;
+                rectPay.sizeDelta =
+                    new Vector2(resourceObjectPay.GetComponent<Image>().sprite.bounds.size.x,
+                        resourceObjectPay.GetComponent<Image>().sprite.bounds.size.y) * 2;
 
                 GameObject textNameObject = new GameObject();
                 textNameObject.transform.parent = resourceObjectPay.transform;
                 textNameObject.transform.localScale = canvas.transform.localScale;
                 textNameObject.name = player.Wallet.GetResource(i) + ", " + player.Wallet.GetResourceName(i);
                 textResource[i] = textNameObject.AddComponent<Text>();
-                textResource[i].font = UnityEngine.Resources.Load<Font>("Fonts/ARIAL");
+                textResource[i].font = FONT;
                 textResource[i].fontSize = 16;
                 textResource[i].text = player.Wallet.GetResource(i) + "";
                 textResource[i].color = Color.black;
@@ -333,9 +473,10 @@ namespace TownView
                 RectTransform rectEarn = resourceObjectEarn.GetComponent<RectTransform>();
                 rectEarn.sizeDelta = rectPay.sizeDelta;
                 Button buttonEarn = resourceObjectEarn.GetComponent<Button>();
-                buttonEarn.onClick.AddListener(() => setTrade(false, selectedResource, resourceObjectEarn.transform.position));
+                buttonEarn.onClick.AddListener(
+                    () => setTrade(false, selectedResource, resourceObjectEarn.transform.position));
                 resourceObjectEarn.GetComponent<Image>().sprite = resourceObjectPay.GetComponent<Image>().sprite;
-                
+
                 // Calculate the position for the next gameobject
                 float newX = nextPositionPay.x;
                 float newY = nextPositionPay.y;
@@ -350,42 +491,42 @@ namespace TownView
                 }
                 nextPositionPay = new Vector2(newX, newY);
                 nextPositionEarn = new Vector2(newX, nextPositionEarn.y);
-                
             }
 
             string prefabPath = "Prefabs/Slider";
             GameObject sliderObject = Instantiate(UnityEngine.Resources.Load<GameObject>(prefabPath));
             sliderObject.transform.parent = cardSpriteRenderer.transform;
             sliderObject.transform.localScale = canvas.transform.localScale;
-            
+
             float bottomY = cardSpriteRenderer.transform.position.y * 0.5f;
 
             sliderObject.transform.position = new Vector2(cardSpriteRenderer.transform.position.x, bottomY);
-            
+
 
             GameObject textLeftObject = new GameObject();
             textLeftObject.transform.parent = cardSpriteRenderer.transform;
             textLeftObject.transform.localScale = canvas.transform.localScale;
             textLeftResource = textLeftObject.AddComponent<Text>();
-            textLeftResource.font = UnityEngine.Resources.Load<Font>("Fonts/ARIAL");
+            textLeftResource.font = FONT;
             textLeftResource.fontSize = 16;
             //textLeftResource.text = ratio[0] * ratio[1] + "";
             textLeftResource.color = Color.black;
             textLeftResource.alignment = TextAnchor.MiddleRight;
             textLeftObject.transform.position = new Vector2((cardSpriteRenderer.transform.position.x * 0.92f), bottomY);
-            
+
 
             GameObject textRightObject = new GameObject();
             textRightObject.transform.parent = cardSpriteRenderer.transform;
             textRightObject.transform.localScale = canvas.transform.localScale;
             textRightResource = textRightObject.AddComponent<Text>();
-            textRightResource.font = UnityEngine.Resources.Load<Font>("Fonts/ARIAL");
+            textRightResource.font = FONT;
             textRightResource.fontSize = 16;
             //textRightResource.text = 1 + "";
             textRightResource.color = Color.black;
             textRightResource.alignment = TextAnchor.MiddleLeft;
-            textRightResource.transform.position = new Vector2((cardSpriteRenderer.transform.position.x * 1.08f), bottomY);
-            
+            textRightResource.transform.position = new Vector2((cardSpriteRenderer.transform.position.x * 1.08f),
+                bottomY);
+
             slider = sliderObject.GetComponent<Slider>();
             slider.enabled = false;
             slider.maxValue = player.Wallet.GetResource(0) / ratio[1];
@@ -399,7 +540,6 @@ namespace TownView
         /// </summary>
         private void CreateTownHallView()
         {
-
             // TOOD: get parents order and i++
             float offsetX = cardSpriteRenderer.transform.position.x - (cardSpriteRenderer.bounds.size.x / 2.5f);
             float offsetY = cardSpriteRenderer.transform.position.y + (cardSpriteRenderer.bounds.size.y / 4);
@@ -415,7 +555,8 @@ namespace TownView
                 int offset = 0;
                 if (town.Buildings[i].Built)
                     offset = town.Buildings.Length;
-                else if (!Player.Wallet.CanPay(town.Buildings[i].Cost) || town.HasBuiltThisRound || !town.Buildings[i].MeetsRequirements(town))
+                else if (!Player.Wallet.CanPay(town.Buildings[i].Cost) || town.HasBuiltThisRound ||
+                         !town.Buildings[i].MeetsRequirements(town))
                     offset = town.Buildings.Length * 2;
 
                 // Building imagebutton with listener
@@ -425,9 +566,11 @@ namespace TownView
                 buildingObject.name = town.Buildings[i].Name;
                 buildingObject.tag = "toDestroy";
                 Building selectedBuilding = town.Buildings[i];
-                buildingObject.GetComponent<Image>().sprite = libs.GetTown(selectedBuilding.GetSpriteBlueprintID() + offset);
+                buildingObject.GetComponent<Image>().sprite =
+                    libs.GetTown(selectedBuilding.GetSpriteBlueprintID() + offset);
                 RectTransform rect = buildingObject.GetComponent<RectTransform>();
-                rect.sizeDelta = new Vector2(buildingObject.GetComponent<Image>().sprite.bounds.size.x, buildingObject.GetComponent<Image>().sprite.bounds.size.y);
+                rect.sizeDelta = new Vector2(buildingObject.GetComponent<Image>().sprite.bounds.size.x,
+                    buildingObject.GetComponent<Image>().sprite.bounds.size.y);
                 Button button = buildingObject.GetComponent<Button>();
                 button.onClick.AddListener(() => setBuy(selectedBuilding, buildingObject.transform.position));
 
@@ -438,7 +581,7 @@ namespace TownView
                 textObject.name = town.Buildings[i].Name + " text";
                 textObject.tag = "toDestroy";
                 Text text = textObject.AddComponent<Text>();
-                text.font = UnityEngine.Resources.Load<Font>("Fonts/ARIAL");
+                text.font = FONT;
                 text.fontSize = 16;
                 text.text = town.Buildings[i].Name;
                 text.alignment = TextAnchor.UpperCenter;
@@ -446,11 +589,16 @@ namespace TownView
 
                 // Position icon and text
                 buildingObject.transform.position = nextPosition;
-                textObject.transform.position = new Vector2(buildingObject.transform.position.x, buildingObject.transform.position.y - buildingObject.GetComponent<Image>().sprite.bounds.size.y);
+                textObject.transform.position = new Vector2(buildingObject.transform.position.x,
+                    buildingObject.transform.position.y - buildingObject.GetComponent<Image>().sprite.bounds.size.y);
 
 
                 // Create text and image for every resource next to the icon
-                Vector2 position = new Vector2(buildingObject.transform.position.x + (buildingObject.GetComponent<Image>().sprite.bounds.size.x / 1.6f), nextPosition.y + buildingObject.GetComponent<Image>().sprite.bounds.size.y / 2);
+                Vector2 position =
+                    new Vector2(
+                        buildingObject.transform.position.x +
+                        (buildingObject.GetComponent<Image>().sprite.bounds.size.x / 1.6f),
+                        nextPosition.y + buildingObject.GetComponent<Image>().sprite.bounds.size.y / 2);
                 for (int j = 0; j < town.Buildings[i].Cost.GetResourceTab().Length; j++)
                 {
                     if (town.Buildings[i].Cost.GetResourceTab()[j] != 0)
@@ -476,23 +624,29 @@ namespace TownView
                         textCostObject.transform.localScale = canvas.transform.localScale;
                         textCostObject.name = town.Buildings[i].Cost.ToString(j);
                         Text textCost = textCostObject.AddComponent<Text>();
-                        textCost.font = UnityEngine.Resources.Load<Font>("Fonts/ARIAL");
+                        textCost.font = FONT;
                         textCost.text = town.Buildings[i].Cost.CostToString(j);
                         textCost.color = Color.black;
                         textCost.fontSize = 12;
                         textCost.alignment = TextAnchor.MiddleLeft;
 
                         imageObject.transform.position = position;
-                        textCostObject.transform.position = new Vector2(position.x + (sprResource.bounds.size.x * 2.2f), position.y);
-                        position = new Vector2(buildingObject.transform.position.x + (buildingObject.GetComponent<Image>().sprite.bounds.size.x / 1.6f), position.y - sprResource.bounds.size.y);
-
+                        textCostObject.transform.position = new Vector2(
+                            position.x + (sprResource.bounds.size.x * 2.2f), position.y);
+                        position =
+                            new Vector2(
+                                buildingObject.transform.position.x +
+                                (buildingObject.GetComponent<Image>().sprite.bounds.size.x / 1.6f),
+                                position.y - sprResource.bounds.size.y);
                     }
                 }
                 // Calculate the position for the next gameobject
                 float newX = nextPosition.x;
                 float newY = nextPosition.y;
 
-                if (nextPosition.x > cardSpriteRenderer.transform.position.x + buildingObject.GetComponent<Image>().sprite.bounds.size.x * 1.3f)
+                if (nextPosition.x >
+                    cardSpriteRenderer.transform.position.x +
+                    buildingObject.GetComponent<Image>().sprite.bounds.size.x * 1.3f)
                 {
                     newX = startX;
                     newY -= (buildingObject.GetComponent<Image>().sprite.bounds.size.y * 1.5f);
@@ -508,7 +662,8 @@ namespace TownView
         /// </summary>
         public void CreateTavernView()
         {
-            Vector2 nextPosition = new Vector2(cardSpriteRenderer.transform.position.x, cardSpriteRenderer.transform.position.y + (cardSpriteRenderer.bounds.size.y / 4));
+            Vector2 nextPosition = new Vector2(cardSpriteRenderer.transform.position.x,
+                cardSpriteRenderer.transform.position.y + (cardSpriteRenderer.bounds.size.y / 4));
             float startX = nextPosition.x;
 
             float leftX = startX;
@@ -527,7 +682,8 @@ namespace TownView
                     heroObject.name = gm.heroes[i].Name;
                     heroObject.GetComponent<Image>().sprite = libs.GetPortrait(selectedHero.GetPortraitID());
                     RectTransform rect = heroObject.GetComponent<RectTransform>();
-                    rect.sizeDelta = new Vector2(heroObject.GetComponent<Image>().sprite.bounds.size.x, heroObject.GetComponent<Image>().sprite.bounds.size.y);
+                    rect.sizeDelta = new Vector2(heroObject.GetComponent<Image>().sprite.bounds.size.x,
+                        heroObject.GetComponent<Image>().sprite.bounds.size.y);
                     Button button = heroObject.GetComponent<Button>();
                     button.onClick.AddListener(() => setBuy(selectedHero, heroObject.transform.position));
                     heroObject.tag = "toDestroy";
@@ -539,11 +695,12 @@ namespace TownView
                     textNameObject.name = gm.heroes[i].Name;
                     textNameObject.tag = "toDestroy";
                     Text textName = textNameObject.AddComponent<Text>();
-                    textName.font = UnityEngine.Resources.Load<Font>("Fonts/ARIAL");
+                    textName.font = FONT;
                     textName.fontSize = 18;
                     textName.text = gm.heroes[i].Name;
                     textName.color = Color.black;
-                    textNameObject.transform.position = new Vector2(nextPosition.x, (nextPosition.y - heroObject.GetComponent<Image>().sprite.bounds.size.y));
+                    textNameObject.transform.position = new Vector2(nextPosition.x,
+                        (nextPosition.y - heroObject.GetComponent<Image>().sprite.bounds.size.y));
 
                     // Calculate the position for the next gameobject
                     float newX = nextPosition.x;
@@ -566,7 +723,8 @@ namespace TownView
         /// <returns></returns>
         private Vector2 getUpRightCorner(SpriteRenderer sr)
         {
-            return new Vector2(sr.transform.position.x + (sr.bounds.size.x / 2.2f), sr.transform.position.y + (sr.bounds.size.y / 2.3f));
+            return new Vector2(sr.transform.position.x + (sr.bounds.size.x / 2.2f),
+                sr.transform.position.y + (sr.bounds.size.y / 2.3f));
         }
 
         /// <summary>
@@ -576,7 +734,8 @@ namespace TownView
         /// <returns></returns>
         private Vector2 getDownRightCorner(SpriteRenderer sr)
         {
-            return new Vector2(sr.transform.position.x + (sr.bounds.size.x / 2.2f), sr.transform.position.y - (sr.bounds.size.y / 2.3f));
+            return new Vector2(sr.transform.position.x + (sr.bounds.size.x / 2.2f),
+                sr.transform.position.y - (sr.bounds.size.y / 2.3f));
         }
 
         /// <summary>
@@ -584,14 +743,14 @@ namespace TownView
         /// </summary>
         void CreateExitButton()
         {
-
             exitButtonObject = Instantiate(UnityEngine.Resources.Load<GameObject>("Prefabs/Button"));
             exitButtonObject.transform.parent = cardWindow.transform;
             exitButtonObject.GetComponent<Image>().sprite = libs.GetUI(new ExitButton().GetSpriteID());
             exitButtonObject.name = "ExitButton";
             exitButtonObject.tag = "toDestroy";
             RectTransform rect = exitButtonObject.GetComponent<RectTransform>();
-            rect.sizeDelta = new Vector2(exitButtonObject.GetComponent<Image>().sprite.bounds.size.x, exitButtonObject.GetComponent<Image>().sprite.bounds.size.y);
+            rect.sizeDelta = new Vector2(exitButtonObject.GetComponent<Image>().sprite.bounds.size.x,
+                exitButtonObject.GetComponent<Image>().sprite.bounds.size.y);
             Button button = exitButtonObject.GetComponent<Button>();
             button.onClick.AddListener(DestroyObjects);
             exitButtonObject.transform.position = getUpRightCorner(cardSpriteRenderer);
@@ -609,7 +768,8 @@ namespace TownView
             buyButtonObject.name = "BuyButton";
             buyButtonObject.tag = "toDestroy";
             RectTransform rect = buyButtonObject.GetComponent<RectTransform>();
-            rect.sizeDelta = new Vector2(buyButtonObject.GetComponent<Image>().sprite.bounds.size.x, buyButtonObject.GetComponent<Image>().sprite.bounds.size.y);
+            rect.sizeDelta = new Vector2(buyButtonObject.GetComponent<Image>().sprite.bounds.size.x,
+                buyButtonObject.GetComponent<Image>().sprite.bounds.size.y);
             Button button = buyButtonObject.GetComponent<Button>();
             button.onClick.AddListener(purchase);
             buyButtonObject.transform.position = getDownRightCorner(cardSpriteRenderer);
@@ -622,7 +782,7 @@ namespace TownView
         private void setBuy(System.Object obj, Vector2 position)
         {
             toBuyObject = obj;
-            
+
             if (toBuyObject.GetType().BaseType.Name.Equals("Hero"))
                 frameImage.sprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/hero_frame");
             else if (toBuyObject.GetType().BaseType.Name.Equals("Building"))
@@ -638,7 +798,7 @@ namespace TownView
         /// <param name="obj"></param>
         private void setTrade(bool top, int type, Vector2 position)
         {
-            if((top && type != selectedEarnResource) || (!top && type != selectedPayResource))
+            if ((top && type != selectedEarnResource) || (!top && type != selectedPayResource))
             {
                 frameImage.sprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/resource_frame");
                 if (top)
@@ -651,11 +811,12 @@ namespace TownView
                     selectedEarnResource = type;
                     resourceFrame.transform.position = position;
                 }
-                if(selectedEarnResource >= 0 && selectedPayResource >= 0)
+                if (selectedEarnResource >= 0 && selectedPayResource >= 0)
                 {
-                    if(!slider.isActiveAndEnabled)
+                    if (!slider.isActiveAndEnabled)
                         slider.enabled = true;
-                    slider.maxValue = (player.Wallet.GetResource(selectedPayResource) * ratio[selectedPayResource]) / ratio[selectedEarnResource];
+                    slider.maxValue = (player.Wallet.GetResource(selectedPayResource) * ratio[selectedPayResource]) /
+                                      ratio[selectedEarnResource];
                     Debug.Log(player.Wallet.GetResource(selectedPayResource));
                     adjustTradeAmount(1);
                     slider.value = 1;
@@ -669,8 +830,8 @@ namespace TownView
         /// <param name="value"></param>
         private void adjustTradeAmount(float value)
         {
-            payAmount = (int)(value * ratio[selectedEarnResource]) / ratio[selectedPayResource];
-            earnAmount = (int)value;
+            payAmount = (int) (value * ratio[selectedEarnResource]) / ratio[selectedPayResource];
+            earnAmount = (int) value;
             textLeftResource.text = payAmount + "";
             textRightResource.text = earnAmount + "";
         }
@@ -681,11 +842,11 @@ namespace TownView
         /// </summary>
         private void purchase()
         {
-            if(toBuyObject != null)
+            if (toBuyObject != null)
             {
                 if (toBuyObject.GetType().BaseType.Name.Equals("Hero"))
                 {
-                    Hero buyHero = (Hero)toBuyObject;
+                    Hero buyHero = (Hero) toBuyObject;
                     // checks if the player can afford the hero and if the hero is alive
                     if (Player.Wallet.CanPay(buyHero.Cost) && (town.StationedHero == null || town.VisitingHero == null))
                     {
@@ -726,10 +887,11 @@ namespace TownView
                 }
                 else if (toBuyObject.GetType().BaseType.Name.Equals("Building"))
                 {
-                    Building buyBuilding = (Building)toBuyObject;
+                    Building buyBuilding = (Building) toBuyObject;
 
                     // Build building if town has not already built that day, player can pay, and building is not built already
-                    if (!Town.HasBuiltThisRound && Player.Wallet.CanPay(buyBuilding.Cost) && !buyBuilding.Built && buyBuilding.MeetsRequirements(town))
+                    if (!Town.HasBuiltThisRound && Player.Wallet.CanPay(buyBuilding.Cost) && !buyBuilding.Built &&
+                        buyBuilding.MeetsRequirements(town))
                     {
                         // Player pays
                         Player.Wallet.Pay(buyBuilding.Cost);
@@ -750,43 +912,48 @@ namespace TownView
                     }
                     else
                     {
-                        Debug.Log("YOU DO NOT HAVE THE SUFFICIENT ECONOMICAL WEALTH TO PRODUCE THE STRUCTURE OF CHOICE: " + buyBuilding.Name); // TODO remove
+                        Debug.Log(
+                            "YOU DO NOT HAVE THE SUFFICIENT ECONOMICAL WEALTH TO PRODUCE THE STRUCTURE OF CHOICE: " +
+                            buyBuilding.Name); // TODO remove
                         return;
                         // TODO: what's the graphic feedback for trying to purchase something unpurchasable?
                     }
                 }
                 else if (toBuyObject.GetType().BaseType.BaseType.Name.Equals("Unit"))
                 {
-                    Unit unit = (Unit)toBuyObject;
+                    Unit unit = (Unit) toBuyObject;
 
-                    if (Player.Wallet.CanPayForMultiple(unit.Price, unitAmount) && town.StationedUnits.addUnit(unit, unitAmount) && currentUnitBuilding.AdjustPresentUnits((int)-slider.value))
+                    // Stops trying to buy 0 units
                     {
                         // Add to hero list if theres a stationed hero
                         if(town.StationedHero != null)
                             town.StationedHero.Units = town.StationedUnits;
                         for (int i = 0; i < (int)slider.value; i++)
                         {
-                            Player.Wallet.Pay(unit.Price);
+                            for (int i = 0; i < (int) slider.value; i++)
+                            {
+                                Player.Wallet.Pay(unit.Price);
+                            }
+
+                            unitTotalCountText.text = currentUnitBuilding.UnitsPresent + "";
+                            unitToBuyCountText.text = slider.value + "";
+                            slider.maxValue = player.Wallet.CanAffordCount(currentUnitBuilding.Unit,
+                                currentUnitBuilding.UnitsPresent);
+                            gm.ReDrawArmyInTown(town);
+                            gm.updateResourceText();
                         }
-                       
-                        gm.ReDrawArmyInTown(town);
-                        gm.updateResourceText();
                     }
-                    if (currentUnitBuilding.UnitsPresent == 0)
-                        slider.minValue = 0;
-                    slider.maxValue = currentUnitBuilding.UnitsPresent;
-                    
                 }
             }
-            else if(selectedPayResource >= 0 && selectedEarnResource >= 0)
+            else if (selectedPayResource >= 0 && selectedEarnResource >= 0)
             {
-                if(Player.Wallet.CanPay(selectedPayResource, payAmount))
+                if (Player.Wallet.CanPay(selectedPayResource, payAmount))
                 {
                     Player.Wallet.adjustResource(selectedPayResource, -payAmount);
                     Player.Wallet.adjustResource(selectedEarnResource, earnAmount);
                     gm.updateResourceText();
 
-                    for(int i=0; i<5; i++)
+                    for (int i = 0; i < 5; i++)
                     {
                         textResource[i].text = player.Wallet.GetResource(i) + "";
                         slider.maxValue = player.Wallet.GetResource(selectedPayResource) / ratio[selectedEarnResource];
@@ -815,5 +982,4 @@ namespace TownView
             Destroy(cardWindow);
         }
     }
-
 }

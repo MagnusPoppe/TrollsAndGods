@@ -1,4 +1,7 @@
-﻿public class Wallet : Resources
+﻿using System.Runtime.Serialization.Formatters;
+using UnityEngine;
+
+public class Wallet : Resources
 {
 
     public Wallet(int gold, int wood, int ore, int crystal, int gem)
@@ -68,18 +71,45 @@
     /// <summary>
     /// Checks canpay for multiples
     /// </summary>
-    /// <param name="cost"></param>
+    /// <param name="price"></param>
     /// <param name="amount"></param>
     /// <returns></returns>
-    public bool CanPayForMultiple(Cost cost, int amount)
+    public bool CanPayForMultiple(Cost price, int amount)
     {
-        return this.ResourceTab[(int)type.GOLD] * amount >= cost.GetResource(type.GOLD)
-            && this.ResourceTab[(int)type.WOOD] * amount >= cost.GetResource(type.WOOD)
-            && this.ResourceTab[(int)type.ORE] * amount >= cost.GetResource(type.ORE)
-            && this.ResourceTab[(int)type.CRYSTAL] * amount >= cost.GetResource(type.CRYSTAL)
-            && this.ResourceTab[(int)type.GEM] * amount >= cost.GetResource(type.GEM);
+        return this.ResourceTab[(int) type.GOLD] >= price.GetResource(type.GOLD) * amount
+               && this.ResourceTab[(int) type.WOOD] >= price.GetResource(type.WOOD) * amount
+               && this.ResourceTab[(int) type.ORE] >= price.GetResource(type.ORE) * amount
+               && this.ResourceTab[(int) type.CRYSTAL] >= price.GetResource(type.CRYSTAL) * amount
+               && this.ResourceTab[(int) type.GEM] >= price.GetResource(type.GEM) * amount;
     }
 
+    public string ToString()
+    {
+        return "Wallet{Gold=" + this.ResourceTab[(int) type.GOLD] +
+            "Wood=" + this.ResourceTab[(int)type.WOOD] +
+            "Ore=" + this.ResourceTab[(int)type.ORE] +
+            "Crystal=" + this.ResourceTab[(int)type.CRYSTAL] +
+            "Gem=" + this.ResourceTab[(int)type.GEM] + "}";
+    }
+
+    public int CanAffordCount(Unit unit, int max)
+    {
+        int count = 1;
+        Cost price = unit.Price;
+
+        
+        for (int i = 1; i <= max; i++)
+        {
+            if (this.CanPayForMultiple(price, count))
+            {
+                count++;
+            }
+            else
+                break;
+
+        }
+        return count-1;
+    }
 
 
     /// <summary>
