@@ -2,15 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Event : MonoBehaviour {
+public abstract class Event
+{
+    private int IDfrom, IDto;
+    private string description;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    public abstract void execute();
 }
