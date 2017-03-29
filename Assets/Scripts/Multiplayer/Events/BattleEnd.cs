@@ -4,30 +4,34 @@ using UnityEngine;
 namespace Multiplayer
 {
 
-    public class BattleBegin : GameEvent
+    public class BattleEnd : GameEvent
     {
+
         public int playerID, heroID;
         public Point pos;
+        public bool winner;
 
-        public BattleBegin(int id, string description, int playerId, int heroId, Point pos) : base(id, description)
+        public BattleEnd(int id, string description, int playerId, int heroId, Point pos, bool winner) : base(id, description)
         {
             playerID = playerId;
             heroID = heroId;
             this.pos = pos;
+            this.winner = winner;
         }
 
         public override void execute()
         {
-            //todo engage in combat(not show unless player is active in battle)
-            throw new System.NotImplementedException();
+            //todo test
+            Gm.exitCombat(winner);
         }
 
         public override void unpackJSON(string JSON)
         {
-            BattleBegin obj = JsonUtility.FromJson<BattleBegin>(JSON);
+            BattleEnd obj = JsonUtility.FromJson<BattleEnd>(JSON);
             playerID = obj.playerID;
             heroID = obj.heroID;
             pos = obj.pos;
+            winner = obj.winner;
         }
 
         public override string packJSON()
@@ -35,5 +39,4 @@ namespace Multiplayer
             return JsonUtility.ToJson(this);
         }
     }
-
 }
