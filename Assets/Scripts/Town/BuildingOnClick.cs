@@ -890,8 +890,7 @@ namespace TownView
                     Building buyBuilding = (Building) toBuyObject;
 
                     // Build building if town has not already built that day, player can pay, and building is not built already
-                    if (!Town.HasBuiltThisRound && Player.Wallet.CanPay(buyBuilding.Cost) && !buyBuilding.Built &&
-                        buyBuilding.MeetsRequirements(town))
+                    if (!Town.HasBuiltThisRound && Player.Wallet.CanPay(buyBuilding.Cost) && !buyBuilding.Built && buyBuilding.MeetsRequirements(town))
                     {
                         // Player pays
                         Player.Wallet.Pay(buyBuilding.Cost);
@@ -912,18 +911,15 @@ namespace TownView
                     }
                     else
                     {
-                        Debug.Log(
-                            "YOU DO NOT HAVE THE SUFFICIENT ECONOMICAL WEALTH TO PRODUCE THE STRUCTURE OF CHOICE: " +
-                            buyBuilding.Name); // TODO remove
+                        Debug.Log("YOU DO NOT HAVE THE SUFFICIENT ECONOMICAL WEALTH TO PRODUCE THE STRUCTURE OF CHOICE: " + buyBuilding.Name); // TODO remove
                         return;
                         // TODO: what's the graphic feedback for trying to purchase something unpurchasable?
                     }
                 }
                 else if (toBuyObject.GetType().BaseType.BaseType.Name.Equals("Unit"))
                 {
+                    
                     Unit unit = (Unit) toBuyObject;
-
-                    // Stops trying to buy 0 units
                     {
                         if (Player.Wallet.CanPayForMultiple(unit.Price, unitAmount) && town.StationedUnits.addUnit(unit, unitAmount) && currentUnitBuilding.AdjustPresentUnits((int)-slider.value))
                         {
@@ -937,8 +933,7 @@ namespace TownView
 
                             unitTotalCountText.text = currentUnitBuilding.UnitsPresent + "";
                             unitToBuyCountText.text = slider.value + "";
-                            slider.maxValue = player.Wallet.CanAffordCount(currentUnitBuilding.Unit,
-                                currentUnitBuilding.UnitsPresent);
+                            slider.maxValue = player.Wallet.CanAffordCount(currentUnitBuilding.Unit, currentUnitBuilding.UnitsPresent);
                             gm.ReDrawArmyInTown(town);
                             gm.updateResourceText();
                         }

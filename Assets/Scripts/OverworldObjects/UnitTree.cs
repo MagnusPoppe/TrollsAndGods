@@ -166,6 +166,10 @@ public class UnitTree
 
     public bool addUnit(Unit unit, int amount)
     {
+        if (amount < 1)
+        {
+            return false;
+        }
 
         // checks for a unit of the same type to stack onto, choosing the first it finds
         for (int i = 0; i < units.Length; i++)

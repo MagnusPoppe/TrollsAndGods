@@ -76,6 +76,10 @@ public class Wallet : Resources
     /// <returns></returns>
     public bool CanPayForMultiple(Cost price, int amount)
     {
+        if (amount < 1)
+        {
+            return false;
+        } 
         return this.ResourceTab[(int) type.GOLD] >= price.GetResource(type.GOLD) * amount
                && this.ResourceTab[(int) type.WOOD] >= price.GetResource(type.WOOD) * amount
                && this.ResourceTab[(int) type.ORE] >= price.GetResource(type.ORE) * amount
