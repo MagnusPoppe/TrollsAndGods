@@ -8,10 +8,10 @@
     {
         // Required values for building:
         const string name = "Temple";
-        const string description = "Pray here";
+        const string description = "Eat, Pray, Program";
         const bool[] requirements = null;
         const int LOCAL_SPRITEID = 3;
-        const int LOCAL_SPRITEID_BLUEPRINT = 9;
+        const int LOCAL_SPRITEID_BLUEPRINT = 13;
 
 
         // Resources cost: 
@@ -34,7 +34,7 @@
         /// <returns>Integer for which window type to display in the game</returns>
         protected override int GetUIType()
         {
-            return UI.WindowTypes.TAVERN_CARD;
+            return UI.WindowTypes.BUILDING_CARD;
         }
     }
 }

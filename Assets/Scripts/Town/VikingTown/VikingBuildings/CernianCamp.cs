@@ -8,14 +8,14 @@ namespace TownView
     /// Placeholder class for a spesific building.
     /// Belongs to the "Unknown Town".
     /// </summary>
-    public class Marketplace : Building
+    public class CernianCamp : Building
     {
         // Required values for building:
-        const string name = "Marketplace";
-        const string description = "Trade resources here";
-        static bool[] requirements = new bool[]{false, true, false, false, false};
-        const int LOCAL_SPRITEID = 6;
-        const int LOCAL_SPRITEID_BLUEPRINT = 16;
+        const string name = "Cernian Camp";
+        const string description = "Hestesak?";
+        static bool[] requirements = new bool[] { false, true, false, false, false };
+        const int LOCAL_SPRITEID = 8;
+        const int LOCAL_SPRITEID_BLUEPRINT = 18;
 
         // Resources cost: 
         const int GOLD_COST = 1000;
@@ -27,7 +27,7 @@ namespace TownView
 
 
         // This needs no indata since it knows its values.
-        public Marketplace() : base(name, description, requirements, new Cost(GOLD_COST, WOOD_COST, ORE_COST, CRYSTAL_COST, GEM_COST), LOCAL_SPRITEID, LOCAL_SPRITEID_BLUEPRINT)
+        public CernianCamp() : base(name, description, requirements, new Cost(GOLD_COST, WOOD_COST, ORE_COST, CRYSTAL_COST, GEM_COST), LOCAL_SPRITEID, LOCAL_SPRITEID_BLUEPRINT)
         {
         }
 
@@ -37,7 +37,7 @@ namespace TownView
         /// <returns>Integer for which window type to display in the game</returns>
         protected override int GetUIType()
         {
-            return UI.WindowTypes.MARKETPLACE_CARD;
+            return UI.WindowTypes.DWELLING_CARD;
         }
     }
 }

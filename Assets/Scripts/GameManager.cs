@@ -1505,7 +1505,7 @@ public class GameManager : MonoBehaviour
         heroLayer[hero.Position.x, hero.Position.y] = null;
 
         // Remove the reaction, either main reaction or prereaction
-        if (reactions[hero.Position.x, hero.Position.y].GetType().Equals((typeof(HeroMeetReact))))
+        if (reactions[hero.Position.x, hero.Position.y].GetType() == (typeof(HeroMeetReact)))
             reactions[hero.Position.x, hero.Position.y] = null;
         else
             reactions[hero.Position.x, hero.Position.y].PreReaction = null;
