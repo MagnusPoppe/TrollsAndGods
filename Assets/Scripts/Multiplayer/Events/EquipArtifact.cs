@@ -17,8 +17,19 @@ namespace Multiplayer
 
         public override void execute()
         {
-            //todo implement
-            throw new System.NotImplementedException();
+            HeroMeetReact hmr;
+            if (Gm.Reactions[pos.x, pos.y].HasPreReact())
+            {
+                hmr = (HeroMeetReact)Gm.Reactions[pos.x, pos.y].PreReaction;
+            }
+            else
+            {
+                hmr = (HeroMeetReact)Gm.Reactions[pos.x, pos.y];
+            }
+            Item item = hmr.Hero.Items[slot];
+            Item tmp = hmr.Hero.EquippedItems[item.SlotType];
+            hmr.Hero.EquippedItems[item.SlotType] = item;
+            hmr.Hero.Items[slot] = tmp;
         }
 
         public override void unpackJSON(string JSON)
