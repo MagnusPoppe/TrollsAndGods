@@ -11,7 +11,7 @@
         const string description = "Recruit dragons";
         static bool[] requirements = new bool[] { false, false, true, false, false };
         const int LOCAL_SPRITEID = 4;
-        const int LOCAL_SPRITEID_BLUEPRINT = 10;
+        const int LOCAL_SPRITEID_BLUEPRINT = 14;
 
 
         // Resources cost: 

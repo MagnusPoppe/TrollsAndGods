@@ -15,7 +15,7 @@ namespace TownView
         const string description = "Trade resources here";
         static bool[] requirements = new bool[]{false, true, false, false, false};
         const int LOCAL_SPRITEID = 6;
-        const int LOCAL_SPRITEID_BLUEPRINT = 12;
+        const int LOCAL_SPRITEID_BLUEPRINT = 16;
 
         // Resources cost: 
         const int GOLD_COST = 1000;

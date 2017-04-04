@@ -12,9 +12,9 @@ class JackMcBlackwell : Hero
 
     // Resources cost: 
     const int GOLD_COST = 1000;
-    const int WOOD_COST = 10;
-    const int ORE_COST = 10;
-    const int CRYSTAL_COST = 5;
+    const int WOOD_COST = 0;
+    const int ORE_COST = 0;
+    const int CRYSTAL_COST = 0;
     const int GEM_COST = 0;
 
 

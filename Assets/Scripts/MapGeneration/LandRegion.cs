@@ -32,16 +32,6 @@ namespace MapGenerator
             buildings = new List<OverworldBuilding>();
         }
 
-        public void PlaceHero(Player player, int[,] map, int[,] canWalk)
-        {
-            Point heroPos = new Point(RegionCenter.x, RegionCenter.y - 2);
-            hero = new TestHero(player, heroPos);
-            player.addHero(hero);
-            canWalk[heroPos.x, heroPos.y] = 2;
-            map[heroPos.x, heroPos.y] = hero.GetSpriteID();
-            castle.Town.Owner = player;
-        }
-
         public void PlaceCastle(int[,] map, int[,] canWalk)
         {
             castle.FlipCanWalk(canWalk);
