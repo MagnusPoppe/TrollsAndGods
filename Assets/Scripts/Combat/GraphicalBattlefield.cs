@@ -71,7 +71,7 @@ public class GraphicalBattlefield : MonoBehaviour
                 field[getUnitWhoseTurnItIs().LogicalPos.x, getUnitWhoseTurnItIs().LogicalPos.y]
                     .GetComponent<GroundGameObject>().IsOccupied = true;
                 canwalk[getUnitWhoseTurnItIs().LogicalPos.x, getUnitWhoseTurnItIs().LogicalPos.y] = MapMaker.CANNOTWALK;
-                
+
                 if (attacking)
                 {
                     //todo attack animation
@@ -150,8 +150,12 @@ public class GraphicalBattlefield : MonoBehaviour
     {
         field = new GameObject[width,height];
         float gx = 0, gy = 0;
+        float sx = 1.0f, sy = 1.0f;
         for (int x = 0; x < width; x++)
         {
+            float scaleFactorY = 0.1f;
+            float scaleFactorX = 0.1f;
+            float totalRemovedX = 0;
             for (int y = 0; y < height; y++)
             {
                 GameObject go = Instantiate(hexagon);
@@ -161,6 +165,10 @@ public class GraphicalBattlefield : MonoBehaviour
                 ggo.LogicalPos = new Point(x, y);
                 field[x, y] = go;
                 go.transform.SetParent(parent.transform);
+
+                float fromCenter = ((width / 2) - x ) / (width + 0.0f);
+                totalRemovedX += (0.5f *  fromCenter * ((1 - sx) ) );
+                gx += (0.5f *  fromCenter * ((1 - sx)));
                 if (y % 2 == 0)
                 {
                     go.transform.localPosition = new Vector2(gx+OFFSETX, gy+OFFSETY);
@@ -169,9 +177,18 @@ public class GraphicalBattlefield : MonoBehaviour
                 {
                     go.transform.localPosition = new Vector2(gx + OFFSETX + ODDOFFSETX, gy + OFFSETY + ODDOFFSETY);
                 }
-                gy += 0.43f;
+                sy -= scaleFactorY;
+                scaleFactorY *= .6f;
+
+                sx -= scaleFactorX;
+                scaleFactorX *= .3f;
+
+                go.transform.localScale = new Vector3(sx, sy, 1);
+                gy += 0.42f - ( 0.43f * (1-sy)); // Scaling y axis with the percent scaled down.
             }
-            gx += 0.5f;
+            gx -= totalRemovedX;
+            gx += 0.43f ;
+            sy = sx = 1f;
             gy = 0;
         }
     }
