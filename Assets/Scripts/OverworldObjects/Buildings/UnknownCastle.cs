@@ -30,10 +30,10 @@ namespace OverworldObjects
         public UnknownCastle(Point origo, Player owner ) 
             : base(origo, shape, owner, LOCAL_SPRITE_ID, SPRITE_CATEGORY, environmentTileType)
         {
-            Town = new VikingTown(owner);
+            Town = new VikingTown(owner, origo);
         }
 
-
+        /*
         /// <summary>
         /// Sets all the needed values to be a castle. Also creates the town that belongs to
         /// the castle. This constructor allows the origopkt to be placed after the creation of the town.
@@ -44,5 +44,6 @@ namespace OverworldObjects
         {
             Town = new VikingTown(owner);
         }
+        */
     }
 }

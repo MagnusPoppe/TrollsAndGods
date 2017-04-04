@@ -29,7 +29,7 @@ namespace OverworldObjects
         public VikingCastle(Point origo, Player owner)
             : base(origo, shape, owner, LOCAL_SPRITE_ID, SPRITE_CATEGORY, environment)
         {
-            Town = new VikingTown(owner);
+            Town = new VikingTown(owner, origo);
 
             // TODO: Fjern temp som bygger alle bygninger
             //Town.BuildAll(Town);
@@ -38,7 +38,7 @@ namespace OverworldObjects
             Town.Buildings[0].Build();
         }
 
-
+        /*
         /// <summary>
         /// Sets all the needed values to be a castle. Also creates the town that belongs to
         /// the castle. This constructor allows the origopkt to be placed after the creation of the town.
@@ -51,6 +51,6 @@ namespace OverworldObjects
 
             // Builds Town Hall-type building that can build other buildings
             Town.Buildings[0].Build();
-        }
+        }*/
     }
 }
