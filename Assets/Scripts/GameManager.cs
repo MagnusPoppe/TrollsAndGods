@@ -106,6 +106,7 @@ public class GameManager : MonoBehaviour
     public GameObject dwellingPanel;
     public GameObject buildingPanel;
     public GameObject townToDestroyPanel;
+    public GameObject townResourcePanel;
 
     // UI
     Button nextRoundBtn;
@@ -149,12 +150,14 @@ public class GameManager : MonoBehaviour
         marketplacePanel = GameObject.Find("MarketplacePanel");
         dwellingPanel = GameObject.Find("DwellingPanel");
         buildingPanel = GameObject.Find("BuildingPanel");
+        townResourcePanel = GameObject.Find("TownResourcePanel");
         townArmyPanel.SetActive(false);
         townHallPanel.SetActive(false);
         tavernPanel.SetActive(false);
         marketplacePanel.SetActive(false);
         dwellingPanel.SetActive(false);
         buildingPanel.SetActive(false);
+        townResourcePanel.SetActive(false);
 
         parentToMarkers = new GameObject();
         parentToMarkers.name = "Path";
@@ -975,14 +978,16 @@ public class GameManager : MonoBehaviour
     {
         if (buildingPanel.activeSelf)
             buildingPanel.SetActive(!deActivate);
-        else if (dwellingPanel.activeSelf)
+        if (dwellingPanel.activeSelf)
             dwellingPanel.SetActive(!deActivate);
-        else if (marketplacePanel.activeSelf)
+        if (marketplacePanel.activeSelf)
             marketplacePanel.SetActive(!deActivate);
-        else if (townHallPanel.activeSelf)
+        if (townHallPanel.activeSelf)
             townHallPanel.SetActive(!deActivate);
-        else if (tavernPanel.activeSelf)
+        if (tavernPanel.activeSelf)
             tavernPanel.SetActive(!deActivate);
+        if (townResourcePanel.activeSelf)
+            townResourcePanel.SetActive(!deActivate);
     }
 
     public void DestroyTownBuildings()

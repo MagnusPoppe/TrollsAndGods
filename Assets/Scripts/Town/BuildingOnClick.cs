@@ -675,6 +675,8 @@ namespace TownView
         /// <param name="obj"></param>
         private void setBuy(System.Object obj, Vector2 position)
         {
+            setResourcePanel();
+
             toBuyObject = obj;
 
             if (toBuyObject.GetType().BaseType.Name.Equals("Hero"))
@@ -683,6 +685,19 @@ namespace TownView
                 frameImage.sprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/building_frame");
 
             frame.transform.position = position;
+        }
+
+        public void setResourcePanel()
+        {
+            gm.townResourcePanel.SetActive(true);
+            for (int i = 0; i < 5; i++)
+            {
+                Text text = gm.townResourcePanel.transform.GetChild(i).gameObject.GetComponent<Text>();
+                if (true)
+                    text.text = "-100";
+                else
+                    text.text = "";
+            }
         }
 
 
@@ -724,6 +739,8 @@ namespace TownView
         /// <param name="value"></param>
         private void adjustTradeAmount(float value)
         {
+            setResourcePanel();
+
             payAmount = (int) (value * ratio[selectedEarnResource]) / ratio[selectedPayResource];
             earnAmount = (int) value;
             textLeftResource.text = payAmount + "";
@@ -771,6 +788,8 @@ namespace TownView
                             gm.updateResourceText();
                             // Update herolist and townlist UI
                             gm.updateOverworldUI(player);
+                            // Deactivate resource panel
+                            gm.townResourcePanel.SetActive(false);
                         }
                         else
                             Debug.Log("Could not merge with existing troops");
@@ -802,6 +821,8 @@ namespace TownView
                                 DestroyObjects();
                             }
                         }
+                        // Deactivate resource panel
+                        gm.townResourcePanel.SetActive(false);
                     }
                     else
                     {
@@ -830,6 +851,8 @@ namespace TownView
                             slider.maxValue = player.Wallet.CanAffordCount(currentUnitBuilding.Unit, currentUnitBuilding.UnitsPresent);
                             gm.ReDrawArmyInTown(town);
                             gm.updateResourceText();
+                            // Deactivate resource panel
+                            gm.townResourcePanel.SetActive(false);
                         }
                     }
                 }
