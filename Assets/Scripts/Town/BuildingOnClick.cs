@@ -243,22 +243,25 @@ namespace TownView
         private void CreateTownHallView()
         {
 
-            // Array for all building frames frames
-            GameObject[] buildingFrames = new GameObject[town.Buildings.Length];
-            for (int i = 0; i < town.Buildings.Length; i++)
+            // Array for all building frames frames, except Workshop
+            int buildingCount = town.Buildings.Length - 1;
+            Building[] buildingArray = town.Buildings;
+
+            GameObject[] buildingFrames = new GameObject[buildingCount];
+            for (int i = 0; i < buildingCount; i++)
             {
-                // If it's already purchased or you can't build it, use another sprite, set by an offset
+                // If it's already purchased or you can't build it, use another sprite, set by an offset, -1 because Workshop has no buysprites
                 int offset = 0;
-                if (town.Buildings[i].Built)
-                    offset = town.Buildings.Length;
-                else if (!Player.Wallet.CanPay(town.Buildings[i].Cost) || town.HasBuiltThisRound || !town.Buildings[i].MeetsRequirements(town))
-                    offset = town.Buildings.Length * 2;
+                if (buildingArray[i].Built)
+                    offset = buildingCount;
+                else if (!Player.Wallet.CanPay(buildingArray[i].Cost) || town.HasBuiltThisRound || !buildingArray[i].MeetsRequirements(town))
+                    offset = buildingCount * 2;
 
                 // Finding the panel that holds the gameobject with button and textchild, and resourcepanel
                 GameObject buildingPanel = gm.townHallPanel.transform.GetChild(i).gameObject;
                 // Building imagebutton with listener
                 GameObject buildingObject = buildingPanel.transform.GetChild(0).gameObject;
-                Building selectedBuilding = town.Buildings[i];
+                Building selectedBuilding = buildingArray[i];
                 // Set building image
                 buildingObject.GetComponent<Image>().sprite = libs.GetTown(selectedBuilding.GetSpriteBlueprintID() + offset);
                 Button button = buildingObject.GetComponent<Button>();
@@ -266,14 +269,14 @@ namespace TownView
                 button.onClick.AddListener(() => setBuy(selectedBuilding, buildingObject.transform.position));
 
                 // Add text below building
-                buildingObject.transform.GetChild(0).GetComponent<Text>().text = town.Buildings[i].Name;
+                buildingObject.transform.GetChild(0).GetComponent<Text>().text = buildingArray[i].Name;
                 // Finding resourcepanel
                 GameObject resourcePanel = buildingPanel.transform.GetChild(1).gameObject;
 
                 // Create text and image for every resource next to the icon
-                for (int j = 0; j < town.Buildings[i].Cost.GetResourceTab().Length; j++)
+                for (int j = 0; j < buildingArray[i].Cost.GetResourceTab().Length; j++)
                 {
-                    if (town.Buildings[i].Cost.GetResourceTab()[j] != 0)
+                    if (buildingArray[i].Cost.GetResourceTab()[j] != 0)
                     {
                         // Finding resourcepanel gameobject child with buttonimage and text
                         GameObject resourceObject = resourcePanel.transform.GetChild(j).gameObject;
@@ -291,7 +294,8 @@ namespace TownView
                         // Setting resource mage
                         resourceButton.GetComponent<Image>().sprite = UnityEngine.Resources.Load<Sprite>(spritePath);
                         // Setting resourcecost text
-                        resourceButton.transform.GetChild(0).GetComponent<Text>().text = town.Buildings[i].Cost.CostToString(j);
+                        resourceButton.transform.GetChild(0).GetComponent<Text>().text =
+                            buildingArray[i].Cost.CostToString(j);
                     }
                 }
             }
