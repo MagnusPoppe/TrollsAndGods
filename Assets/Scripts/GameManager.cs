@@ -347,7 +347,7 @@ public class GameManager : MonoBehaviour
                             bool heroNotDead = true;
                             
                             // If tile is threatened, perform the additional reaction before the main one
-                            if (reactions[x, y].HasPreReact(activeHero))
+                            if (reactions[x, y].HasPreReact())
                             {
                                 reactions[x, y].PreReact(activeHero);
                                 curReaction = reactions[x, y];
@@ -1138,5 +1138,11 @@ public class GameManager : MonoBehaviour
         Destroy(go);
         heroLayer[h.Position.x, h.Position.y] = null;
         reactions[h.Position.x, h.Position.y] = null;
+    }
+
+    public Reaction[,] Reactions
+    {
+        get { return reactions; }
+        set { reactions = value; }
     }
 }

@@ -23,17 +23,15 @@ public class UnitTree
     /// </summary>
     /// <param name="pos1">position of first unit</param>
     /// <param name="pos2">position of second unit</param>
-    /// <param name="amount1">amount of first stack</param>
-    /// <param name="amount2">amount of second stack</param>
-    public void swapUnits(int pos1, int amount1, int pos2, int amount2)
+    public void swapUnits(int pos1, int pos2)
     {
         Unit tmp = units[pos1];
         units[pos1] = units[pos2];
         units[pos2] = tmp;
 
-        int tmpAmount = amount1;
-        unitAmount[amount1] = amount2;
-        unitAmount[amount2] = tmpAmount;
+        int tmpAmount = unitAmount[pos1];
+        unitAmount[pos1] = unitAmount[pos2];
+        unitAmount[pos2] = tmpAmount;
     }
 
     /// <summary>

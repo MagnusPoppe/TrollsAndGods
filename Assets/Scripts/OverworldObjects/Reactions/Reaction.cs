@@ -53,7 +53,7 @@ abstract public class Reaction {
     /// Checks if there's a reaction that needs to trigger before the normal reaction
     /// </summary>
     /// <returns>true if there is an additional reaction there</returns>
-    public bool HasPreReact(Hero h)
+    public bool HasPreReact()
     {
         return (preReaction != null);
     }
