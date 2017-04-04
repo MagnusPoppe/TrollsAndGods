@@ -8,6 +8,11 @@
         };
         private static IngameObjectLibrary.Category category = IngameObjectLibrary.Category.Ground;
 
+        public int[] Sprites
+        {
+            get { return spriteIDs; }
+        }
+
         /// <summary>
         /// Creates a sprite out of a set of spriteIDs.
         /// </summary>

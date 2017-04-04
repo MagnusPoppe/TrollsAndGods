@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,8 +12,12 @@ public class GroundGameObject : MonoBehaviour {
     Point logicalPos;
     GraphicalBattlefield graphicalBattlefield;
 
+    private const String SPRITE_PATH_REACHABLE = "Sprites/Combat/HexagonTrimmedReachable";
+    private const String SPRITE_PATH_ATTACKABLE = "Sprites/Combat/HexagonTrimmedAttackable";
+    private const String SPRITE_PATH_DEFAULT   = "Sprites/Combat/HexagonTrimmed";
+
     // Use this for initialization
-    void Start () {
+    void Awake () {
         isOccupied = reachable = false;
 	}
 	
@@ -24,10 +29,21 @@ public class GroundGameObject : MonoBehaviour {
     void OnMouseDown()
     {
         //moves unit if space is not occupied
-        if (!isOccupied)
+        if (!isOccupied && reachable)
         {
             graphicalBattlefield.moveUnit(logicalPos);
         }
+    }
+
+    public void MarkReachable( bool attackable )
+    {
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+        if (attackable)
+            sr.sprite = UnityEngine.Resources.Load<Sprite>(SPRITE_PATH_ATTACKABLE);
+        else if (Reachable)
+            sr.sprite = UnityEngine.Resources.Load<Sprite>(SPRITE_PATH_REACHABLE);
+        else
+            sr.sprite = UnityEngine.Resources.Load<Sprite>(SPRITE_PATH_DEFAULT);
     }
 
     public bool IsOccupied

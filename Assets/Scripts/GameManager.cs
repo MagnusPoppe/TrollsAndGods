@@ -49,6 +49,7 @@ public class GameManager : MonoBehaviour
     // Generated from mapmaker class:
     Region[] regions;
     int[,] canWalk;
+    Placement placement;
     Reaction[,] reactions;
 
     // Graphical elements
@@ -639,6 +640,10 @@ public class GameManager : MonoBehaviour
         mapmaker.initializePlayers(map, canWalk, players);
 
 	    // Placeing all buildings within the regions.
+<<<<<<< HEAD
+	    placement = mapmaker.PlaceBuildings(players);
+        PlaceBuildings();
+=======
 	    mapmaker.PlaceBuildings(players);
         
         // Add reactions to buildings in regions
@@ -651,6 +656,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
+>>>>>>> Town
 
         if 
             (CanWalkDebugMode) DrawDebugMap(map, canWalk);
@@ -665,6 +671,29 @@ public class GameManager : MonoBehaviour
         // Kaster mapmaker
         mapmaker = null;
 	}
+
+    private void PlaceBuildings()
+    {
+        Player ownerOfMines = players[0];
+        foreach (Region r in regions)
+        {
+            OverworldObjects.ResourceBuilding mine = new OreMine(ownerOfMines);
+            placement.Place( r, mine );
+            ownerOfMines.ResourceBuildings.Add(mine);
+
+            mine = new GemMine(ownerOfMines);
+            placement.Place( r, mine);
+            ownerOfMines.ResourceBuildings.Add(mine);
+
+            mine = new CrystalMine(ownerOfMines);
+            placement.Place( r, mine);
+            ownerOfMines.ResourceBuildings.Add(mine);
+
+            mine = new GoldMine(ownerOfMines);
+            placement.Place( r, mine);
+            ownerOfMines.ResourceBuildings.Add(mine);
+        }
+    }
     
     /// <summary>
     /// Setting up UI buttons, text and images.
@@ -1030,6 +1059,9 @@ public class GameManager : MonoBehaviour
         buildingsInActiveTown[i].GetComponent<BuildingOnClick>().Player = players[whoseTurn];
     }
 
+<<<<<<< HEAD
+    public void DestroyBuildingsInTown()
+=======
     /// <summary>
     /// Sets UI for the startplayers hero and towns to click on
     /// </summary>
@@ -1064,6 +1096,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     /// <param name="player">current player</param>
     public void updateOverworldUI(Player player)
+>>>>>>> Town
     {
         // Heroes
         for (int i = 0; i < heroObjects.Length; i++)
@@ -1441,8 +1474,8 @@ public class GameManager : MonoBehaviour
     public void enterCombat(int width, int height, Hero attacker, UnitTree defender)
     {
         overWorld = false;
-        graphicalBattlefield.beginCombat(width, height, attacker, defender);
         combatWindow.SetActive(true);
+        graphicalBattlefield.beginCombat(width, height, attacker, defender);
         cameraMovement.enabled = false;
         combatWindow.transform.localPosition = new Vector3(0,0,10);
     }
@@ -1463,6 +1496,7 @@ public class GameManager : MonoBehaviour
             //defender won
             removeHero(activeHero);
         }
+        combatWindow.SetActive(false);
         overWorld = true;
         cameraMovement.enabled = true;
     }

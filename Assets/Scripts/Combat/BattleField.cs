@@ -73,20 +73,23 @@ public class BattleField {
         CanWalk = canWalk;
         aStar = new AStarAlgo(canWalk, width, height, true);
 
-        Unit[] attackingUnits = attacker.Units.GetUnits();
-        Unit[] defendingUnits = defender.GetUnits();
+        attackingUnits = attacker.Units;
+        defendingUnits = defender;
+
+        Unit[] aUnits = attacker.Units.GetUnits();
+        Unit[] dUnits = defender.GetUnits();
 
         int increment = height / UnitTree.TREESIZE;
         int place = 0;
         unitsPos = new UnitAndAmount[width,height];
         for (int i = 0; i < UnitTree.TREESIZE; i++)
         {
-            if (attackingUnits[i] != null)
+            if (aUnits[i] != null)
             {
                 UnitAndAmount atroop = new UnitAndAmount(attacker.Units, i);
                 unitsPos[0, place] = atroop;
             }
-            if (defendingUnits[i] != null)
+            if (dUnits[i] != null)
             {
                 UnitAndAmount dtroop = new UnitAndAmount(defender, i);
                 unitsPos[width - 1, place] = dtroop;
@@ -154,6 +157,9 @@ public class BattleField {
         if (defendingUnits.Amount < 0) defendingUnits.Amount = 0;
     }
 
+    /// <summary>
+    /// Cleans up dead units when combat is ended
+    /// </summary>
     public void endCombat()
     {
         for (int i = 0; i<UnitTree.TREESIZE; i++)
