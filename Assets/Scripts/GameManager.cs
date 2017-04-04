@@ -640,11 +640,8 @@ public class GameManager : MonoBehaviour
         mapmaker.initializePlayers(map, canWalk, players);
 
 	    // Placeing all buildings within the regions.
-<<<<<<< HEAD
 	    placement = mapmaker.PlaceBuildings(players);
         PlaceBuildings();
-=======
-	    mapmaker.PlaceBuildings(players);
         
         // Add reactions to buildings in regions
         foreach (Region r in regions)
@@ -655,8 +652,6 @@ public class GameManager : MonoBehaviour
                 lr.makeReactions(reactions);
             }
         }
-
->>>>>>> Town
 
         if 
             (CanWalkDebugMode) DrawDebugMap(map, canWalk);
@@ -1059,9 +1054,11 @@ public class GameManager : MonoBehaviour
         buildingsInActiveTown[i].GetComponent<BuildingOnClick>().Player = players[whoseTurn];
     }
 
-<<<<<<< HEAD
     public void DestroyBuildingsInTown()
-=======
+    {
+
+    }
+
     /// <summary>
     /// Sets UI for the startplayers hero and towns to click on
     /// </summary>
@@ -1096,7 +1093,6 @@ public class GameManager : MonoBehaviour
     /// </summary>
     /// <param name="player">current player</param>
     public void updateOverworldUI(Player player)
->>>>>>> Town
     {
         // Heroes
         for (int i = 0; i < heroObjects.Length; i++)
