@@ -223,13 +223,22 @@ namespace TownView
             textObject.transform.position = new Vector2(cardWindow.transform.position.x, cardWindow.transform.position.y);
             */
 
+
+
+            // Get the ContentPanel and set description
+            GameObject buildingContentPanel = gm.buildingPanel.transform.GetChild(0).gameObject;
+            buildingContentPanel.transform.GetChild(0).GetComponent<Text>().text = Building.Description;
+
+            // Set Buildingname Text
+            GameObject buildingNameObject = gm.buildingPanel.transform.GetChild(1).gameObject;
+            buildingNameObject.GetComponent<Text>().text = Building.Name;
+
+            // Set exit button
+            GameObject exitButtonObject = gm.buildingPanel.transform.GetChild(2).gameObject;
+            exitButtonObject.GetComponent<Button>().onClick.AddListener(DestroyObjects);
+
             gm.buildingPanel.SetActive(true);
-            GameObject panel = gm.buildingPanel.transform.GetChild(0).gameObject;
-
-            panel.transform.GetChild(0).GetComponent<Text>().text = Building.Name;
-            panel.transform.GetChild(1).GetComponent<Text>().text = Building.Description;
-
-            CreateExitButton();
+            //CreateExitButton();
         }
 
 
@@ -241,9 +250,20 @@ namespace TownView
         private void CreateTownHallView()
         {
 
+            GameObject townHallPanel = gm.townHallPanel.transform.GetChild(0).gameObject;
+
+            // Set Buildingname Text
+            GameObject buildingNameObject = gm.townHallPanel.transform.GetChild(1).gameObject;
+            buildingNameObject.GetComponent<Text>().text = Building.Name;
+
+            // Set exit button
+            GameObject exitButtonObject = gm.townHallPanel.transform.GetChild(2).gameObject;
+            exitButtonObject.GetComponent<Button>().onClick.AddListener(DestroyObjects);
+
             // Array for all building frames frames, except Workshop
             int buildingCount = town.Buildings.Length - 1;
             Building[] buildingArray = town.Buildings;
+
 
             GameObject[] buildingFrames = new GameObject[buildingCount];
             for (int i = 0; i < buildingCount; i++)
@@ -256,9 +276,10 @@ namespace TownView
                     offset = buildingCount * 2;
 
                 // Finding the panel that holds the gameobject with button and textchild, and resourcepanel
-                GameObject buildingPanel = gm.townHallPanel.transform.GetChild(i).gameObject;
+                GameObject buildingPanel = townHallPanel.transform.GetChild(i).gameObject;
                 // Building imagebutton with listener
                 GameObject buildingObject = buildingPanel.transform.GetChild(0).gameObject;
+
                 Building selectedBuilding = buildingArray[i];
                 // Set building image
                 buildingObject.GetComponent<Image>().sprite = libs.GetTown(selectedBuilding.GetSpriteBlueprintID() + offset);
@@ -305,7 +326,16 @@ namespace TownView
         /// </summary>
         public void CreateTavernView()
         {
-            GameObject heroPanel = gm.tavernPanel.transform.GetChild(0).gameObject;
+            GameObject heroPanel = gm.tavernPanel.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject;
+
+            // Set Buildingname Text
+            GameObject buildingNameObject = gm.tavernPanel.transform.GetChild(1).gameObject;
+            buildingNameObject.GetComponent<Text>().text = Building.Name;
+
+            // Set exit button
+            GameObject exitButtonObject = gm.tavernPanel.transform.GetChild(2).gameObject;
+            exitButtonObject.GetComponent<Button>().onClick.AddListener(DestroyObjects);
+
             // Add each hero that you can buy in Tavern
             int count = 0;
             for (int i = 0; i < gm.heroes.Length; i++)
@@ -319,6 +349,8 @@ namespace TownView
                     heroObject.GetComponent<Image>().sprite = libs.GetPortrait(selectedHero.GetPortraitID());
                     Button button = heroObject.GetComponent<Button>();
                     button.onClick.AddListener(() => setBuy(selectedHero, heroObject.transform.position));
+
+                    button.transform.GetChild(0).GetComponent<Text>().text = selectedHero.Name;
                     // TODO listener to popup hero panel
                     count++;
                 }
@@ -332,9 +364,20 @@ namespace TownView
         /// </summary>
         private void CreateMarketplaceView()
         {
-            GameObject payPanel = gm.marketplacePanel.transform.GetChild(0).gameObject;
-            GameObject earnPanel = gm.marketplacePanel.transform.GetChild(1).gameObject;
-            GameObject bottomPanel = gm.marketplacePanel.transform.GetChild(2).gameObject;
+            GameObject marketplacePanel = gm.marketplacePanel.transform.GetChild(0).gameObject;
+
+            // Set Buildingname Text
+            GameObject buildingNameObject = gm.marketplacePanel.transform.GetChild(1).gameObject;
+            buildingNameObject.GetComponent<Text>().text = Building.Name;
+
+            // Set exit button
+            GameObject exitButtonObject = gm.marketplacePanel.transform.GetChild(2).gameObject;
+            exitButtonObject.GetComponent<Button>().onClick.AddListener(DestroyObjects);
+
+
+            GameObject payPanel = marketplacePanel.transform.GetChild(0).gameObject;
+            GameObject earnPanel = marketplacePanel.transform.GetChild(1).gameObject;
+            GameObject bottomPanel = marketplacePanel.transform.GetChild(2).gameObject;
 
             /*
             resourceFrame = new GameObject();
