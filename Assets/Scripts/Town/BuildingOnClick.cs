@@ -117,8 +117,6 @@ namespace TownView
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                foreach (GameObject go in GameObject.FindGameObjectsWithTag("toDestroy")) // TODO ikke bruke lenger?
-                    Destroy(go);
                 gm.ExitTown();
             }
         }
@@ -821,17 +819,7 @@ namespace TownView
                     t.GetComponent<PolygonCollider2D>().enabled = true;
             }
 
-            //foreach (GameObject go in GameObject.FindGameObjectsWithTag("toDestroy"))
-            //    Destroy(go);
-            //Destroy(cardWindow);
-            if (gm.buildingPanel.activeSelf)
-                gm.buildingPanel.SetActive(false);
-            else if (gm.dwellingPanel.activeSelf)
-                gm.dwellingPanel.SetActive(false);
-            else if (gm.marketplacePanel.activeSelf)
-                gm.marketplacePanel.SetActive(false);
-            else if (gm.townHallPanel.activeSelf)
-                gm.townHallPanel.SetActive(false);
+            gm.DeactivateTownPanels(true);
         }
     }
 }
