@@ -31,7 +31,7 @@ public class MovementManager
     public Point destination;
     private Reaction curReaction;
 
-
+    public int totalTilesToBeWalked;
     private GameManager gameManager;
 
     public MovementManager(Player[] players, Reaction[,] reactions, int[,] canWalk, AStarAlgo aStar, GameManager gm)
@@ -233,7 +233,10 @@ public class MovementManager
         RemoveMarkers(gameManager.pathObjects);
         // Call algorithm method that returns a list of Vector2 positions to the point, go through all objects
         activeHero.Path = aStar.calculate(activeHero.Position, new Point(pos));
-        gameManager.DrawPath(activeHero.Path);
+
+        // Calculate how many steps the hero will move, if this path is chosen
+        int count = totalTilesToBeWalked = Math.Min(activeHero.Path.Count, activeHero.CurMovementSpeed);
+
         return gameManager.pathObjects;
     }
 
@@ -266,7 +269,7 @@ public class MovementManager
 
     public bool IsLastStep(int stepNumber)
     {
-        return stepNumber == activeHero.CurMovementSpeed || stepNumber == gameManager.tilesWalking || lastStep;
+        return stepNumber == activeHero.CurMovementSpeed || stepNumber == totalTilesToBeWalked || lastStep;
     }
 
 }

@@ -113,7 +113,6 @@ public class GameManager : MonoBehaviour
     public GameObject parentToMarkers;
     public bool heroActive;
     public GameObject activeHeroObject;
-    public int tilesWalking;
 
     public Sprite pathDestYes;
     public Sprite pathDestNo;
@@ -273,7 +272,7 @@ public class GameManager : MonoBehaviour
                     if (movement.pathMarked && posClicked.Equals(savedClickedPos) && movement.activeHero.CurMovementSpeed > 0)
                     {
                         movement.walking = true;
-                        movement.destination = new Point(movement.activeHero.Path[tilesWalking - 1]);
+                        movement.destination = new Point(movement.activeHero.Path[movement.totalTilesToBeWalked - 1]);
                     }
                     // Activate clicked path
                     else
@@ -333,12 +332,9 @@ public class GameManager : MonoBehaviour
     /// Graphically draw the path objects
     /// </summary>
     /// <param name="path">list of positions to draw the path</param>
-    public void DrawPath(List<Vector2> path)
+    public void DrawPath(List<Vector2> path, int tilesToBeWalked)
     {
-        // Calculate how many steps the hero will move, if this path is chosen
-        int count = tilesWalking = Math.Min(activeHero.Path.Count, activeHero.CurMovementSpeed);
         // For each position, create a gameobject with an image and instantiate it, and add it to a gameobject list for later to be removed
-
         for (int i = 0; i < activeHero.Path.Count; i++)
         {
             // Create a cloned gameobject of the prefab corresponding to what the marker shall look like
@@ -349,16 +345,18 @@ public class GameManager : MonoBehaviour
             sr.sortingLayerName = "Markers";
             if (i + 1 == activeHero.Path.Count)
             {
-                if (i + 1 == tilesWalking)
+                if (i + 1 == tilesToBeWalked)
                     sr.sprite = pathDestYes;
                 else
                     sr.sprite = pathDestNo;
             }
-            else if (count > 0)
+            else if (tilesToBeWalked > 0)
                 sr.sprite = pathYes;
             else
                 sr.sprite = pathNo;
-            count--;
+
+            tilesToBeWalked--;
+
             // set the cloned position to the vector2 object and add it to the list of gameobjects, pathList
             pathMarker.transform.position = HandyMethods.getGraphicPosForIso(path[i]);
             pathObjects.Add(pathMarker);
@@ -1189,6 +1187,7 @@ public class GameManager : MonoBehaviour
                 if (movement.activeHero.Path != null && movement.activeHero.Path.Count > 0)
                 {
                     movement.MarkPath(movement.activeHero.Path[movement.activeHero.Path.Count-1]);
+                    DrawPath(movement.activeHero.Path, movement.totalTilesToBeWalked);
                     savedClickedPos = movement.activeHero.Path[movement.activeHero.Path.Count - 1];
                 }
                // Center camera to the upcoming players first hero
