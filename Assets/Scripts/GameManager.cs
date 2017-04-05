@@ -123,9 +123,12 @@ public class GameManager : MonoBehaviour
     //currentReaction
     private Reaction curReaction;
 
-    //Comabt
+    //Combat
     private GraphicalBattlefield graphicalBattlefield;
     private GameObject combatWindow;
+
+    //Movement
+    private MovementManager movement;
 
     // Use this for initialization
     void Start ()
@@ -202,6 +205,8 @@ public class GameManager : MonoBehaviour
         combatWindow.SetActive(false);
         graphicalBattlefield = combatWindow.GetComponent<GraphicalBattlefield>();
 
+        // Starting movementmanager:
+        movement = new MovementManager();
     }
 
 	// Update is called once per frame
