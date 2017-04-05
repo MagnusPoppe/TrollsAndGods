@@ -20,24 +20,15 @@ namespace TownView
 
         private UnitBuilding currentUnitBuilding; // Clear after exit dwelling screen;
 
-        GameObject canvas;
-
         GameObject frame;
-        GameObject resourceFrame;
         SpriteRenderer frameImage;
-        SpriteRenderer resourceFrameImage;
 
         IngameObjectLibrary libs;
-        SpriteSystem spriteSystem;
-        SpriteRenderer cardSpriteRenderer;
-        GameObject cardWindow;
-        GameObject exitButtonObject;
-        GameObject buyButtonObject;
         GameObject[] buildingObjects;
 
         // Selected actions in town
         Text[] textResource;
-        int[] ratio = {1, 100, 100, 200, 200};
+        readonly int[] ratio = {1, 100, 100, 200, 200};
         Slider tradeSlider, unitSlider;
         int payAmount;
         int earnAmount;
@@ -46,13 +37,6 @@ namespace TownView
         int selectedPayResource;
         int selectedEarnResource;
         int unitAmount;
-
-        private Font FONT;
-
-        private Text unitTotalCountText;
-        private Text unitToBuyCountText;
-        private Text textCost;
-        private Text[] totalCostTexts;
 
         public GameObject[] BuildingObjects
         {
@@ -89,8 +73,6 @@ namespace TownView
             libs = GameManager.libs;
             GameObject go = GameObject.Find("GameManager");
             gm = go.GetComponent<GameManager>();
-            FONT = UnityEngine.Resources.Load<Font>("Fonts/ARIAL");
-            totalCostTexts = new Text[5];
         }
 
         // Fade effet when hovering a building in the town view
@@ -143,22 +125,7 @@ namespace TownView
 
             // TODO: Make less specific
             BuildingCard card = new BuildingCard(windowType, IngameObjectLibrary.Category.UI);
-            /*
-            canvas = GameObject.Find("TownCanvas");
 
-            
-            // Creates a building card game ojbect with a spriterenderer, sets its position, layer, name and parent
-            cardWindow = new GameObject();
-            cardWindow.transform.parent = canvas.transform;
-            cardWindow.name = "TownCardPanel";
-            cardWindow.tag = "toDestroy";
-            cardWindow.transform.position = cardWindow.transform.parent.position;
-            cardSpriteRenderer = cardWindow.AddComponent<SpriteRenderer>();
-            cardSpriteRenderer.sprite = libs.GetUI(card.GetSpriteID());
-            cardSpriteRenderer.sortingLayerName = "TownInteractive";
-            
-            frame.transform.parent = cardWindow.transform;
-            */
 
             // disables colliders in other layers when window is open
             for (int i = 0; i < BuildingObjects.Length; i++)
@@ -198,9 +165,6 @@ namespace TownView
                 CreateBuildingView();
             }
 
-
-            //CreateExitButton();
-            //frame.transform.parent = GameObject.Find("TownCardPanel").transform;
         }
 
         /// <summary>
@@ -232,7 +196,6 @@ namespace TownView
         /// </summary>
         private void CreateTownHallView()
         {
-
             GameObject townHallContentPanel = gm.townHallPanel.transform.GetChild(0).gameObject;
 
             // Set Buildingname Text
@@ -268,7 +231,7 @@ namespace TownView
                 buildingObject.GetComponent<Image>().sprite = libs.GetTown(selectedBuilding.GetSpriteBlueprintID() + offset);
                 Button button = buildingObject.GetComponent<Button>();
                 // Set buy listener to building
-                button.onClick.AddListener(() => SetBuilding(selectedBuilding, buildingObject.transform.position));
+                button.onClick.AddListener(() => SetBuilding(selectedBuilding));
 
                 // Add text below building
                 buildingObject.transform.GetChild(0).GetComponent<Text>().text = buildingArray[i].Name;
@@ -331,7 +294,7 @@ namespace TownView
                     Hero selectedHero = gm.heroes[i];
                     heroObject.GetComponent<Image>().sprite = libs.GetPortrait(selectedHero.GetPortraitID());
                     Button button = heroObject.GetComponent<Button>();
-                    button.onClick.AddListener(() => SetHero(selectedHero, heroObject.transform.position));
+                    button.onClick.AddListener(() => SetHero(selectedHero));
 
                     button.transform.GetChild(0).GetComponent<Text>().text = selectedHero.Name;
                     // TODO listener to popup hero panel
@@ -368,16 +331,6 @@ namespace TownView
             GameObject earnPanel = marketplaceContentPanel.transform.GetChild(1).gameObject;
             GameObject bottomPanel = marketplaceContentPanel.transform.GetChild(2).gameObject;
 
-            /*
-            resourceFrame = new GameObject();
-            resourceFrame.transform.parent = cardWindow.transform;
-            resourceFrameImage = resourceFrame.AddComponent<SpriteRenderer>();
-            resourceFrameImage.sortingLayerName = "TownInteractive";
-            resourceFrameImage.sprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/resource_frame");
-            resourceFrame.name = "frame";
-            resourceFrame.tag = "toDestroy";
-            */
-
             // Prepare global text for your resources, if you trade they will be updated
             textResource = new Text[5];
 
@@ -388,7 +341,7 @@ namespace TownView
                 int selectedResource = i;
                 //resourceObjectPay.GetComponent<Image>().sprite = libs.GetPortrait(selectedHero.GetPortraitID());
                 Button buttonPay = resourceObjectPay.GetComponent<Button>();
-                buttonPay.onClick.AddListener(() => setTrade(true, selectedResource, resourceObjectPay.transform.position));
+                buttonPay.onClick.AddListener(() => setTrade(true, selectedResource));
 
                 // Quick and dirty switch
                 switch (i)
@@ -423,7 +376,7 @@ namespace TownView
                 GameObject resourceObjectEarn = earnPanel.transform.GetChild(i).gameObject;
 
                 Button buttonEarn = resourceObjectEarn.GetComponent<Button>();
-                buttonEarn.onClick.AddListener(() => setTrade(false, selectedResource, resourceObjectEarn.transform.position));
+                buttonEarn.onClick.AddListener(() => setTrade(false, selectedResource));
                 resourceObjectEarn.GetComponent<Image>().sprite = resourceObjectPay.GetComponent<Image>().sprite;
 
                 // Set buy button onclick
@@ -509,32 +462,23 @@ namespace TownView
             SetCostPanelText(currentUnitBuilding.Unit.Price.GetCostScaled((unitAmount)));
         }
 
-        /*
-        /// <summary>
-        /// Adjusts the texts for total price to pay
-        /// </summary>
-        private void AdjustTotalCost()
-        {
-            for (int i = 0; i < totalCostTexts.Length; i++)
-            {
-                if (currentUnitBuilding.Unit.Price.GetResourceTab()[i] > 0)
-                    totalCostTexts[i].text = (currentUnitBuilding.Unit.Price.GetResourceTab()[i] * tradeSlider.value) + "";
-            }
-        }
-        */
 
         /// <summary>
         /// Sets which building to buy
         /// </summary>
         /// <param name="obj"></param>
-        private void SetBuilding(Building toBuyBuilding, Vector2 position)
+        private void SetBuilding(Building toBuyBuilding)
         {
             gm.purchaseButton.GetComponent<Button>().onClick.RemoveAllListeners();
             SetCostPanelText(toBuyBuilding.Cost);
             gm.purchaseButton.GetComponent<Button>().onClick.AddListener(() => BuyBuilding(toBuyBuilding));
         }
 
-        private void SetHero(Hero toBuyHero, Vector2 position)
+        /// <summary>
+        /// Sets the hero to be bought
+        /// </summary>
+        /// <param name="toBuyHero"></param>
+        private void SetHero(Hero toBuyHero)
         {
             gm.purchaseButton.GetComponent<Button>().onClick.RemoveAllListeners();
             SetCostPanelText(toBuyHero.Cost);
@@ -546,7 +490,7 @@ namespace TownView
         /// Sets which object to be bought by buybutton.
         /// </summary>
         /// <param name="obj"></param>
-        private void setTrade(bool top, int type, Vector2 position)
+        private void setTrade(bool top, int type)
         {
             if ((top && type != selectedEarnResource) || (!top && type != selectedPayResource))
             {
