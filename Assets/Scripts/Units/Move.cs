@@ -6,7 +6,7 @@
         string description;
         int minDamage;
         int maxDamage;
-        int damageType;
+        int damageType; // TODO Element
 
         public Move(string name, string description, int minDamage, int maxDamage, int damageType)
         {

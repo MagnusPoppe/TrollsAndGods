@@ -36,13 +36,13 @@ namespace TownView
         GameObject[] buildingObjects;
 
         // Selected actions in town
-        System.Object toBuyObject;
         Text[] textResource;
         int[] ratio = {1, 100, 100, 200, 200};
-        Slider slider;
+        Slider tradeSlider, unitSlider;
         int payAmount;
         int earnAmount;
         Text textLeftResource, textRightResource;
+        Text textLeftUnit, textRightUnit;
         int selectedPayResource;
         int selectedEarnResource;
         int unitAmount;
@@ -208,23 +208,6 @@ namespace TownView
         /// </summary>
         private void CreateBuildingView()
         {
-            // Add text below building
-            /*
-            GameObject textObject = new GameObject();
-            textObject.transform.parent = cardWindow.transform;
-            textObject.transform.localScale = canvas.transform.localScale;
-            textObject.name = Building.Name + " text";
-            Text text = textObject.AddComponent<Text>();
-            text.font = FONT;
-            text.fontSize = 18;
-            text.text = Building.Description;
-            text.alignment = TextAnchor.UpperCenter;
-            text.color = Color.black;
-            textObject.transform.position = new Vector2(cardWindow.transform.position.x, cardWindow.transform.position.y);
-            */
-
-
-
             // Get the ContentPanel and set description
             GameObject buildingContentPanel = gm.buildingPanel.transform.GetChild(0).gameObject;
             buildingContentPanel.transform.GetChild(0).GetComponent<Text>().text = Building.Description;
@@ -250,7 +233,7 @@ namespace TownView
         private void CreateTownHallView()
         {
 
-            GameObject townHallPanel = gm.townHallPanel.transform.GetChild(0).gameObject;
+            GameObject townHallContentPanel = gm.townHallPanel.transform.GetChild(0).gameObject;
 
             // Set Buildingname Text
             GameObject buildingNameObject = gm.townHallPanel.transform.GetChild(1).gameObject;
@@ -276,7 +259,7 @@ namespace TownView
                     offset = buildingCount * 2;
 
                 // Finding the panel that holds the gameobject with button and textchild, and resourcepanel
-                GameObject buildingPanel = townHallPanel.transform.GetChild(i).gameObject;
+                GameObject buildingPanel = townHallContentPanel.transform.GetChild(i).gameObject;
                 // Building imagebutton with listener
                 GameObject buildingObject = buildingPanel.transform.GetChild(0).gameObject;
 
@@ -299,7 +282,6 @@ namespace TownView
                     {
                         // Finding resourcepanel gameobject child with buttonimage and text
                         GameObject resourceObject = resourcePanel.transform.GetChild(j).gameObject;
-                        Button resourceButton = resourceObject.GetComponent<Button>();
                         string spritePath = "Sprites/UI/gold"; // TODO add to IngameObjectLibrary
                         if (j == 1)
                             spritePath = "Sprites/UI/wood";
@@ -311,10 +293,9 @@ namespace TownView
                             spritePath = "Sprites/UI/gem";
 
                         // Setting resource mage
-                        resourceButton.GetComponent<Image>().sprite = UnityEngine.Resources.Load<Sprite>(spritePath);
+                        resourceObject.GetComponent<Image>().sprite = UnityEngine.Resources.Load<Sprite>(spritePath);
                         // Setting resourcecost text
-                        resourceButton.transform.GetChild(0).GetComponent<Text>().text =
-                            buildingArray[i].Cost.CostToString(j);
+                        resourceObject.transform.GetChild(0).GetComponent<Text>().text = buildingArray[i].Cost.CostToString(j);
                     }
                 }
             }
@@ -326,7 +307,7 @@ namespace TownView
         /// </summary>
         public void CreateTavernView()
         {
-            GameObject heroPanel = gm.tavernPanel.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject;
+            GameObject heroContentPanel = gm.tavernPanel.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject;
 
             // Set Buildingname Text
             GameObject buildingNameObject = gm.tavernPanel.transform.GetChild(1).gameObject;
@@ -338,13 +319,15 @@ namespace TownView
 
             // Add each hero that you can buy in Tavern
             int count = 0;
-            for (int i = 0; i < gm.heroes.Length; i++)
+
+            for (int i = 0; i < gm.heroes.Length && count < 5; i++)
             {
-                if (gm.heroes[i] != null && !gm.heroes[i].Alive || count < 5)
+                if (gm.heroes[i] != null && !gm.heroes[i].Alive)
                 {
                     // Hero imagebutton with listener
-                    GameObject heroObject = heroPanel.transform.GetChild(count).gameObject;
-                    
+                    GameObject heroObject = heroContentPanel.transform.GetChild(count).gameObject;
+                    heroObject.SetActive(true);
+
                     Hero selectedHero = gm.heroes[i];
                     heroObject.GetComponent<Image>().sprite = libs.GetPortrait(selectedHero.GetPortraitID());
                     Button button = heroObject.GetComponent<Button>();
@@ -355,6 +338,12 @@ namespace TownView
                     count++;
                 }
             }
+            // Hide unused panels
+            while(count < 5)
+            {
+                heroContentPanel.transform.GetChild(count).gameObject.SetActive(false);
+                count++;
+            }
             gm.tavernPanel.SetActive(true);
         }
 
@@ -364,7 +353,7 @@ namespace TownView
         /// </summary>
         private void CreateMarketplaceView()
         {
-            GameObject marketplacePanel = gm.marketplacePanel.transform.GetChild(0).gameObject;
+            GameObject marketplaceContentPanel = gm.marketplacePanel.transform.GetChild(0).gameObject;
 
             // Set Buildingname Text
             GameObject buildingNameObject = gm.marketplacePanel.transform.GetChild(1).gameObject;
@@ -375,9 +364,9 @@ namespace TownView
             exitButtonObject.GetComponent<Button>().onClick.AddListener(DestroyObjects);
 
 
-            GameObject payPanel = marketplacePanel.transform.GetChild(0).gameObject;
-            GameObject earnPanel = marketplacePanel.transform.GetChild(1).gameObject;
-            GameObject bottomPanel = marketplacePanel.transform.GetChild(2).gameObject;
+            GameObject payPanel = marketplaceContentPanel.transform.GetChild(0).gameObject;
+            GameObject earnPanel = marketplaceContentPanel.transform.GetChild(1).gameObject;
+            GameObject bottomPanel = marketplaceContentPanel.transform.GetChild(2).gameObject;
 
             /*
             resourceFrame = new GameObject();
@@ -436,9 +425,13 @@ namespace TownView
                 Button buttonEarn = resourceObjectEarn.GetComponent<Button>();
                 buttonEarn.onClick.AddListener(() => setTrade(false, selectedResource, resourceObjectEarn.transform.position));
                 resourceObjectEarn.GetComponent<Image>().sprite = resourceObjectPay.GetComponent<Image>().sprite;
-                
+
+                // Set buy button onclick
+                gm.purchaseButton.GetComponent<Button>().onClick.RemoveAllListeners();
+                gm.purchaseButton.GetComponent<Button>().onClick.AddListener(() => BuyResource(selectedPayResource, payAmount, selectedEarnResource, earnAmount));
+
             }
-            
+
 
             GameObject leftTextObject = bottomPanel.transform.GetChild(0).gameObject;
             GameObject sliderObject = bottomPanel.transform.GetChild(1).gameObject;
@@ -447,11 +440,11 @@ namespace TownView
             textLeftResource = leftTextObject.GetComponent<Text>();
             textRightResource = rightTextObject.GetComponent<Text>();
             
-            slider = sliderObject.GetComponent<Slider>();
-            slider.enabled = false;
-            slider.maxValue = player.Wallet.GetResource(0) / ratio[1];
+            tradeSlider = sliderObject.GetComponent<Slider>();
+            tradeSlider.enabled = false;
+            tradeSlider.maxValue = player.Wallet.GetResource(0) / ratio[1];
 
-            slider.onValueChanged.AddListener(adjustTradeAmount);
+            tradeSlider.onValueChanged.AddListener(adjustTradeAmount);
             textLeftResource.text = "";
             textRightResource.text = "";
             //textLeftResource.text = ratio[0] * ratio[1] + "";
@@ -462,140 +455,40 @@ namespace TownView
 
         private void CreateDwellingView()
         {
-            // Gets the unit to create a view for 
-            currentUnitBuilding = (UnitBuilding) building;
-
-            toBuyObject = currentUnitBuilding.Unit;
+            currentUnitBuilding = (UnitBuilding)building;
             unitAmount = -1;
+            GameObject dwellingContentPanel = gm.dwellingPanel.transform.GetChild(0).gameObject;
 
-            gm.CreateUnitCard(cardWindow, canvas, currentUnitBuilding);
+            // Set Buildingname Text
+            GameObject buildingNameObject = gm.dwellingPanel.transform.GetChild(1).gameObject;
+            buildingNameObject.GetComponent<Text>().text = Building.Name;
 
-            // Creates the purchase slider
-            string prefabPath = "Prefabs/Slider";
-            GameObject sliderObject = Instantiate(UnityEngine.Resources.Load<GameObject>(prefabPath));
-            sliderObject.transform.parent = cardSpriteRenderer.transform;
-            sliderObject.transform.localScale = canvas.transform.localScale;
-            float bottomY = 1.5f;
-            sliderObject.transform.position = new Vector2(cardSpriteRenderer.transform.position.x, bottomY);
-            slider = sliderObject.GetComponent<Slider>();
-            //slider.maxValue = currentUnitBuilding.UnitsPresent;
-            slider.maxValue = player.Wallet.CanAffordCount(currentUnitBuilding.Unit, currentUnitBuilding.UnitsPresent);
-            slider.onValueChanged.AddListener(adjustUnits);
+            // Set exit button
+            GameObject exitButtonObject = gm.dwellingPanel.transform.GetChild(2).gameObject;
+            exitButtonObject.GetComponent<Button>().onClick.AddListener(DestroyObjects);
 
-            // Text for total available units
-            GameObject unitTotalCountObject = new GameObject();
-            unitTotalCountObject.name = "Units available object";
-            unitTotalCountObject.transform.parent = cardSpriteRenderer.transform;
-            unitTotalCountObject.transform.localScale = canvas.transform.localScale;
-            unitTotalCountObject.transform.position = new Vector2(sliderObject.transform.position.x + 1.8f,
-                sliderObject.transform.position.y - 1f);
-            unitTotalCountText = unitTotalCountObject.AddComponent<Text>();
-            unitTotalCountText.color = Color.black;
-            unitTotalCountText.alignment = TextAnchor.UpperLeft;
-            unitTotalCountText.font = FONT;
+            gm.SetUnitCard(dwellingContentPanel, currentUnitBuilding.Unit);
+            
+            // Sets the initial text for TotalUnits and ToBuyUnits
+            GameObject purchasePanel = dwellingContentPanel.transform.GetChild(0).gameObject;
 
-            // Text for how many units to buy
-            GameObject unitToBuyCountObject = new GameObject();
-            unitToBuyCountObject.name = "Units to buy object";
-            unitToBuyCountObject.transform.parent = cardSpriteRenderer.transform;
-            unitToBuyCountObject.transform.localScale = canvas.transform.localScale;
-            unitToBuyCountObject.transform.position = new Vector2(sliderObject.transform.position.x - 0.3f,
-                sliderObject.transform.position.y - 1f);
-            unitToBuyCountText = unitToBuyCountObject.AddComponent<Text>();
-            unitToBuyCountText.color = Color.black;
-            unitToBuyCountText.alignment = TextAnchor.UpperLeft;
-            unitToBuyCountText.font = FONT;
+            // Set slider object and max value (max value is set to how many units the current player can afford);
+            GameObject sliderObject = purchasePanel.transform.GetChild(1).gameObject;
+            unitSlider = sliderObject.GetComponent<Slider>();
+            unitSlider.onValueChanged.AddListener(UpdateUnitText);
+            unitSlider.maxValue = player.Wallet.CanAffordCount(currentUnitBuilding.Unit, currentUnitBuilding.UnitsPresent);
 
-            unitTotalCountText.text = currentUnitBuilding.UnitsPresent + "";
-            unitToBuyCountText.text = slider.value + "";
+            textLeftUnit = purchasePanel.transform.GetChild(0).gameObject.GetComponent<Text>();
+            textRightUnit = purchasePanel.transform.GetChild(2).gameObject.GetComponent<Text>();
+            textLeftUnit.text = currentUnitBuilding.UnitsPresent + "";
+            textRightUnit.text = sliderObject.GetComponent<Slider>().value + "";
 
-            // positions for resource images and text
-            Vector2 position = new Vector2(slider.transform.position.x - 3f, slider.transform.position.y + 2f);
-            float offset = 0.6f;
 
-            for (int i = 0; i < currentUnitBuilding.Unit.Price.GetResourceTab().Length; i++)
-            {
-                if (currentUnitBuilding.Unit.Price.GetResourceTab()[i] > 0)
-                {
-                    GameObject imageObject = new GameObject();
-                    imageObject.transform.parent = cardWindow.transform;
-                    imageObject.transform.position = position;
-                    imageObject.name = town.Buildings[i].Cost.ResourceToString(i) + "image";
-                    SpriteRenderer sprResource = imageObject.AddComponent<SpriteRenderer>();
-                    string spritePath = "Sprites/UI/gold"; // TODO add to IngameObjectLibrary
-                    if (i == 1)
-                        spritePath = "Sprites/UI/wood";
-                    else if (i == 2)
-                        spritePath = "Sprites/UI/ore";
-                    else if (i == 3)
-                        spritePath = "Sprites/UI/crystal";
-                    else if (i == 4)
-                        spritePath = "Sprites/UI/gem";
-                    sprResource.sprite = UnityEngine.Resources.Load<Sprite>(spritePath);
-                    sprResource.sortingLayerName = "TownGUI";
+            //GameObject unitPanel = dwellingContentPanel.transform.GetChild(2).gameObject;
 
-                    position = new Vector2(position.x + offset, position.y);
-
-                    GameObject textCostObject = new GameObject();
-                    textCostObject.transform.parent = cardWindow.transform;
-                    textCostObject.transform.position = position;
-                    textCostObject.transform.localScale = canvas.transform.localScale;
-                    textCostObject.name = currentUnitBuilding.Unit.Price.ToString(i);
-                    Text textCost = textCostObject.AddComponent<Text>();
-                    textCost.font = FONT;
-                    textCost.text = currentUnitBuilding.Unit.Price.CostToString(i);
-                    textCost.color = Color.black;
-                    textCost.fontSize = 16;
-                    textCost.alignment = TextAnchor.MiddleCenter;
-
-                    position = new Vector2(position.x - offset, position.y - offset);
-                }
-            }
-
-            // resets positions
-            position = new Vector2(slider.transform.position.x + 2.5f, slider.transform.position.y + 2f);
-
-            for (int i = 0; i < currentUnitBuilding.Unit.Price.GetResourceTab().Length; i++)
-            {
-                if (currentUnitBuilding.Unit.Price.GetResourceTab()[i] > 0)
-                {
-                    GameObject imageObject = new GameObject();
-                    imageObject.transform.parent = cardWindow.transform;
-                    imageObject.transform.position = position;
-                    imageObject.name = town.Buildings[i].Cost.ResourceToString(i) + "image";
-                    SpriteRenderer sprResource = imageObject.AddComponent<SpriteRenderer>();
-                    string spritePath = "Sprites/UI/gold"; // TODO add to IngameObjectLibrary
-                    if (i == 1)
-                        spritePath = "Sprites/UI/wood";
-                    else if (i == 2)
-                        spritePath = "Sprites/UI/ore";
-                    else if (i == 3)
-                        spritePath = "Sprites/UI/crystal";
-                    else if (i == 4)
-                        spritePath = "Sprites/UI/gem";
-                    sprResource.sprite = UnityEngine.Resources.Load<Sprite>(spritePath);
-                    sprResource.sortingLayerName = "TownGUI";
-
-                    position = new Vector2(position.x + offset, position.y);
-
-                    GameObject textCostObject = new GameObject();
-                    textCostObject.transform.parent = cardWindow.transform;
-                    textCostObject.transform.localScale = canvas.transform.localScale;
-                    textCostObject.transform.position = position;
-                    textCostObject.name = currentUnitBuilding.Unit.Price.ToString(i);
-                    textCost = textCostObject.AddComponent<Text>();
-                    textCost.font = FONT;
-                    textCost.text = (currentUnitBuilding.Unit.Price.GetResourceTab()[i] * slider.value) + "";
-                    textCost.color = Color.black;
-                    textCost.fontSize = 16;
-                    textCost.alignment = TextAnchor.MiddleCenter;
-
-                    position = new Vector2(position.x - offset, position.y - offset);
-
-                    totalCostTexts[i] = textCost;
-                }
-            }
-
+            // Set buy button onclick
+            gm.purchaseButton.GetComponent<Button>().onClick.RemoveAllListeners();
+            gm.purchaseButton.GetComponent<Button>().onClick.AddListener(() => BuyUnit(currentUnitBuilding.Unit, (int)unitSlider.value));
 
             gm.dwellingPanel.SetActive(true);
         }
@@ -604,14 +497,19 @@ namespace TownView
         /// Function for unit slider to update the numbers on the UI
         /// </summary>
         /// <param name="value">Value of slider</param>
-        private void adjustUnits(float value)
+        private void UpdateUnitText(float value)
         {
             unitAmount = (int) value;
-            unitTotalCountText.text = (currentUnitBuilding.UnitsPresent - unitAmount) + "";
-            unitToBuyCountText.text = unitAmount + "";
-            AdjustTotalCost();
+            textLeftUnit.text = (currentUnitBuilding.UnitsPresent - unitAmount) + "";
+            textRightUnit.text = unitAmount + "";
+            
+
+
+            // Set panel info
+            SetCostPanelText(currentUnitBuilding.Unit.Price.GetCostScaled((unitAmount)));
         }
 
+        /*
         /// <summary>
         /// Adjusts the texts for total price to pay
         /// </summary>
@@ -620,52 +518,8 @@ namespace TownView
             for (int i = 0; i < totalCostTexts.Length; i++)
             {
                 if (currentUnitBuilding.Unit.Price.GetResourceTab()[i] > 0)
-                    totalCostTexts[i].text = (currentUnitBuilding.Unit.Price.GetResourceTab()[i] * slider.value) + "";
+                    totalCostTexts[i].text = (currentUnitBuilding.Unit.Price.GetResourceTab()[i] * tradeSlider.value) + "";
             }
-        }
-
-        /// <summary>
-        /// Gets the upper right corner of the current building card.
-        /// </summary>
-        /// <param name="sr">The sprite renderer to get the bounds from</param>
-        /// <returns></returns>
-        private Vector2 getUpRightCorner(SpriteRenderer sr)
-        {
-            return new Vector2(sr.transform.position.x + (sr.bounds.size.x / 2.2f),
-                sr.transform.position.y + (sr.bounds.size.y / 2.3f));
-        }
-
-        /// <summary>
-        /// Gets the bottom right corner of the current building card.
-        /// </summary>
-        /// <param name="sr">The sprite renderer to get the bounds from</param>
-        /// <returns></returns>
-        private Vector2 getDownRightCorner(SpriteRenderer sr)
-        {
-            return new Vector2(sr.transform.position.x + (sr.bounds.size.x / 2.2f),
-                sr.transform.position.y - (sr.bounds.size.y / 2.3f));
-        }
-        
-        void CreateExitButton()
-        {
-            GameObject.Find("ExitButton").GetComponent<Button>().onClick.AddListener(DestroyObjects);
-        }
-
-        /*
-        void CreateBuyButton()
-        {
-            // gets the positions for exit button and buy button if the window type requires it
-            buyButtonObject = Instantiate(UnityEngine.Resources.Load<GameObject>("Prefabs/Button"));
-            buyButtonObject.transform.parent = cardWindow.transform;
-            buyButtonObject.GetComponent<Image>().sprite = libs.GetUI(new ExitButton().GetSpriteID() + 1);
-            buyButtonObject.name = "BuyButton";
-            buyButtonObject.tag = "toDestroy";
-            RectTransform rect = buyButtonObject.GetComponent<RectTransform>();
-            rect.sizeDelta = new Vector2(buyButtonObject.GetComponent<Image>().sprite.bounds.size.x,
-                buyButtonObject.GetComponent<Image>().sprite.bounds.size.y);
-            Button button = buyButtonObject.GetComponent<Button>();
-            button.onClick.AddListener(purchase);
-            buyButtonObject.transform.position = getDownRightCorner(cardSpriteRenderer);
         }
         */
 
@@ -675,29 +529,30 @@ namespace TownView
         /// <param name="obj"></param>
         private void setBuy(System.Object obj, Vector2 position)
         {
-            setResourcePanel();
-
-            toBuyObject = obj;
-
-            if (toBuyObject.GetType().BaseType.Name.Equals("Hero"))
+            gm.purchaseButton.GetComponent<Button>().onClick.RemoveAllListeners();
+            if (obj.GetType().BaseType.Name.Equals("Hero"))
+            {
                 frameImage.sprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/hero_frame");
-            else if (toBuyObject.GetType().BaseType.Name.Equals("Building"))
+                Hero hero = (Hero)obj;
+                SetCostPanelText(hero.Cost);
+                gm.purchaseButton.GetComponent<Button>().onClick.AddListener(() => BuyHero(hero));
+            }
+            else if (obj.GetType().BaseType.Name.Equals("Building"))
+            {
                 frameImage.sprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/building_frame");
+                Building building = (Building)obj;
+                SetCostPanelText(building.Cost);
+                gm.purchaseButton.GetComponent<Button>().onClick.AddListener(() => BuyBuilding(building));
+            }
+            /*
+            else if (obj.GetType().BaseType.Name.Equals("Unit"))
+            {
+                Unit unit = (Unit)obj;
+                SetCostPanelText((unit.Price.GetCostScaled((int)tradeSlider.value)));
+                gm.purchaseButton.GetComponent<Button>().onClick.AddListener(() => BuyUnit(unit, (int)tradeSlider.value));
+            }*/
 
             frame.transform.position = position;
-        }
-
-        public void setResourcePanel()
-        {
-            gm.townResourcePanel.SetActive(true);
-            for (int i = 0; i < 5; i++)
-            {
-                Text text = gm.townResourcePanel.transform.GetChild(i).gameObject.GetComponent<Text>();
-                if (true)
-                    text.text = "-100";
-                else
-                    text.text = "";
-            }
         }
 
 
@@ -722,13 +577,12 @@ namespace TownView
                 }
                 if (selectedEarnResource >= 0 && selectedPayResource >= 0)
                 {
-                    if (!slider.isActiveAndEnabled)
-                        slider.enabled = true;
-                    slider.maxValue = (player.Wallet.GetResource(selectedPayResource) * ratio[selectedPayResource]) /
-                                      ratio[selectedEarnResource];
+                    if (!tradeSlider.isActiveAndEnabled)
+                        tradeSlider.enabled = true;
+                    tradeSlider.maxValue = (player.Wallet.GetResource(selectedPayResource) * ratio[selectedPayResource]) / ratio[selectedEarnResource];
                     Debug.Log(player.Wallet.GetResource(selectedPayResource));
                     adjustTradeAmount(1);
-                    slider.value = 1;
+                    tradeSlider.value = 1;
                 }
             }
         }
@@ -739,141 +593,176 @@ namespace TownView
         /// <param name="value"></param>
         private void adjustTradeAmount(float value)
         {
-            setResourcePanel();
-
             payAmount = (int) (value * ratio[selectedEarnResource]) / ratio[selectedPayResource];
             earnAmount = (int) value;
             textLeftResource.text = payAmount + "";
             textRightResource.text = earnAmount + "";
+
+
+            Cost cost = new Cost(0, 0, 0, 0, 0);
+            cost.adjustResource(selectedPayResource, payAmount);
+            cost.adjustResource(selectedEarnResource, -earnAmount);
+
+            // Set panel info
+            SetCostPanelText(cost);
         }
 
 
+
         /// <summary>
-        /// When clicked on buybutton, try to purchase active object
+        /// Check all resources in the resourcearray in cost, set the panel's textboxes to the values
         /// </summary>
-        private void purchase()
+        /// <param name="cost">The costobject with the int array to find the pay or earn values</param>
+        public void SetCostPanelText(Cost cost)
         {
-            if (toBuyObject != null)
+            for (int i = 0; i < cost.GetResourceTab().Length; i++)
             {
-                if (toBuyObject.GetType().BaseType.Name.Equals("Hero"))
+                Text costText = gm.adjustResourcePanel.transform.GetChild(0).gameObject.transform.GetChild(i).GetComponent<Text>();
+                // Set - and value if you can're supposed to pay the amount
+                if (cost.GetResourceTab()[i] > 0)
+                    costText.text = "-" + cost.GetResourceTab()[i];
+                // + If you gain the value
+                else if (cost.GetResourceTab()[i] < 0)
                 {
-                    Hero buyHero = (Hero) toBuyObject;
-                    // checks if the player can afford the hero and if the hero is alive
-                    if (Player.Wallet.CanPay(buyHero.Cost) && (town.StationedHero == null || town.VisitingHero == null))
-                    {
-                        // If theres stationed and visitingunits there, check if you can merge with the existing troops
-                        if ((town.StationedUnits == null || buyHero.Units.CanMerge(town.StationedUnits)) || (town.VisitingUnits == null || buyHero.Units.CanMerge(town.VisitingUnits)))
-                        {
-
-                            if (town.VisitingHero == null)
-                            {
-                                town.VisitingHero = buyHero;
-                                town.VisitingHero.Units.Merge(town.VisitingUnits);
-                                town.VisitingUnits = town.VisitingHero.Units;
-                            }
-                            else if (town.StationedHero == null)
-                            {
-                                town.StationedHero = buyHero;
-                                town.StationedHero.Units.Merge(town.StationedUnits);
-                                town.StationedUnits = town.StationedHero.Units;
-                            }
-
-                            Player.Wallet.Pay(buyHero.Cost);
-                            Debug.Log("Bought the hero" + buyHero.Name);
-
-                            // TODO PLACE HERO LOGICALLY AND VISUALLY
-                            gm.PlaceHero(Player, buyHero, town.Position);
-                            DestroyObjects();
-                            gm.ReDrawArmyInTown(town);
-                            gm.updateResourceText();
-                            // Update herolist and townlist UI
-                            gm.updateOverworldUI(player);
-                            // Deactivate resource panel
-                            gm.townResourcePanel.SetActive(false);
-                        }
-                        else
-                            Debug.Log("Could not merge with existing troops");
-                    }
-                    else
-                        Debug.Log("Not enough gold");
-                    return;
+                    costText.text = "+" + Math.Abs(cost.GetResourceTab()[i]);
                 }
-                else if (toBuyObject.GetType().BaseType.Name.Equals("Building"))
-                {
-                    Building buyBuilding = (Building) toBuyObject;
-
-                    // Build building if town has not already built that day, player can pay, and building is not built already
-                    if (!Town.HasBuiltThisRound && Player.Wallet.CanPay(buyBuilding.Cost) && !buyBuilding.Built && buyBuilding.MeetsRequirements(town))
-                    {
-                        // Player pays
-                        Player.Wallet.Pay(buyBuilding.Cost);
-                        town.HasBuiltThisRound = true;
-                        gm.updateResourceText();
-
-                        // Find the building in the town's list, build it and draw it in the view
-                        for (int i = 0; i < town.Buildings.Length; i++)
-                        {
-                            if (town.Buildings[i].Equals(buyBuilding))
-                            {
-                                Debug.Log("YOU BOUGHT: " + buyBuilding.Name); // TODO remove
-                                town.Buildings[i].Build();
-                                gm.DrawBuilding(town, buyBuilding, i);
-                                DestroyObjects();
-                            }
-                        }
-                        // Deactivate resource panel
-                        gm.townResourcePanel.SetActive(false);
-                    }
-                    else
-                    {
-                        Debug.Log("YOU DO NOT HAVE THE SUFFICIENT ECONOMICAL WEALTH TO PRODUCE THE STRUCTURE OF CHOICE: " + buyBuilding.Name); // TODO remove
-                        return;
-                        // TODO: what's the graphic feedback for trying to purchase something unpurchasable?
-                    }
-                }
-                else if (toBuyObject.GetType().BaseType.BaseType.Name.Equals("Unit"))
-                {
-                    
-                    Unit unit = (Unit) toBuyObject;
-                    {
-                        if (Player.Wallet.CanPayForMultiple(unit.Price, unitAmount) && town.StationedUnits.addUnit(unit, unitAmount) && currentUnitBuilding.AdjustPresentUnits((int)-slider.value))
-                        {
-                            // Add to hero list if theres a stationed hero
-                            if (town.StationedHero != null)
-                                town.StationedHero.Units = town.StationedUnits;
-                            for (int i = 0; i < (int)slider.value; i++)
-                            {
-                                Player.Wallet.Pay(unit.Price);
-                            }
-
-                            unitTotalCountText.text = currentUnitBuilding.UnitsPresent + "";
-                            unitToBuyCountText.text = slider.value + "";
-                            slider.maxValue = player.Wallet.CanAffordCount(currentUnitBuilding.Unit, currentUnitBuilding.UnitsPresent);
-                            gm.ReDrawArmyInTown(town);
-                            gm.updateResourceText();
-                            // Deactivate resource panel
-                            gm.townResourcePanel.SetActive(false);
-                        }
-                    }
-                }
+                // Else empty text
+                else
+                    costText.text = "";
             }
-            else if (selectedPayResource >= 0 && selectedEarnResource >= 0)
+            // Show the panel and buybutton
+            gm.adjustResourcePanel.SetActive(true);
+        }
+
+        public void BuyResource(int payPos, int pay, int earnPos, int earn)
+        {
+            if (payPos >= 0 && earnPos >= 0)
             {
-                if (Player.Wallet.CanPay(selectedPayResource, payAmount))
+                if (Player.Wallet.CanPay(payPos, payAmount))
                 {
-                    Player.Wallet.adjustResource(selectedPayResource, -payAmount);
-                    Player.Wallet.adjustResource(selectedEarnResource, earnAmount);
+                    //Player.Wallet.adjustResource(payPos, -pay);
+                    //Player.Wallet.adjustResource(earnPos, earn);
+
+                    Cost resourceCost = new Cost();
+                    resourceCost.adjustResource(payPos, pay);
+                    resourceCost.adjustResource(earnPos, -earn);
+                    Player.Wallet.Pay(resourceCost);
                     gm.updateResourceText();
 
                     for (int i = 0; i < 5; i++)
                     {
                         textResource[i].text = player.Wallet.GetResource(i) + "";
-                        slider.maxValue = player.Wallet.GetResource(selectedPayResource) / ratio[selectedEarnResource];
+                        tradeSlider.maxValue = player.Wallet.GetResource(payPos) / ratio[earnPos];
                         //textLeftResource.text = "";
                         //textRightResource.text = "";
                         //slider.value = 1;
                     }
                 }
+            }
+        }
+
+        public void BuyHero(Hero hero)
+        {
+            //if (toBuyObject.GetType().BaseType.Name.Equals("Hero"))
+            //{
+                // checks if the player can afford the hero and if the hero is alive
+                if (Player.Wallet.CanPay(hero.Cost) && (town.StationedHero == null || town.VisitingHero == null))
+                {
+                    // If theres stationed and visitingunits there, check if you can merge with the existing troops
+                    if ((town.StationedUnits == null || hero.Units.CanMerge(town.StationedUnits)) || (town.VisitingUnits == null || hero.Units.CanMerge(town.VisitingUnits)))
+                    {
+
+                        if (town.VisitingHero == null)
+                        {
+                            town.VisitingHero = hero;
+                            town.VisitingHero.Units.Merge(town.VisitingUnits);
+                            town.VisitingUnits = town.VisitingHero.Units;
+                        }
+                        else if (town.StationedHero == null)
+                        {
+                            town.StationedHero = hero;
+                            town.StationedHero.Units.Merge(town.StationedUnits);
+                            town.StationedUnits = town.StationedHero.Units;
+                        }
+
+                        Player.Wallet.Pay(hero.Cost);
+                        Debug.Log("Bought the hero" + hero.Name);
+
+                        // TODO PLACE HERO LOGICALLY AND VISUALLY
+                        gm.PlaceHero(Player, hero, town.Position);
+                        DestroyObjects();
+                        gm.ReDrawArmyInTown(town);
+                        gm.updateResourceText();
+                        // Update herolist and townlist UI
+                        gm.updateOverworldUI(player);
+                        // Deactivate resource panel
+                        gm.adjustResourcePanel.SetActive(false);
+                    }
+                    else
+                        Debug.Log("Could not merge with existing troops");
+                }
+                else
+                    Debug.Log("Not enough gold");
+            //}
+        }
+
+        public void BuyBuilding(Building building)
+        {
+                // Build building if town has not already built that day, player can pay, and building is not built already
+                if (!Town.HasBuiltThisRound && Player.Wallet.CanPay(building.Cost) && !building.Built && building.MeetsRequirements(town))
+                {
+                    // Player pays
+                    Player.Wallet.Pay(building.Cost);
+                    town.HasBuiltThisRound = true;
+                    gm.updateResourceText();
+
+                    // Find the building in the town's list, build it and draw it in the view
+                    for (int i = 0; i < town.Buildings.Length; i++)
+                    {
+                        if (town.Buildings[i].Equals(building))
+                        {
+                            Debug.Log("YOU BOUGHT: " + building.Name); // TODO remove
+                            town.Buildings[i].Build();
+                            gm.DrawBuilding(town, building, i);
+                            DestroyObjects();
+                        }
+                    }
+                    // Deactivate resource panel
+                    gm.adjustResourcePanel.SetActive(false);
+                }
+                else
+                {
+                    Debug.Log("YOU DO NOT HAVE THE SUFFICIENT ECONOMICAL WEALTH TO PRODUCE THE STRUCTURE OF CHOICE: " + building.Name); // TODO remove
+                    // TODO: what's the graphic feedback for trying to purchase something unpurchasable?
+                }
+        }
+
+        public void BuyUnit(Unit unit, int amount)
+        {
+            if (Player.Wallet.CanPayForMultiple(unit.Price, unitAmount) && town.StationedUnits.addUnit(unit, unitAmount) && currentUnitBuilding.AdjustPresentUnits((int)-unitSlider.value))
+            {
+                // Add to hero list if theres a stationed hero
+                if (town.StationedHero != null)
+                    town.StationedHero.Units = town.StationedUnits;
+
+                // TODO cost instead?
+                for (int i = 0; i < (int)unitSlider.value; i++)
+                {
+                    Player.Wallet.Pay(unit.Price);
+                }
+
+                textLeftUnit.text = currentUnitBuilding.UnitsPresent + "";
+                textRightUnit.text = unitSlider.value + "";
+                unitSlider.maxValue = player.Wallet.CanAffordCount(currentUnitBuilding.Unit, currentUnitBuilding.UnitsPresent);
+                gm.ReDrawArmyInTown(town);
+                gm.updateResourceText();
+                // Deactivate resource panel
+                gm.adjustResourcePanel.SetActive(false);
+
+                // Set panel info
+                if (unitSlider.maxValue > 0)
+                    SetCostPanelText(currentUnitBuilding.Unit.Price.GetCostScaled((unitAmount)));
+
             }
         }
 
@@ -889,7 +778,7 @@ namespace TownView
                     t.GetComponent<PolygonCollider2D>().enabled = true;
             }
 
-            gm.DeactivateTownPanels(true);
+            gm.DeactivateTownPanels();
         }
     }
 }

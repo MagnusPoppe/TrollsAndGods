@@ -106,7 +106,6 @@ public class GameManager : MonoBehaviour
     public GameObject dwellingPanel;
     public GameObject buildingPanel;
     public GameObject townToDestroyPanel;
-    public GameObject townResourcePanel;
 
     // UI
     Button nextRoundBtn;
@@ -120,6 +119,9 @@ public class GameManager : MonoBehaviour
     GameObject[] townObjects;
     Button[] heroButton;
     Button[] townButton;
+    public GameObject adjustResourcePanel;
+    public GameObject purchaseButton;
+    public GameObject unitPanel;
 
     //currentReaction
     private Reaction curReaction;
@@ -142,22 +144,26 @@ public class GameManager : MonoBehaviour
         heroButton = new Button[8];
         townButton = new Button[10];
 
+        adjustResourcePanel = GameObject.Find("OverworldAdjustResourcePanel");
+        adjustResourcePanel.SetActive(false);
+        purchaseButton = adjustResourcePanel.transform.GetChild(1).gameObject;
         // Initialize TownPanels and deactivate them
         townToDestroyPanel = GameObject.Find("TownToDestroyPanel");
         townArmyPanel = GameObject.Find("TownArmyPanel");
-        townHallPanel = GameObject.Find("TownHallPanel");
-        tavernPanel = GameObject.Find("TavernPanel");
-        marketplacePanel = GameObject.Find("MarketplacePanel");
-        dwellingPanel = GameObject.Find("DwellingPanel");
-        buildingPanel = GameObject.Find("BuildingPanel");
-        townResourcePanel = GameObject.Find("TownResourcePanel");
         townArmyPanel.SetActive(false);
+        townHallPanel = GameObject.Find("TownHallPanel");
         townHallPanel.SetActive(false);
+        tavernPanel = GameObject.Find("TavernPanel");
         tavernPanel.SetActive(false);
+        marketplacePanel = GameObject.Find("MarketplacePanel");
         marketplacePanel.SetActive(false);
+        dwellingPanel = GameObject.Find("DwellingPanel");
         dwellingPanel.SetActive(false);
+        buildingPanel = GameObject.Find("BuildingPanel");
         buildingPanel.SetActive(false);
-        townResourcePanel.SetActive(false);
+        unitPanel = GameObject.Find("UnitPanel");
+        unitPanel.SetActive(false);
+
 
         parentToMarkers = new GameObject();
         parentToMarkers.name = "Path";
@@ -971,25 +977,31 @@ public class GameManager : MonoBehaviour
         overWorld = true;
         cameraMovement.enabled = true;
         DestroyTownBuildings();
-        DeactivateTownPanels(true);
+        DeactivateTownPanels();
     }
 
-    public void DeactivateTownPanels(bool deActivate)
+    /// <summary>
+    /// Check all the children in the town canvas, deactivate if any of them are activated
+    /// </summary>
+    public void DeactivateTownPanels()
     {
         if (buildingPanel.activeSelf)
-            buildingPanel.SetActive(!deActivate);
+            buildingPanel.SetActive(false);
         if (dwellingPanel.activeSelf)
-            dwellingPanel.SetActive(!deActivate);
+            dwellingPanel.SetActive(false);
         if (marketplacePanel.activeSelf)
-            marketplacePanel.SetActive(!deActivate);
+            marketplacePanel.SetActive(false);
         if (townHallPanel.activeSelf)
-            townHallPanel.SetActive(!deActivate);
+            townHallPanel.SetActive(false);
         if (tavernPanel.activeSelf)
-            tavernPanel.SetActive(!deActivate);
-        if (townResourcePanel.activeSelf)
-            townResourcePanel.SetActive(!deActivate);
+            tavernPanel.SetActive(false);
+        if (adjustResourcePanel.activeSelf)
+            adjustResourcePanel.SetActive(false);
     }
 
+    /// <summary>
+    /// Checks and destroys all objects in towntodestroypanel
+    /// </summary>
     public void DestroyTownBuildings()
     {
         for (int i = 0; i < townToDestroyPanel.transform.childCount; i++)
@@ -1014,6 +1026,7 @@ public class GameManager : MonoBehaviour
         buildingsInActiveTown = new GameObject[town.Buildings.Length];
 
         town.BuildAll(town);
+        town.Buildings[9].Build();
 
         // loads in the town buildings
         for (int i = 0; i < town.Buildings.Length; i++)
@@ -1756,5 +1769,117 @@ public class GameManager : MonoBehaviour
         unitText.alignment = TextAnchor.UpperLeft;
         RectTransform rectTransform = toAttach.GetComponent<RectTransform>();
         rectTransform.sizeDelta = new Vector2(200f, 200f); */
+    }
+
+    public void SetUnitCard(GameObject parent, Unit unit)
+    {
+        const int MAX_MOVES = 3;
+        // Set unitpanel unittext and unitimage
+
+        unitPanel.transform.parent = parent.transform;
+        unitPanel.GetComponent<RectTransform>().sizeDelta = new Vector3(0,0,0);
+        unitPanel.transform.GetChild(0).gameObject.GetComponent<Text>().text = unit.Name;
+        unitPanel.transform.GetChild(1).gameObject.GetComponent<Image>().sprite = libs.GetUnit(unit.GetSpriteID());
+
+        GameObject panel = unitPanel.transform.GetChild(2).gameObject;
+
+        GameObject parentMovePanel = panel.transform.GetChild(0).gameObject;
+
+        // Set move info
+        for(int i=0; i<MAX_MOVES; i++)
+        {
+            GameObject movePanel = parentMovePanel.transform.GetChild(i).gameObject;
+            if (i < unit.Moves.Length && unit.Moves[i] != null)
+            {
+                Move move = unit.Moves[i];
+                movePanel.transform.GetChild(0).GetComponent<Text>().text = move.Name + "";
+                movePanel.transform.GetChild(1).GetComponent<Text>().text = move.MinDamage + " - " + move.MaxDamage; // TODO base minmax?
+                //movePanel.transform.GetChild(2).GetComponent<Image>().sprite = libs.getsprite corresponding move?;
+                movePanel.transform.GetChild(3).GetComponent<Text>().text = move.Description + "";
+                movePanel.SetActive(true);
+            }
+            else
+                movePanel.SetActive(false);
+        }
+
+        // Set stats info
+        GameObject statsPanel = panel.transform.GetChild(1).gameObject;
+
+        UnitStats unitStats = unit.Unitstats;
+        GameObject healthObject = statsPanel.transform.GetChild(0).gameObject;
+        //healthObject.GetComponent<Image>().sprite =  // TODO set icon
+        string statText = unitStats.BaseHealth + "";
+        if (unitStats.BonusHealth > 0)
+            statText += " (" + unitStats.Health + ")";
+        healthObject.transform.GetChild(0).gameObject.GetComponent<Text>().text = statText;
+
+        GameObject attackObject = statsPanel.transform.GetChild(1).gameObject;
+        //attackObject.GetComponent<Image>().sprite =  // TODO set icon
+        statText = unitStats.BaseAttack + "";
+        if(unitStats.BonusAttack > 0)
+            statText += " (" + unitStats.Attack + ")";
+        attackObject.transform.GetChild(0).gameObject.GetComponent<Text>().text = statText;
+
+        GameObject defenseObject = statsPanel.transform.GetChild(2).gameObject;
+        //attackObject.GetComponent<Image>().sprite =  // TODO set icon
+        statText = unitStats.BaseDefence + "";
+        if (unitStats.BonusDefence > 0)
+            statText += " (" + unitStats.Defence + ")";
+        defenseObject.transform.GetChild(0).gameObject.GetComponent<Text>().text = statText;
+        
+        GameObject speedObject = statsPanel.transform.GetChild(3).gameObject;
+        //attackObject.GetComponent<Image>().sprite =  // TODO set icon
+        statText = unitStats.BaseSpeed + "";
+        if (unitStats.BonusSpeed > 0)
+            statText += " (" + unitStats.Speed + ")";
+        speedObject.transform.GetChild(0).gameObject.GetComponent<Text>().text = statText;
+
+        GameObject initiativeObject = statsPanel.transform.GetChild(4).gameObject;
+        //attackObject.GetComponent<Image>().sprite =  // TODO set icon
+        statText = unitStats.BaseInitative + "";
+        if (unitStats.BonusInitiative > 0)
+            statText += " (" + unitStats.Initative + ")";
+        initiativeObject.transform.GetChild(0).gameObject.GetComponent<Text>().text = statText;
+
+        GameObject moralObject = statsPanel.transform.GetChild(5).gameObject;
+        //attackObject.GetComponent<Image>().sprite =  // TODO set icon
+        statText = unitStats.BaseMoral + "";
+        if (unitStats.BonusMoral > 0)
+            statText += " (" + unitStats.Moral + ")";
+        moralObject.transform.GetChild(0).gameObject.GetComponent<Text>().text = statText;
+
+        GameObject luckObject = statsPanel.transform.GetChild(6).gameObject;
+        //attackObject.GetComponent<Image>().sprite =  // TODO set icon
+        statText = unitStats.BaseLuck + "";
+        if (unitStats.BonusLuck > 0)
+            statText += " (" + unitStats.Luck + ")";
+        luckObject.transform.GetChild(0).gameObject.GetComponent<Text>().text = statText;
+
+        if(unit.IsRanged)
+        {
+            Ranged rangedUnit = (Ranged)unit;
+            GameObject ammoObject = statsPanel.transform.GetChild(7).gameObject;
+            //attackObject.GetComponent<Image>().sprite =  // TODO set icon
+            statText = rangedUnit.MaxAmmo + "";
+            //if (rangedUnit.BonusAmmo > 0)
+            //    statText += " (" + unitStats.Ammo + ")"; // TODO bonus ammo?
+            ammoObject.transform.GetChild(0).gameObject.GetComponent<Text>().text = statText;
+
+            GameObject rangeObject = statsPanel.transform.GetChild(8).gameObject;
+            //attackObject.GetComponent<Image>().sprite =  // TODO set icon
+            statText = unitStats.EffectiveRange + "";
+            rangeObject.transform.GetChild(0).gameObject.GetComponent<Text>().text = statText;
+        }
+
+        /*
+        for(int i=0; i<MAX_STATS; i++)
+        {
+            if(unit.Unitstats.Health)
+        }
+        */
+
+        GameObject abilityPanel = panel.transform.GetChild(2).gameObject;
+        
+        unitPanel.SetActive(true);
     }
 }
