@@ -277,7 +277,10 @@ public class GameManager : MonoBehaviour
                     // Activate clicked path
                     else
                     {
-                        pathObjects = movement.MarkPath(posClicked);
+                        // Needs to clear existing objects if an earlier path was already made
+                        RemoveMarkers(pathObjects);
+                        movement.MarkPath(posClicked);
+                        DrawPath(activeHero.Path, movement.totalTilesToBeWalked);
                         savedClickedPos = posClicked;
                     }
                 }
@@ -343,6 +346,7 @@ public class GameManager : MonoBehaviour
             pathMarker.transform.parent = parentToMarkers.transform;
             SpriteRenderer sr = pathMarker.AddComponent<SpriteRenderer>();
             sr.sortingLayerName = "Markers";
+
             if (i + 1 == activeHero.Path.Count)
             {
                 if (i + 1 == tilesToBeWalked)
@@ -361,6 +365,20 @@ public class GameManager : MonoBehaviour
             pathMarker.transform.position = HandyMethods.getGraphicPosForIso(path[i]);
             pathObjects.Add(pathMarker);
         }
+    }
+
+    /// <summary>
+    /// Destroy the tile gameobjects and refresh list
+    /// </summary>
+    /// <param name="li">List that shall be cleared</param>
+    public void RemoveMarkers(List<GameObject> li)
+    {
+        foreach (GameObject go in li)
+        {
+            GameObject.Destroy(go);
+        }
+        li.Clear();
+        li = new List<GameObject>();
     }
 
     public void ListenToMouseHover()
@@ -1164,8 +1182,9 @@ public class GameManager : MonoBehaviour
                 if (hero != null)
                     hero.CurMovementSpeed = hero.MovementSpeed;
             }
+
             // Remove all path markers on the map
-            movement.RemoveMarkers(pathObjects);
+            RemoveMarkers(pathObjects);
 
             // Set active hero and active hero object to the upcoming players first hero
 

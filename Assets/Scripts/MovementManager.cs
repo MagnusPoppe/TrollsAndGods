@@ -224,34 +224,19 @@ public class MovementManager
     /// </summary>
     /// <param name="pos">Destination tile position</param>
     /// <returns>List of instantiated marker objects</returns>
-    public List<GameObject> MarkPath(Vector2 pos)
+    public void MarkPath(Vector2 pos)
     {
         stepNumber = 0;
         pathMarked = true;
         lastStep = false;
+
         // Needs to clear existing objects if an earlier path was already made
-        RemoveMarkers(gameManager.pathObjects);
+
         // Call algorithm method that returns a list of Vector2 positions to the point, go through all objects
         activeHero.Path = aStar.calculate(activeHero.Position, new Point(pos));
 
         // Calculate how many steps the hero will move, if this path is chosen
         int count = totalTilesToBeWalked = Math.Min(activeHero.Path.Count, activeHero.CurMovementSpeed);
-
-        return gameManager.pathObjects;
-    }
-
-    /// <summary>
-    /// Destroy the tile gameobjects and refresh list
-    /// </summary>
-    /// <param name="li">List that shall be cleared</param>
-    public void RemoveMarkers(List<GameObject> li)
-    {
-        foreach (GameObject go in li)
-        {
-            GameObject.Destroy(go);
-        }
-        li.Clear();
-        li = new List<GameObject>();
     }
 
     /// <summary>
