@@ -317,10 +317,10 @@ public class GameManager : MonoBehaviour
             // Hero is active, either try to make a path to pointed destination, or activate walking towards there.
             else if (heroActive && movement.activeHero.Player.equals(players[WhoseTurn]))
             {
-                // If click while movement is happening, cancel the movement.
+                // If click while movement is happening, anywhere else that the hero it self, cancel the movement.
                 if (ANIMATION_RUNNING)
                 {
-                    movement.CanceledMovement = true;
+                    movement.Deactivate();
                 }
                 // Hero's own position is clicked
                 else if (activeHero.Position.Equals(new Point(posClicked)))
@@ -383,7 +383,7 @@ public class GameManager : MonoBehaviour
         {
             nextTurn();
         }
-        //rightclick for combat for testing
+        // Rightclick for combat for testing
         else if (Input.GetMouseButtonDown(1))
         {
             if (activeHero.Units.GetUnits()[0] == null)

@@ -63,10 +63,22 @@ public class MovementManager
         this.canWalk = canWalk;
     }
 
+    /// <summary>
+    /// Activates the movement. This must happen after a "WalkTo( );" has occurred.
+    /// </summary>
     public void Activate()
     {
         canceledMovement = false;
         activated = true;
+    }
+
+    /// <summary>
+    /// Deactivates movement. This ends movement overall. Can be used mid-movement.
+    /// </summary>
+    public void Deactivate()
+    {
+        canceledMovement = true;
+        activated = false;
     }
 
     /// <summary>
