@@ -104,6 +104,7 @@ public class GameManager : MonoBehaviour
     public GameObject purchaseButton;
     public GameObject unitPanel;
     public GameObject heroPanel;
+    public GameObject heroReactPanel, castleReactPanel, dwellingReactPanel, resourceReactPanel, artifactReactPanel;
 
     //currentReaction
     private Reaction curReaction;
@@ -154,6 +155,16 @@ public class GameManager : MonoBehaviour
         heroPanel = GameObject.Find("HeroPanel");
         heroPanel.SetActive(false);
 
+        heroReactPanel = GameObject.Find("HeroReactPanel");
+        heroReactPanel.SetActive(false);
+        castleReactPanel = GameObject.Find("CastleReactPanel");
+        castleReactPanel.SetActive(false);
+        dwellingReactPanel = GameObject.Find("DwellingReactPanel");
+        dwellingReactPanel.SetActive(false);
+        resourceReactPanel = GameObject.Find("ResourceReactPanel");
+        resourceReactPanel.SetActive(false);
+        artifactReactPanel = GameObject.Find("ArtifactReactPanel");
+        artifactReactPanel.SetActive(false);
 
         parentToMarkers = new GameObject();
         parentToMarkers.name = "Path";
@@ -316,8 +327,57 @@ public class GameManager : MonoBehaviour
 
             int x = (int)posClicked.x;
             int y = (int)posClicked.y;
-            // Open unit card if you right clicked at a unitreaction
-            if (canWalk[x, y] != MapMaker.TRIGGER && reactions[x, y] != null && reactions[x, y].GetType().Equals(typeof(UnitReaction)))
+
+            // Check if any panels are supposed to be opened
+            OpenPanelIfReaction(x, y);
+            
+            // TODO REMOVE
+            if (activeHero.Units.GetUnits()[0] == null)
+            {
+                activeHero.Units.setUnit(new StoneTroll(), 5, 0);
+            }
+            UnitTree defendingTest = new UnitTree();
+            defendingTest.setUnit(new StoneTroll(), 5, 0);
+            enterCombat(15, 11, activeHero, defendingTest);
+        }
+        // Right click up, close the opened panels
+        else if(Input.GetMouseButtonUp(1))
+        {
+            CloseReactPanels();
+        }
+    }
+
+    /// <summary>
+    /// Closes any open reactionPanel
+    /// </summary>
+    public void CloseReactPanels()
+    {
+        if(heroReactPanel.activeSelf)
+            heroReactPanel.SetActive(false);
+        if (castleReactPanel.activeSelf)
+            castleReactPanel.SetActive(false);
+        if (dwellingReactPanel.activeSelf)
+            dwellingReactPanel.SetActive(false);
+        if (resourceReactPanel.activeSelf)
+            resourceReactPanel.SetActive(false);
+        if (artifactReactPanel.activeSelf)
+            artifactReactPanel.SetActive(false);
+        if (unitPanel.activeSelf)
+            unitPanel.SetActive(false);
+    }
+
+    /// <summary>
+    /// System for opening panels corresponding with reactions
+    /// </summary>
+    /// <param name="x">x pos</param>
+    /// <param name="y">y pos</param>
+    public void OpenPanelIfReaction(int x, int y)
+    {
+        // Open unit card if you right clicked at a unitreaction
+        if (reactions[x, y] != null)
+        {
+            // Unitreaction found, open unitpanel
+            if (reactions[x, y].GetType().Equals(typeof(UnitReaction)))
             {
                 UnitReaction unitReaction = (UnitReaction)reactions[x, y];
                 UnitTree unitTree = unitReaction.Units;
@@ -331,15 +391,142 @@ public class GameManager : MonoBehaviour
                     }
                 }
             }
-
-            if (activeHero.Units.GetUnits()[0] == null)
+            // Castle react found. If there was a hero prereact at that spot, open heropanel, else open castle panel
+            else if (reactions[x, y].GetType().Equals(typeof(CastleReact)))
             {
-                activeHero.Units.setUnit(new StoneTroll(), 5, 0);
+                CastleReact castleReact = (CastleReact)reactions[x, y];
+                Castle castle = castleReact.Castle;
+                if (castleReact.HasPreReact() && castleReact.PreReaction.GetType().Equals(typeof(HeroMeetReact)))
+                {
+                    HeroMeetReact heroMeetReact = (HeroMeetReact)reactions[x, y].PreReaction;
+                    OpenHeroReactPanel(heroMeetReact.Hero);
+                }
+                else
+                    OpenCastleReactPanel(castle);
             }
-            UnitTree defendingTest = new UnitTree();
-            defendingTest.setUnit(new StoneTroll(), 5, 0);
-            enterCombat(15, 11, activeHero, defendingTest);
+            // HeromeetReact found, open heroPanel
+            else if (reactions[x, y].GetType().Equals(typeof(HeroMeetReact)))
+            {
+                HeroMeetReact heroMeetReact = (HeroMeetReact)reactions[x, y];
+                OpenHeroReactPanel(heroMeetReact.Hero);
+            }
+            // ArtifactReaction found, open ArtifactReactionPanel
+            else if (reactions[x, y].GetType().Equals(typeof(ArtifactReaction)))
+            {
+                ArtifactReaction artifactReaction = (ArtifactReaction)reactions[x, y];
+                OpenArtifactReactPanel(artifactReaction.Artifact);
+            }
+            // ResourceReaction found, open ResourceReactionPanel
+            else if (reactions[x, y].GetType().Equals(typeof(ResourceReaction)))
+            {
+                ResourceReaction resourceReaction = (ResourceReaction)reactions[x, y];
+                OpenResourceReactPanel(0); // TODO index
+            }
+            // DwellingReaction found, open DwellingReact
+            else if (reactions[x, y].GetType().Equals(typeof(DwellingReact)))
+            {
+                DwellingReact dwellingReaction = (DwellingReact)reactions[x, y];
+                OpenDwellingReactPanel(dwellingReaction.DwellingBuilding);
+            }
         }
+    }
+
+    /// <summary>
+    /// Activates HeroReactPanel
+    /// </summary>
+    /// <param name="hero">The Hero</param>
+    public void OpenHeroReactPanel(Hero hero)
+    {
+        // Set hero name, image, and army
+        heroReactPanel.transform.GetChild(0).gameObject.GetComponent<Text>().text = hero.Name;
+        heroReactPanel.transform.GetChild(1).gameObject.GetComponent<Image>().sprite = libs.GetPortrait(hero.GetPortraitID());
+        GameObject armyPanel = heroReactPanel.transform.GetChild(2).gameObject;
+        for (int i = 0; i < hero.Units.GetUnits().Length; i++)
+        {
+            GameObject unitObject = armyPanel.transform.GetChild(i).gameObject;
+            if (hero.Units.GetUnits()[i] != null)
+            {
+                unitObject.GetComponent<Image>().sprite = libs.GetUnit(hero.Units.GetUnits()[i].GetSpriteID());
+                unitObject.transform.GetChild(0).GetComponent<Text>().text = hero.Units.getUnitAmount(i) + "";
+                unitObject.SetActive(true);
+            }
+            else
+            {
+                unitObject.transform.GetChild(0).GetComponent<Text>().text = "";
+                unitObject.SetActive(true);
+            }
+        }
+        heroReactPanel.SetActive(true);
+    }
+    
+    /// <summary>
+    /// Activates CastleReactPanel
+    /// </summary>
+    /// <param name="castle">The Castle</param>
+    public void OpenCastleReactPanel(Castle castle)
+    {
+        // Set castle name, image, and hero + army
+        castleReactPanel.transform.GetChild(0).gameObject.GetComponent<Text>().text = castle.Name;
+        castleReactPanel.transform.GetChild(1).gameObject.GetComponent<Image>().sprite = libs.GetCastle(castle.GetSpriteID());
+        GameObject armyPanel = castleReactPanel.transform.GetChild(2).gameObject;
+
+        GameObject heroObject = armyPanel.transform.GetChild(0).gameObject;
+        if(castle.Town.StationedHero != null)
+        {
+            heroObject.GetComponent<Image>().sprite = libs.GetUnit(castle.Town.StationedHero.GetSpriteID());
+            heroObject.SetActive(true);
+        }
+        else
+        {
+            heroObject.SetActive(false);
+        }
+
+        for (int i = 0; i < castle.Town.StationedUnits.GetUnits().Length; i++)
+        {
+            GameObject unitObject = armyPanel.transform.GetChild(i+1).gameObject;
+            if (castle.Town.StationedUnits.GetUnits()[i] != null)
+            {
+                unitObject.GetComponent<Image>().sprite = libs.GetUnit(castle.Town.StationedUnits.GetUnits()[i].GetSpriteID());
+                unitObject.transform.GetChild(0).GetComponent<Text>().text = castle.Town.StationedUnits.getUnitAmount(i) + "";
+                unitObject.SetActive(true);
+            }
+            else
+            {
+                unitObject.transform.GetChild(0).GetComponent<Text>().text = "";
+                unitObject.SetActive(true);
+            }
+        }
+        castleReactPanel.SetActive(true);
+    }
+    
+    /// <summary>
+    /// Activates ResourceReactPanel
+    /// </summary>
+    /// <param name="resourceIndex">The resourcetype</param>
+    public void OpenResourceReactPanel(int resourceIndex)
+    {
+        resourceReactPanel.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Gold"; // TODO 
+        resourceReactPanel.SetActive(true);
+    }
+    
+    /// <summary>
+    /// Activates ArtifactReactPanel
+    /// </summary>
+    /// <param name="artifact">The artifact</param>
+    public void OpenArtifactReactPanel(Item artifact)
+    {
+        artifactReactPanel.transform.GetChild(0).gameObject.GetComponent<Text>().text = artifact.SlotType.ToString();
+        artifactReactPanel.SetActive(true);
+    }
+    
+    /// <summary>
+    /// Activates DwellingReactPanel
+    /// </summary>
+    /// <param name="dwellingBuilding">The DwellingBuilding</param>
+    public void OpenDwellingReactPanel(DwellingBuilding dwellingBuilding)
+    {
+        resourceReactPanel.transform.GetChild(0).gameObject.GetComponent<Text>().text = dwellingBuilding.ToString();
+        dwellingReactPanel.SetActive(true);
     }
 
     public void ListenToMouseHover()
@@ -368,6 +555,7 @@ public class GameManager : MonoBehaviour
             }
             else if (reactions[x, y].GetType().Equals(typeof(UnitReaction)))
             {
+                UnitReaction u = (UnitReaction)reactions[x, y];
                 // TODO when you hover over an neutral unit, change mouse pointer
             }
         }
@@ -786,7 +974,7 @@ public class GameManager : MonoBehaviour
         // Creates a GameObject array for the new building
         buildingsInActiveTown = new GameObject[town.Buildings.Length];
 
-        //town.BuildAll(town);
+        town.BuildAll(town);
         town.Buildings[9].Build();
 
         // loads in the town buildings

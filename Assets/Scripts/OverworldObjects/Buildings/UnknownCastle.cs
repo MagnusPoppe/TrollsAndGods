@@ -12,6 +12,7 @@ namespace OverworldObjects
     {
         // Shape of the sprite:
         const int shape = Shapes.CUBE;
+        const string NAME = "unknown";
 
         // Unique sprite ID for this castle to be displayed in the overworld map: 
         private const int LOCAL_SPRITE_ID = 0;
@@ -28,7 +29,7 @@ namespace OverworldObjects
         /// <param name="origo">pkt the castle should be placed at.</param>
         /// <param name="owner">Player that owns the castle.</param>
         public UnknownCastle(Point origo, Player owner ) 
-            : base(origo, shape, owner, LOCAL_SPRITE_ID, SPRITE_CATEGORY, environmentTileType)
+            : base(origo, shape, owner, LOCAL_SPRITE_ID, NAME, SPRITE_CATEGORY, environmentTileType)
         {
             Town = new VikingTown(owner, origo);
         }

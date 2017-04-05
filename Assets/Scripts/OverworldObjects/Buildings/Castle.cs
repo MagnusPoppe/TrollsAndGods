@@ -14,17 +14,17 @@ namespace OverworldObjects
 	    string name;
         Town town;
 
-        public Castle(Point origo, int shape, Player owner, int spriteID, IngameObjectLibrary.Category spriteCategory, Environment environment)
+        public Castle(Point origo, int shape, Player owner, int spriteID, string name, IngameObjectLibrary.Category spriteCategory, Environment environment)
             : base(origo, shape, owner, spriteID, spriteCategory)
         {
-            Name = "unnamed";
+            Name = name;
             this.environment = environment;
             Town = town;
         }
         public Castle( int shape, Player owner, int spriteID, IngameObjectLibrary.Category spriteCategory)
                 : base( shape, owner, spriteID, spriteCategory)
         {
-            this.Name = "unnamed";
+            Name = name;
             Town = town;
         }
 
