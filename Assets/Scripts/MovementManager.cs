@@ -22,17 +22,11 @@ public class MovementManager
     private int[,] canWalk;
 
     // Values to use with marking a path:
-    public Sprite pathDestYes;
-    public Sprite pathDestNo;
-    public Sprite pathYes;
-    public Sprite pathNo;
-    public List<GameObject> pathObjects;
     public bool pathMarked;
     public int stepNumber;
     public float animationSpeed = 0.1f;
     public bool walking;
     public bool lastStep;
-    public int tilesWalking;
     public bool newStep;
     public Point destination;
     private Reaction curReaction;
@@ -40,19 +34,11 @@ public class MovementManager
 
     private GameManager gameManager;
 
-
-
     public MovementManager(Player[] players, Reaction[,] reactions, int[,] canWalk, AStarAlgo aStar, GameManager gm)
     {
         this.players = players;
         this.aStar = aStar;
         this.gameManager = gm;
-
-        pathDestYes = UnityEngine.Resources.Load<Sprite>("Sprites/Pointers/pointerDestYes");
-        pathDestNo = UnityEngine.Resources.Load<Sprite>("Sprites/Pointers/pointerDestNo");
-        pathYes = UnityEngine.Resources.Load<Sprite>("Sprites/Pointers/pointerPathYes");
-        pathNo = UnityEngine.Resources.Load<Sprite>("Sprites/Pointers/pointerPathNo");
-        pathObjects = new List<GameObject>();
 
         // MAPS:
         this.reactions = reactions;
@@ -90,7 +76,7 @@ public class MovementManager
         }
 
         // If hero has reached a new tile, increment so that he walks towards the next one, reset time animation, and destroy tile object
-        if (stop || gameManager.activeHeroObject.transform.position.Equals(pathObjects[stepNumber].transform.position))
+        if (stop || gameManager.activeHeroObject.transform.position.Equals(gameManager.pathObjects[stepNumber].transform.position))
         {
             Vector2 position = IncrementStep();
 
@@ -220,10 +206,14 @@ public class MovementManager
     /// <returns>Position the hero shall be moved to</returns>
     public Vector2 PrepareMovement()
     {
-        if(pathObjects != null && stepNumber < pathObjects.Count)
+        if(gameManager.pathObjects != null && stepNumber < gameManager.pathObjects.Count)
         {
             // Add animation, transform hero position
-            return Vector2.MoveTowards(gameManager.activeHeroObject.transform.position, pathObjects[stepNumber].transform.position, animationSpeed);
+            return Vector2.MoveTowards(
+                gameManager.activeHeroObject.transform.position,
+                gameManager.pathObjects[stepNumber].transform.position,
+                animationSpeed
+            );
         }
         return gameManager.activeHeroObject.transform.position;
     }
@@ -239,51 +229,13 @@ public class MovementManager
         stepNumber = 0;
         pathMarked = true;
         lastStep = false;
-        gameManager.savedClickedPos = pos;
         // Needs to clear existing objects if an earlier path was already made
-        RemoveMarkers(pathObjects);
+        RemoveMarkers(gameManager.pathObjects);
         // Call algorithm method that returns a list of Vector2 positions to the point, go through all objects
         activeHero.Path = aStar.calculate(activeHero.Position, new Point(pos));
-        DrawPath(activeHero.Path);
-        return pathObjects;
+        gameManager.DrawPath(activeHero.Path);
+        return gameManager.pathObjects;
     }
-
-    /// <summary>
-    /// Graphically draw the path objects
-    /// </summary>
-    /// <param name="path">list of positions to draw the path</param>
-    public void DrawPath(List<Vector2> path)
-    {
-        // Calculate how many steps the hero will move, if this path is chosen
-        int count = tilesWalking = Math.Min(activeHero.Path.Count, activeHero.CurMovementSpeed);
-        // For each position, create a gameobject with an image and instantiate it, and add it to a gameobject list for later to be removed
-
-        for (int i = 0; i < activeHero.Path.Count; i++)
-        {
-            // Create a cloned gameobject of the prefab corresponding to what the marker shall look like
-            GameObject pathMarker = new GameObject();
-            pathMarker.name = gameManager.parentToMarkers.name + "(" + path[i].x + ", " + path[i].y + ")";
-            pathMarker.transform.parent = gameManager.parentToMarkers.transform;
-            SpriteRenderer sr = pathMarker.AddComponent<SpriteRenderer>();
-            sr.sortingLayerName = "Markers";
-            if (i + 1 == activeHero.Path.Count)
-            {
-                if (i + 1 == tilesWalking)
-                    sr.sprite = pathDestYes;
-                else
-                    sr.sprite = pathDestNo;
-            }
-            else if (count > 0)
-                sr.sprite = pathYes;
-            else
-                sr.sprite = pathNo;
-            count--;
-            // set the cloned position to the vector2 object and add it to the list of gameobjects, pathList
-            pathMarker.transform.position = HandyMethods.getGraphicPosForIso(path[i]);
-            pathObjects.Add(pathMarker);
-        }
-    }
-
 
     /// <summary>
     /// Destroy the tile gameobjects and refresh list
@@ -305,7 +257,7 @@ public class MovementManager
     private Vector2 IncrementStep()
     {
         newStep = true;
-        GameObject.Destroy(pathObjects[stepNumber]);
+        GameObject.Destroy(gameManager.pathObjects[stepNumber]);
         stepNumber++;
         Vector2 position = activeHero.Path[0];
         activeHero.Path.RemoveAt(0);
@@ -314,7 +266,7 @@ public class MovementManager
 
     public bool IsLastStep(int stepNumber)
     {
-        return stepNumber == activeHero.CurMovementSpeed || stepNumber == tilesWalking || lastStep;
+        return stepNumber == activeHero.CurMovementSpeed || stepNumber == gameManager.tilesWalking || lastStep;
     }
 
 }

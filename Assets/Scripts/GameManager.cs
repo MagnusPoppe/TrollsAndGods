@@ -113,6 +113,14 @@ public class GameManager : MonoBehaviour
     public GameObject parentToMarkers;
     public bool heroActive;
     public GameObject activeHeroObject;
+    public int tilesWalking;
+
+    public Sprite pathDestYes;
+    public Sprite pathDestNo;
+    public Sprite pathYes;
+    public Sprite pathNo;
+    public List<GameObject> pathObjects;
+
 
     // Use this for initialization
     void Start ()
@@ -186,10 +194,15 @@ public class GameManager : MonoBehaviour
         // Starting movementmanager:
         movement = new MovementManager(players, reactions, canWalk, aStar, this);
         movement.activeHero = activeHero;
+        pathDestYes = UnityEngine.Resources.Load<Sprite>("Sprites/Pointers/pointerDestYes");
+        pathDestNo = UnityEngine.Resources.Load<Sprite>("Sprites/Pointers/pointerDestNo");
+        pathYes = UnityEngine.Resources.Load<Sprite>("Sprites/Pointers/pointerPathYes");
+        pathNo = UnityEngine.Resources.Load<Sprite>("Sprites/Pointers/pointerPathNo");
+        pathObjects = new List<GameObject>();
     }
 
 	// Update is called once per frame
-	void Update ()
+    void Update()
     {
         if (overWorld)
         {
@@ -260,12 +273,13 @@ public class GameManager : MonoBehaviour
                     if (movement.pathMarked && posClicked.Equals(savedClickedPos) && movement.activeHero.CurMovementSpeed > 0)
                     {
                         movement.walking = true;
-                        movement.destination = new Point(movement.activeHero.Path[movement.tilesWalking - 1]);
+                        movement.destination = new Point(movement.activeHero.Path[tilesWalking - 1]);
                     }
                     // Activate clicked path
                     else
                     {
-                        movement.pathObjects = movement.MarkPath(posClicked);
+                        pathObjects = movement.MarkPath(posClicked);
+                        savedClickedPos = posClicked;
                     }
                 }
             }
@@ -312,6 +326,42 @@ public class GameManager : MonoBehaviour
             UnitTree defendingTest = new UnitTree();
             defendingTest.setUnit(new StoneTroll(), 5, 0);
             enterCombat(15, 11, activeHero, defendingTest);
+        }
+    }
+
+    /// <summary>
+    /// Graphically draw the path objects
+    /// </summary>
+    /// <param name="path">list of positions to draw the path</param>
+    public void DrawPath(List<Vector2> path)
+    {
+        // Calculate how many steps the hero will move, if this path is chosen
+        int count = tilesWalking = Math.Min(activeHero.Path.Count, activeHero.CurMovementSpeed);
+        // For each position, create a gameobject with an image and instantiate it, and add it to a gameobject list for later to be removed
+
+        for (int i = 0; i < activeHero.Path.Count; i++)
+        {
+            // Create a cloned gameobject of the prefab corresponding to what the marker shall look like
+            GameObject pathMarker = new GameObject();
+            pathMarker.name = parentToMarkers.name + "(" + path[i].x + ", " + path[i].y + ")";
+            pathMarker.transform.parent = parentToMarkers.transform;
+            SpriteRenderer sr = pathMarker.AddComponent<SpriteRenderer>();
+            sr.sortingLayerName = "Markers";
+            if (i + 1 == activeHero.Path.Count)
+            {
+                if (i + 1 == tilesWalking)
+                    sr.sprite = pathDestYes;
+                else
+                    sr.sprite = pathDestNo;
+            }
+            else if (count > 0)
+                sr.sprite = pathYes;
+            else
+                sr.sprite = pathNo;
+            count--;
+            // set the cloned position to the vector2 object and add it to the list of gameobjects, pathList
+            pathMarker.transform.position = HandyMethods.getGraphicPosForIso(path[i]);
+            pathObjects.Add(pathMarker);
         }
     }
 
@@ -1117,7 +1167,7 @@ public class GameManager : MonoBehaviour
                     hero.CurMovementSpeed = hero.MovementSpeed;
             }
             // Remove all path markers on the map
-            movement.RemoveMarkers(movement.pathObjects);
+            movement.RemoveMarkers(pathObjects);
 
             // Set active hero and active hero object to the upcoming players first hero
 
@@ -1139,6 +1189,7 @@ public class GameManager : MonoBehaviour
                 if (movement.activeHero.Path != null && movement.activeHero.Path.Count > 0)
                 {
                     movement.MarkPath(movement.activeHero.Path[movement.activeHero.Path.Count-1]);
+                    savedClickedPos = movement.activeHero.Path[movement.activeHero.Path.Count - 1];
                 }
                // Center camera to the upcoming players first hero
                cameraMovement.centerCamera(HandyMethods.getGraphicPosForIso(activeHero.Position));
