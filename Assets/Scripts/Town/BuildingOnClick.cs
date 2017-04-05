@@ -467,7 +467,7 @@ namespace TownView
             GameObject exitButtonObject = gm.dwellingPanel.transform.GetChild(2).gameObject;
             exitButtonObject.GetComponent<Button>().onClick.AddListener(DestroyObjects);
 
-            gm.SetUnitCard(dwellingContentPanel, currentUnitBuilding.Unit);
+            gm.OpenUnitPanel(dwellingContentPanel, currentUnitBuilding.Unit, 0);
             
             // Sets the initial text for TotalUnits and ToBuyUnits
             GameObject purchasePanel = dwellingContentPanel.transform.GetChild(0).gameObject;
