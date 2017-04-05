@@ -37,7 +37,6 @@
             buildings[7] = new CernianCamp();
             buildings[8] = new TrainingCamp();
             buildings[9] = new Workshop();
-
             return buildings;
         }
 

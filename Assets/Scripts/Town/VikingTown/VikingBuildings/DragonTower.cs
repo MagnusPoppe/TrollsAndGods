@@ -4,12 +4,12 @@
     /// Placeholder class for a spesific building.
     /// Belongs to the "Unknown Town".
     /// </summary>
-    public class DragonTower : Building
+    public class DragonTower : UnitBuilding
     {
         // Required values for building:
         const string name = "Dragon Tower";
         const string description = "Recruit dragons";
-        static bool[] requirements = new bool[] { false, false, true, false, false };
+        static bool[] requirements = new bool[] { false, true, false, false, false, false, false, false, false, false };
         const int LOCAL_SPRITEID = 4;
         const int LOCAL_SPRITEID_BLUEPRINT = 14;
 

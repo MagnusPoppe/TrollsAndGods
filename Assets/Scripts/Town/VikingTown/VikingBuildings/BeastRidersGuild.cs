@@ -8,12 +8,12 @@ namespace TownView
     /// Placeholder class for a spesific building.
     /// Belongs to the "Unknown Town".
     /// </summary>
-    public class BeastRidersGuild : Building
+    public class BeastRidersGuild : UnitBuilding
     {
         // Required values for building:
         const string name = "Beast Rider's Guild";
         const string description = "Buy beast riders here!";
-        static bool[] requirements = new bool[] { false, true, false, false, false };
+        static bool[] requirements = new bool[] { false, true, false, false, false, false, false, false, false, false };
         const int LOCAL_SPRITEID = 7;
         const int LOCAL_SPRITEID_BLUEPRINT = 17;
 

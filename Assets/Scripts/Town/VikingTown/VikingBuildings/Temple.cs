@@ -9,7 +9,7 @@
         // Required values for building:
         const string name = "Temple";
         const string description = "Eat, Pray, Program";
-        const bool[] requirements = null;
+        static bool[] requirements = new bool[] { false, false, false, false, false, false, false, false, false, false };
         const int LOCAL_SPRITEID = 3;
         const int LOCAL_SPRITEID_BLUEPRINT = 13;
 

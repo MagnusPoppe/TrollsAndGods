@@ -1,79 +1,51 @@
-﻿using UI;
+﻿using System.Diagnostics;
+using UI;
+
 namespace TownView
 {
-
-
     public class Building : SpriteSystem, Window
     {
         private string name;
         private string description;
         private bool built;
-        protected bool[] requirements;
+        public bool[] requirements;
         protected Cost cost;
         private Point placement;
         private int local_sprite_blueprint;
         private const IngameObjectLibrary.Category CATEGORY = IngameObjectLibrary.Category.Town;
 
 
-
         public bool Built
         {
-            get
-            {
-                return built;
-            }
+            get { return built; }
         }
 
         public Point Placement
         {
-            get
-            {
-                return placement;
-            }
+            get { return placement; }
 
-            set
-            {
-                placement = value;
-            }
+            set { placement = value; }
         }
 
         public string Name
         {
-            get
-            {
-                return name;
-            }
+            get { return name; }
 
-            set
-            {
-                name = value;
-            }
+            set { name = value; }
         }
 
         public Cost Cost
         {
-            get
-            {
-                return cost;
-            }
+            get { return cost; }
 
-            set
-            {
-                cost = value;
-            }
+            set { cost = value; }
         }
 
         public string Description
         {
-            get
-            {
-                return description;
-            }
+            get { return description; }
 
-            set
-            {
-                description = value;
-            }
+            set { description = value; }
         }
 
         public void Build()
@@ -82,8 +54,8 @@ namespace TownView
         }
 
 
-
-        public Building(string name, string description, bool[] requirements, Cost cost, int localID, int LOCAL_SPRITEID_BLUEPRINT) :base(localID, CATEGORY)
+        public Building(string name, string description, bool[] requirements, Cost cost, int localID,
+            int LOCAL_SPRITEID_BLUEPRINT) : base(localID, CATEGORY)
         {
             Name = name;
             Description = description;
@@ -115,17 +87,15 @@ namespace TownView
         {
             return local_sprite_blueprint + IngameObjectLibrary.GetOffset(CATEGORY);
         }
-        
+
         public bool MeetsRequirements(Town town)
         {
-            if(requirements != null)
+            for (int i = 0; i < town.Buildings.Length; i++)
             {
-                for (int i = 0; i < town.Buildings.Length; i++)
-                {
-                    if (requirements[i] && !town.Buildings[i].Built)
-                        return false;
-                }
+                if (requirements[i] && !town.Buildings[i].Built)
+                    return false;
             }
+
             return true;
         }
     }
