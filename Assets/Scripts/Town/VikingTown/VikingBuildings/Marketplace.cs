@@ -13,7 +13,7 @@ namespace TownView
         // Required values for building:
         const string name = "Marketplace";
         const string description = "Trade resources here";
-        static bool[] requirements = new bool[]{false, true, false, false, false};
+        static bool[] requirements = new bool[] { false, true, false, false, false, false, false, false, false, false };
         const int LOCAL_SPRITEID = 6;
         const int LOCAL_SPRITEID_BLUEPRINT = 16;
 

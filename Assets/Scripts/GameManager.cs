@@ -756,7 +756,7 @@ public class GameManager : MonoBehaviour
         // Creates a GameObject array for the new building
         buildingsInActiveTown = new GameObject[town.Buildings.Length];
 
-        town.BuildAll(town);
+        //town.BuildAll(town);
         town.Buildings[9].Build();
 
         // loads in the town buildings

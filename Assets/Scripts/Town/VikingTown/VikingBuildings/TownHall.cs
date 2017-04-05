@@ -9,7 +9,7 @@
         // Required values for building:
         const string name = "Town Hall";
         const string description = "Build buildings here";
-        const bool[] requirements = null;
+        static bool[] requirements = new bool[] { false, false, false, false, false, false, false, false, false, false };
         const int LOCAL_SPRITEID = 1;
         const int LOCAL_SPRITEID_BLUEPRINT = 11;
 

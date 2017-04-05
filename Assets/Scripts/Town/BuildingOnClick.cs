@@ -268,7 +268,7 @@ namespace TownView
                 buildingObject.GetComponent<Image>().sprite = libs.GetTown(selectedBuilding.GetSpriteBlueprintID() + offset);
                 Button button = buildingObject.GetComponent<Button>();
                 // Set buy listener to building
-                button.onClick.AddListener(() => setBuy(selectedBuilding, buildingObject.transform.position));
+                button.onClick.AddListener(() => SetBuilding(selectedBuilding, buildingObject.transform.position));
 
                 // Add text below building
                 buildingObject.transform.GetChild(0).GetComponent<Text>().text = buildingArray[i].Name;
@@ -331,7 +331,7 @@ namespace TownView
                     Hero selectedHero = gm.heroes[i];
                     heroObject.GetComponent<Image>().sprite = libs.GetPortrait(selectedHero.GetPortraitID());
                     Button button = heroObject.GetComponent<Button>();
-                    button.onClick.AddListener(() => setBuy(selectedHero, heroObject.transform.position));
+                    button.onClick.AddListener(() => SetHero(selectedHero, heroObject.transform.position));
 
                     button.transform.GetChild(0).GetComponent<Text>().text = selectedHero.Name;
                     // TODO listener to popup hero panel
@@ -524,35 +524,21 @@ namespace TownView
         */
 
         /// <summary>
-        /// Sets which object to be bought by buybutton.
+        /// Sets which building to buy
         /// </summary>
         /// <param name="obj"></param>
-        private void setBuy(System.Object obj, Vector2 position)
+        private void SetBuilding(Building toBuyBuilding, Vector2 position)
         {
             gm.purchaseButton.GetComponent<Button>().onClick.RemoveAllListeners();
-            if (obj.GetType().BaseType.Name.Equals("Hero"))
-            {
-                frameImage.sprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/hero_frame");
-                Hero hero = (Hero)obj;
-                SetCostPanelText(hero.Cost);
-                gm.purchaseButton.GetComponent<Button>().onClick.AddListener(() => BuyHero(hero));
-            }
-            else if (obj.GetType().BaseType.Name.Equals("Building"))
-            {
-                frameImage.sprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/building_frame");
-                Building building = (Building)obj;
-                SetCostPanelText(building.Cost);
-                gm.purchaseButton.GetComponent<Button>().onClick.AddListener(() => BuyBuilding(building));
-            }
-            /*
-            else if (obj.GetType().BaseType.Name.Equals("Unit"))
-            {
-                Unit unit = (Unit)obj;
-                SetCostPanelText((unit.Price.GetCostScaled((int)tradeSlider.value)));
-                gm.purchaseButton.GetComponent<Button>().onClick.AddListener(() => BuyUnit(unit, (int)tradeSlider.value));
-            }*/
+            SetCostPanelText(toBuyBuilding.Cost);
+            gm.purchaseButton.GetComponent<Button>().onClick.AddListener(() => BuyBuilding(toBuyBuilding));
+        }
 
-            frame.transform.position = position;
+        private void SetHero(Hero toBuyHero, Vector2 position)
+        {
+            gm.purchaseButton.GetComponent<Button>().onClick.RemoveAllListeners();
+            SetCostPanelText(toBuyHero.Cost);
+            gm.purchaseButton.GetComponent<Button>().onClick.AddListener(() => BuyHero(toBuyHero));
         }
 
 
@@ -708,33 +694,34 @@ namespace TownView
 
         public void BuyBuilding(Building building)
         {
-                // Build building if town has not already built that day, player can pay, and building is not built already
-                if (!Town.HasBuiltThisRound && Player.Wallet.CanPay(building.Cost) && !building.Built && building.MeetsRequirements(town))
-                {
-                    // Player pays
-                    Player.Wallet.Pay(building.Cost);
-                    town.HasBuiltThisRound = true;
-                    gm.updateResourceText();
+            // Build building if town has not already built that day, player can pay, and building is not built already
+            if (!Town.HasBuiltThisRound && Player.Wallet.CanPay(building.Cost) && !building.Built &&
+                building.MeetsRequirements(town))
+            {
+                // Player pays
+                Player.Wallet.Pay(building.Cost);
+                town.HasBuiltThisRound = true;
+                gm.updateResourceText();
 
-                    // Find the building in the town's list, build it and draw it in the view
-                    for (int i = 0; i < town.Buildings.Length; i++)
-                    {
-                        if (town.Buildings[i].Equals(building))
-                        {
-                            Debug.Log("YOU BOUGHT: " + building.Name); // TODO remove
-                            town.Buildings[i].Build();
-                            gm.DrawBuilding(town, building, i);
-                            DestroyObjects();
-                        }
-                    }
-                    // Deactivate resource panel
-                    gm.adjustResourcePanel.SetActive(false);
-                }
-                else
+                // Find the building in the town's list, build it and draw it in the view
+                for (int i = 0; i < town.Buildings.Length; i++)
                 {
-                    Debug.Log("YOU DO NOT HAVE THE SUFFICIENT ECONOMICAL WEALTH TO PRODUCE THE STRUCTURE OF CHOICE: " + building.Name); // TODO remove
-                    // TODO: what's the graphic feedback for trying to purchase something unpurchasable?
+                    if (town.Buildings[i].Equals(building))
+                    {
+                        Debug.Log("YOU BOUGHT: " + building.Name); // TODO remove
+                        town.Buildings[i].Build();
+                        gm.DrawBuilding(town, building, i);
+                        DestroyObjects();
+                    }
                 }
+                // Deactivate resource panel
+                gm.adjustResourcePanel.SetActive(false);
+            }
+            else
+            {
+                Debug.Log(building.Name + "{HasBuilt=" + Town.HasBuiltThisRound + " ; CanPay=" + Player.Wallet.CanPay(building.Cost) + " ; isBuilt=" + building.Built + " ; MeetsRequirement=" + building.MeetsRequirements(town) + "}");
+                // TODO: what's the graphic feedback for trying to purchase something unpurchasable?
+            }
         }
 
         public void BuyUnit(Unit unit, int amount)
