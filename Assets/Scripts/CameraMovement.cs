@@ -15,6 +15,7 @@ public class CameraMovement : MonoBehaviour
     float cameraHeight;
     float cameraWidth;
     Camera cam;
+    GameManager gm;
 
     public float ScrollSpeed
     {
@@ -31,7 +32,7 @@ public class CameraMovement : MonoBehaviour
 
     void Start ()
     {
-        GameManager gm = GameObject.Find("GameManager").GetComponent<GameManager>();
+        gm = GameObject.Find("GameManager").GetComponent<GameManager>();
         width = gm.WIDTH;
         height = gm.HEIGHT/2/2;
 
@@ -76,9 +77,12 @@ public class CameraMovement : MonoBehaviour
     /// <param name="position">paramter position</param>
     public void centerCamera(Vector2 position)
     {
-        float x = limitX(position.x);
-        float y = limitY(position.y);
-        transform.position = new Vector3(x, y, transform.position.z);
+        if(gm.overWorld)
+        {
+            float x = limitX(position.x);
+            float y = limitY(position.y);
+            transform.position = new Vector3(x, y, transform.position.z);
+        }
     }
 
     private float limitX(float x)
