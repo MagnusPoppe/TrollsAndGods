@@ -1,13 +1,17 @@
-﻿namespace Multiplayer
+﻿using UnityEngine;
+
+namespace Multiplayer
 {
     public abstract class CombatEvent : Event
     {
         private int idFrom, idTo;
+        private GraphicalBattlefield gb;
 
         protected CombatEvent(int id, string description, int idFrom, int idTo) : base(id, description)
         {
             this.idFrom = idFrom;
             this.idTo = idTo;
+            gb = GameObject.Find("Combat").GetComponent<GraphicalBattlefield>();
         }
 
         /// <summary>
@@ -27,6 +31,24 @@
                 output = "INSERT INTO GameEvent VALUES (" + Id + "," + Description + ");";
             }
             return output;
+        }
+
+        public int IdFrom
+        {
+            get { return idFrom; }
+            set { idFrom = value; }
+        }
+
+        public int IdTo
+        {
+            get { return idTo; }
+            set { idTo = value; }
+        }
+
+        public GraphicalBattlefield Gb
+        {
+            get { return gb; }
+            set { gb = value; }
         }
     }
 }
