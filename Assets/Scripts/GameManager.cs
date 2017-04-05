@@ -37,6 +37,9 @@ public class GameManager : MonoBehaviour
     public string seed = "Angelica";
     [Range(0, 100)]
     public int fillpercentWalkable = 57;
+    [Range(0, 1)]
+    public float animationSpeed = 0.1f;
+
 
     // Map Globals:
     int width, height;
@@ -120,6 +123,9 @@ public class GameManager : MonoBehaviour
     public Sprite pathNo;
     public List<GameObject> pathObjects;
 
+    public static bool ANIMATION_RUNNING;
+    private bool pathMarked;
+
 
     // Use this for initialization
     void Start ()
@@ -191,7 +197,7 @@ public class GameManager : MonoBehaviour
         graphicalBattlefield = combatWindow.GetComponent<GraphicalBattlefield>();
 
         // Starting movementmanager:
-        movement = new MovementManager(players, reactions, canWalk, aStar, this);
+        movement = new MovementManager(reactions, canWalk, aStar, this);
         movement.activeHero = activeHero;
         pathDestYes = UnityEngine.Resources.Load<Sprite>("Sprites/Pointers/pointerDestYes");
         pathDestNo = UnityEngine.Resources.Load<Sprite>("Sprites/Pointers/pointerDestNo");
@@ -200,6 +206,10 @@ public class GameManager : MonoBehaviour
         pathObjects = new List<GameObject>();
     }
 
+    // Values used in movement:
+    private Vector2 nextGraphicalStep;
+    private Point nextLogicalStep;
+
 	// Update is called once per frame
     void Update()
     {
@@ -207,10 +217,53 @@ public class GameManager : MonoBehaviour
         {
             ListenToInputs();
 
-            // Upon every update, activedhero will be moved in a direction if walking is enabled
-            if (movement.walking)
+            // Perform animation if the animation is currently running:
+            if (ANIMATION_RUNNING)
             {
-                movement.Walk();
+                Vector2 heroPos = activeHeroObject.transform.position;
+
+                // TODO::: CONTINUE HERE! ANIMATION NOT STOPPING FOR EVERY STEP. NEEDS BETTER EDGECASE!
+                // Edgecase:
+                if (Vector2.Distance(heroPos, nextGraphicalStep) < 0.1f)
+                {
+                    // Stopping animation:
+                    ANIMATION_RUNNING = false;
+
+                    // Removing the previous pathmarker sprite:
+                    Destroy(pathObjects[movement.stepNumber]);
+                }
+                else
+                {
+                    // Animating the movement:
+                    activeHeroObject.transform.position = AnimateMovementTo(heroPos, nextGraphicalStep);
+
+                    // Camera should be following the player when moving:
+                    cameraMovement.centerCamera(heroPos);
+                }
+            }
+            // Taking a new step if there are more steps to take:
+            else if ( movement.Activated )
+            {
+                if (movement.HasNextStep())
+                {
+                    nextLogicalStep = movement.NextStep();
+                    nextGraphicalStep = HandyMethods.getGraphicPosForIso(nextLogicalStep);
+                    ANIMATION_RUNNING = true;
+
+                    if (movement.IsLastStep(movement.stepNumber+1))
+                    {
+                        // Clear the previous table reference to current gameobject
+                        heroLayer[movement.StartPosition.x, movement.StartPosition.y] = null;
+                        // Also move the gameobject's position in the heroLayer table
+                        heroLayer[activeHero.Position.x, activeHero.Position.y] = activeHeroObject;
+                    }
+                }
+                else
+                {
+                    movement.Activated = false;
+                    activeHero.Position = nextLogicalStep;
+                    pathMarked = false;
+                }
             }
             //Nothing is clicked and hero is not walking, listener for change mouse hover
             else
@@ -218,6 +271,12 @@ public class GameManager : MonoBehaviour
                 ListenToMouseHover();
             }
         }
+    }
+
+    private Vector2 AnimateMovementTo( Vector2 from, Vector2 target )
+    {
+        // Add animation, transform hero position
+        return Vector2.MoveTowards( from, target, animationSpeed );
     }
 
     public void ListenToInputs()
@@ -235,10 +294,12 @@ public class GameManager : MonoBehaviour
             Vector2 posClicked = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             posClicked = HandyMethods.getIsoTilePos(posClicked).ToVector2();
 
+            // The coordinates of the click:
             int x = (int)posClicked.x;
             int y = (int)posClicked.y;
+
             // Owners castle is clicked
-            if (canWalk[(int)posClicked.x, (int)posClicked.y] != MapMaker.TRIGGER && reactions[x, y] != null && reactions[x, y].GetType().Equals(typeof(CastleReact)))
+            if (canWalk[x, y] != MapMaker.TRIGGER && reactions[x, y] != null && reactions[x, y].GetType().Equals(typeof(CastleReact)))
             {
                 if (prepareDoubleClick)
                 {
@@ -252,39 +313,44 @@ public class GameManager : MonoBehaviour
                 else
                     prepareDoubleClick = true;
             }
+
             // Hero is active, either try to make a path to pointed destination, or activate walking towards there.
             else if (heroActive && movement.activeHero.Player.equals(players[WhoseTurn]))
             {
-                if (movement.walking)
+                // If click while movement is happening, cancel the movement.
+                if (ANIMATION_RUNNING)
                 {
-                    movement.lastStep = true;
+                    movement.CanceledMovement = true;
                 }
                 // Hero's own position is clicked
-                else if (movement.activeHero.Position.Equals(new Point(posClicked)))
+                else if (activeHero.Position.Equals(new Point(posClicked)))
                 {
                     Debug.Log("Clicked on activated hero");
                     // Todo, open hero menu
                 }
                 // If an open square is clicked
-                else if (canWalk[(int)posClicked.x, (int)posClicked.y] != MapMaker.CANNOTWALK)
+                else if (canWalk[x, y] != MapMaker.CANNOTWALK)
                 {
-                    // Walk to pointer if marked square is clicked by enabling variables that triggers moveHero method on update
-                    if (movement.pathMarked && posClicked.Equals(savedClickedPos) && movement.activeHero.CurMovementSpeed > 0)
+                    // Second click on a path endpoint, start movement if hero has movementpoints:
+                    if (pathMarked && posClicked.Equals(savedClickedPos) && movement.activeHero.CurMovementSpeed > 0)
                     {
-                        movement.walking = true;
-                        movement.destination = new Point(movement.activeHero.Path[movement.totalTilesToBeWalked - 1]);
+                        movement.Activate();
                     }
-                    // Activate clicked path
+                    // Calculate a path
                     else
                     {
                         // Needs to clear existing objects if an earlier path was already made
                         RemoveMarkers(pathObjects);
-                        movement.MarkPath(posClicked);
+
+                        // Initializing Movement. Uses new system.
+                        movement.WalkTo(new Point(posClicked), activeHero);
                         DrawPath(activeHero.Path, movement.totalTilesToBeWalked);
                         savedClickedPos = posClicked;
+                        pathMarked = true;
                     }
                 }
             }
+
             // activate hero that you clicked on (check after pathing test, to also allow you to walk to that hero)
             else if (reactions[x, y] != null && reactions[x, y].GetType().Name.Equals(typeof(HeroMeetReact)))
             {
@@ -295,7 +361,6 @@ public class GameManager : MonoBehaviour
                     Debug.Log("Leftclicked your own hero");
                     heroActive = true;
                     activeHero = heroClicked.Hero;
-                    movement.activeHero = activeHero;
                     cameraMovement.centerCamera(activeHero.Position.ToVector2());
                 }
             }
@@ -1170,9 +1235,9 @@ public class GameManager : MonoBehaviour
     public void nextTurn()
     {
         // Stop ongoing movement
-        if(movement.walking)
+        if(movement.Activated)
         {
-            movement.lastStep = false;
+            movement.Activated = false;
         }
         else
         {
@@ -1199,15 +1264,19 @@ public class GameManager : MonoBehaviour
 
             if(players[WhoseTurn].Heroes[0] != null)
             {
-               activeHero = players[WhoseTurn].Heroes[0];
-               movement.activeHero = activeHero;
+               activeHero = players[WhoseTurn].Heroes[0]; // TODO: Last used hero?
 
                activeHeroObject = heroLayer[activeHero.Position.x, activeHero.Position.y];
-                if (movement.activeHero.Path != null && movement.activeHero.Path.Count > 0)
+                // Setting variables from previous turn:
+                if (activeHero.Path != null && activeHero.Path.Count > 0)
                 {
-                    movement.MarkPath(movement.activeHero.Path[movement.activeHero.Path.Count-1]);
+                    movement.WalkTo(new Point(activeHero.Path[movement.activeHero.Path.Count - 1]), activeHero);
                     DrawPath(movement.activeHero.Path, movement.totalTilesToBeWalked);
                     savedClickedPos = movement.activeHero.Path[movement.activeHero.Path.Count - 1];
+                }
+                else
+                {
+                    movement.activeHero = activeHero;
                 }
                // Center camera to the upcoming players first hero
                cameraMovement.centerCamera(HandyMethods.getGraphicPosForIso(activeHero.Position));
@@ -1215,7 +1284,6 @@ public class GameManager : MonoBehaviour
             else
             {
                 activeHero = null;
-                movement.activeHero = null;
                 activeHeroObject = null;
                 // Center camera to the upcoming players first castle
                 cameraMovement.centerCamera(HandyMethods.getGraphicPosForIso(players[WhoseTurn].Castle[0].GetPosition().ToVector2()));

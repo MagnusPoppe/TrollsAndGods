@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.AccessControl;
 using MapGenerator;
 using UnityEngine;
 
@@ -12,31 +13,48 @@ public class MovementManager
     }
 
     private states state;
-    private Player[] players;
     private Player activePlayer;
     public Hero activeHero;
     AStarAlgo aStar;
 
+    private Point startPosition;
+    public  Point StartPosition
+    {
+        get { return startPosition; }
+        set { startPosition = value; }
+    }
+
     // Values to use with WALK()
     private Reaction[,] reactions;
+
+    private Reaction curReaction;
     private int[,] canWalk;
 
-    // Values to use with marking a path:
-    public bool pathMarked;
     public int stepNumber;
-    public float animationSpeed = 0.1f;
-    public bool walking;
-    public bool lastStep;
-    public bool newStep;
-    public Point destination;
-    private Reaction curReaction;
-
     public int totalTilesToBeWalked;
     private GameManager gameManager;
 
-    public MovementManager(Player[] players, Reaction[,] reactions, int[,] canWalk, AStarAlgo aStar, GameManager gm)
+
+    // -------- FLAGS -------- \\
+
+    // Flag that allows update to use the movement functions:
+    private bool activated;
+    public bool Activated
     {
-        this.players = players;
+        get { return activated; }
+        set { activated = value; }
+    }
+
+    // Flag that cancels the movement inbetween steps.
+    private bool canceledMovement;
+    public bool CanceledMovement
+    {
+        get { return canceledMovement; }
+        set { canceledMovement = value; }
+    }
+
+    public MovementManager(Reaction[,] reactions, int[,] canWalk, AStarAlgo aStar, GameManager gm)
+    {
         this.aStar = aStar;
         this.gameManager = gm;
 
@@ -45,216 +63,205 @@ public class MovementManager
         this.canWalk = canWalk;
     }
 
-    public void Walk()
+    public void Activate()
     {
-        // Getting the new position:
-        Vector2 newPos = PrepareMovement();
-
-        bool stop = false;
-
-        // Test if next tile is occupied by allied hero, checked before movement to new tile is started
-        if (newStep)
-        {
-            newStep = false;
-
-            if (activeHero.Path.Count == 1) // IF this is the last step
-            {
-                int x = (int)activeHero.Path[0].x;
-                int y = (int)activeHero.Path[0].y;
-
-                if (reactions[x, y] != null)
-                {
-                    if (reactions[x, y].GetType().Equals(typeof(DwellingReact)) || reactions[x, y].GetType().Equals(typeof(CastleReact)))
-                    {
-                        if (reactions[x, y].HasPreReact(activeHero))
-                            stop = true;
-                    }
-                    else
-                        stop = true;
-                }
-            }
-        }
-
-        // If hero has reached a new tile, increment so that he walks towards the next one, reset time animation, and destroy tile object
-        if (stop || gameManager.activeHeroObject.transform.position.Equals(gameManager.pathObjects[stepNumber].transform.position))
-        {
-            Vector2 position = IncrementStep();
-
-            // Stop the movement when amount of tiles moved has reached the limit, or walking is disabled
-            if (IsLastStep(stepNumber))
-            {
-                Point fromPosition = activeHero.Position;
-
-                // Set hero position when he stops walking to his isometric position
-                activeHero.Position = HandyMethods.getIsoTilePos(gameManager.activeHeroObject.transform.position);
-                activeHero.CurMovementSpeed -= stepNumber;
-
-                int x = destination.x;
-                int y = destination.y;
-                walking = false;
-                pathMarked = false;
-
-                // objectcollision, when final destination is reached
-                if (canWalk[x, y] == MapMaker.TRIGGER)
-                {
-                    Debug.Log(reactions[x, y]);
-                    bool heroNotDead = true;
-
-                    // If tile is threatened, perform the additional reaction before the main one
-                    if (reactions[x, y].HasPreReact(activeHero))
-                    {
-                        Debug.Log(reactions[x, y].PreReaction);
-                        reactions[x, y].PreReact(activeHero);
-                        curReaction = reactions[x, y];
-                        // Remove hero when false, opponent unit or hero when true
-                    }
-                    // Only perform the main reaction if the hero didn't die in previous reaction
-                    else if (reactions[x, y].React(activeHero))
-                    {
-                        Debug.Log(reactions[x, y]);
-                        //bool react = reactions[x, y].React(activeHero);
-
-
-                        if (reactions[x, y].GetType().Equals(typeof(ResourceReaction)))
-                        {
-                            // TODO visually remove picked up resource
-                        }
-                        else if (reactions[x, y].GetType().Equals(typeof(ArtifactReaction)))
-                        {
-                            // TODO visually remove picked up artifact
-                        }
-                        else if (reactions[x, y].GetType().Equals(typeof(CastleReact)))
-                        {
-                            // TODO change owner of defenseless castle visually
-                            CastleReact cr = (CastleReact)reactions[x, y];
-                            // TODO: changeCastleOwner(cr);
-                        }
-                        else if (reactions[x, y].GetType().Equals(typeof(DwellingReact)))
-                        {
-                            // TODO visually dwelling has been captured
-                        }
-                        else if (reactions[x, y].GetType().Equals(typeof(ResourceBuildingReaction)))
-                        {
-                            // TODO visually resourceBuilding has been captured
-                        }
-                    }
-                    else
-                    {
-                        curReaction = reactions[x, y];
-                    }
-                }
-
-                // Clear the previous table reference to current gameobject
-                gameManager.heroLayer[fromPosition.x, fromPosition.y] = null;
-                // Also move the gameobject's position in the heroLayer table
-                gameManager.heroLayer[activeHero.Position.x, activeHero.Position.y] = gameManager.activeHeroObject;
-
-                // If destination has reaction, set prereact
-                if (reactions[activeHero.Position.x, activeHero.Position.y] != null)
-                {
-                    // if you came from a prereact
-                    if (!reactions[fromPosition.x, fromPosition.y].GetType().Equals(typeof(HeroMeetReact)))
-                    {
-                        reactions[activeHero.Position.x, activeHero.Position.y].PreReaction = reactions[fromPosition.x, fromPosition.y].PreReaction;
-                    }
-                    else
-                        reactions[activeHero.Position.x, activeHero.Position.y].PreReaction = reactions[fromPosition.x, fromPosition.y];
-
-                }
-                // Else, set destination reaction to the heroreaction, and make the tile a triggertile
-                else
-                {
-                    // if you came from a prereact
-                    if (!reactions[fromPosition.x, fromPosition.y].GetType().Equals(typeof(HeroMeetReact)))
-                    {
-                        reactions[activeHero.Position.x, activeHero.Position.y] = reactions[fromPosition.x, fromPosition.y].PreReaction;
-                    }
-                    else
-                    {
-                        reactions[activeHero.Position.x, activeHero.Position.y] = reactions[fromPosition.x, fromPosition.y];
-                    }
-                    canWalk[activeHero.Position.x, activeHero.Position.y] = MapMaker.TRIGGER;
-                }
-
-                // If from position didn't have prereact, flip canwalk and remove
-                if (reactions[fromPosition.x, fromPosition.y].GetType().Equals(typeof(HeroMeetReact)))
-                {
-                    canWalk[fromPosition.x, fromPosition.y] = MapMaker.CANWALK;
-                    reactions[fromPosition.x, fromPosition.y] = null;
-                }
-                // Else, remove the prereact
-                else
-                {
-                    reactions[fromPosition.x, fromPosition.y].PreReaction = null;
-                }
-
-                // Update herolist and townlist UI, so that onclick listener has updated centercamera
-                gameManager.updateOverworldUI(players[gameManager.WhoseTurn]);
-            }
-        }
-        // Execute the movement
-        if (!stop)
-        {
-            gameManager.activeHeroObject.transform.position = newPos;
-            gameManager.cameraMovement.centerCamera(newPos);
-        }
+        canceledMovement = false;
+        activated = true;
     }
 
     /// <summary>
-    /// Creates a position with animationspeed and returns it
+    /// Prepares for movement to a given location. This sets a list of points
+    /// that a given hero will traverse. To execute the given movement, use
+    /// HasNextStep() -> NextStep() iterate methods.
     /// </summary>
-    /// <returns>Position the hero shall be moved to</returns>
-    public Vector2 PrepareMovement()
+    /// <param name="target"> The new desired postition to move to. </param>
+    /// <param name="activeHero"> The hero that will move to this given new location. </param>
+    public void WalkTo( Point target, Hero hero )
     {
-        if(gameManager.pathObjects != null && stepNumber < gameManager.pathObjects.Count)
+        // Resetting variables:
+        stepNumber = -1;
+
+        // Setting the active hero:
+        this.activeHero = hero;
+        this.startPosition = hero.Position;
+
+        // Calculating fastest route from active hero to target:
+        activeHero.Path = aStar.calculate(activeHero.Position, target);
+
+        // Calculate total tiles that the hero can walk:
+        totalTilesToBeWalked = Math.Min(activeHero.Path.Count, activeHero.CurMovementSpeed);
+    }
+
+    /// <summary>
+    /// Checks if there are more steps to take.
+    /// </summary>
+    /// <returns>false if there is no more steps to take. true otherwise.</returns>
+    public bool HasNextStep()
+    {
+        if (canceledMovement)
         {
-            // Add animation, transform hero position
-            return Vector2.MoveTowards(
-                gameManager.activeHeroObject.transform.position,
-                gameManager.pathObjects[stepNumber].transform.position,
-                animationSpeed
-            );
+            return false;
         }
-        return gameManager.activeHeroObject.transform.position;
+        return stepNumber != totalTilesToBeWalked-1;
     }
 
-    /// <summary>
-    /// Prepares movement variables,
-    /// Creates a list of positions and creates and returns a list of gameobjects
-    /// </summary>
-    /// <param name="pos">Destination tile position</param>
-    /// <returns>List of instantiated marker objects</returns>
-    public void MarkPath(Vector2 pos)
+    /// <summary> Executes the actual step logically. </summary>
+    /// <returns> The next step in the logical positions </returns>
+    public Point NextStep()
     {
-        stepNumber = 0;
-        pathMarked = true;
-        lastStep = false;
-
-        // Needs to clear existing objects if an earlier path was already made
-
-        // Call algorithm method that returns a list of Vector2 positions to the point, go through all objects
-        activeHero.Path = aStar.calculate(activeHero.Position, new Point(pos));
-
-        // Calculate how many steps the hero will move, if this path is chosen
-        int count = totalTilesToBeWalked = Math.Min(activeHero.Path.Count, activeHero.CurMovementSpeed);
-    }
-
-    /// <summary>
-    /// Removes visual marker and the Vector2 in activehero's path table, and increments stepnumber.
-    /// </summary>
-    private Vector2 IncrementStep()
-    {
-        newStep = true;
-        GameObject.Destroy(gameManager.pathObjects[stepNumber]);
-        stepNumber++;
-        Vector2 position = activeHero.Path[0];
+        // Getting next step from the path:
+        Point nextStep = new Point(activeHero.Path[0]);
         activeHero.Path.RemoveAt(0);
-        return position;
+        stepNumber++;
+        activeHero.CurMovementSpeed--;
+
+        // Checking if prereact TODO: FIND OUT WHY?:
+        bool preReact = (StopForPreReact(nextStep));
+
+        // When this step is the last step:
+        if (IsLastStep(stepNumber+1))
+        {
+            activeHero.Position = nextStep;
+            // If there is a trigger at the stop position:
+            if (canWalk[nextStep.x, nextStep.y] == MapMaker.TRIGGER)
+            {
+                // React to the reaction at the last step:
+                react(nextStep);
+            }
+        }
+
+        // Return logial position to graphics or event
+        return nextStep;
+    }
+
+    /// <summary>Checks if there is a preReact in the next step.</summary>
+    /// <param name="nextStep">The next step</param>
+    /// <returns>True if there is a pre-react and the hero should stop,false otherwise.</returns>
+    private bool StopForPreReact(Point nextStep)
+    {
+        if (activeHero.Path.Count == 1) // IF this is the last step
+        {
+            int x = nextStep.x;
+            int y = nextStep.y;
+
+            if (reactions[x, y] != null)
+            {
+                if (reactions[x, y].GetType().Equals(typeof(DwellingReact))
+                    ||  reactions[x, y].GetType().Equals(typeof(CastleReact)))
+                {
+                    if (reactions[x, y].HasPreReact(activeHero))
+                        return true; // Stop for pre react
+                }
+                else
+                    return true; // Stop for pre react
+            }
+        }
+        return false; // Do not stop for pre react
+    }
+
+    private void react(Point end)
+    {
+        int x = end.x;
+        int y = end.y;
+        Point start = startPosition;
+
+        Debug.Log(reactions[x, y]);
+        bool heroNotDead = true;
+
+        // If tile is threatened, perform the additional reaction before the main one
+        if (reactions[x, y].HasPreReact(activeHero))
+        {
+            Debug.Log(reactions[x, y].PreReaction);
+            reactions[x, y].PreReact(activeHero);
+            curReaction = reactions[x, y];
+            // Remove hero when false, opponent unit or hero when true
+        }
+        // Only perform the main reaction if the hero didn't die in previous reaction
+        else if (reactions[x, y].React(activeHero))
+        {
+            Debug.Log(reactions[x, y]);
+            //bool react = reactions[x, y].React(activeHero);
+
+
+            if (reactions[x, y].GetType().Equals(typeof(ResourceReaction)))
+            {
+                // TODO visually remove picked up resource
+            }
+            else if (reactions[x, y].GetType().Equals(typeof(ArtifactReaction)))
+            {
+                // TODO visually remove picked up artifact
+            }
+            else if (reactions[x, y].GetType().Equals(typeof(CastleReact)))
+            {
+                // TODO change owner of defenseless castle visually
+                CastleReact cr = (CastleReact) reactions[x, y];
+                // TODO: changeCastleOwner(cr);
+            }
+            else if (reactions[x, y].GetType().Equals(typeof(DwellingReact)))
+            {
+                // TODO visually dwelling has been captured
+            }
+            else if (reactions[x, y].GetType().Equals(typeof(ResourceBuildingReaction)))
+            {
+                // TODO visually resourceBuilding has been captured
+            }
+        }
+        else
+        {
+            curReaction = reactions[x, y];
+        }
+
+        // If destination has reaction, set prereact
+        if (reactions[activeHero.Position.x, activeHero.Position.y] != null)
+        {
+
+            // if you came from a prereact
+            if (!reactions[start.x, start.y].GetType().Equals(typeof(HeroMeetReact)))
+            {
+                reactions[x, y].PreReaction = reactions[start.x, start.y].PreReaction;
+            }
+            else
+                reactions[x, y].PreReaction = reactions[start.x, start.y];
+
+        }
+        // Else, set destination reaction to the heroreaction, and make the tile a triggertile
+        else
+        {
+            // if you came from a prereact
+            if (!reactions[start.x, start.y].GetType().Equals(typeof(HeroMeetReact)))
+            {
+                reactions[x,y] = reactions[start.x, start.y].PreReaction;
+            }
+            else
+            {
+                reactions[x, y] = reactions[start.x, start.y];
+            }
+            canWalk[x,y] = MapMaker.TRIGGER;
+        }
+
+        // If from position didn't have prereact, flip canwalk and remove
+        if (reactions[start.x, start.y].GetType().Equals(typeof(HeroMeetReact)))
+        {
+            canWalk[start.x, start.y] = MapMaker.CANWALK;
+            reactions[start.x, start.y] = null;
+        }
+        // Else, remove the prereact
+        else
+        {
+            reactions[start.x, start.y].PreReaction = null;
+        }
+    }
+
+    /// <summary>
+    ///
+    /// </summary>
+    public void WalkFinished()
+    {
+        // TODO: IMPLEMENT LOGGING IF NOT EVENT.
     }
 
     public bool IsLastStep(int stepNumber)
     {
-        return stepNumber == activeHero.CurMovementSpeed || stepNumber == totalTilesToBeWalked || lastStep;
+        return stepNumber == activeHero.CurMovementSpeed || stepNumber == totalTilesToBeWalked;
     }
-
 }
