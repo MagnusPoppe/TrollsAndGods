@@ -1268,7 +1268,7 @@ public class GameManager : MonoBehaviour
         visitingHeroButton.GetComponent<Image>().sprite = defaultsprite;
         GameObject swapVisitingHero = armyInActiveTown[count];
         visitingHeroButton.onClick.RemoveAllListeners();
-        visitingHeroButton.onClick.AddListener(() => SwapArmy(swapVisitingHero, town));
+        visitingHeroButton.onClick.AddListener(() => SwapHero(town, 1));
         if (town.VisitingHero != null)
             visitingHeroButton.GetComponent<Image>().sprite = libs.GetPortrait(town.VisitingHero.GetPortraitID());
         count++;
@@ -1281,7 +1281,8 @@ public class GameManager : MonoBehaviour
             visitingUnitButton.GetComponent<Image>().sprite = defaultsprite;
             GameObject swapVisitingUnit = armyInActiveTown[count];
             visitingUnitButton.onClick.RemoveAllListeners();
-            visitingUnitButton.onClick.AddListener(() => SwapArmy(swapVisitingUnit, town));
+            int pos = i;
+            visitingUnitButton.onClick.AddListener(() => SwapArmy(town, pos));
             Text text = armyInActiveTown[count].transform.GetChild(0).GetComponent<Text>();
             if (town.VisitingUnits.GetUnits()[i] != null)
             {
@@ -1300,7 +1301,7 @@ public class GameManager : MonoBehaviour
         stationedHeroButton.GetComponent<Image>().sprite = defaultsprite;
         GameObject swapStationedHero = armyInActiveTown[count];
         stationedHeroButton.onClick.RemoveAllListeners();
-        stationedHeroButton.onClick.AddListener(() => SwapArmy(swapStationedHero, town));
+        stationedHeroButton.onClick.AddListener(() => SwapHero(town, 2));
         if (town.StationedHero != null)
             stationedHeroButton.GetComponent<Image>().sprite = libs.GetPortrait(town.StationedHero.GetPortraitID());
         count++;
@@ -1313,7 +1314,8 @@ public class GameManager : MonoBehaviour
             stationedUnitButton.GetComponent<Image>().sprite = defaultsprite;
             GameObject swapStatonedUnit = armyInActiveTown[count];
             stationedUnitButton.onClick.RemoveAllListeners();
-            stationedUnitButton.onClick.AddListener(() => SwapArmy(swapStatonedUnit, town));
+            int pos = i + UnitTree.TREESIZE;
+            stationedUnitButton.onClick.AddListener(() => SwapArmy(town, pos));
             Text text = armyInActiveTown[count].transform.GetChild(0).GetComponent<Text>();
             if (town.StationedUnits.GetUnits()[i] != null)
             {
@@ -1376,163 +1378,162 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+    
+    private int heroPosClicked = -1;
 
+    /// <summary>
+    /// Checks if swapping is supposed to be done, performs it if so.
+    /// </summary>
+    /// <param name="town">The town to swap the heroes</param>
+    /// <param name="pos">ID - 1 for visiting, 2 for stationed</param>
+    public void SwapHero(Town town, int pos)
+    {
+        if (heroPosClicked > -1)
+        {
+            // Remove visiting hero visually when placing him in stationary
+            if (town.VisitingHero != null)
+            {
+                // Deactivate activeHero if he was active
+                if (activeHero != null && activeHero.Equals(town.VisitingHero))
+                {
+                    activeHero = null;
+                    activeHeroObject = null;
+                }
+                heroLayer[town.VisitingHero.Position.x, town.VisitingHero.Position.y].SetActive(false);
+            }
+            // Open hero panel when same pos clicked
+            if (heroPosClicked == pos)
+            {
+                if (heroPosClicked == 1 && town.VisitingHero != null)
+                {
+                    OpenHeroPanel(town.VisitingHero);
+                    ResetUnitTreeSwap();
+                }
+                else if (heroPosClicked == 2 && town.StationedHero != null)
+                {
+                    OpenHeroPanel(town.StationedHero);
+                    ResetUnitTreeSwap();
+                }
+            }
+            else
+            {
+                town.swapHeroes();
+                // TODO In the map, hide stationaryhero, show visitinghero
+
+
+                ReDrawArmyInTown(town);
+                ResetUnitTreeSwap();
+            }
+        }
+        else if((pos == 1 && town.VisitingHero != null) || (pos == 2 && town.StationedHero != null))
+        {
+            heroPosClicked = pos;
+        }
+    }
+
+    public UnitTree unitTree1;
+    public UnitTree unitTree2;
+    public int pos1 = -1;
+    public int pos2 = -1;
+    private bool visiting;
     /// <summary>
     /// Method to swap units or heroes in a town screen, both visually and logically
     /// </summary>
     /// <param name="gameObject">The pressed object to swap</param>
     /// <param name="town">The town in which the swap is happening</param>
-    public void SwapArmy(GameObject gameObject, Town town)
+    public void SwapArmy(Town town, int pos)
     {
-        // If there is a unit or hero there, check if you can swap it
-        if (swapObject != null)
+        if (unitTree1 != null)
         {
-            // Shift held, open unitwindow with possibility to swap IF one pos is empty, or they're both the same unit type
-            if (Input.GetKey(KeyCode.LeftShift)) // && !swapObject.name.Equals(gameObject.name)) TODO uncomment only do when different gameobject to swap
+            if (pos >= UnitTree.TREESIZE)
             {
-                // TODO fix
-                // Open unitactionpanel with exitbutton, swapslider and confirm
-                OpenUnitActionPanel(townCanvas, town.StationedUnits.GetUnits()[0], 5, town.StationedUnits.GetUnits()[0], 5, true);
-            }
-            // Open hero or unit panel if you clicked the same object twice
-            else if (swapObject.name.Equals(gameObject.name))
-            {
-                if(gameObject.name.Equals("VisitingHero"))
-                    OpenHeroPanel(town.VisitingHero);
-                else if (gameObject.name.Equals("StationaryHero"))
-                    OpenHeroPanel(town.StationedHero);
-                else
-                {
-                    // Open unitactionpanel with exitbutton, deletebutton and confirm
-                    int unitPos = Int32.Parse(gameObject.name);
-                    if (unitPos < UnitTree.TREESIZE && town.VisitingUnits.GetUnits()[unitPos] != null)
-                    {
-                        OpenUnitActionPanel(townCanvas, town.VisitingUnits.GetUnits()[unitPos], town.VisitingUnits.getUnitAmount(unitPos), town.VisitingUnits.GetUnits()[unitPos], town.VisitingUnits.getUnitAmount(unitPos), false);
-                    }
-                    else
-                    {
-                        unitPos -= 7;
-                        if (town.StationedUnits.GetUnits()[unitPos] != null)
-                        {
-                            OpenUnitActionPanel(townCanvas, town.StationedUnits.GetUnits()[unitPos], town.StationedUnits.getUnitAmount(unitPos), town.StationedUnits.GetUnits()[unitPos], town.StationedUnits.getUnitAmount(unitPos), false);
-                        }
-                    }
-                }
-                swapObject = null;
+                visiting = true;
+                pos -= UnitTree.TREESIZE;
+                unitTree2 = town.StationedUnits;
             }
             else
             {
-                // Check if a hero was chicked or hero was already activated
-                if (gameObject.name.Equals("VisitingHero") || gameObject.name.Equals("StationaryHero") || swapObject.name.Equals("VisitingHero") || swapObject.name.Equals("StationaryHero"))
-                {
-                    // Check if a hero was activated and another hero was clicked
-                    if ((gameObject.name.Equals("VisitingHero") && swapObject.name.Equals("StationaryHero")) || (gameObject.name.Equals("StationaryHero") && swapObject.name.Equals("VisitingHero")))
-                    {
-                        // Remove visiting hero visually when placing him in stationary
-                        if (town.VisitingHero != null)
-                        {
-                            // Deactivate activeHero if he was active
-                            if(activeHero != null && activeHero.Equals(town.VisitingHero))
-                            {
-                                activeHero = null;
-                                activeHeroObject = null;
-                            }
-                            heroLayer[town.VisitingHero.Position.x, town.VisitingHero.Position.y].SetActive(false);
-                        }
-                        // Swap heroes logically (also swaps the towns.unittree's)
-                        /*if (town.StationedHero != null)
-                        {
-                            heroLayer[town.StationedHero.Position.x, town.StationedHero.Position.y].SetActive(true);
-                        }*/
-                        town.swapHeroes();
-                        // Redraw visuals
-                        ReDrawArmyInTown(town);
-                        // In the map, hide stationaryhero, show visitinghero
-                        //refreshTownHeroes(town);
+                unitTree2 = town.VisitingUnits;
+            }
+            pos2 = pos;
+            // Same pos clicked twice
+            if (unitTree1.GetUnits()[pos1] != null && unitTree2.GetUnits()[pos1] != null && unitTree1.Equals(unitTree2) && pos1 == pos2)
+            {
+                // Open unitactionpanel with exitbutton, deletebutton and confirm
+                OpenUnitActionPanel(townCanvas, unitTree1, pos1, unitTree1, pos1, false, town);
 
-                        swapObject = null;
+                ResetUnitTreeSwap();
+                ReDrawArmyInTown(town);
+            }
+            // Shift held, open unitwindow with possibility to swap IF one pos is empty, or they're both the same unit type
+            else if ((!visiting || town.VisitingHero != null) && unitTree1.GetUnits()[pos1] != null && pos1 != pos2 && Input.GetKey(KeyCode.LeftShift)) // && !swapObject.name.Equals(gameObject.name)) TODO uncomment only do when different gameobject to swap
+            {
+                // Open unitactionpanel with exitbutton, swapslider and confirm
+                OpenUnitActionPanel(townCanvas, unitTree1, pos1, unitTree2, pos2, true, town);
+
+                ResetUnitTreeSwap();
+                ReDrawArmyInTown(town);
+            }
+            else
+            {
+                if (!visiting || town.VisitingHero != null)
+                {
+                    // Merge 2 alike units
+                    if (unitTree1.GetUnits()[pos1].Equals(unitTree2.GetUnits()[pos2]))
+                    {
+                        unitTree2.SetUnitAmount(unitTree1.GetUnits()[pos2], pos2, unitTree1.getUnitAmount(pos1) + unitTree2.getUnitAmount(pos2));
+                        unitTree1.SetUnitAmount(unitTree1.GetUnits()[pos1], pos1, 0);
                     }
-                    // If not hero swap, just activate the newly clicked gameobject
+                    // Swap 2 different units
                     else
                     {
-                        // TODO dont activate if no unit/hero at position of gameobject
-                        swapObject = gameObject;
+                        Unit tmpUnit = unitTree1.GetUnits()[pos1];
+                        int tmpAmount = unitTree1.getUnitAmount(pos1);
+                        unitTree1.SetUnitAmount(unitTree2.GetUnits()[pos2], pos1, unitTree2.getUnitAmount(pos2));
+                        unitTree2.SetUnitAmount(tmpUnit, pos2, tmpAmount);
                     }
+
+                    ResetUnitTreeSwap();
+                    ReDrawArmyInTown(town);
                 }
                 else
                 {
-                    // VISITING 0-6, STATIONARY 7-13
-                    int unitPos1 = Int32.Parse(swapObject.name);
-                    int unitPos2 = Int32.Parse(gameObject.name);
-                    // Both stationary
-                    if (unitPos1 >= UnitTree.TREESIZE && unitPos2 >= UnitTree.TREESIZE)
-                    {
-                        unitPos1 -= UnitTree.TREESIZE;
-                        unitPos2 -= UnitTree.TREESIZE;
-                        town.SwapStationaryUnits(unitPos1, unitPos2);
-                    }
-                    else if(unitPos1 >= UnitTree.TREESIZE)
-                    {
-                        unitPos1 -= UnitTree.TREESIZE;
-                        town.SwapStationedVisitingUnits(unitPos1, unitPos2);
-                    }
-                    else if(unitPos2 >= UnitTree.TREESIZE)
-                    {
-                        unitPos2 -= UnitTree.TREESIZE;
-                        town.SwapVisitingStationaryUnits(unitPos1, unitPos2);
-                    }
-                    else
-                    {
-                        town.SwapVisitingUnits(unitPos1, unitPos2);
-                    }
-
-                    // Swap logically with int positions
-                    //town.swapUnits(unitPos1, unitPos2);
-                    // Redraw visuals
-                    ReDrawArmyInTown(town);
-                    swapObject = null;
-                    // TODO Swap two units, også ta for seg swapping mellom stationared og visitingunits, med forbehold om at det finnes en hero i visiting
+                    ResetUnitTreeSwap();
                 }
             }
         }
-        // If there wasn't a unit or hero there, just activate the one pressed
         else
         {
-            // TODO dont activate if no unit/hero at position of gameobject
-
-            // VISITING 0-6, STATIONARY 7-13
-            if (gameObject.name.Equals("VisitingHero") || gameObject.name.Equals("StationaryHero"))
+            if (pos >= UnitTree.TREESIZE)
             {
-                if ((gameObject.name.Equals("VisitingHero") && town.VisitingHero != null) || (gameObject.name.Equals("StationaryHero") && town.StationedHero != null))
-                    swapObject = gameObject;
+                pos -= UnitTree.TREESIZE;
+                unitTree1 = town.StationedUnits;
+                visiting = true;
             }
             else
             {
-                int unitpos = Int32.Parse(gameObject.name);
-                if(((unitpos >= UnitTree.TREESIZE) && town.StationedUnits != null && town.StationedUnits.GetUnits()[unitpos - UnitTree.TREESIZE] != null) || ((unitpos < UnitTree.TREESIZE) && town.VisitingUnits != null && town.VisitingUnits.GetUnits()[unitpos] != null))
-                    swapObject = gameObject;
+                unitTree1 = town.VisitingUnits;
             }
+
+            pos1 = pos;
+
+            if (unitTree1.GetUnits()[pos1] == null)
+                ResetUnitTreeSwap();
         }
     }
 
-    public void refreshTownHeroes(Town town)
+    /// <summary>
+    /// Resets the variables for swapping, so that next click is first click
+    /// </summary>
+    private void ResetUnitTreeSwap()
     {
-        if (town.StationedHero != null)
-            heroLayer[town.StationedHero.Position.x, town.StationedHero.Position.y].SetActive(false);
-        if (town.VisitingHero != null)
-            heroLayer[town.VisitingHero.Position.x, town.VisitingHero.Position.y].SetActive(true);
+        unitTree1 = null;
+        unitTree2 = null;
+        pos1 = -1;
+        pos2 = -1;
+        heroPosClicked = -1;
+        visiting = false;
     }
-
-    public void showHero(Hero hero)
-    {
-        heroLayer[hero.Position.x, hero.Position.y].SetActive(true);
-    }
-
-    public void hideHero(Hero hero)
-    {
-        heroLayer[hero.Position.x, hero.Position.y].SetActive(false);
-    }
-    
 
     /// <summary>
     /// Called by next turn UI button
@@ -1768,36 +1769,52 @@ public class GameManager : MonoBehaviour
             reactions[position.x, position.y] = new HeroMeetReact(hero, position);
     }
 
-    public void OpenUnitActionPanel(GameObject parent, Unit unit1, int amount1, Unit unit2, int amount2, bool swap)
+    /// <summary>
+    /// Opens the unit action panel
+    /// </summary>
+    /// <param name="parent">The gameobject to set as transform panel</param>
+    /// <param name="unitTree1"></param>
+    /// <param name="pos1"></param>
+    /// <param name="unitTree2"></param>
+    /// <param name="pos2"></param>
+    /// <param name="swap">bool whether to open swap panel to split and merge units, or regular panel with delete option</param>
+    /// <param name="town">corresponding town to unitTree, can use null as parameter if no town</param>
+    public void OpenUnitActionPanel(GameObject parent, UnitTree unitTree1, int pos1, UnitTree unitTree2, int pos2, bool swap, Town town)
     {
         if(swap)
-            OpenUnitPanel(unitActionPanel, unit1, 0);
+            OpenUnitPanel(unitActionPanel, unitTree1.GetUnits()[pos1], 0);
         else
-            OpenUnitPanel(unitActionPanel, unit1, amount1);
+            OpenUnitPanel(unitActionPanel, unitTree1.GetUnits()[pos1], unitTree1.getUnitAmount(pos1));
 
         // Deletebutton
         GameObject actionPanel = unitActionPanel.transform.GetChild(1).gameObject;
         GameObject deleteObject = actionPanel.transform.GetChild(0).gameObject;
-        Button deleteButton = deleteObject.GetComponent<Button>();
+        Toggle deleteToggle = deleteObject.GetComponent<Toggle>();
 
         // Textleft and textRight
         GameObject textLeftObject = actionPanel.transform.GetChild(1).gameObject;
-        Text textLeft = textLeftObject.GetComponent<Text>();
-        textLeft.text = amount1 + "";
+        leftText = textLeftObject.GetComponent<Text>();
+        leftText.text = unitTree1.getUnitAmount(pos1) + "";
 
         GameObject textRightObject = actionPanel.transform.GetChild(3).gameObject;
-        Text textRight = textRightObject.GetComponent<Text>();
-        textRight.text = amount2 + "";
+        rightText = textRightObject.GetComponent<Text>();
+        rightText.text = unitTree1.getUnitAmount(pos2) + "";
 
         // Slider
         GameObject sliderObject = actionPanel.transform.GetChild(2).gameObject;
         Slider slider = sliderObject.GetComponent<Slider>();
 
+        maxSliderValue = unitTree1.getUnitAmount(pos1) + unitTree2.getUnitAmount(pos2);
+
+        slider.maxValue = maxSliderValue;
+        slider.value = unitTree1.getUnitAmount(pos1);
+        slider.onValueChanged.RemoveAllListeners();
+        slider.onValueChanged.AddListener(UpdateUnitSliderText);
+
         // Confirm button
         GameObject confirmObject = actionPanel.transform.GetChild(4).gameObject;
-        Button confirmButton = deleteObject.GetComponent<Button>();
+        Button confirmButton = confirmObject.GetComponent<Button>();
         confirmButton.onClick.RemoveAllListeners();
-
         // Show slider and unitslide amount, hide deletebutton if swap action
         if (swap)
         {
@@ -1805,7 +1822,7 @@ public class GameManager : MonoBehaviour
             deleteObject.SetActive(false);
             textLeftObject.SetActive(true);
             textRightObject.SetActive(true);
-            confirmButton.onClick.AddListener(() => PerformSwapUnitAction(unit1, amount1, unit2, amount2));
+            confirmButton.onClick.AddListener(() => PerformSwapUnitAction(unitTree1, pos1, unitTree2, pos2, town));
         }
         // Show deletbutton, hide sliderObject and unitslide amount
         else
@@ -1814,7 +1831,7 @@ public class GameManager : MonoBehaviour
             sliderObject.SetActive(false);
             textLeftObject.SetActive(false);
             textRightObject.SetActive(false);
-            confirmButton.onClick.AddListener(() => PerformDeleteUnitAction(deleteButton));
+            confirmButton.onClick.AddListener(() => PerformDeleteUnitAction(deleteToggle, unitTree1, pos1, town));
         }
 
         // Set exit button
@@ -1824,25 +1841,71 @@ public class GameManager : MonoBehaviour
         unitActionPanel.SetActive(true);
     }
 
-    public void PerformDeleteUnitAction(Button deleteButton)
+    public int leftSliderValue;
+    public int rightSliderValue;
+    public int maxSliderValue;
+    public Text leftText;
+    public Text rightText;
+
+    /// <summary>
+    /// Triggered by unitslider value changed
+    /// </summary>
+    /// <param name="value"></param>
+    public void UpdateUnitSliderText(float value)
     {
-        swapObject = null;
-        if (deleteButton.isActiveAndEnabled)
+        leftSliderValue = (int)value;
+        rightSliderValue = maxSliderValue - leftSliderValue;
+        leftText.text = leftSliderValue + "";
+        rightText.text = rightSliderValue + "";
+    }
+
+    /// <summary>
+    /// Deletes the unit if toggle
+    /// </summary>
+    /// <param name="deleteToggle">The toggle that must be activated</param>
+    /// <param name="unitTree">The unitTree to remove the unit from</param>
+    /// <param name="pos">Position in the unitTree</param>
+    /// <param name="town">The Town to redraw after action</param>
+    public void PerformDeleteUnitAction(Toggle deleteToggle, UnitTree unitTree, int pos, Town town)
+    {
+        if (deleteToggle.isOn)
         {
-            Debug.Log("Delete");
-        }
-        else
-        {
-            Debug.Log("Swap");
+            unitTree.GetUnits()[pos] = null;
+            unitTree.SetUnitAmount(pos, 0);
+            ExitPanel(unitActionPanel);
+            if (town != null)
+                ReDrawArmyInTown(town);
         }
     }
 
-    public void PerformSwapUnitAction(Unit unit1, int amount1, Unit unit2, int amount2)
+    /// <summary>
+    /// Splits or merges units in 2 different cells
+    /// </summary>
+    /// <param name="unitTree1">First unitTree</param>
+    /// <param name="pos1">Position in tree1</param>
+    /// <param name="unitTree2">Second unitTree</param>
+    /// <param name="pos2">Position in tree2</param>
+    /// <param name="town">The town to redraw after action</param>
+    public void PerformSwapUnitAction(UnitTree unitTree1, int pos1, UnitTree unitTree2, int pos2, Town town)
     {
-        swapObject = null;
-        Debug.Log("Swap units");
+        Unit unit = null;
+        if(unitTree1.GetUnits()[pos1] != null)
+        unit = unitTree1.GetUnits()[pos1];
+        else if (unitTree2.GetUnits()[pos2] != null)
+            unit = unitTree2.GetUnits()[pos2];
+        unitTree1.SetUnitAmount(unit, pos1, leftSliderValue);
+        unitTree2.SetUnitAmount(unit, pos2, rightSliderValue);
+        ExitPanel(unitActionPanel);
+        if(town != null)
+            ReDrawArmyInTown(town);
     }
 
+    /// <summary>
+    /// Opens the unit popup panel
+    /// </summary>
+    /// <param name="parent">Parent gameobject to put as transform parent</param>
+    /// <param name="unit">The unit to show</param>
+    /// <param name="amount">Amount of the unit</param>
     public void OpenUnitPanel(GameObject parent, Unit unit, int amount)
     {
         const int MAX_MOVES = 3;
@@ -1853,7 +1916,7 @@ public class GameManager : MonoBehaviour
         string topText = unit.Name;
         // Add amount text if theres a stack
         if (amount > 0)
-            topText += " " + amount;
+            topText += " - " + amount;
         unitPanel.transform.GetChild(0).gameObject.GetComponent<Text>().text = topText;
         unitPanel.transform.GetChild(1).gameObject.GetComponent<Image>().sprite = libs.GetUnit(unit.GetSpriteID());
 
@@ -1952,6 +2015,10 @@ public class GameManager : MonoBehaviour
         unitPanel.SetActive(true);
     }
 
+    /// <summary>
+    /// Selects hero if hero is not inside a town. Either activates on single click or opens hero panel on doubleclick
+    /// </summary>
+    /// <param name="hero">The hero to either activate or open panel</param>
     public void SelectHero(Hero hero)
     {
         if (!hero.IsInTown)
@@ -1982,6 +2049,10 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Opens the hero panel
+    /// </summary>
+    /// <param name="hero">The hero which sets the panel values</param>
     public void OpenHeroPanel(Hero hero)
     {
         heroPanel.SetActive(true);
@@ -1998,11 +2069,17 @@ public class GameManager : MonoBehaviour
         heroContentPanel.transform.GetChild(0).GetComponent<Text>().text = hero.Description;
     }
 
+    /// <summary>
+    /// Exits the parameter panel, and activates camera if overworld
+    /// </summary>
+    /// <param name="panel">The panel to exit</param>
     public void ExitPanel(GameObject panel)
     {
         panel.SetActive(false);
         // Dont activate cameramovement if you are opening the hero panel from for example the town
         if(overWorld)
             cameraMovement.enabled = true;
+        // If a swap object was enabled, nullify it
+        swapObject = null;
     }
 }

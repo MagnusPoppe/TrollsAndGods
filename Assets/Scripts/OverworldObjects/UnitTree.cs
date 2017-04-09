@@ -36,7 +36,6 @@ public class UnitTree
     public void SetUnitAmount(int pos, int amount)
     {
         unitAmount[pos] = amount;
-        /*
         // Remove unit if it's reduced to 0
         if (amount == 0)
             units[pos] = null;
@@ -45,7 +44,25 @@ public class UnitTree
         {
             unitAmount[pos] = amount;
         }
-        */
+    }
+
+
+    public void SetUnitAmount(Unit Unit, int pos, int amount)
+    {
+        unitAmount[pos] = amount;
+        // Remove unit if it's reduced to 0
+        if (amount == 0)
+        {
+            units[pos] = null;
+            unitAmount[pos] = amount;
+        }
+        // Else set stackamount to input amount
+        else
+        {
+            unitAmount[pos] = amount;
+            if(units[pos] == null)
+                units[pos] = Unit;
+        }
     }
 
     /// <summary>
