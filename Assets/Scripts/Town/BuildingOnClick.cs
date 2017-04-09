@@ -612,7 +612,7 @@ namespace TownView
                         Debug.Log("Bought the hero" + hero.Name);
 
                         // TODO PLACE HERO LOGICALLY AND VISUALLY
-                        gm.PlaceHero(Player, hero, town.Position);
+                        gm.PlaceHero(Player, hero, town.Position, false);
                         DestroyObjects();
                         gm.ReDrawArmyInTown(town);
                         gm.updateResourceText();

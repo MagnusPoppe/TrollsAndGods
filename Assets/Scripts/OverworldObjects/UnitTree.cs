@@ -67,7 +67,7 @@ public class UnitTree
     /// <returns></returns>
     public bool CanMerge(UnitTree units2)
     {
-        if (this == null || units2 == null)
+        if (units != null || units2 == null || units2.units != null)
             return true;
 
         // Check if merge can be done
@@ -79,7 +79,7 @@ public class UnitTree
                 count++;
                 for(int j=0; j<TREESIZE; j++)
                 {
-                    if (units[i].equals(units2.units[j]))
+                    if (units[i] != null && units[i].equals(units2.units[j]))
                         count--;
                 }
             }
