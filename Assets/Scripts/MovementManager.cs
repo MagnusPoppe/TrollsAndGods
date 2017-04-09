@@ -64,7 +64,7 @@ public class MovementManager
     }
 
     /// <summary>
-    /// Activates the movement. This must happen after a "WalkTo( );" has occurred.
+    /// Activates the movement. This must happen after a "PrepareMovement( );" has occurred.
     /// </summary>
     public void Activate()
     {
@@ -88,7 +88,7 @@ public class MovementManager
     /// </summary>
     /// <param name="target"> The new desired postition to move to. </param>
     /// <param name="activeHero"> The hero that will move to this given new location. </param>
-    public void WalkTo( Point target, Hero hero )
+    public void PrepareMovement( Point target, Hero hero )
     {
         // Resetting variables:
         stepNumber = -1;
