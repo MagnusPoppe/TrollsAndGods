@@ -22,6 +22,7 @@ public class Hero : SpriteSystem
     private const IngameObjectLibrary.Category SPRITEPORTRAITCATEGORY = IngameObjectLibrary.Category.Portraits;
     private List<Vector2> path;
     private bool alive;
+    public bool IsInTown { get; private set; }
     protected Cost cost;
 
     /// <summary>

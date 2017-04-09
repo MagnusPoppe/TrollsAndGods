@@ -116,26 +116,29 @@ public class GameManager : MonoBehaviour
     //Movement
     private MovementManager movement;
     public GameObject parentToMarkers;
-    public bool heroActive;
     public GameObject activeHeroObject;
 
     // Use this for initialization
     void Start ()
     {
+        // Initialize all the possible heroes to play with
         heroes[0] = new Blueberry();
         heroes[1] = new Gork();
         heroes[2] = new JackMcBlackwell();
         heroes[3] = new JohnyMudbone();
         heroes[4] = new Mantooth();
 
+        // Initialize overworld hero and town panels with clickable buttons
         heroObjects = new GameObject[8];
         townObjects = new GameObject[10];
         heroButton = new Button[8];
         townButton = new Button[10];
 
+        // Initialize resource purchasepanel with buybutton and deactivate it
         adjustResourcePanel = GameObject.Find("OverworldAdjustResourcePanel");
         adjustResourcePanel.SetActive(false);
         purchaseButton = adjustResourcePanel.transform.GetChild(1).gameObject;
+
         // Initialize TownPanels and deactivate them
         townToDestroyPanel = GameObject.Find("TownToDestroyPanel");
         townArmyPanel = GameObject.Find("TownArmyPanel");
@@ -155,6 +158,7 @@ public class GameManager : MonoBehaviour
         heroPanel = GameObject.Find("HeroPanel");
         heroPanel.SetActive(false);
 
+        // Initialize popup panels for rightclicking on reactions and deactive them
         heroReactPanel = GameObject.Find("HeroReactPanel");
         heroReactPanel.SetActive(false);
         castleReactPanel = GameObject.Find("CastleReactPanel");
@@ -170,6 +174,7 @@ public class GameManager : MonoBehaviour
         parentToMarkers.name = "Path";
         width = WIDTH;
         height = HEIGHT;
+
         // Initialize sprite library
         libs = new IngameObjectLibrary();
 
@@ -185,7 +190,6 @@ public class GameManager : MonoBehaviour
         cameraMovement = tempCameraObject.GetComponent<CameraMovement>();
 
         // Set active Hero
-        heroActive = true;
         activeHero = players[0].Heroes[0];
         activeHeroObject = heroLayer[activeHero.Position.x, activeHero.Position.y];
 
@@ -256,7 +260,7 @@ public class GameManager : MonoBehaviour
                     castleClicked.React(players[WhoseTurn]);
             }
             // Hero is active, either try to make a path to pointed destination, or activate walking towards there.
-            else if (heroActive && movement.activeHero.Player.equals(players[WhoseTurn]))
+            else if (activeHero != null && movement.activeHero.Player.equals(players[WhoseTurn]))
             {
                 if (movement.walking)
                 {
@@ -330,15 +334,16 @@ public class GameManager : MonoBehaviour
 
             // Check if any panels are supposed to be opened
             OpenPanelIfReaction(x, y);
-            
+
             // TODO REMOVE
+            /*
             if (activeHero.Units.GetUnits()[0] == null)
             {
                 activeHero.Units.setUnit(new StoneTroll(), 5, 0);
             }
             UnitTree defendingTest = new UnitTree();
             defendingTest.setUnit(new StoneTroll(), 5, 0);
-            enterCombat(15, 11, activeHero, defendingTest);
+            enterCombat(15, 11, activeHero, defendingTest);*/
         }
         // Right click up, close the opened panels
         else if(Input.GetMouseButtonUp(1))
@@ -473,7 +478,7 @@ public class GameManager : MonoBehaviour
         GameObject heroObject = armyPanel.transform.GetChild(0).gameObject;
         if(castle.Town.StationedHero != null)
         {
-            heroObject.GetComponent<Image>().sprite = libs.GetUnit(castle.Town.StationedHero.GetSpriteID());
+            heroObject.GetComponent<Image>().sprite = libs.GetPortrait(castle.Town.StationedHero.GetPortraitID());
             heroObject.SetActive(true);
         }
         else
@@ -1165,7 +1170,7 @@ public class GameManager : MonoBehaviour
             stationedUnitButton.onClick.RemoveAllListeners();
             stationedUnitButton.onClick.AddListener(() => SwapArmy(swapStatonedUnit, town));
             Text text = armyInActiveTown[count].transform.GetChild(0).GetComponent<Text>();
-            if (town.VisitingUnits.GetUnits()[i] != null)
+            if (town.StationedUnits.GetUnits()[i] != null)
             {
                 stationedUnitButton.GetComponent<Image>().sprite = libs.GetUnit(town.StationedUnits.GetUnits()[i].GetSpriteID());
                 text.text = town.StationedUnits.getUnitAmount(i) + "";
@@ -1251,6 +1256,19 @@ public class GameManager : MonoBehaviour
                     if ((gameObject.name.Equals("VisitingHero") && swapObject.name.Equals("StationaryHero")) || (gameObject.name.Equals("StationaryHero") && swapObject.name.Equals("VisitingHero")))
                     {
                         // Swap heroes logically (also swaps the towns.unittree's)
+                        if (town.VisitingHero != null)
+                        {
+                            if(activeHero.Equals(town.VisitingHero))
+                            {
+                                activeHero = null;
+                                activeHeroObject = null;
+                            }
+                            heroLayer[town.VisitingHero.Position.x, town.VisitingHero.Position.y].SetActive(false);
+                        }
+                        /*if (town.StationedHero != null)
+                        {
+                            heroLayer[town.StationedHero.Position.x, town.StationedHero.Position.y].SetActive(true);
+                        }*/
                         town.swapHeroes();
                         // Redraw visuals
                         ReDrawArmyInTown(town);
@@ -1678,27 +1696,30 @@ public class GameManager : MonoBehaviour
 
     public void SelectHero(Hero hero)
     {
-        if (prepareDoubleClick)
+        if (!hero.IsInTown)
         {
-            if (players[WhoseTurn].equals(hero.Player))
+            if (prepareDoubleClick)
             {
-                cameraMovement.enabled = false;
-                OpenHeroPanel(hero);
-            }
-        }
-        else
-        {
-            if(players[WhoseTurn].equals(hero.Player))
-            {
-                // Activate clicked hero
-                if(!hero.Equals(activeHero))
+                if (players[WhoseTurn].equals(hero.Player))
                 {
-                    activeHero = hero;
-                    activeHeroObject = heroLayer[activeHero.Position.x, activeHero.Position.y];
+                    cameraMovement.enabled = false;
+                    OpenHeroPanel(hero);
                 }
-                // Center camera and prepare to open heroPanel
-                prepareDoubleClick = true;
-                cameraMovement.centerCamera(HandyMethods.getGraphicPosForIso(hero.Position.ToVector2()));
+            }
+            else
+            {
+                if (players[WhoseTurn].equals(hero.Player))
+                {
+                    // Activate clicked hero
+                    if (!hero.Equals(activeHero))
+                    {
+                        activeHero = hero;
+                        activeHeroObject = heroLayer[activeHero.Position.x, activeHero.Position.y];
+                    }
+                    // Center camera and prepare to open heroPanel
+                    prepareDoubleClick = true;
+                    cameraMovement.centerCamera(HandyMethods.getGraphicPosForIso(hero.Position.ToVector2()));
+                }
             }
         }
     }
