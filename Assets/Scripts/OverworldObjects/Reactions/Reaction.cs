@@ -58,4 +58,8 @@ abstract public class Reaction {
         return (preReaction != null);
     }
 
+    public bool HasPreReact()
+    {
+        return (preReaction != null);
+    }
 }

@@ -8,12 +8,12 @@ namespace TownView
     /// Placeholder class for a spesific building.
     /// Belongs to the "Unknown Town".
     /// </summary>
-    public class CernianCamp : Building
+    public class CernianCamp : UnitBuilding
     {
         // Required values for building:
         const string name = "Cernian Camp";
         const string description = "Hestesak?";
-        static bool[] requirements = new bool[] { false, true, false, false, false };
+        static bool[] requirements = new bool[] { false, true, false, false, false, false, false, false, false, false };
         const int LOCAL_SPRITEID = 8;
         const int LOCAL_SPRITEID_BLUEPRINT = 18;
 

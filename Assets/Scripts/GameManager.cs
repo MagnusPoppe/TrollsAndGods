@@ -68,10 +68,11 @@ public class GameManager : MonoBehaviour
     Date date;
 
     // Click listeners
-    const int CLICKSPEED = 35;
+    const int DOUBLECLICK_DELAY = 50;
     bool prepareDoubleClick;
     int clickCount;
     public Vector2 savedClickedPos;
+    public Town townSelected;
 
     public Hero activeHero;
     public Hero[] heroes = new Hero[5];
@@ -82,7 +83,7 @@ public class GameManager : MonoBehaviour
     GameObject townArmyCanvas;
     GameObject townWindow;
     public GameObject swapObject;
-    bool overWorld;
+    public bool overWorld;
     public GameObject townArmyPanel;
     public GameObject townHallPanel;
     public GameObject tavernPanel;
@@ -95,7 +96,6 @@ public class GameManager : MonoBehaviour
     Button nextRoundBtn;
     Text dateText;
     Text[] resourceText;
-    string[] resourceTextPosition = new string[] { "TextGold", "TextWood", "TextOre", "TextCrystal", "TextGem" };
     GameObject overWorldCanvas;
     GameObject overworldInteractablePanel;
     Vector2 overworldInteractablePanelPosition;
@@ -103,6 +103,11 @@ public class GameManager : MonoBehaviour
     GameObject[] townObjects;
     Button[] heroButton;
     Button[] townButton;
+    public GameObject adjustResourcePanel;
+    public GameObject purchaseButton;
+    public GameObject unitPanel;
+    public GameObject heroPanel;
+    public GameObject heroReactPanel, castleReactPanel, dwellingReactPanel, resourceReactPanel, artifactReactPanel;
 
     //currentReaction
     private Reaction curReaction;
@@ -141,20 +146,38 @@ public class GameManager : MonoBehaviour
         heroButton = new Button[8];
         townButton = new Button[10];
 
+        adjustResourcePanel = GameObject.Find("OverworldAdjustResourcePanel");
+        adjustResourcePanel.SetActive(false);
+        purchaseButton = adjustResourcePanel.transform.GetChild(1).gameObject;
         // Initialize TownPanels and deactivate them
         townToDestroyPanel = GameObject.Find("TownToDestroyPanel");
         townArmyPanel = GameObject.Find("TownArmyPanel");
-        townHallPanel = GameObject.Find("TownHallPanel");
-        tavernPanel = GameObject.Find("TavernPanel");
-        marketplacePanel = GameObject.Find("MarketplacePanel");
-        dwellingPanel = GameObject.Find("DwellingPanel");
-        buildingPanel = GameObject.Find("BuildingPanel");
         townArmyPanel.SetActive(false);
+        townHallPanel = GameObject.Find("TownHallPanel");
         townHallPanel.SetActive(false);
+        tavernPanel = GameObject.Find("TavernPanel");
         tavernPanel.SetActive(false);
+        marketplacePanel = GameObject.Find("MarketplacePanel");
         marketplacePanel.SetActive(false);
+        dwellingPanel = GameObject.Find("DwellingPanel");
         dwellingPanel.SetActive(false);
+        buildingPanel = GameObject.Find("BuildingPanel");
         buildingPanel.SetActive(false);
+        unitPanel = GameObject.Find("UnitPanel");
+        unitPanel.SetActive(false);
+        heroPanel = GameObject.Find("HeroPanel");
+        heroPanel.SetActive(false);
+
+        heroReactPanel = GameObject.Find("HeroReactPanel");
+        heroReactPanel.SetActive(false);
+        castleReactPanel = GameObject.Find("CastleReactPanel");
+        castleReactPanel.SetActive(false);
+        dwellingReactPanel = GameObject.Find("DwellingReactPanel");
+        dwellingReactPanel.SetActive(false);
+        resourceReactPanel = GameObject.Find("ResourceReactPanel");
+        resourceReactPanel.SetActive(false);
+        artifactReactPanel = GameObject.Find("ArtifactReactPanel");
+        artifactReactPanel.SetActive(false);
 
         parentToMarkers = new GameObject();
         parentToMarkers.name = "Path";
@@ -281,7 +304,7 @@ public class GameManager : MonoBehaviour
     public void ListenToInputs()
     {
         // if you have clicked once on a castle of possession, give a window of frames to click it again to open castle menu
-        if (prepareDoubleClick && ++clickCount == CLICKSPEED)
+        if (prepareDoubleClick && ++clickCount == DOUBLECLICK_DELAY)
         {
             clickCount = 0;
             prepareDoubleClick = false;
@@ -296,21 +319,18 @@ public class GameManager : MonoBehaviour
             // The coordinates of the click:
             int x = (int)posClicked.x;
             int y = (int)posClicked.y;
+<<<<<<< HEAD
 
             // Owners castle is clicked
             if (canWalk[x, y] != MapMaker.TRIGGER && reactions[x, y] != null && reactions[x, y].GetType().Equals(typeof(CastleReact)))
+=======
+            // Fire castle react if you clicked on your own castle
+            if (canWalk[(int)posClicked.x, (int)posClicked.y] != MapMaker.TRIGGER && reactions[x, y] != null && reactions[x, y].GetType().Equals(typeof(CastleReact)))
+>>>>>>> master
             {
-                if (prepareDoubleClick)
-                {
-                    CastleReact castleClicked = (CastleReact)reactions[x, y];
-                    if (players[WhoseTurn].equals(castleClicked.Castle.Player))
-                    {
-                        castleClicked.React(players[WhoseTurn]);
-                        Debug.Log("Leftclicked your own castle");
-                    }
-                }
-                else
-                    prepareDoubleClick = true;
+                CastleReact castleClicked = (CastleReact)reactions[x, y];
+                if (players[WhoseTurn].equals(castleClicked.Castle.Player))
+                    castleClicked.React(players[WhoseTurn]);
             }
 
             // Hero is active, either try to make a path to pointed destination, or activate walking towards there.
@@ -324,8 +344,7 @@ public class GameManager : MonoBehaviour
                 // Hero's own position is clicked
                 else if (activeHero.Position.Equals(new Point(posClicked)))
                 {
-                    Debug.Log("Clicked on activated hero");
-                    // Todo, open hero menu
+                    SelectHero(activeHero);
                 }
                 // If an open square is clicked
                 else if (canWalk[x, y] != MapMaker.CANNOTWALK)
@@ -356,11 +375,15 @@ public class GameManager : MonoBehaviour
                 HeroMeetReact heroClicked = (HeroMeetReact)reactions[x, y];
                 if (players[WhoseTurn].equals(heroClicked.Hero.Player))
                 {
+<<<<<<< HEAD
                     // TODO when click on your own hero
                     Debug.Log("Leftclicked your own hero");
                     heroActive = true;
                     activeHero = heroClicked.Hero;
                     cameraMovement.centerCamera(activeHero.Position.ToVector2());
+=======
+                    SelectHero(activeHero);
+>>>>>>> master
                 }
             }
         }
@@ -377,6 +400,13 @@ public class GameManager : MonoBehaviour
                 cameraMovement.centerCamera(players[WhoseTurn].Castle[0].GetPosition().ToVector2());
             }
         }
+        // Escape clicked
+        else if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            // Exit heropanel if it is active
+            if (heroPanel.activeSelf)
+                ExitHeroPanel();
+        }
         // Nextturn by enter
         else if (Input.GetKeyDown(KeyCode.Return))
         {
@@ -385,6 +415,17 @@ public class GameManager : MonoBehaviour
         // Rightclick for combat for testing
         else if (Input.GetMouseButtonDown(1))
         {
+            // Fetch the point just clicked and adjust the position in the square to the corresponding isometric position
+            Vector2 posClicked = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            posClicked = HandyMethods.getIsoTilePos(posClicked).ToVector2();
+
+            int x = (int)posClicked.x;
+            int y = (int)posClicked.y;
+
+            // Check if any panels are supposed to be opened
+            OpenPanelIfReaction(x, y);
+            
+            // TODO REMOVE
             if (activeHero.Units.GetUnits()[0] == null)
             {
                 activeHero.Units.setUnit(new StoneTroll(), 5, 0);
@@ -393,6 +434,193 @@ public class GameManager : MonoBehaviour
             defendingTest.setUnit(new StoneTroll(), 5, 0);
             enterCombat(15, 11, activeHero, defendingTest);
         }
+        // Right click up, close the opened panels
+        else if(Input.GetMouseButtonUp(1))
+        {
+            CloseReactPanels();
+        }
+    }
+
+    /// <summary>
+    /// Closes any open reactionPanel
+    /// </summary>
+    public void CloseReactPanels()
+    {
+        if(heroReactPanel.activeSelf)
+            heroReactPanel.SetActive(false);
+        if (castleReactPanel.activeSelf)
+            castleReactPanel.SetActive(false);
+        if (dwellingReactPanel.activeSelf)
+            dwellingReactPanel.SetActive(false);
+        if (resourceReactPanel.activeSelf)
+            resourceReactPanel.SetActive(false);
+        if (artifactReactPanel.activeSelf)
+            artifactReactPanel.SetActive(false);
+        if (unitPanel.activeSelf)
+            unitPanel.SetActive(false);
+    }
+
+    /// <summary>
+    /// System for opening panels corresponding with reactions
+    /// </summary>
+    /// <param name="x">x pos</param>
+    /// <param name="y">y pos</param>
+    public void OpenPanelIfReaction(int x, int y)
+    {
+        // Open unit card if you right clicked at a unitreaction
+        if (reactions[x, y] != null)
+        {
+            // Unitreaction found, open unitpanel
+            if (reactions[x, y].GetType().Equals(typeof(UnitReaction)))
+            {
+                UnitReaction unitReaction = (UnitReaction)reactions[x, y];
+                UnitTree unitTree = unitReaction.Units;
+                Unit unit;
+                for (int i = 0; i < unitTree.GetUnits().Length; i++)
+                {
+                    if (unitTree.GetUnits()[i] != null)
+                    {
+                        unit = unitTree.GetUnits()[i];
+                        OpenUnitPanel(null, unit, unitTree.getUnitAmount(i));
+                    }
+                }
+            }
+            // Castle react found. If there was a hero prereact at that spot, open heropanel, else open castle panel
+            else if (reactions[x, y].GetType().Equals(typeof(CastleReact)))
+            {
+                CastleReact castleReact = (CastleReact)reactions[x, y];
+                Castle castle = castleReact.Castle;
+                if (castleReact.HasPreReact() && castleReact.PreReaction.GetType().Equals(typeof(HeroMeetReact)))
+                {
+                    HeroMeetReact heroMeetReact = (HeroMeetReact)reactions[x, y].PreReaction;
+                    OpenHeroReactPanel(heroMeetReact.Hero);
+                }
+                else
+                    OpenCastleReactPanel(castle);
+            }
+            // HeromeetReact found, open heroPanel
+            else if (reactions[x, y].GetType().Equals(typeof(HeroMeetReact)))
+            {
+                HeroMeetReact heroMeetReact = (HeroMeetReact)reactions[x, y];
+                OpenHeroReactPanel(heroMeetReact.Hero);
+            }
+            // ArtifactReaction found, open ArtifactReactionPanel
+            else if (reactions[x, y].GetType().Equals(typeof(ArtifactReaction)))
+            {
+                ArtifactReaction artifactReaction = (ArtifactReaction)reactions[x, y];
+                OpenArtifactReactPanel(artifactReaction.Artifact);
+            }
+            // ResourceReaction found, open ResourceReactionPanel
+            else if (reactions[x, y].GetType().Equals(typeof(ResourceReaction)))
+            {
+                ResourceReaction resourceReaction = (ResourceReaction)reactions[x, y];
+                OpenResourceReactPanel(0); // TODO index
+            }
+            // DwellingReaction found, open DwellingReact
+            else if (reactions[x, y].GetType().Equals(typeof(DwellingReact)))
+            {
+                DwellingReact dwellingReaction = (DwellingReact)reactions[x, y];
+                OpenDwellingReactPanel(dwellingReaction.DwellingBuilding);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Activates HeroReactPanel
+    /// </summary>
+    /// <param name="hero">The Hero</param>
+    public void OpenHeroReactPanel(Hero hero)
+    {
+        // Set hero name, image, and army
+        heroReactPanel.transform.GetChild(0).gameObject.GetComponent<Text>().text = hero.Name;
+        heroReactPanel.transform.GetChild(1).gameObject.GetComponent<Image>().sprite = libs.GetPortrait(hero.GetPortraitID());
+        GameObject armyPanel = heroReactPanel.transform.GetChild(2).gameObject;
+        for (int i = 0; i < hero.Units.GetUnits().Length; i++)
+        {
+            GameObject unitObject = armyPanel.transform.GetChild(i).gameObject;
+            if (hero.Units.GetUnits()[i] != null)
+            {
+                unitObject.GetComponent<Image>().sprite = libs.GetUnit(hero.Units.GetUnits()[i].GetSpriteID());
+                unitObject.transform.GetChild(0).GetComponent<Text>().text = hero.Units.getUnitAmount(i) + "";
+                unitObject.SetActive(true);
+            }
+            else
+            {
+                unitObject.transform.GetChild(0).GetComponent<Text>().text = "";
+                unitObject.SetActive(true);
+            }
+        }
+        heroReactPanel.SetActive(true);
+    }
+    
+    /// <summary>
+    /// Activates CastleReactPanel
+    /// </summary>
+    /// <param name="castle">The Castle</param>
+    public void OpenCastleReactPanel(Castle castle)
+    {
+        // Set castle name, image, and hero + army
+        castleReactPanel.transform.GetChild(0).gameObject.GetComponent<Text>().text = castle.Name;
+        castleReactPanel.transform.GetChild(1).gameObject.GetComponent<Image>().sprite = libs.GetCastle(castle.GetSpriteID());
+        GameObject armyPanel = castleReactPanel.transform.GetChild(2).gameObject;
+
+        GameObject heroObject = armyPanel.transform.GetChild(0).gameObject;
+        if(castle.Town.StationedHero != null)
+        {
+            heroObject.GetComponent<Image>().sprite = libs.GetUnit(castle.Town.StationedHero.GetSpriteID());
+            heroObject.SetActive(true);
+        }
+        else
+        {
+            heroObject.SetActive(false);
+        }
+
+        for (int i = 0; i < castle.Town.StationedUnits.GetUnits().Length; i++)
+        {
+            GameObject unitObject = armyPanel.transform.GetChild(i+1).gameObject;
+            if (castle.Town.StationedUnits.GetUnits()[i] != null)
+            {
+                unitObject.GetComponent<Image>().sprite = libs.GetUnit(castle.Town.StationedUnits.GetUnits()[i].GetSpriteID());
+                unitObject.transform.GetChild(0).GetComponent<Text>().text = castle.Town.StationedUnits.getUnitAmount(i) + "";
+                unitObject.SetActive(true);
+            }
+            else
+            {
+                unitObject.transform.GetChild(0).GetComponent<Text>().text = "";
+                unitObject.SetActive(true);
+            }
+        }
+        castleReactPanel.SetActive(true);
+    }
+    
+    /// <summary>
+    /// Activates ResourceReactPanel
+    /// </summary>
+    /// <param name="resourceIndex">The resourcetype</param>
+    public void OpenResourceReactPanel(int resourceIndex)
+    {
+        resourceReactPanel.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Gold"; // TODO 
+        resourceReactPanel.SetActive(true);
+    }
+    
+    /// <summary>
+    /// Activates ArtifactReactPanel
+    /// </summary>
+    /// <param name="artifact">The artifact</param>
+    public void OpenArtifactReactPanel(Item artifact)
+    {
+        artifactReactPanel.transform.GetChild(0).gameObject.GetComponent<Text>().text = artifact.SlotType.ToString();
+        artifactReactPanel.SetActive(true);
+    }
+    
+    /// <summary>
+    /// Activates DwellingReactPanel
+    /// </summary>
+    /// <param name="dwellingBuilding">The DwellingBuilding</param>
+    public void OpenDwellingReactPanel(DwellingBuilding dwellingBuilding)
+    {
+        resourceReactPanel.transform.GetChild(0).gameObject.GetComponent<Text>().text = dwellingBuilding.ToString();
+        dwellingReactPanel.SetActive(true);
     }
 
     /// <summary>
@@ -471,6 +699,7 @@ public class GameManager : MonoBehaviour
             }
             else if (reactions[x, y].GetType().Equals(typeof(UnitReaction)))
             {
+                UnitReaction u = (UnitReaction)reactions[x, y];
                 // TODO when you hover over an neutral unit, change mouse pointer
             }
         }
@@ -812,11 +1041,23 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void EnterTown(Town town)
     {
-        townArmyPanel.SetActive(true);
-        DrawTown(town);
-        townWindow.SetActive(true);
-        overWorld = false;
-        cameraMovement.enabled = false;
+        if (prepareDoubleClick)
+        {
+            if (players[WhoseTurn].equals(town.Owner))
+            {
+                townSelected = null;
+                townArmyPanel.SetActive(true);
+                DrawTown(town);
+                townWindow.SetActive(true);
+                overWorld = false;
+                cameraMovement.enabled = false;
+            }
+        }
+        else
+        {
+            prepareDoubleClick = true;
+            cameraMovement.centerCamera(HandyMethods.getGraphicPosForIso(town.Position.ToVector2()));
+        }
     }
 
     /// <summary>
@@ -829,23 +1070,31 @@ public class GameManager : MonoBehaviour
         overWorld = true;
         cameraMovement.enabled = true;
         DestroyTownBuildings();
-        DeactivateTownPanels(true);
+        DeactivateTownPanels();
     }
 
-    public void DeactivateTownPanels(bool deActivate)
+    /// <summary>
+    /// Check all the children in the town canvas, deactivate if any of them are activated
+    /// </summary>
+    public void DeactivateTownPanels()
     {
         if (buildingPanel.activeSelf)
-            buildingPanel.SetActive(!deActivate);
-        else if (dwellingPanel.activeSelf)
-            dwellingPanel.SetActive(!deActivate);
-        else if (marketplacePanel.activeSelf)
-            marketplacePanel.SetActive(!deActivate);
-        else if (townHallPanel.activeSelf)
-            townHallPanel.SetActive(!deActivate);
-        else if (tavernPanel.activeSelf)
-            tavernPanel.SetActive(!deActivate);
+            buildingPanel.SetActive(false);
+        if (dwellingPanel.activeSelf)
+            dwellingPanel.SetActive(false);
+        if (marketplacePanel.activeSelf)
+            marketplacePanel.SetActive(false);
+        if (townHallPanel.activeSelf)
+            townHallPanel.SetActive(false);
+        if (tavernPanel.activeSelf)
+            tavernPanel.SetActive(false);
+        if (adjustResourcePanel.activeSelf)
+            adjustResourcePanel.SetActive(false);
     }
 
+    /// <summary>
+    /// Checks and destroys all objects in towntodestroypanel
+    /// </summary>
     public void DestroyTownBuildings()
     {
         for (int i = 0; i < townToDestroyPanel.transform.childCount; i++)
@@ -870,6 +1119,7 @@ public class GameManager : MonoBehaviour
         buildingsInActiveTown = new GameObject[town.Buildings.Length];
 
         town.BuildAll(town);
+        town.Buildings[9].Build();
 
         // loads in the town buildings
         for (int i = 0; i < town.Buildings.Length; i++)
@@ -967,10 +1217,9 @@ public class GameManager : MonoBehaviour
                 GameObject swapObject = heroObjects[i];
                 Vector2 position = HandyMethods.getGraphicPosForIso(player.Heroes[i].Position.ToVector2());
                 Hero hero = player.Heroes[i];
-                heroButton[i].onClick.AddListener(() => cameraMovement.centerCamera(position));
-                heroButton[i].onClick.AddListener(() => activeHero = hero);
-                heroButton[i].onClick.AddListener(() => activeHeroObject = heroLayer[activeHero.Position.x, activeHero.Position.y]);
-
+                heroButton[i].onClick.RemoveAllListeners();
+                heroButton[i].onClick.AddListener(() => SelectHero(hero));
+                heroObjects[i].SetActive(true);
             }
             else
                 heroObjects[i].SetActive(false);
@@ -984,7 +1233,9 @@ public class GameManager : MonoBehaviour
                 Sprite sprite = libs.GetTown(player.Castle[i].Town.GetSpriteID());
                 townButton[i].GetComponent<Image>().sprite = sprite;
                 Castle castle = player.Castle[i];
+                townButton[i].onClick.RemoveAllListeners();
                 townButton[i].onClick.AddListener(() => EnterTown(castle.Town));
+                townObjects[i].SetActive(true);
             }
             else
                 townObjects[i].SetActive(false);
@@ -1010,6 +1261,7 @@ public class GameManager : MonoBehaviour
         Button visitingHeroButton = armyInActiveTown[count].GetComponent<Button>();
         visitingHeroButton.GetComponent<Image>().sprite = defaultsprite;
         GameObject swapVisitingHero = armyInActiveTown[count];
+        visitingHeroButton.onClick.RemoveAllListeners();
         visitingHeroButton.onClick.AddListener(() => SwapArmy(swapVisitingHero, town));
         if (town.VisitingHero != null)
             visitingHeroButton.GetComponent<Image>().sprite = libs.GetPortrait(town.VisitingHero.GetPortraitID());
@@ -1022,12 +1274,14 @@ public class GameManager : MonoBehaviour
             Button visitingUnitButton = armyInActiveTown[count].GetComponent<Button>();
             visitingUnitButton.GetComponent<Image>().sprite = defaultsprite;
             GameObject swapVisitingUnit = armyInActiveTown[count];
+            visitingUnitButton.onClick.RemoveAllListeners();
             visitingUnitButton.onClick.AddListener(() => SwapArmy(swapVisitingUnit, town));
             Text text = armyInActiveTown[count].transform.GetChild(0).GetComponent<Text>();
             if (town.VisitingUnits.GetUnits()[i] != null)
             {
                 visitingUnitButton.GetComponent<Image>().sprite = libs.GetUnit(town.VisitingUnits.GetUnits()[i].GetSpriteID());
                 text.text = town.VisitingUnits.getUnitAmount(i) + "";
+                // TODO listener to open unitcard stationedUnitButton.onClick.AddListener(() => );
             }
             else
                 text.text = "";
@@ -1039,9 +1293,10 @@ public class GameManager : MonoBehaviour
         Button stationedHeroButton = armyInActiveTown[count].GetComponent<Button>();
         stationedHeroButton.GetComponent<Image>().sprite = defaultsprite;
         GameObject swapStationedHero = armyInActiveTown[count];
+        stationedHeroButton.onClick.RemoveAllListeners();
         stationedHeroButton.onClick.AddListener(() => SwapArmy(swapStationedHero, town));
         if (town.StationedHero != null)
-            stationedHeroButton.GetComponent<Image>().sprite = libs.GetPortrait(town.VisitingHero.GetPortraitID());
+            stationedHeroButton.GetComponent<Image>().sprite = libs.GetPortrait(town.StationedHero.GetPortraitID());
         count++;
 
         // Draws stationedUnits with listener for swapping
@@ -1051,12 +1306,14 @@ public class GameManager : MonoBehaviour
             Button stationedUnitButton = armyInActiveTown[count].GetComponent<Button>();
             stationedUnitButton.GetComponent<Image>().sprite = defaultsprite;
             GameObject swapStatonedUnit = armyInActiveTown[count];
+            stationedUnitButton.onClick.RemoveAllListeners();
             stationedUnitButton.onClick.AddListener(() => SwapArmy(swapStatonedUnit, town));
             Text text = armyInActiveTown[count].transform.GetChild(0).GetComponent<Text>();
             if (town.VisitingUnits.GetUnits()[i] != null)
             {
                 stationedUnitButton.GetComponent<Image>().sprite = libs.GetUnit(town.StationedUnits.GetUnits()[i].GetSpriteID());
                 text.text = town.StationedUnits.getUnitAmount(i) + "";
+                // TODO listener to open unitcard stationedUnitButton.onClick.AddListener(() => );
             }
             else
                 text.text = "";
@@ -1459,165 +1716,162 @@ public class GameManager : MonoBehaviour
             reactions[position.x, position.y] = new HeroMeetReact(hero, position);
     }
 
-    /// <summary>
-    /// Writes a units details on top of a unit playing card
-    /// </summary>
-    /// <param name="parent">The parent of the unit card</param>
-    /// <param name="canvas">The canvas the unit card is attached to</param>
-    /// <param name="unitBuilding">The unit building which has all the information on the unit to display</param>
-    // TODO: extend method so that this method creates teh unit card backgrounda s well
-    public void CreateUnitCard(GameObject parent, GameObject canvas, UnitBuilding unitBuilding)
+
+    public void OpenUnitPanel(GameObject parent, Unit unit, int amount)
     {
+        const int MAX_MOVES = 3;
+        // Set unitpanel unittext and unitimage
 
-        BuildingCard card = new BuildingCard(WindowTypes.UNIT_CARD, IngameObjectLibrary.Category.UI);
+        unitPanel.transform.parent = parent.transform;
+        unitPanel.GetComponent<RectTransform>().sizeDelta = new Vector3(0,0,0);
+        string topText = unit.Name;
+        // Add amount text if theres a stack
+        if (amount > 0)
+            topText += " " + amount;
+        unitPanel.transform.GetChild(0).gameObject.GetComponent<Text>().text = topText;
+        unitPanel.transform.GetChild(1).gameObject.GetComponent<Image>().sprite = libs.GetUnit(unit.GetSpriteID());
 
-        // Creates a building card game ojbect with a spriterenderer, sets its position, layer, name and parent
-        GameObject cardWindow = new GameObject();
-        cardWindow.transform.parent = parent.transform;
-        cardWindow.name = "TownCardPanel";
-        cardWindow.tag = "toDestroy";
-        cardWindow.transform.position = cardWindow.transform.parent.position;
-        SpriteRenderer cardSpriteRenderer = cardWindow.AddComponent<SpriteRenderer>();
-        cardSpriteRenderer.sprite = libs.GetUI(card.GetSpriteID());
-        cardSpriteRenderer.sortingLayerName = "TownGUI";
+        GameObject panel = unitPanel.transform.GetChild(2).gameObject;
 
-        int pos = 0;
+        GameObject parentMovePanel = panel.transform.GetChild(0).gameObject;
 
-        string unitName = unitBuilding.GetUnitName();
-        string unitAttack = unitBuilding.GetAttack() + "";
-        string unitDefense = unitBuilding.GetDefense() + "";
-        string unitMagic = unitBuilding.GetMagic() + "";
-        string unitSpeed = unitBuilding.GetSpeed() + "";
-        Ability unitAbility = unitBuilding.GetAbility();
-        Move[] moves = unitBuilding.GetMoves();
-        int unitPortrait = unitBuilding.GetImage();
+        // Set move info
+        for(int i=0; i<MAX_MOVES; i++)
+        {
+            GameObject movePanel = parentMovePanel.transform.GetChild(i).gameObject;
+            if (i < unit.Moves.Length && unit.Moves[i] != null)
+            {
+                Move move = unit.Moves[i];
+                movePanel.transform.GetChild(0).GetComponent<Text>().text = move.Name + "";
+                movePanel.transform.GetChild(1).GetComponent<Text>().text = move.MinDamage + " - " + move.MaxDamage; // TODO base minmax?
+                //movePanel.transform.GetChild(2).GetComponent<Image>().sprite = libs.getsprite corresponding move?;
+                movePanel.transform.GetChild(3).GetComponent<Text>().text = move.Description + "";
+                movePanel.SetActive(true);
+            }
+            else
+                movePanel.SetActive(false);
+        }
+
+        // Set stats info
+        GameObject statsPanel = panel.transform.GetChild(1).gameObject;
+
+        UnitStats unitStats = unit.Unitstats;
+        GameObject healthObject = statsPanel.transform.GetChild(0).gameObject;
+        //healthObject.GetComponent<Image>().sprite =  // TODO set icon
+        string statText = unitStats.BaseHealth + "";
+        if (unitStats.BonusHealth > 0)
+            statText += " (" + unitStats.Health + ")";
+        healthObject.transform.GetChild(0).gameObject.GetComponent<Text>().text = statText;
+
+        GameObject attackObject = statsPanel.transform.GetChild(1).gameObject;
+        //attackObject.GetComponent<Image>().sprite =  // TODO set icon
+        statText = unitStats.BaseAttack + "";
+        if(unitStats.BonusAttack > 0)
+            statText += " (" + unitStats.Attack + ")";
+        attackObject.transform.GetChild(0).gameObject.GetComponent<Text>().text = statText;
+
+        GameObject defenseObject = statsPanel.transform.GetChild(2).gameObject;
+        //attackObject.GetComponent<Image>().sprite =  // TODO set icon
+        statText = unitStats.BaseDefence + "";
+        if (unitStats.BonusDefence > 0)
+            statText += " (" + unitStats.Defence + ")";
+        defenseObject.transform.GetChild(0).gameObject.GetComponent<Text>().text = statText;
         
-        // Unit portrait
-        GameObject unitPortraitObject = new GameObject();
-        unitPortraitObject.name = unitName + " portrait";   
-        unitPortraitObject.transform.position = parent.transform.position;
-        unitPortraitObject.transform.localScale = canvas.transform.localScale;
-        unitPortraitObject.transform.parent = parent.transform;
-        SpriteRenderer sr = unitPortraitObject.AddComponent<SpriteRenderer>();
-        sr.sprite = libs.GetUnit(unitPortrait);
-        sr.sortingLayerName = "TownGUI";
+        GameObject speedObject = statsPanel.transform.GetChild(3).gameObject;
+        //attackObject.GetComponent<Image>().sprite =  // TODO set icon
+        statText = unitStats.BaseSpeed + "";
+        if (unitStats.BonusSpeed > 0)
+            statText += " (" + unitStats.Speed + ")";
+        speedObject.transform.GetChild(0).gameObject.GetComponent<Text>().text = statText;
 
+        GameObject initiativeObject = statsPanel.transform.GetChild(4).gameObject;
+        //attackObject.GetComponent<Image>().sprite =  // TODO set icon
+        statText = unitStats.BaseInitative + "";
+        if (unitStats.BonusInitiative > 0)
+            statText += " (" + unitStats.Initative + ")";
+        initiativeObject.transform.GetChild(0).gameObject.GetComponent<Text>().text = statText;
 
-        // Name of unit
-        GameObject unitNameObject = new GameObject();
-        SetUnitCardText(unitNameObject, parent, canvas, unitName, pos++, BIG_FONT);
+        GameObject moralObject = statsPanel.transform.GetChild(5).gameObject;
+        //attackObject.GetComponent<Image>().sprite =  // TODO set icon
+        statText = unitStats.BaseMoral + "";
+        if (unitStats.BonusMoral > 0)
+            statText += " (" + unitStats.Moral + ")";
+        moralObject.transform.GetChild(0).gameObject.GetComponent<Text>().text = statText;
 
-        // attack of unit
-        GameObject unitAttackObject = new GameObject();
-        SetUnitCardText(unitAttackObject, parent, canvas, unitAttack, pos++, BIG_FONT);
+        GameObject luckObject = statsPanel.transform.GetChild(6).gameObject;
+        //attackObject.GetComponent<Image>().sprite =  // TODO set icon
+        statText = unitStats.BaseLuck + "";
+        if (unitStats.BonusLuck > 0)
+            statText += " (" + unitStats.Luck + ")";
+        luckObject.transform.GetChild(0).gameObject.GetComponent<Text>().text = statText;
 
-        // defence of unut
-        GameObject unitDefenseObject = new GameObject();
-        SetUnitCardText(unitDefenseObject, parent, canvas, unitDefense, pos++, BIG_FONT);
+        if(unit.IsRanged)
+        {
+            Ranged rangedUnit = (Ranged)unit;
+            GameObject ammoObject = statsPanel.transform.GetChild(7).gameObject;
+            //attackObject.GetComponent<Image>().sprite =  // TODO set icon
+            statText = rangedUnit.MaxAmmo + "";
+            //if (rangedUnit.BonusAmmo > 0)
+            //    statText += " (" + unitStats.Ammo + ")"; // TODO bonus ammo?
+            ammoObject.transform.GetChild(0).gameObject.GetComponent<Text>().text = statText;
 
-        // magic of unit
-        GameObject unitMagicObject = new GameObject();
-        SetUnitCardText(unitMagicObject, parent, canvas, unitMagic, pos++, BIG_FONT);
+            GameObject rangeObject = statsPanel.transform.GetChild(8).gameObject;
+            //attackObject.GetComponent<Image>().sprite =  // TODO set icon
+            statText = unitStats.EffectiveRange + "";
+            rangeObject.transform.GetChild(0).gameObject.GetComponent<Text>().text = statText;
+        }
 
-        // speed of unit
-        GameObject unitSpeedObject = new GameObject();
-        SetUnitCardText(unitSpeedObject, parent, canvas, unitSpeed, pos++, BIG_FONT);
-
-        // ability name and description of unit
-        GameObject unitAbilityNameObject = new GameObject();
-        SetUnitCardText(unitAbilityNameObject, parent, canvas, unitAbility.Name, pos++, BIG_FONT);
-        GameObject unitAbilityDescriptionObject = new GameObject();
-        SetUnitCardText(unitAbilityDescriptionObject, parent, canvas, unitAbility.Description, pos++, SMALL_FONT);
-
-        // move 1 name, description and dmg of unit
-        string moveName = moves[0].Name;
-        string moveDesc = moves[0].Description;
-        string moveDamage = moves[0].MinDamage + "-" + moves[0].MaxDamage;
-
-        GameObject unitMove1NameObject = new GameObject();
-        SetUnitCardText(unitMove1NameObject, parent, canvas, moveName, pos++, BIG_FONT);
-        GameObject unitMove1DescriptionObject = new GameObject();
-        SetUnitCardText(unitMove1DescriptionObject, parent, canvas, moveDesc, pos++, SMALL_FONT);
-        GameObject unitMove1DamageObject = new GameObject();
-        SetUnitCardText(unitMove1DamageObject, parent, canvas, moveDamage, pos++, BIG_FONT);
-
-        // move 2 name, description and dmg of unit
-        moveName = moves[1].Name;
-        moveDesc = moves[1].Description;
-        moveDamage = moves[1].MinDamage + "-" + moves[1].MaxDamage;
-
-        GameObject unitMove2NameObject = new GameObject();
-        SetUnitCardText(unitMove2NameObject, parent, canvas, moveName, pos++, BIG_FONT);
-        GameObject unitMove2DescriptionObject = new GameObject();
-        SetUnitCardText(unitMove2DescriptionObject, parent, canvas, moveDesc, pos++, SMALL_FONT);
-        GameObject unitMove2DamageObject = new GameObject();
-        SetUnitCardText(unitMove2DamageObject, parent, canvas, moveDamage, pos++, BIG_FONT);
-
+        GameObject abilityPanel = panel.transform.GetChild(2).gameObject;
+        
+        unitPanel.SetActive(true);
     }
 
-
-    private static float UNIT_CARD_TEXT_MIDDLE = 0.11f;
-    private static float UNIT_CARD_TEXT_RIGHT = -0.9f;
-    private static float UNIT_CARD_TEXT_LEFT = 2.14f;
-    private static float UNIT_CARD_MIDDLE_LEFT = 1f;
-    /// <summary>
-    /// Text positions relative to its parent object
-    /// </summary>
-    private readonly Vector2[] unitCardTextPos =
+    public void SelectHero(Hero hero)
     {
-        // TODO: polish the positioning of text
-        new Vector2(UNIT_CARD_TEXT_MIDDLE, 2.34f), // 0, name
-        new Vector2(UNIT_CARD_TEXT_LEFT, -1.25f), // 1, attack
-        new Vector2(UNIT_CARD_TEXT_LEFT, -1.9f), // 2, defense
-        new Vector2(UNIT_CARD_TEXT_LEFT, -2.5f), // 3, magic
-        new Vector2(UNIT_CARD_TEXT_LEFT, -3.1f), // 4, speed
-        new Vector2(UNIT_CARD_TEXT_RIGHT, -3f), // 5, ability name
-        new Vector2(UNIT_CARD_TEXT_RIGHT, -3.4f), // 6, ability desc
-        new Vector2(UNIT_CARD_TEXT_RIGHT, -1f), // 7, move1 name 
-        new Vector2(UNIT_CARD_TEXT_RIGHT, -1.2f), // 8, move1 desc
-        new Vector2(UNIT_CARD_MIDDLE_LEFT, -1.25f), // 9, move1 dmg
-        new Vector2(UNIT_CARD_TEXT_RIGHT, -1.8f), // 10, move2 name 
-        new Vector2(UNIT_CARD_TEXT_RIGHT, -2f), // 11, move2 desc
-        new Vector2(UNIT_CARD_MIDDLE_LEFT, -2.2f), // 12, move2 dmg
-    };
+        if (prepareDoubleClick)
+        {
+            if (players[WhoseTurn].equals(hero.Player))
+            {
+                cameraMovement.enabled = false;
+                OpenHeroPanel(hero);
+            }
+        }
+        else
+        {
+            if(players[WhoseTurn].equals(hero.Player))
+            {
+                // Activate clicked hero
+                if(!hero.Equals(activeHero))
+                {
+                    activeHero = hero;
+                    activeHeroObject = heroLayer[activeHero.Position.x, activeHero.Position.y];
+                }
+                // Center camera and prepare to open heroPanel
+                prepareDoubleClick = true;
+                cameraMovement.centerCamera(HandyMethods.getGraphicPosForIso(hero.Position.ToVector2()));
+            }
+        }
+    }
 
-    private int BIG_FONT = 15;
-    private int SMALL_FONT = 10;
-
-    /// <summary>
-    /// Method to attach text to a unit playing card
-    /// </summary>
-    /// <param name="toAttach">The game object to attach text to</param>
-    /// <param name="parent">The parent of toAttach</param>
-    /// <param name="canvas">The canvas toAttach is a part of</param>
-    /// <param name="text">The text to write</param>
-    /// <param name="pos">The position of the text relative to its parent, taken from unitCardTextPos</param>
-    /// <param name="fontSize">The size of the font displayed</param>
-    public void SetUnitCardText(GameObject toAttach, GameObject parent, GameObject canvas, string text, int pos, int fontSize)
+    public void OpenHeroPanel(Hero hero)
     {
-        toAttach.transform.parent = parent.transform;
-        toAttach.transform.position = (Vector2) parent.transform.position + unitCardTextPos[pos];
-        toAttach.transform.localScale = canvas.transform.localScale;
-        toAttach.name = text + " text";
-        Text unitText = toAttach.AddComponent<Text>();
-        unitText.text = text;
-        unitText.font = UnityEngine.Resources.Load<Font>("Fonts/ARIAL");
-        unitText.fontSize = fontSize;
-        unitText.color = Color.black;
+        heroPanel.SetActive(true);
 
+        GameObject heroContentPanel = heroPanel.transform.GetChild(0).gameObject;
+        // Set HeroName Text
+        heroPanel.transform.GetChild(1).GetComponent<Text>().text = hero.Name;
+        // Set exit button
+        GameObject exitButtonObject = heroPanel.transform.GetChild(2).gameObject;
+        exitButtonObject.GetComponent<Button>().onClick.RemoveAllListeners();
+        exitButtonObject.GetComponent<Button>().onClick.AddListener(() => ExitHeroPanel());
 
-        // TODO: fix rect tansform for long texts
-        /*
-        // Alternativ 2
-        HorizontalLayoutGroup layout = toAttach.AddComponent<HorizontalLayoutGroup>();
-        layout.preferredWidth = 100f;
-        ContentSizeFitter fitter = toAttach.AddComponent<ContentSizeFitter>();
-        fitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
-       
+        // Set HeroDescription Text
+        heroContentPanel.transform.GetChild(0).GetComponent<Text>().text = hero.Description;
+    }
 
-        // Alternativ 1
-        unitText.alignment = TextAnchor.UpperLeft;
-        RectTransform rectTransform = toAttach.GetComponent<RectTransform>();
-        rectTransform.sizeDelta = new Vector2(200f, 200f); */
+    public void ExitHeroPanel()
+    {
+        heroPanel.SetActive(false);
+        cameraMovement.enabled = true;
     }
 }
