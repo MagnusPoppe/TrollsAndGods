@@ -605,7 +605,7 @@ public class GameManager : MonoBehaviour
             else
             {
                 unitObject.transform.GetChild(0).GetComponent<Text>().text = "";
-                unitObject.SetActive(true);
+                unitObject.SetActive(false);
             }
         }
         castleReactPanel.SetActive(true);
@@ -768,7 +768,7 @@ public class GameManager : MonoBehaviour
         // TODO players shall be able to choose their heroes
         foreach (Player p in players)
         {
-            PlaceRandomHero(p, p.Castle[0].GetPosition(), true);
+            PlaceRandomHero(p, p.Castle[0].Town, p.Castle[0].GetPosition(), true);
         }
 
         // Kaster mapmaker
@@ -1453,17 +1453,6 @@ public class GameManager : MonoBehaviour
     {
         if (heroPosClicked > -1)
         {
-            // Remove visiting hero visually when placing him in stationary
-            if (town.VisitingHero != null)
-            {
-                // Deactivate activeHero if he was active
-                if (activeHero != null && activeHero.Equals(town.VisitingHero))
-                {
-                    activeHero = null;
-                    activeHeroObject = null;
-                }
-                heroLayer[town.VisitingHero.Position.x, town.VisitingHero.Position.y].SetActive(false);
-            }
             // Open hero panel when same pos clicked
             if (heroPosClicked == pos)
             {
@@ -1480,10 +1469,43 @@ public class GameManager : MonoBehaviour
             }
             else
             {
+                // Swap heroes visually
+                if (town.VisitingHero != null)
+                {
+                    // Put visiting hero inside
+                    heroLayer[town.Position.x, town.Position.y - 1] = heroLayer[town.VisitingHero.Position.x, town.VisitingHero.Position.y].gameObject;
+                    heroLayer[town.Position.x, town.Position.y - 1].transform.position = HandyMethods.getGraphicPosForIso(new Point(town.Position.x, town.Position.y + 1));
+                    heroLayer[town.Position.x, town.Position.y - 1].SetActive(false);
+                    heroLayer[town.Position.x, town.Position.y] = null;
+                    town.VisitingHero.IsInTown = true;
+
+                    // Deactivate activeHero if he was active
+                    if (activeHero != null && activeHero.Equals(town.VisitingHero))
+                    {
+                        activeHero = null;
+                        activeHeroObject = null;
+                        RemoveMarkers(pathObjects);
+                    }
+                }
+                if (town.StationedHero != null)
+                {
+                    // Put stationed hero outside
+                    heroLayer[town.Position.x, town.Position.y - 1].SetActive(true);
+                    heroLayer[town.Position.x, town.Position.y - 1].transform.position = HandyMethods.getGraphicPosForIso(new Point(town.Position.x, town.Position.y));
+                    heroLayer[town.Position.x, town.Position.y] = heroLayer[town.Position.x, town.Position.y - 1];
+                    heroLayer[town.Position.x, town.Position.y - 1] = null;
+                    town.StationedHero.IsInTown = false;
+                }
+                // Swap heroes logically
                 town.swapHeroes();
-                // TODO In the map, hide stationaryhero, show visitinghero
 
-
+                // Update reactions
+                if (town.VisitingHero != null)
+                    reactions[town.Position.x, town.Position.y].PreReaction = new HeroMeetReact(town.VisitingHero, town.Position);
+                else
+                    reactions[town.Position.x, town.Position.y].PreReaction = null;
+                
+                // Redraw visuals
                 ReDrawArmyInTown(town);
                 ResetUnitTreeSwap();
             }
@@ -1871,7 +1893,7 @@ public class GameManager : MonoBehaviour
     /// players first castle as position
     /// </summary>
     /// <param name="player">The player that gets the new hero</param>
-    public void PlaceRandomHero(Player player, Point position, bool startOfTheGame)
+    public void PlaceRandomHero(Player player, Town town, Point position, bool startOfTheGame)
     {
         bool placed = false;
         while (!placed)
@@ -1879,7 +1901,7 @@ public class GameManager : MonoBehaviour
             int random = UnityEngine.Random.Range(0, heroes.Length);
             if (!heroes[random].Alive)
             {
-                PlaceHero(player, heroes[random], position, startOfTheGame);
+                PlaceHero(player, town, heroes[random], position, startOfTheGame);
                 placed = true;
             }
         }
@@ -1891,32 +1913,58 @@ public class GameManager : MonoBehaviour
     /// <param name="player">Player that gets the hero</param>
     /// <param name="hero">The hero to place</param>
     /// <param name="position">Where to place him</param>
-    public void PlaceHero(Player player, Hero hero, Point position, bool startOfTheGame)
+    public void PlaceHero(Player player, Town town, Hero hero, Point position, bool startOfTheGame)
     {
         // Create the visual object
         GameObject heroObject = new GameObject();
         heroObject.AddComponent<SpriteRenderer>().sprite = libs.GetHero(hero.GetSpriteID());
         // Add the visual object to the game
         heroObject.name = "Heroes";
-        Vector2 a = getIsometricPlacement(position.x, position.y, position.y);
-        Point isometricPosition = new Point((int)a.x, (int)a.y);
-        heroLayer[position.x, position.y] = placeSprite(position.x, position.y, isometricPosition.y, libs.GetHero(hero.GetSpriteID()), heroObject); // TODO .setActive(false) if stationedHero
-        // If start of the game, add the hero to a castle if the position corresponds with a castle of the players ownership
-        if (startOfTheGame)
+
+        // If you're placing the hero in a town with occupied visiting spot, shift the position one step
+        if (town != null && town.VisitingHero != null)
         {
-            for (int i = 0; i < player.Castle.Count; i++)
-                if (player.Castle[i].GetPosition().Equals(position) && player.Castle[i].Town.VisitingHero == null)
-                    player.Castle[i].Town.VisitingHero = hero;
+            position = new Point(position.x, position.y - 1);
         }
-        // Add hero to corresponding player
-        player.addHero(hero, position);
-        // Flip canwalk
-        canWalk[position.x, position.y] = 2;
-        // if there's already a castle at the position, place the heroreact under it, else place it normally in reaction tab
-        if (reactions[position.x, position.y] != null)
-            reactions[position.x, position.y].PreReaction = new HeroMeetReact(hero, position);
+
+        // Place visually
+        Vector2 pos = getIsometricPlacement(position.x, position.y, position.y);
+        Point isometricPosition = new Point((int)pos.x, (int)pos.y);
+        heroLayer[position.x, position.y] = placeSprite(position.x, position.y, isometricPosition.y, libs.GetHero(hero.GetSpriteID()), heroObject);
+        
+
+        // If there's a town, place the hero in it
+        if (town != null)
+        {
+            // Place him either as visitingHero or stationedHero
+            if (town.VisitingHero == null)
+            {
+                // Place logically
+                town.VisitingHero = hero;
+                town.VisitingHero.Units.Merge(town.VisitingUnits);
+                town.VisitingUnits = town.VisitingHero.Units;
+                // Place prereact
+                reactions[position.x, position.y].PreReaction = new HeroMeetReact(hero, position);
+            }
+            else if (town.StationedHero == null)
+            {
+                // Place logically
+                town.StationedHero = hero;
+                town.StationedHero.Units.Merge(town.StationedUnits);
+                town.StationedUnits = town.StationedHero.Units;
+
+                // Hide visually
+                heroLayer[position.x, position.y].SetActive(false);
+                town.StationedHero.IsInTown = true;
+            }
+        }
         else
             reactions[position.x, position.y] = new HeroMeetReact(hero, position);
+        // Flip canwalk
+        canWalk[position.x, position.y] = 2;
+
+        // Add hero to corresponding player
+        player.addHero(hero, position);
     }
 
     /// <summary>
@@ -2020,8 +2068,10 @@ public class GameManager : MonoBehaviour
     {
         if (deleteToggle.isOn)
         {
+            // Update the unittree
             unitTree1.GetUnits()[pos] = null;
             unitTree1.SetUnitAmount(pos, 0);
+            // Exit panel and redraw visuals
             ExitPanel(unitActionPanel);
             if (town != null)
                 ReDrawArmyInTown(town);
@@ -2045,8 +2095,10 @@ public class GameManager : MonoBehaviour
         unit = unitTree1.GetUnits()[pos1];
         else if (unitTree2.GetUnits()[pos2] != null)
             unit = unitTree2.GetUnits()[pos2];
+        // Update the unittree's
         unitTree1.SetUnitAmount(unit, pos1, leftSliderValue);
         unitTree2.SetUnitAmount(unit, pos2, rightSliderValue);
+        // Exit panel and redraw visuals
         ExitPanel(unitActionPanel);
         if(town != null)
             ReDrawArmyInTown(town);
@@ -2247,15 +2299,14 @@ public class GameManager : MonoBehaviour
         GameObject heroContentPanel = panel.transform.GetChild(0).gameObject;
         
         GameObject[] armyObjects = new GameObject[UnitTree.TREESIZE];
-        GameObject unitPanel = heroContentPanel.transform.GetChild(1).gameObject;
+        GameObject heroArmyPanel = heroContentPanel.transform.GetChild(1).gameObject;
 
         // Draws units with listener for swapping
         for (int i = 0; i < UnitTree.TREESIZE; i++)
         {
-            armyObjects[i] = unitPanel.transform.GetChild(i).gameObject;
+            armyObjects[i] = heroArmyPanel.transform.GetChild(i).gameObject;
             Button unitButton = armyObjects[i].GetComponent<Button>();
             unitButton.GetComponent<Image>().sprite = defaultsprite;
-            //GameObject swapVisitingUnit = armyObjects[i];
             unitButton.onClick.RemoveAllListeners();
             int pos = i;
             unitButton.onClick.AddListener(() => SwapArmy(hero, pos));
@@ -2266,7 +2317,9 @@ public class GameManager : MonoBehaviour
                 text.text = hero.Units.getUnitAmount(i) + "";
             }
             else
+            {
                 text.text = "";
+            }
         }
 
         // Set HeroName Text
