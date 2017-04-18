@@ -45,6 +45,23 @@ public class GameManager : MonoBehaviour
     int width, height;
     static public IngameObjectLibrary libs;
     AStarAlgo aStar;
+
+    public Reaction[,] Reactions
+    {
+        get { return reactions; }
+    }
+
+    public int[,] CanWalk
+    {
+        get { return canWalk; }
+    }
+
+    public AStarAlgo AStar
+    {
+        get { return aStar; }
+    }
+
+
     GameObject[,] tiles;
     public const float XRESOLUTION = 2598;
     public const float YRESOLUTION = 1299;
