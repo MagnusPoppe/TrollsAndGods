@@ -17,6 +17,12 @@ public class UnitTree
         unitAmount = new int[TREESIZE];
     }
 
+    public UnitTree(UnitTree unitTree)
+    {
+        this.units = unitTree.units;
+        this.unitAmount = unitTree.unitAmount;
+    }
+
     public UnitTree(Unit[] units)
     {
         this.units = units;
@@ -30,7 +36,6 @@ public class UnitTree
     public void SetUnitAmount(int pos, int amount)
     {
         unitAmount[pos] = amount;
-        /*
         // Remove unit if it's reduced to 0
         if (amount == 0)
             units[pos] = null;
@@ -39,7 +44,25 @@ public class UnitTree
         {
             unitAmount[pos] = amount;
         }
-        */
+    }
+
+
+    public void SetUnitAmount(Unit Unit, int pos, int amount)
+    {
+        unitAmount[pos] = amount;
+        // Remove unit if it's reduced to 0
+        if (amount == 0)
+        {
+            units[pos] = null;
+            unitAmount[pos] = amount;
+        }
+        // Else set stackamount to input amount
+        else
+        {
+            unitAmount[pos] = amount;
+            if(units[pos] == null)
+                units[pos] = Unit;
+        }
     }
 
     /// <summary>
@@ -61,13 +84,33 @@ public class UnitTree
     /// <returns></returns>
     public bool CanMerge(UnitTree units2)
     {
-        if (this == null || units2 == null)
+        if (units != null || units2 == null || units2.units != null)
             return true;
 
-        UnitTree tmp1 = this;
-        UnitTree tmp2 = units2;
         // Check if merge can be done
+        int count = 0;
+        for(int i=0; i<TREESIZE; i++)
+        {
+            if (units[i] != null)
+            {
+                count++;
+                for(int j=0; j<TREESIZE; j++)
+                {
+                    if (units[i] != null && units[i].equals(units2.units[j]))
+                        count--;
+                }
+            }
+            if (units2.units[i] != null)
+                count++;
+        }
+        if (count <= TREESIZE)
+            return true;
+        return false;
 
+        /*
+        
+        UnitTree tmp1 = new UnitTree(this);
+        UnitTree tmp2 = new UnitTree(units2);
         // Perform testMerge of tmp2 into tmp1
         tmp1.Merge(tmp2);
 
@@ -77,6 +120,7 @@ public class UnitTree
             return true;
         }
         return false;
+        */
     }
 
     /// <summary>

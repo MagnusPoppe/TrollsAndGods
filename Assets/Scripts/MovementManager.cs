@@ -140,6 +140,7 @@ public class MovementManager
                 // React to the reaction at the last step:
                 react(nextStep);
             }
+            UpdateReact(nextStep);
         }
 
         // Return logial position to graphics or event
@@ -222,7 +223,17 @@ public class MovementManager
         {
             curReaction = reactions[x, y];
         }
+    }
 
+    /// <summary>
+    /// Called upon ended walk, flips the reactions in fromposition and toposition
+    /// </summary>
+    /// <param name="end">end position</param>
+    public void UpdateReact(Point end)
+    {
+        int x = end.x;
+        int y = end.y;
+        Point start = startPosition;
         // If destination has reaction, set prereact
         if (reactions[activeHero.Position.x, activeHero.Position.y] != null)
         {
@@ -242,13 +253,13 @@ public class MovementManager
             // if you came from a prereact
             if (!reactions[start.x, start.y].GetType().Equals(typeof(HeroMeetReact)))
             {
-                reactions[x,y] = reactions[start.x, start.y].PreReaction;
+                reactions[x, y] = reactions[start.x, start.y].PreReaction;
             }
             else
             {
                 reactions[x, y] = reactions[start.x, start.y];
             }
-            canWalk[x,y] = MapMaker.TRIGGER;
+            canWalk[x, y] = MapMaker.TRIGGER;
         }
 
         // If from position didn't have prereact, flip canwalk and remove

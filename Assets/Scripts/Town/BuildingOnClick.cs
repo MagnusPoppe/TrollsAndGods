@@ -594,25 +594,11 @@ namespace TownView
                     // If theres stationed and visitingunits there, check if you can merge with the existing troops
                     if ((town.StationedUnits == null || hero.Units.CanMerge(town.StationedUnits)) || (town.VisitingUnits == null || hero.Units.CanMerge(town.VisitingUnits)))
                     {
-
-                        if (town.VisitingHero == null)
-                        {
-                            town.VisitingHero = hero;
-                            town.VisitingHero.Units.Merge(town.VisitingUnits);
-                            town.VisitingUnits = town.VisitingHero.Units;
-                        }
-                        else if (town.StationedHero == null)
-                        {
-                            town.StationedHero = hero;
-                            town.StationedHero.Units.Merge(town.StationedUnits);
-                            town.StationedUnits = town.StationedHero.Units;
-                        }
-
                         Player.Wallet.Pay(hero.Cost);
                         Debug.Log("Bought the hero" + hero.Name);
+                    
+                        gm.PlaceHero(Player, town, hero, town.Position, false);
 
-                        // TODO PLACE HERO LOGICALLY AND VISUALLY
-                        gm.PlaceHero(Player, hero, town.Position);
                         DestroyObjects();
                         gm.ReDrawArmyInTown(town);
                         gm.updateResourceText();
