@@ -3,6 +3,10 @@ using UnityEngine;
 
 namespace Multiplayer
 {
+    /// <summary>
+    /// Class to execute movement logically. This loads a movement from json and
+    /// executes it accordingly.
+    /// </summary>
     public class PlayerMoved : GameEvent
     {
         private const int ID_FROM = 0;
@@ -26,10 +30,17 @@ namespace Multiplayer
             // Preparing movement:
             MovementManager movement = new MovementManager(gm.Reactions, gm.CanWalk, gm.AStar, gm);
             movement.PrepareMovement(to, hero);
+            Point step = null;
 
             // Actually moving:
             while (movement.HasNextStep())
-                movement.NextStep();
+                step = movement.NextStep();
+
+            // Updating the graphics accordingly:
+            GameObject graphics = gm.heroLayer[movement.StartPosition.x, movement.StartPosition.y];
+            gm.heroLayer[movement.StartPosition.x, movement.StartPosition.y] = null;
+            gm.heroLayer[step.x, step.y] = graphics;
+            graphics.transform.position = HandyMethods.getGraphicPosForIso(step.ToVector2());
         }
 
         public override void unpackJSON( String JSON )

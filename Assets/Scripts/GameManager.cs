@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System;
 using TownView;
 using MapGenerator;
+using Multiplayer;
 using OverworldObjects;
 using UI;
 using Units;
@@ -49,6 +50,11 @@ public class GameManager : MonoBehaviour
     public Reaction[,] Reactions
     {
         get { return reactions; }
+    }
+
+    public Player[] Players
+    {
+        get { return players; }
     }
 
     public int[,] CanWalk
@@ -260,6 +266,12 @@ public class GameManager : MonoBehaviour
         pathYes = UnityEngine.Resources.Load<Sprite>("Sprites/Pointers/pointerPathYes");
         pathNo = UnityEngine.Resources.Load<Sprite>("Sprites/Pointers/pointerPathNo");
         pathObjects = new List<GameObject>();
+
+        // Testing event logging system:
+        Update();
+        Log log = new Log(this);
+        log.DownloadEvents();
+        log.ExectuteAll();
     }
 
 	// Update is called once per frame
