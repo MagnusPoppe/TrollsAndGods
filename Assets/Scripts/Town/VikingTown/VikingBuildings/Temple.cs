@@ -9,9 +9,9 @@
         // Required values for building:
         const string name = "Temple";
         const string description = "Eat, Pray, Program";
-        static bool[] requirements = new bool[] { false, false, false, false, false, false, false, false, false, false };
+        static bool[] requirements = new bool[] { false, false, false, false, false, false, false, false, false, false, false, false };
         const int LOCAL_SPRITEID = 3;
-        const int LOCAL_SPRITEID_BLUEPRINT = 13;
+        const int LOCAL_SPRITEID_BLUEPRINT = 15;
 
 
         // Resources cost: 

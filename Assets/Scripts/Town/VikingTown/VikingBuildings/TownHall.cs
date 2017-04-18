@@ -9,9 +9,9 @@
         // Required values for building:
         const string name = "Town Hall";
         const string description = "Build buildings here";
-        static bool[] requirements = new bool[] { false, false, false, false, false, false, false, false, false, false };
+        static bool[] requirements = new bool[] { false, false, false, false, false, false, false, false, false, false, false, false };
         const int LOCAL_SPRITEID = 1;
-        const int LOCAL_SPRITEID_BLUEPRINT = 11;
+        const int LOCAL_SPRITEID_BLUEPRINT = 13;
 
         // Resources cost: 
         const int GOLD_COST = 1500;

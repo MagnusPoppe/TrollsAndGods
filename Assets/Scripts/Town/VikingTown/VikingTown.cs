@@ -25,7 +25,7 @@
         /// <returns>Array of buildings for the building tree.</returns>
         public Building[] InitializeTownBuildings()
         {
-            Building[] buildings = new Building[10];
+            Building[] buildings = new Building[12];
 
             buildings[0] = new TownHall();
             buildings[1] = new Pallisade();
@@ -36,7 +36,9 @@
             buildings[6] = new BeastRidersGuild();
             buildings[7] = new CernianCamp();
             buildings[8] = new TrainingCamp();
-            buildings[9] = new Workshop();
+            buildings[9] = new MageTower();
+            buildings[10] = new WarriorsCamp();
+            buildings[11] = new Workshop();
             return buildings;
         }
 

@@ -8,14 +8,14 @@ namespace TownView
     /// Placeholder class for a spesific building.
     /// Belongs to the "Unknown Town".
     /// </summary>
-    public class Workshop : Building
+    public class WarriorsCamp : Building
     {
         // Required values for building:
-        const string name = "Workshop";
-        const string description = "Buy buildings at great prices!!";
-        static bool[] requirements = new bool[] { false, false, false, false, false, false, false, false, false, false, false, false };
-        const int LOCAL_SPRITEID = 12;
-        const int LOCAL_SPRITEID_BLUEPRINT = -1;
+        const string name = "Warrior's Camp";
+        const string description = "A camp. A camp for warriors!";
+        static bool[] requirements = new bool[] { true, true, false, false, false, false, false, false, false, false, false, false };
+        const int LOCAL_SPRITEID = 11;
+        const int LOCAL_SPRITEID_BLUEPRINT = 23;
 
         // Resources cost: 
         const int GOLD_COST = 1000;
@@ -27,7 +27,7 @@ namespace TownView
 
 
         // This needs no indata since it knows its values.
-        public Workshop() : base(name, description, requirements, new Cost(GOLD_COST, WOOD_COST, ORE_COST, CRYSTAL_COST, GEM_COST), LOCAL_SPRITEID, LOCAL_SPRITEID_BLUEPRINT)
+        public WarriorsCamp() : base(name, description, requirements, new Cost(GOLD_COST, WOOD_COST, ORE_COST, CRYSTAL_COST, GEM_COST), LOCAL_SPRITEID, LOCAL_SPRITEID_BLUEPRINT)
         {
         }
 
@@ -37,7 +37,7 @@ namespace TownView
         /// <returns>Integer for which window type to display in the game</returns>
         protected override int GetUIType()
         {
-            return UI.WindowTypes.TOWN_HALL_CARD;
+            return UI.WindowTypes.DWELLING_CARD;
         }
     }
 }

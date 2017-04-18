@@ -217,7 +217,6 @@ namespace TownView
                 GameObject buildingPanel = townHallContentPanel.transform.GetChild(i).gameObject;
                 // Building imagebutton with listener
                 GameObject buildingObject = buildingPanel.transform.GetChild(0).gameObject;
-
                 Building selectedBuilding = buildingArray[i];
                 // Set building image
                 buildingObject.GetComponent<Image>().sprite = libs.GetTown(selectedBuilding.GetSpriteBlueprintID() + offset);

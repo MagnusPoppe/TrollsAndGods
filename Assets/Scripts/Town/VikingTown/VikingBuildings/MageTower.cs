@@ -8,14 +8,14 @@ namespace TownView
     /// Placeholder class for a spesific building.
     /// Belongs to the "Unknown Town".
     /// </summary>
-    public class Workshop : Building
+    public class MageTower : Building
     {
         // Required values for building:
-        const string name = "Workshop";
-        const string description = "Buy buildings at great prices!!";
-        static bool[] requirements = new bool[] { false, false, false, false, false, false, false, false, false, false, false, false };
-        const int LOCAL_SPRITEID = 12;
-        const int LOCAL_SPRITEID_BLUEPRINT = -1;
+        const string name = "Mage Tower";
+        const string description = "Automagisk!";
+        static bool[] requirements = new bool[] { true, false, false, false, false, false, false, false, false, false, false, false };
+        const int LOCAL_SPRITEID = 10;
+        const int LOCAL_SPRITEID_BLUEPRINT = 22;
 
         // Resources cost: 
         const int GOLD_COST = 1000;
@@ -27,7 +27,7 @@ namespace TownView
 
 
         // This needs no indata since it knows its values.
-        public Workshop() : base(name, description, requirements, new Cost(GOLD_COST, WOOD_COST, ORE_COST, CRYSTAL_COST, GEM_COST), LOCAL_SPRITEID, LOCAL_SPRITEID_BLUEPRINT)
+        public MageTower() : base(name, description, requirements, new Cost(GOLD_COST, WOOD_COST, ORE_COST, CRYSTAL_COST, GEM_COST), LOCAL_SPRITEID, LOCAL_SPRITEID_BLUEPRINT)
         {
         }
 

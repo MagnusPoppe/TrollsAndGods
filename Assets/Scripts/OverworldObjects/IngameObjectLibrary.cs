@@ -299,7 +299,7 @@ public class IngameObjectLibrary
     // towns-variabler. towns[] holder alle sprites, TOWNS_START er global startverdi for towns sprites, TOWNS_COUNT er antall towns sprites
     Sprite[] towns;
     public const int TOWNS_START = CASTLES_START + CASTLES_COUNT;
-    public const int TOWNS_COUNT = 41;
+    public const int TOWNS_COUNT = 46;
 
     /// <summary>
     /// Initialiserer et array for å holde på alle towns sprites
@@ -322,38 +322,46 @@ public class IngameObjectLibrary
         sprites[7] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Beast Riders Guild");
         sprites[8] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Cernian Camp");
         sprites[9] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Training Camp");
-        sprites[10] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Workshop");
+        sprites[10] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Mage Tower");
+        sprites[11] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Warriors Camp");
+        sprites[12] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Workshop");
 
         // viking town can build blueprint sprites
-        sprites[11] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Town Hall");
-        sprites[12] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Pallisade");
-        sprites[13] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Temple");
-        sprites[14] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Dragon Tower");
-        sprites[15] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Troll Cave");
-        sprites[16] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Marketplace");
-        sprites[17] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Beast Riders Guild");
-        sprites[18] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Cernian Camp");
-        sprites[19] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Training Camp");
+        sprites[13] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Town Hall");
+        sprites[14] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Pallisade");
+        sprites[15] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Temple");
+        sprites[16] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Dragon Tower");
+        sprites[17] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Troll Cave");
+        sprites[18] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Marketplace");
+        sprites[19] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Beast Riders Guild");
+        sprites[20] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Cernian Camp");
+        sprites[21] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Training Camp");
+        sprites[22] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Mage Tower");
+        sprites[23] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Warriors Camp");
         // viking town has built sprites
-        sprites[20] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Town Hall HasBought");
-        sprites[21] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Pallisade HasBought");
-        sprites[22] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Temple HasBought");
-        sprites[23] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Dragon Tower HasBought");
-        sprites[24] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Troll Cave HasBought");
-        sprites[25] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Marketplace HasBought");
-        sprites[26] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Beast Riders Guild HasBought");
-        sprites[27] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Cernian Camp HasBought");
-        sprites[28] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Training Camp HasBought");
+        sprites[24] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Town Hall HasBought");
+        sprites[25] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Pallisade HasBought");
+        sprites[26] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Temple HasBought");
+        sprites[27] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Dragon Tower HasBought");
+        sprites[28] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Troll Cave HasBought");
+        sprites[29] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Marketplace HasBought");
+        sprites[30] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Beast Riders Guild HasBought");
+        sprites[31] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Cernian Camp HasBought");
+        sprites[32] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Training Camp HasBought");
+        sprites[33] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Mage Tower HasBought");
+        sprites[34] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Warriors Camp HasBought");
         // viking town can't build sprites
-        sprites[29] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Town Hall NoBuy");
-        sprites[30] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Pallisade NoBuy");
-        sprites[31] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Temple NoBuy");
-        sprites[32] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Dragon Tower NoBuy");
-        sprites[33] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Troll Cave NoBuy");
-        sprites[34] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Marketplace NoBuy");
-        sprites[35] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Beast Riders Guild NoBuy");
-        sprites[36] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Cernian Camp NoBuy");
-        sprites[37] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Training Camp NoBuy");
+        sprites[35] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Town Hall NoBuy");
+        sprites[36] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Pallisade NoBuy");
+        sprites[37] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Temple NoBuy");
+        sprites[39] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Dragon Tower NoBuy");
+        sprites[39] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Troll Cave NoBuy");
+        sprites[40] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Marketplace NoBuy");
+        sprites[41] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Beast Riders Guild NoBuy");
+        sprites[42] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Cernian Camp NoBuy");
+        sprites[43] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Training Camp NoBuy");
+        sprites[44] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Mage Tower NoBuy");
+        sprites[45] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Warriors Camp NoBuy");
 
 
         return sprites;
