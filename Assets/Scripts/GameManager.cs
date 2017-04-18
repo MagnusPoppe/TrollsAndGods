@@ -123,6 +123,9 @@ public class GameManager : MonoBehaviour
     public GameObject parentToMarkers;
     public GameObject activeHeroObject;
 
+    private Vector2 nextGraphicalStep;
+    private Point nextLogicalStep;
+
     public Sprite pathDestYes;
     public Sprite pathDestNo;
     public Sprite pathYes;
@@ -131,7 +134,6 @@ public class GameManager : MonoBehaviour
 
     public static bool ANIMATION_RUNNING;
     private bool pathMarked;
-
 
     // Use this for initialization
     void Start ()
@@ -243,10 +245,6 @@ public class GameManager : MonoBehaviour
         pathObjects = new List<GameObject>();
     }
 
-    // Values used in movement:
-    private Vector2 nextGraphicalStep;
-    private Point nextLogicalStep;
-
 	// Update is called once per frame
     void Update()
     {
@@ -257,56 +255,72 @@ public class GameManager : MonoBehaviour
             // Perform animation if the animation is currently running:
             if (ANIMATION_RUNNING)
             {
-                Vector2 heroPos = activeHeroObject.transform.position;
-
-                // TODO::: CONTINUE HERE! ANIMATION NOT STOPPING FOR EVERY STEP. NEEDS BETTER EDGECASE!
-                // Edgecase:
-                if (Vector2.Distance(heroPos, nextGraphicalStep) < 0.1f)
-                {
-                    // Stopping animation:
-                    ANIMATION_RUNNING = false;
-
-                    // Removing the previous pathmarker sprite:
-                    Destroy(pathObjects[movement.stepNumber]);
-                }
-                else
-                {
-                    // Animating the movement:
-                    activeHeroObject.transform.position = AnimateMovementTo(heroPos, nextGraphicalStep);
-
-                    // Camera should be following the player when moving:
-                    cameraMovement.centerCamera(heroPos);
-                }
+                AnimateToNextPosition();
             }
             // Taking a new step if there are more steps to take:
             else if ( movement.Activated )
             {
-                if (movement.HasNextStep())
-                {
-                    nextLogicalStep = movement.NextStep();
-                    nextGraphicalStep = HandyMethods.getGraphicPosForIso(nextLogicalStep);
-                    ANIMATION_RUNNING = true;
-
-                    if (movement.IsLastStep(movement.stepNumber+1))
-                    {
-                        // Clear the previous table reference to current gameobject
-                        heroLayer[movement.StartPosition.x, movement.StartPosition.y] = null;
-                        // Also move the gameobject's position in the heroLayer table
-                        heroLayer[activeHero.Position.x, activeHero.Position.y] = activeHeroObject;
-                    }
-                }
-                else
-                {
-                    movement.Activated = false;
-                    activeHero.Position = nextLogicalStep;
-                    pathMarked = false;
-                }
+                PerformNextStep();
             }
             //Nothing is clicked and hero is not walking, listener for change mouse hover
             else
             {
                 ListenToMouseHover();
             }
+        }
+    }
+
+    /// <summary>
+    /// Performs the next step if the movement is active. 
+    /// </summary>
+    private void PerformNextStep()
+    {
+        if (movement.HasNextStep())
+        {
+            nextLogicalStep = movement.NextStep();
+            nextGraphicalStep = HandyMethods.getGraphicPosForIso(nextLogicalStep);
+            ANIMATION_RUNNING = true;
+
+            if (movement.IsLastStep(movement.stepNumber+1))
+            {
+                // Clear the previous table reference to current gameobject
+                heroLayer[movement.StartPosition.x, movement.StartPosition.y] = null;
+                // Also move the gameobject's position in the heroLayer table
+                heroLayer[activeHero.Position.x, activeHero.Position.y] = activeHeroObject;
+            }
+        }
+        else
+        {
+            movement.Activated = false;
+            activeHero.Position = nextLogicalStep;
+            pathMarked = false;
+        }
+    }
+
+    /// <summary>
+    /// Runs the animation from one step to the next, frame by frame.
+    /// </summary>
+    private void AnimateToNextPosition()
+    {
+        Vector2 heroPos = activeHeroObject.transform.position;
+
+        // TODO::: CONTINUE HERE! ANIMATION NOT STOPPING FOR EVERY STEP. NEEDS BETTER EDGECASE!
+        // Edgecase:
+        if (Vector2.Distance(heroPos, nextGraphicalStep) < 0.1f)
+        {
+            // Stopping animation:
+            ANIMATION_RUNNING = false;
+
+            // Removing the previous pathmarker sprite:
+            Destroy(pathObjects[movement.stepNumber]);
+        }
+        else
+        {
+            // Animating the movement:
+            activeHeroObject.transform.position = AnimateMovementTo(heroPos, nextGraphicalStep);
+
+            // Camera should be following the player when moving:
+            cameraMovement.centerCamera(heroPos);
         }
     }
 

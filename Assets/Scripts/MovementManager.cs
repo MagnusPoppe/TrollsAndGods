@@ -237,28 +237,21 @@ public class MovementManager
         // If destination has reaction, set prereact
         if (reactions[activeHero.Position.x, activeHero.Position.y] != null)
         {
-
             // if you came from a prereact
             if (!reactions[start.x, start.y].GetType().Equals(typeof(HeroMeetReact)))
-            {
                 reactions[x, y].PreReaction = reactions[start.x, start.y].PreReaction;
-            }
             else
                 reactions[x, y].PreReaction = reactions[start.x, start.y];
-
         }
         // Else, set destination reaction to the heroreaction, and make the tile a triggertile
         else
         {
             // if you came from a prereact
             if (!reactions[start.x, start.y].GetType().Equals(typeof(HeroMeetReact)))
-            {
                 reactions[x, y] = reactions[start.x, start.y].PreReaction;
-            }
             else
-            {
                 reactions[x, y] = reactions[start.x, start.y];
-            }
+
             canWalk[x, y] = MapMaker.TRIGGER;
         }
 
