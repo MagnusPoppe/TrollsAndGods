@@ -271,7 +271,7 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Performs the next step if the movement is active. 
+    /// Performs the next step if the movement is active.
     /// </summary>
     private void PerformNextStep()
     {
@@ -280,20 +280,17 @@ public class GameManager : MonoBehaviour
             nextLogicalStep = movement.NextStep();
             nextGraphicalStep = HandyMethods.getGraphicPosForIso(nextLogicalStep);
             ANIMATION_RUNNING = true;
-
-            if (movement.IsLastStep(movement.stepNumber+1))
-            {
-                // Clear the previous table reference to current gameobject
-                heroLayer[movement.StartPosition.x, movement.StartPosition.y] = null;
-                // Also move the gameobject's position in the heroLayer table
-                heroLayer[activeHero.Position.x, activeHero.Position.y] = activeHeroObject;
-            }
         }
         else
         {
             movement.Activated = false;
-            activeHero.Position = nextLogicalStep;
             pathMarked = false;
+
+            // Clear the previous table reference to current gameobject
+            heroLayer[movement.StartPosition.x, movement.StartPosition.y] = null;
+            // Also move the gameobject's position in the heroLayer table
+            heroLayer[activeHero.Position.x, activeHero.Position.y] = activeHeroObject;
+            activeHero.Position = nextLogicalStep;
         }
     }
 
@@ -312,7 +309,7 @@ public class GameManager : MonoBehaviour
             ANIMATION_RUNNING = false;
 
             // Removing the previous pathmarker sprite:
-            Destroy(pathObjects[movement.stepNumber]);
+            Destroy(pathObjects[movement.stepNumber-1]);
         }
         else
         {

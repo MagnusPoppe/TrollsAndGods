@@ -33,6 +33,7 @@ public class MovementManager
     public int stepNumber;
     public int totalTilesToBeWalked;
     private GameManager gameManager;
+    private Point previousStep;
 
 
     // -------- FLAGS -------- \\
@@ -78,7 +79,6 @@ public class MovementManager
     public void Deactivate()
     {
         canceledMovement = true;
-        activated = false;
     }
 
     /// <summary>
@@ -91,7 +91,7 @@ public class MovementManager
     public void PrepareMovement( Point target, Hero hero )
     {
         // Resetting variables:
-        stepNumber = -1;
+        stepNumber = 0;
 
         // Setting the active hero:
         this.activeHero = hero;
@@ -110,11 +110,12 @@ public class MovementManager
     /// <returns>false if there is no more steps to take. true otherwise.</returns>
     public bool HasNextStep()
     {
-        if (canceledMovement)
+        if (canceledMovement) // Cannot happen at first step.
         {
+            WalkFinished(previousStep);
             return false;
         }
-        return stepNumber != totalTilesToBeWalked-1;
+        return stepNumber != totalTilesToBeWalked;
     }
 
     /// <summary> Executes the actual step logically. </summary>
@@ -123,25 +124,19 @@ public class MovementManager
     {
         // Getting next step from the path:
         Point nextStep = new Point(activeHero.Path[0]);
+
+        // When this step is the last step or the hero should stop before the next step is taken:
+        if (IsLastStep(stepNumber+1) || StopForPreReact(nextStep))
+        {
+            WalkFinished(nextStep);
+        }
+
         activeHero.Path.RemoveAt(0);
         stepNumber++;
         activeHero.CurMovementSpeed--;
 
-        // Checking if prereact TODO: FIND OUT WHY?:
-        bool preReact = (StopForPreReact(nextStep));
-
-        // When this step is the last step:
-        if (IsLastStep(stepNumber+1))
-        {
-            activeHero.Position = nextStep;
-            // If there is a trigger at the stop position:
-            if (canWalk[nextStep.x, nextStep.y] == MapMaker.TRIGGER)
-            {
-                // React to the reaction at the last step:
-                react(nextStep);
-            }
-            UpdateReact(nextStep);
-        }
+        // Saving the last step taken:
+        previousStep = nextStep;
 
         // Return logial position to graphics or event
         return nextStep;
@@ -234,6 +229,7 @@ public class MovementManager
         int x = end.x;
         int y = end.y;
         Point start = startPosition;
+
         // If destination has reaction, set prereact
         if (reactions[activeHero.Position.x, activeHero.Position.y] != null)
         {
@@ -266,14 +262,29 @@ public class MovementManager
         {
             reactions[start.x, start.y].PreReaction = null;
         }
+
+        // Remove hero from town if he walked out of it
+        if (reactions[start.x, start.y].GetType().Equals(typeof(CastleReact)))
+        {
+            CastleReact cr = (CastleReact)reactions[start.x, start.y];
+            cr.Castle.Town.VisitingHero = null;
+        }
     }
 
     /// <summary>
-    ///
+    /// Finishes the walking.
     /// </summary>
-    public void WalkFinished()
+    public void WalkFinished( Point lastStep )
     {
         // TODO: IMPLEMENT LOGGING IF NOT EVENT.
+        activeHero.Position = lastStep;
+        // If there is a trigger at the stop position:
+        if (canWalk[lastStep.x, lastStep.y] == MapMaker.TRIGGER)
+        {
+            // React to the reaction at the last step:
+            react(lastStep);
+        }
+        UpdateReact(lastStep);
     }
 
     public bool IsLastStep(int stepNumber)
