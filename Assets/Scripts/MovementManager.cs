@@ -268,6 +268,7 @@ public class MovementManager
         {
             CastleReact cr = (CastleReact)reactions[start.x, start.y];
             cr.Castle.Town.VisitingHero = null;
+            cr.Castle.Town.VisitingUnits = new UnitTree();
         }
     }
 

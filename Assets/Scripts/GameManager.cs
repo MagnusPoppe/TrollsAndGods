@@ -1401,29 +1401,33 @@ public class GameManager : MonoBehaviour
     }
 
 
+    Hero hero1;
+    Hero hero2;
     /// <summary>
     /// Updates the heroes and units in the town
     /// </summary>
     /// <param name="town">the town to update the heroes and units</param>
-    public void ReDrawArmy(UnitTree unitTree1, UnitTree unitTree2)
+    public void ReDrawArmy()
     {
         Sprite defaultSprite = UnityEngine.Resources.Load<Sprite>("Sprites/UI/NoUnit");
 
         GameObject heroContentPanel = heroPanel.transform.GetChild(0).gameObject;
 
+        // If theres a second army, use the herotradepanel
         if (heroTradePanel.activeSelf)
         {
-            heroContentPanel = heroTradePanel.transform.GetChild(0).gameObject;
+            heroContentPanel = heroTradePanel.transform.GetChild(0).transform.GetChild(0).gameObject;
         }
 
+        // Draw first army
         GameObject unitPanel = heroContentPanel.transform.GetChild(1).gameObject;
         for (int i = 0; i < UnitTree.TREESIZE; i++)
         {
             Text text = unitPanel.transform.GetChild(i).transform.GetChild(0).GetComponent<Text>();
-            if (unitTree1 != null && unitTree1.GetUnits()[i] != null)
+            if (hero1.Units != null && hero1.Units.GetUnits()[i] != null)
             {
-                text.text = unitTree1.getUnitAmount(i) + "";
-                unitPanel.transform.GetChild(i).GetComponent<Button>().GetComponent<Image>().sprite = libs.GetUnit(unitTree1.GetUnits()[i].GetSpriteID());
+                text.text = hero1.Units.getUnitAmount(i) + "";
+                unitPanel.transform.GetChild(i).GetComponent<Button>().GetComponent<Image>().sprite = libs.GetUnit(hero1.Units.GetUnits()[i].GetSpriteID());
             }
             else
             {
@@ -1432,17 +1436,18 @@ public class GameManager : MonoBehaviour
             }
         }
 
+        // If theres a second army, draw the next one
         if (heroTradePanel.activeSelf)
         {
-            GameObject heroContentPanel2 = heroTradePanel.transform.GetChild(1).gameObject;
+            GameObject heroContentPanel2 = heroTradePanel.transform.GetChild(1).transform.GetChild(0).gameObject;
             GameObject unitPanel2 = heroContentPanel2.transform.GetChild(1).gameObject;
             for (int i = 0; i < UnitTree.TREESIZE; i++)
             {
                 Text text = unitPanel2.transform.GetChild(i).transform.GetChild(0).GetComponent<Text>();
-                if (unitTree2 != null && unitTree2.GetUnits()[i] != null)
+                if (hero2.Units != null && hero2.Units.GetUnits()[i] != null)
                 {
-                    text.text = unitTree2.getUnitAmount(i) + "";
-                    unitPanel2.transform.GetChild(i).GetComponent<Button>().GetComponent<Image>().sprite = libs.GetUnit(unitTree2.GetUnits()[i].GetSpriteID());
+                    text.text = hero2.Units.getUnitAmount(i) + "";
+                    unitPanel2.transform.GetChild(i).GetComponent<Button>().GetComponent<Image>().sprite = libs.GetUnit(hero2.Units.GetUnits()[i].GetSpriteID());
                 }
                 else
                 {
@@ -1653,7 +1658,7 @@ public class GameManager : MonoBehaviour
                 // Open unitactionpanel with exitbutton, deletebutton and confirm
                 OpenUnitActionPanel(townCanvas, unitTree1, pos1, unitTree1, pos1, false, null, hero);
 
-                ReDrawArmy(unitTree1, unitTree2);
+                ReDrawArmy();
                 ResetUnitTreeSwap();
             }
             // Shift held, open unitwindow with possibility to swap IF one pos is empty, or they're both the same unit type
@@ -1662,7 +1667,7 @@ public class GameManager : MonoBehaviour
                 // Open unitactionpanel with exitbutton, swapslider and confirm
                 OpenUnitActionPanel(townCanvas, unitTree1, pos1, unitTree2, pos2, true, null, hero);
 
-                ReDrawArmy(unitTree1, unitTree2);
+                ReDrawArmy();
                 ResetUnitTreeSwap();
             }
             else
@@ -1682,7 +1687,7 @@ public class GameManager : MonoBehaviour
                         unitTree2.SetUnitAmount(tmpUnit, pos2, tmpAmount);
                     }
 
-                    ReDrawArmy(unitTree1, unitTree2);
+                    ReDrawArmy();
                     ResetUnitTreeSwap();
             }
         }
@@ -2087,7 +2092,7 @@ public class GameManager : MonoBehaviour
             if (town != null)
                 ReDrawArmyInTown(town);
             else if(hero != null)
-                ReDrawArmy(unitTree1, unitTree2);
+                ReDrawArmy();
         }
     }
 
@@ -2114,7 +2119,7 @@ public class GameManager : MonoBehaviour
         if(town != null)
             ReDrawArmyInTown(town);
         else if(hero != null)
-            ReDrawArmy(unitTree1, unitTree2);
+            ReDrawArmy();
     }
 
     /// <summary>
@@ -2273,6 +2278,7 @@ public class GameManager : MonoBehaviour
     /// <param name="hero">The hero to fill the panel</param>
     public void OpenHeroPanel(Hero hero)
     {
+        hero1 = hero;
         OpenHeroPanel(heroPanel, hero);
         heroPanel.SetActive(true);
 
@@ -2289,6 +2295,8 @@ public class GameManager : MonoBehaviour
     /// <param name="hero2">Hero2 to fill the panel</param>
     public void OpenHeroTradePanel(Hero hero1, Hero hero2)
     {
+        this.hero1 = hero1;
+        this.hero2 = hero2;
         OpenHeroPanel(heroTradePanel.transform.GetChild(0).gameObject, hero1);
         OpenHeroPanel(heroTradePanel.transform.GetChild(1).gameObject, hero2);
         heroTradePanel.SetActive(true);
