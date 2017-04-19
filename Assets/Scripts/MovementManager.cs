@@ -185,10 +185,20 @@ public class MovementManager
         // If tile is threatened, perform the additional reaction before the main one
         if (reactions[x, y].HasPreReact())
         {
+            // If reaction is castleReact, trigger castleReact instead of preReact if enemy castle
             if (reactions[x, y].GetType() == typeof(CastleReact))
             {
-                reactions[x, y].React(activeHero);
-                curReaction = reactions[x, y];
+                CastleReact cr = (CastleReact) reactions[x, y];
+                if (!cr.Castle.Player.equals(activePlayer))
+                {
+                    reactions[x, y].React(activeHero);
+                    curReaction = reactions[x, y];
+                }
+                else
+                {
+                    reactions[x, y].PreReact(activeHero);
+                    curReaction = reactions[x, y];
+                }
             }
             else
             {
@@ -197,7 +207,7 @@ public class MovementManager
             }
             Debug.Log(reactions[x, y].PreReaction + " - prereact");
         }
-        // Only perform the main reaction if the hero didn't die in previous reaction
+        // Perform main reaction if there is not a preReaction
         else if (reactions[x, y].React(activeHero))
         {
             Debug.Log(reactions[x, y] + " - react");
