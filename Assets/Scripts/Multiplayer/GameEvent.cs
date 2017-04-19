@@ -5,7 +5,7 @@ namespace Multiplayer
 {
     public abstract class GameEvent : Event
     {
-        private GameManager gm;
+        protected GameManager gm;
 
         protected GameEvent(int id, string description) : base(id, description)
         {
