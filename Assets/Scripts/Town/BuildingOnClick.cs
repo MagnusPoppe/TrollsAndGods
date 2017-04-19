@@ -323,7 +323,7 @@ namespace TownView
             GameObject bottomPanel = marketplaceContentPanel.transform.GetChild(2).gameObject;
 
             // Prepare global text for your resources, if you trade they will be updated
-            textResource = new Text[5];
+            textResource = new Text[Resources.TYPES];
 
             for (int i = 0; i < Enum.GetNames(typeof(Resources.type)).Length; i++)
             {
@@ -571,7 +571,7 @@ namespace TownView
                     Player.Wallet.Pay(resourceCost);
                     gm.updateResourceText();
 
-                    for (int i = 0; i < 5; i++)
+                    for (int i = 0; i < Resources.TYPES; i++)
                     {
                         textResource[i].text = player.Wallet.GetResource(i) + "";
                         tradeSlider.maxValue = player.Wallet.GetResource(payPos) / ratio[earnPos];

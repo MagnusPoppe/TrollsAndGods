@@ -110,6 +110,38 @@ public class Player
         return base.GetHashCode();
     }
 
+    /// <summary>
+    /// Gets the income of the player
+    /// </summary>
+    /// <returns>The resource object with all his income</returns>
+    public Resources GetIncome()
+    {
+        Resources resources = new Resources();
+
+        for (int i = 0; i < Resources.TYPES; i++)
+        {
+
+            // Gets income of buildings
+            foreach (ResourceBuilding building in ResourceBuildings)
+            {
+                resources.adjustResource(i, building.Earnings.GetResource(i));
+            }
+            // Gets income of castle buildings
+            foreach (Castle c in Castle)
+            {
+                foreach (Building building in c.Town.Buildings)
+                {
+                    if (building.GetType().BaseType == typeof(TownView.ResourceBuilding))
+                    {
+                        TownView.ResourceBuilding b = (TownView.ResourceBuilding)building;
+                        resources.adjustResource(i, b.Earnings.GetResource(i));
+                    }
+                }
+            }
+        }
+        return resources;
+    }
+
     public Hero[] Heroes
     {
         get

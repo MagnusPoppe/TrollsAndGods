@@ -180,7 +180,6 @@ public class GameManager : MonoBehaviour
         heroes[2] = new JackMcBlackwell();
         heroes[3] = new JohnyMudbone();
         heroes[4] = new Mantooth();
-
         // Initialize overworld hero and town panels with clickable buttons
         overworldCanvas = GameObject.Find("OverworldCanvas");
         heroObjects = new GameObject[8];
@@ -278,6 +277,7 @@ public class GameManager : MonoBehaviour
         pathNo = UnityEngine.Resources.Load<Sprite>("Sprites/Pointers/pointerPathNo");
         pathObjects = new List<GameObject>();
 
+        ResourceIncomePanel incomePanel = new ResourceIncomePanel();
         // Testing event logging system:
         Update();
         Log log = new Log(this);
@@ -498,16 +498,6 @@ public class GameManager : MonoBehaviour
 
             // Check if any panels are supposed to be opened
             OpenPanelIfReaction(x, y);
-
-            // TODO REMOVE
-            /*
-            if (activeHero.Units.GetUnits()[0] == null)
-            {
-                activeHero.Units.setUnit(new StoneTroll(), 5, 0);
-            }
-            UnitTree defendingTest = new UnitTree();
-            defendingTest.setUnit(new StoneTroll(), 5, 0);
-            enterCombat(15, 11, activeHero, defendingTest);*/
         }
         // Right click up, close the opened panels
         else if(Input.GetMouseButtonUp(1))
