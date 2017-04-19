@@ -308,7 +308,6 @@ public class MovementManager
     public void WalkFinished(Point currentStep, Point lastStep)
     {
         // TODO: IMPLEMENT LOGGING IF NOT EVENT.
-        activeHero.Position = lastStep;
         activeHero.Position = currentStep;
         // If there is a trigger at the stop position:
         if (canWalk[lastStep.x, lastStep.y] == MapMaker.TRIGGER)
