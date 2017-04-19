@@ -480,7 +480,7 @@ public class GameManager : MonoBehaviour
         {
             nextTurn();
         }
-        // Rightclick for combat for testing
+        // Rightclick to show reaction
         else if (Input.GetMouseButtonDown(1))
         {
             // Fetch the point just clicked and adjust the position in the square to the corresponding isometric position
@@ -493,20 +493,21 @@ public class GameManager : MonoBehaviour
             // Check if any panels are supposed to be opened
             OpenPanelIfReaction(x, y);
 
-            // TODO REMOVE
-            /*
+        }
+        // Right click up, close the opened panels
+        else if(Input.GetMouseButtonUp(1))
+        {
+            CloseReactPanels();
+        }
+        else if(Input.GetKeyDown(KeyCode.C))
+        {
             if (activeHero.Units.GetUnits()[0] == null)
             {
                 activeHero.Units.setUnit(new StoneTroll(), 5, 0);
             }
             UnitTree defendingTest = new UnitTree();
             defendingTest.setUnit(new StoneTroll(), 5, 0);
-            enterCombat(15, 11, activeHero, defendingTest);*/
-        }
-        // Right click up, close the opened panels
-        else if(Input.GetMouseButtonUp(1))
-        {
-            CloseReactPanels();
+            enterCombat(15, 11, activeHero, defendingTest);
         }
     }
 
