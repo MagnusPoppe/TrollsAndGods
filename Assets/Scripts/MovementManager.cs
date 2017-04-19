@@ -35,7 +35,6 @@ public class MovementManager
     private GameManager gameManager;
     private Point previousStep;
 
-
     // -------- FLAGS -------- \\
 
     // Flag that allows update to use the movement functions:
@@ -92,11 +91,12 @@ public class MovementManager
     {
         // Resetting variables:
         stepNumber = 0;
-
+        
         // Setting the active hero:
         this.activeHero = hero;
         this.startPosition = hero.Position;
 
+        previousStep = startPosition;
         // Calculating fastest route from active hero to target:
         activeHero.Path = aStar.calculate(activeHero.Position, target);
 
@@ -115,6 +115,15 @@ public class MovementManager
             WalkFinished(previousStep);
             return false;
         }
+
+        if (activeHero.Path.Count > 0)
+        {
+            if (StopForPreReact(new Point(activeHero.Path[0])))
+            {
+                WalkFinished(previousStep, new Point(activeHero.Path[0]));
+                return false;
+            }
+        }
         return stepNumber != totalTilesToBeWalked;
     }
 
@@ -126,7 +135,7 @@ public class MovementManager
         Point nextStep = new Point(activeHero.Path[0]);
 
         // When this step is the last step or the hero should stop before the next step is taken:
-        if (IsLastStep(stepNumber+1) || StopForPreReact(nextStep))
+        if (IsLastStep(stepNumber + 1))
         {
             WalkFinished(nextStep);
         }
@@ -147,8 +156,7 @@ public class MovementManager
     /// <returns>True if there is a pre-react and the hero should stop,false otherwise.</returns>
     private bool StopForPreReact(Point nextStep)
     {
-        if (activeHero.Path.Count == 1) // IF this is the last step
-        {
+
             int x = nextStep.x;
             int y = nextStep.y;
 
@@ -163,7 +171,6 @@ public class MovementManager
                 else
                     return true; // Stop for pre react
             }
-        }
         return false; // Do not stop for pre react
     }
 
@@ -172,8 +179,7 @@ public class MovementManager
         int x = end.x;
         int y = end.y;
         Point start = startPosition;
-
-        Debug.Log(reactions[x, y]);
+        
         bool heroNotDead = true;
 
         // If tile is threatened, perform the additional reaction before the main one
@@ -189,12 +195,12 @@ public class MovementManager
                 reactions[x, y].PreReact(activeHero);
                 curReaction = reactions[x, y];
             }
-            Debug.Log(reactions[x, y].PreReaction);
+            Debug.Log(reactions[x, y].PreReaction + " - prereact");
         }
         // Only perform the main reaction if the hero didn't die in previous reaction
         else if (reactions[x, y].React(activeHero))
         {
-            Debug.Log(reactions[x, y]);
+            Debug.Log(reactions[x, y] + " - react");
             //bool react = reactions[x, y].React(activeHero);
 
 
@@ -234,46 +240,48 @@ public class MovementManager
     public void UpdateReact(Point end)
     {
         Point start = startPosition;
-
-        // Remove hero from town if he walked out of it
-        if (reactions[start.x, start.y].GetType().Equals(typeof(CastleReact)))
+        if (!start.Equals(end))
         {
-            CastleReact cr = (CastleReact)reactions[start.x, start.y];
-            cr.Castle.Town.VisitingHero = null;
-            cr.Castle.Town.VisitingUnits = new UnitTree();
-        }
+            // Remove hero from town if he walked out of it
+            if (reactions[start.x, start.y].GetType().Equals(typeof(CastleReact)))
+            {
+                CastleReact cr = (CastleReact)reactions[start.x, start.y];
+                cr.Castle.Town.VisitingHero = null;
+                cr.Castle.Town.VisitingUnits = new UnitTree();
+            }
 
-        // If destination has reaction, set prereact
-        if (reactions[end.x, end.y] != null)
-        {
-            // if you came from a prereact
-            if (!reactions[start.x, start.y].GetType().Equals(typeof(HeroMeetReact)))
-                reactions[end.x, end.y].PreReaction = reactions[start.x, start.y].PreReaction;
+            // If destination has reaction, set prereact
+            if (reactions[end.x, end.y] != null)
+            {
+                // if you came from a prereact
+                if (!reactions[start.x, start.y].GetType().Equals(typeof(HeroMeetReact)))
+                    reactions[end.x, end.y].PreReaction = reactions[start.x, start.y].PreReaction;
+                else
+                    reactions[end.x, end.y].PreReaction = reactions[start.x, start.y];
+            }
+            // Else, set destination reaction to the heroreaction, and make the tile a triggertile
             else
-                reactions[end.x, end.y].PreReaction = reactions[start.x, start.y];
-        }
-        // Else, set destination reaction to the heroreaction, and make the tile a triggertile
-        else
-        {
-            // if you came from a prereact
-            if (!reactions[start.x, start.y].GetType().Equals(typeof(HeroMeetReact)))
-                reactions[end.x, end.y] = reactions[start.x, start.y].PreReaction;
+            {
+                // if you came from a prereact
+                if (!reactions[start.x, start.y].GetType().Equals(typeof(HeroMeetReact)))
+                    reactions[end.x, end.y] = reactions[start.x, start.y].PreReaction;
+                else
+                    reactions[end.x, end.y] = reactions[start.x, start.y];
+
+                canWalk[end.x, end.y] = MapMaker.TRIGGER;
+            }
+
+            // If from position didn't have prereact, flip canwalk and remove
+            if (reactions[start.x, start.y].GetType().Equals(typeof(HeroMeetReact)))
+            {
+                canWalk[start.x, start.y] = MapMaker.CANWALK;
+                reactions[start.x, start.y] = null;
+            }
+            // Else, remove the prereact
             else
-                reactions[end.x, end.y] = reactions[start.x, start.y];
-
-            canWalk[end.x, end.y] = MapMaker.TRIGGER;
-        }
-
-        // If from position didn't have prereact, flip canwalk and remove
-        if (reactions[start.x, start.y].GetType().Equals(typeof(HeroMeetReact)))
-        {
-            canWalk[start.x, start.y] = MapMaker.CANWALK;
-            reactions[start.x, start.y] = null;
-        }
-        // Else, remove the prereact
-        else
-        {
-            reactions[start.x, start.y].PreReaction = null;
+            {
+                reactions[start.x, start.y].PreReaction = null;
+            }
         }
     }
 
@@ -282,19 +290,27 @@ public class MovementManager
     /// </summary>
     public void WalkFinished( Point lastStep )
     {
+        WalkFinished(lastStep, lastStep);
+    }
+
+    /// <summary>
+    /// Finishes the walking.
+    /// </summary>
+    public void WalkFinished(Point currentStep, Point lastStep)
+    {
         // TODO: IMPLEMENT LOGGING IF NOT EVENT.
-        activeHero.Position = lastStep;
+        activeHero.Position = currentStep;
         // If there is a trigger at the stop position:
         if (canWalk[lastStep.x, lastStep.y] == MapMaker.TRIGGER)
         {
             // React to the reaction at the last step:
             react(lastStep);
         }
-        UpdateReact(lastStep);
+        UpdateReact(currentStep);
     }
 
     public bool IsLastStep(int stepNumber)
     {
-        return stepNumber == activeHero.CurMovementSpeed || stepNumber == totalTilesToBeWalked;
+        return  activeHero.CurMovementSpeed == 0 || stepNumber == totalTilesToBeWalked;
     }
 }

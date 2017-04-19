@@ -328,9 +328,15 @@ public class GameManager : MonoBehaviour
 
             // Clear the previous table reference to current gameobject
             heroLayer[movement.StartPosition.x, movement.StartPosition.y] = null;
+
             // Also move the gameobject's position in the heroLayer table
             heroLayer[activeHero.Position.x, activeHero.Position.y] = activeHeroObject;
-            activeHero.Position = nextLogicalStep;
+
+            // Move if hero moved more than 0 steps
+            if(nextLogicalStep != null)
+                activeHero.Position = nextLogicalStep;
+
+            nextLogicalStep = null;
         }
     }
 
@@ -710,7 +716,7 @@ public class GameManager : MonoBehaviour
 
             if (i + 1 == activeHero.Path.Count)
             {
-                if (i + 1 == tilesToBeWalked)
+                if (i + 1 <= activeHero.CurMovementSpeed)
                     sr.sprite = pathDestYes;
                 else
                     sr.sprite = pathDestNo;
@@ -1644,7 +1650,7 @@ public class GameManager : MonoBehaviour
                 if (!visiting || town.VisitingHero != null)
                 {
                     // Merge 2 alike units
-                    if (unitTree1.GetUnits()[pos1].Equals(unitTree2.GetUnits()[pos2]))
+                    if (unitTree1.GetUnits()[pos1].equals(unitTree2.GetUnits()[pos2]))
                     {
                         unitTree2.SetUnitAmount(unitTree1.GetUnits()[pos2], pos2, unitTree1.getUnitAmount(pos1) + unitTree2.getUnitAmount(pos2));
                         unitTree1.SetUnitAmount(unitTree1.GetUnits()[pos1], pos1, 0);
@@ -1828,7 +1834,7 @@ public class GameManager : MonoBehaviour
                 // Setting variables from previous turn:
                 if (activeHero.Path != null && activeHero.Path.Count > 0)
                 {
-                    movement.PrepareMovement(new Point(activeHero.Path[movement.activeHero.Path.Count - 1]), activeHero);
+                    movement.PrepareMovement(new Point(activeHero.Path[activeHero.Path.Count - 1]), activeHero);
                     DrawPath(movement.activeHero.Path, movement.totalTilesToBeWalked);
                     savedClickedPos = movement.activeHero.Path[movement.activeHero.Path.Count - 1];
                 }
