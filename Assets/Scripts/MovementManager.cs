@@ -157,7 +157,7 @@ public class MovementManager
                 if (reactions[x, y].GetType().Equals(typeof(DwellingReact))
                     ||  reactions[x, y].GetType().Equals(typeof(CastleReact)))
                 {
-                    if (reactions[x, y].HasPreReact(activeHero))
+                    if (reactions[x, y].HasPreReact())
                         return true; // Stop for pre react
                 }
                 else
@@ -177,12 +177,19 @@ public class MovementManager
         bool heroNotDead = true;
 
         // If tile is threatened, perform the additional reaction before the main one
-        if (reactions[x, y].HasPreReact(activeHero))
+        if (reactions[x, y].HasPreReact())
         {
+            if (reactions[x, y].GetType() == typeof(CastleReact))
+            {
+                reactions[x, y].React(activeHero);
+                curReaction = reactions[x, y];
+            }
+            else
+            {
+                reactions[x, y].PreReact(activeHero);
+                curReaction = reactions[x, y];
+            }
             Debug.Log(reactions[x, y].PreReaction);
-            reactions[x, y].PreReact(activeHero);
-            curReaction = reactions[x, y];
-            // Remove hero when false, opponent unit or hero when true
         }
         // Only perform the main reaction if the hero didn't die in previous reaction
         else if (reactions[x, y].React(activeHero))
@@ -203,7 +210,7 @@ public class MovementManager
             {
                 // TODO change owner of defenseless castle visually
                 CastleReact cr = (CastleReact) reactions[x, y];
-                // TODO: changeCastleOwner(cr);
+                gameManager.changeCastleOwner(cr);
             }
             else if (reactions[x, y].GetType().Equals(typeof(DwellingReact)))
             {
