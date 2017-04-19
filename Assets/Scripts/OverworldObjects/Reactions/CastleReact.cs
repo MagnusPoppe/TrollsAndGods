@@ -43,15 +43,35 @@ public class CastleReact : Reaction {
         }
         else
         {
-            if (castle.Town.VisitingUnits != null)
+            if (castle.Town.VisitingUnits.CountUnits() > 0)
             {
-                //todo combine with stationed units and battle
+                if (castle.Town.StationedHero != null)
+                {
+                    gm.enterCombat(15,11,h,castle.Town.VisitingHero);
+                }
+                else
+                {
+                    castle.Town.StationedHero = castle.Town.VisitingHero;
+                    castle.Town.VisitingHero = null;
+                    if (castle.Town.StationedUnits.CanMerge(castle.Town.VisitingUnits))
+                    {
+                        castle.Town.StationedUnits.Merge(castle.Town.VisitingUnits);
+                    }
+                    gm.enterCombat(15,11,h,castle.Town.StationedHero);
+                }
                 return false;
             }
-            else if (castle.Town.StationedUnits != null)
+            else if (castle.Town.StationedUnits.CountUnits() > 0)
             {
                 //battle
-                gm.enterCombat(15, 11, h, castle.Town.StationedUnits);
+                if (castle.Town.StationedHero != null)
+                {
+                    gm.enterCombat(15, 11, h, castle.Town.StationedHero);
+                }
+                else
+                {
+                    gm.enterCombat(15, 11, h, castle.Town.StationedUnits);
+                }
                 return false;
             }
             return true;
