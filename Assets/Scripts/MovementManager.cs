@@ -226,29 +226,35 @@ public class MovementManager
     /// <param name="end">end position</param>
     public void UpdateReact(Point end)
     {
-        int x = end.x;
-        int y = end.y;
         Point start = startPosition;
 
+        // Remove hero from town if he walked out of it
+        if (reactions[start.x, start.y].GetType().Equals(typeof(CastleReact)))
+        {
+            CastleReact cr = (CastleReact)reactions[start.x, start.y];
+            cr.Castle.Town.VisitingHero = null;
+            cr.Castle.Town.VisitingUnits = new UnitTree();
+        }
+
         // If destination has reaction, set prereact
-        if (reactions[activeHero.Position.x, activeHero.Position.y] != null)
+        if (reactions[end.x, end.y] != null)
         {
             // if you came from a prereact
             if (!reactions[start.x, start.y].GetType().Equals(typeof(HeroMeetReact)))
-                reactions[x, y].PreReaction = reactions[start.x, start.y].PreReaction;
+                reactions[end.x, end.y].PreReaction = reactions[start.x, start.y].PreReaction;
             else
-                reactions[x, y].PreReaction = reactions[start.x, start.y];
+                reactions[end.x, end.y].PreReaction = reactions[start.x, start.y];
         }
         // Else, set destination reaction to the heroreaction, and make the tile a triggertile
         else
         {
             // if you came from a prereact
             if (!reactions[start.x, start.y].GetType().Equals(typeof(HeroMeetReact)))
-                reactions[x, y] = reactions[start.x, start.y].PreReaction;
+                reactions[end.x, end.y] = reactions[start.x, start.y].PreReaction;
             else
-                reactions[x, y] = reactions[start.x, start.y];
+                reactions[end.x, end.y] = reactions[start.x, start.y];
 
-            canWalk[x, y] = MapMaker.TRIGGER;
+            canWalk[end.x, end.y] = MapMaker.TRIGGER;
         }
 
         // If from position didn't have prereact, flip canwalk and remove
@@ -261,14 +267,6 @@ public class MovementManager
         else
         {
             reactions[start.x, start.y].PreReaction = null;
-        }
-
-        // Remove hero from town if he walked out of it
-        if (reactions[start.x, start.y].GetType().Equals(typeof(CastleReact)))
-        {
-            CastleReact cr = (CastleReact)reactions[start.x, start.y];
-            cr.Castle.Town.VisitingHero = null;
-            cr.Castle.Town.VisitingUnits = new UnitTree();
         }
     }
 

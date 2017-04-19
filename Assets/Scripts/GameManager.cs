@@ -2003,7 +2003,7 @@ public class GameManager : MonoBehaviour
         // Deletebutton
         GameObject actionPanel = unitActionPanel.transform.GetChild(1).gameObject;
         GameObject deleteObject = actionPanel.transform.GetChild(0).gameObject;
-        Toggle deleteToggle = deleteObject.GetComponent<Toggle>();
+        Button deleteButton = deleteObject.GetComponent<Button>();
 
         // Textleft and textRight
         GameObject textLeftObject = actionPanel.transform.GetChild(1).gameObject;
@@ -2036,6 +2036,7 @@ public class GameManager : MonoBehaviour
             deleteObject.SetActive(false);
             textLeftObject.SetActive(true);
             textRightObject.SetActive(true);
+            confirmObject.SetActive(true);
             confirmButton.onClick.AddListener(() => PerformSwapUnitAction(unitTree1, pos1, unitTree2, pos2, town, hero));
         }
         // Show deletbutton, hide sliderObject and unitslide amount
@@ -2045,7 +2046,8 @@ public class GameManager : MonoBehaviour
             sliderObject.SetActive(false);
             textLeftObject.SetActive(false);
             textRightObject.SetActive(false);
-            confirmButton.onClick.AddListener(() => PerformDeleteUnitAction(deleteToggle, unitTree1, pos1, unitTree2, town, hero));
+            confirmObject.SetActive(false);
+            deleteButton.onClick.AddListener(() => PerformDeleteUnitAction(unitTree1, pos1, unitTree2, town, hero));
         }
 
         // Set exit button
@@ -2076,24 +2078,20 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Deletes the unit if toggle
     /// </summary>
-    /// <param name="deleteToggle">The toggle that must be activated</param>
     /// <param name="unitTree">The unitTree to remove the unit from</param>
     /// <param name="pos">Position in the unitTree</param>
     /// <param name="town">The Town to redraw after action</param>
-    public void PerformDeleteUnitAction(Toggle deleteToggle, UnitTree unitTree1, int pos, UnitTree unitTree2, Town town, Hero hero)
+    public void PerformDeleteUnitAction(UnitTree unitTree1, int pos, UnitTree unitTree2, Town town, Hero hero)
     {
-        if (deleteToggle.isOn)
-        {
-            // Update the unittree
-            unitTree1.GetUnits()[pos] = null;
-            unitTree1.SetUnitAmount(pos, 0);
-            // Exit panel and redraw visuals
-            ExitPanel(unitActionPanel);
-            if (town != null)
-                ReDrawArmyInTown(town);
-            else if(hero != null)
-                ReDrawArmy();
-        }
+        // Update the unittree
+        unitTree1.GetUnits()[pos] = null;
+        unitTree1.SetUnitAmount(pos, 0);
+        // Exit panel and redraw visuals
+        ExitPanel(unitActionPanel);
+        if (town != null)
+            ReDrawArmyInTown(town);
+        else if (hero != null)
+            ReDrawArmy();
     }
 
     /// <summary>
