@@ -1908,11 +1908,11 @@ public class GameManager : MonoBehaviour
 
     public void exitCombat(bool winner)
     {
+        combatWindow.SetActive(false);
+        overWorld = true;
+        cameraMovement.enabled = true;
         if (winner)
         {
-            combatWindow.SetActive(false);
-            overWorld = true;
-            cameraMovement.enabled = true;
             //attacker won
             if (curReaction.GetType() == typeof(CastleReact))
             {
