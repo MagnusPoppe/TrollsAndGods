@@ -6,13 +6,20 @@ namespace Multiplayer
 {
     public class Attack : CombatEvent
     {
-        public Attack(int id, string description, int idFrom, int idTo) : base(id, description, idFrom, idTo)
+        public Point pos;
+        public Point goal;
+
+        public Attack(int id, string description, Point pos, Point goal) : base(id, description)
         {
+            this.pos = pos;
+            this.goal = goal;
         }
 
         public override void execute()
         {
             throw new System.NotImplementedException();
         }
+
+        
     } 
 }

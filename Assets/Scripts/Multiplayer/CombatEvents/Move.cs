@@ -6,7 +6,7 @@ namespace Multiplayer
 {
     public class Move : CombatEvent
     {
-        public Move(int id, string description, int idFrom, int idTo) : base(id, description, idFrom, idTo)
+        public Move(int id, string description) : base(id, description)
         {
         }
 
