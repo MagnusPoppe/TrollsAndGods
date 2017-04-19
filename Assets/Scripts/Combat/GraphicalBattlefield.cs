@@ -121,7 +121,7 @@ public class GraphicalBattlefield : MonoBehaviour
             else if(attacking)
             {
                 frame++;
-                if (frame == 100)
+                if (frame == 50)
                 {
                     attacking = false;
                     getUnitWhoseTurnItIs().GetComponent<Animator>().runtimeAnimatorController = null;
