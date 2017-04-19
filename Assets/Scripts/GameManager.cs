@@ -1890,8 +1890,10 @@ public class GameManager : MonoBehaviour
     public void enterCombat(int width, int height, Hero attacker, Hero defender)
     {
         overWorld = false;
-        //todo add canvas
-        // graphicalBattlefield.beginCombat(width, height, attacker, defender)
+        combatWindow.SetActive(true);
+        graphicalBattlefield.beginCombat(width, height, attacker, defender);
+        cameraMovement.enabled = false;
+        combatWindow.transform.localPosition = new Vector3(0, 0, 10);
     }
 
     public void enterCombat(int width, int height, Hero attacker, UnitTree defender)
@@ -1907,11 +1909,31 @@ public class GameManager : MonoBehaviour
     {
         if (winner)
         {
+            combatWindow.SetActive(false);
+            overWorld = true;
+            cameraMovement.enabled = true;
             //attacker won
             if (curReaction.GetType() == typeof(CastleReact))
             {
                 CastleReact cr = (CastleReact) curReaction;
-                changeCastleOwner(cr);
+                if (cr.Castle.Town.StationedUnits.CountUnits() > 0)
+                {
+                    cr.React(activeHero);
+                }
+                else
+                {
+                    changeCastleOwner(cr);
+                }
+            }
+            else if (curReaction.GetType() == typeof(HeroMeetReact))
+            {
+                HeroMeetReact hmr = (HeroMeetReact) curReaction;
+                removeHero(hmr.Hero);
+            }
+            else if (curReaction.GetType() == typeof(UnitReaction))
+            {
+                UnitReaction ur = (UnitReaction) curReaction;
+                //todo remove unit
             }
         }
         else
@@ -1919,9 +1941,6 @@ public class GameManager : MonoBehaviour
             //defender won
             removeHero(activeHero);
         }
-        combatWindow.SetActive(false);
-        overWorld = true;
-        cameraMovement.enabled = true;
     }
 
     /// <summary>
