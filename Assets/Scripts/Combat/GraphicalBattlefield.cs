@@ -29,6 +29,7 @@ public class GraphicalBattlefield : MonoBehaviour
     private int step;
     public float animationSpeed = 0.1f;
     private float towardNextStep;
+    private Sprite attackSheet, moveSheet;
 
     // Use this for initialization
     void Start () {
@@ -38,6 +39,9 @@ public class GraphicalBattlefield : MonoBehaviour
         parent = GameObject.Find("Combat");
         unit = UnityEngine.Resources.Load<GameObject>("Sprites/Combat/Unit");
         gm = GameObject.Find("GameManager").GetComponent<GameManager>();
+        //todo implement loading of animations dynamically based on unit
+        attackSheet = UnityEngine.Resources.Load<Sprite>("Sprites/Combat/Attack");
+        moveSheet = UnityEngine.Resources.Load<Sprite>("Sprites/Combat/TrollWalk");
     }
 
 	// Update is called once per frame
@@ -54,6 +58,28 @@ public class GraphicalBattlefield : MonoBehaviour
                     {
                         finishedWalking = true;
                         isWalking = false;
+                    }
+                    if (getUnitWhoseTurnItIs().LogicalPos.x % 2 == 0)
+                    {
+                        if (path[step].x < getUnitWhoseTurnItIs().LogicalPos.x)
+                        {
+                            getUnitWhoseTurnItIs().GetComponent<SpriteRenderer>().flipX = true;
+                        }
+                        else
+                        {
+                            getUnitWhoseTurnItIs().GetComponent<SpriteRenderer>().flipX = false;
+                        }
+                    }
+                    else
+                    {
+                        if (path[step].x <= getUnitWhoseTurnItIs().LogicalPos.x)
+                        {
+                            getUnitWhoseTurnItIs().GetComponent<SpriteRenderer>().flipX = true;
+                        }
+                        else
+                        {
+                            getUnitWhoseTurnItIs().GetComponent<SpriteRenderer>().flipX = false;
+                        }
                     }
                 }
                 else
@@ -268,8 +294,6 @@ public class GraphicalBattlefield : MonoBehaviour
             }
             place += increment;
         }
-        // Sorts initative in descending order
-        // todo fix sort
         Array.Sort(initative);
         Array.Reverse(initative);
         WhoseTurn = 0;
@@ -301,7 +325,6 @@ public class GraphicalBattlefield : MonoBehaviour
             if (activeUnit.LogicalPos.Equals(goal))
             {
                 battleField.attackWithoutMoving(activeUnit.LogicalPos, defender.LogicalPos, false);
-                //todo trigger animation
                 nextTurn();
             }
             else
@@ -313,7 +336,6 @@ public class GraphicalBattlefield : MonoBehaviour
                     if (r.Ammo > 0 && !r.Threatened)
                     {
                         battleField.attackWithoutMoving(activeUnit.LogicalPos, defender.LogicalPos, true);
-                        //todo trigger animation
                         nextTurn();
                     }
                     else
