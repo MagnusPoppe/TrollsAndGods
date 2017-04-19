@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Units;
 using UnityEngine;
 
 /// <summary>
@@ -32,7 +33,6 @@ public class Hero : SpriteSystem
     public Hero(Player player, Point position, int localSpriteID, int portraitID, string name, string description, Cost cost) : base(localSpriteID, SPRITECATEGORY)
     {
         Player = player;
-        Units = new UnitTree();
         Items = new List<Item>();
         EquippedItems = new Item[7];
         Position = position;
@@ -50,7 +50,6 @@ public class Hero : SpriteSystem
     /// <param name="color">id of which player gets the hero</param>
     public Hero(int localSpriteID, int portraitID, string name, string description, Cost cost) : base(localSpriteID, SPRITECATEGORY)
     {
-        Units = new UnitTree();
         Items = new List<Item>();
         EquippedItems = new Item[7];
         CurMovementSpeed = MovementSpeed = 12;
@@ -59,6 +58,11 @@ public class Hero : SpriteSystem
         Name = name;
         Description = description;
         Cost = cost;
+    }
+
+    protected void SetUnits(UnitTree unitTree)
+    {
+        Units = unitTree;
     }
 
     public string Name

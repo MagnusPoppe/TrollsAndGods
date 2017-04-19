@@ -158,6 +158,19 @@ public class GameManager : MonoBehaviour
     public static bool ANIMATION_RUNNING;
     private bool pathMarked;
 
+
+    // Swaphero
+    private int heroPosClicked = -1;
+    // Heroes for herotradepanel
+    private Hero hero1;
+    private Hero hero2;
+    // Swaparmy
+    private UnitTree unitTree1;
+    private UnitTree unitTree2;
+    private int pos1 = -1;
+    private int pos2 = -1;
+    private bool visiting;
+
     // Use this for initialization
     void Start ()
     {
@@ -198,8 +211,6 @@ public class GameManager : MonoBehaviour
         buildingPanel.SetActive(false);
         heroPanel = GameObject.Find("HeroPanel");
         heroPanel.SetActive(false);
-        //heroPanel2 = GameObject.Find("HeroPanel2");
-       ///heroPanel2.SetActive(false);
         heroTradePanel = GameObject.Find("HeroTradePanel");
         heroTradePanel.SetActive(false);
         unitPanel = GameObject.Find("UnitPanel");
@@ -317,9 +328,15 @@ public class GameManager : MonoBehaviour
 
             // Clear the previous table reference to current gameobject
             heroLayer[movement.StartPosition.x, movement.StartPosition.y] = null;
+
             // Also move the gameobject's position in the heroLayer table
             heroLayer[activeHero.Position.x, activeHero.Position.y] = activeHeroObject;
-            activeHero.Position = nextLogicalStep;
+
+            // Move if hero moved more than 0 steps
+            if(nextLogicalStep != null)
+                activeHero.Position = nextLogicalStep;
+
+            nextLogicalStep = null;
         }
     }
 
@@ -699,7 +716,7 @@ public class GameManager : MonoBehaviour
 
             if (i + 1 == activeHero.Path.Count)
             {
-                if (i + 1 == tilesToBeWalked)
+                if (i + 1 <= activeHero.CurMovementSpeed)
                     sr.sprite = pathDestYes;
                 else
                     sr.sprite = pathDestNo;
@@ -1093,6 +1110,40 @@ public class GameManager : MonoBehaviour
         else // IF ODD
             return new Vector2(x + 0.5f, isometricOffset / 2);
     }
+    
+    /// <summary>
+    /// Selects hero if hero is not inside a town. Either activates on single click or opens hero panel on doubleclick
+    /// </summary>
+    /// <param name="hero">The hero to either activate or open panel</param>
+    public void SelectHero(Hero hero)
+    {
+        if (!hero.IsInTown)
+        {
+            if (prepareDoubleClick)
+            {
+                if (players[WhoseTurn].equals(hero.Player))
+                {
+                    cameraMovement.enabled = false;
+                    OpenHeroPanel(hero);
+                }
+            }
+            else
+            {
+                if (players[WhoseTurn].equals(hero.Player))
+                {
+                    // Activate clicked hero
+                    if (!hero.Equals(activeHero))
+                    {
+                        activeHero = hero;
+                        activeHeroObject = heroLayer[activeHero.Position.x, activeHero.Position.y];
+                    }
+                    // Center camera and prepare to open heroPanel
+                    prepareDoubleClick = true;
+                    cameraMovement.centerCamera(HandyMethods.getGraphicPosForIso(hero.Position.ToVector2()));
+                }
+            }
+        }
+    }
 
     /// <summary>
     /// Called by UI click on town, activates towngameobjects and deactivates overworld
@@ -1429,9 +1480,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-
-    Hero hero1;
-    Hero hero2;
     /// <summary>
     /// Updates the heroes and units in the town
     /// </summary>
@@ -1486,8 +1534,6 @@ public class GameManager : MonoBehaviour
             }
         }
     }
-
-    private int heroPosClicked = -1;
 
     /// <summary>
     /// Checks if swapping is supposed to be done, performs it if so.
@@ -1561,11 +1607,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public UnitTree unitTree1;
-    public UnitTree unitTree2;
-    public int pos1 = -1;
-    public int pos2 = -1;
-    private bool visiting;
     /// <summary>
     /// Method to swap units or heroes in a town screen, both visually and logically
     /// </summary>
@@ -1609,7 +1650,7 @@ public class GameManager : MonoBehaviour
                 if (!visiting || town.VisitingHero != null)
                 {
                     // Merge 2 alike units
-                    if (unitTree1.GetUnits()[pos1].Equals(unitTree2.GetUnits()[pos2]))
+                    if (unitTree1.GetUnits()[pos1].equals(unitTree2.GetUnits()[pos2]))
                     {
                         unitTree2.SetUnitAmount(unitTree1.GetUnits()[pos2], pos2, unitTree1.getUnitAmount(pos1) + unitTree2.getUnitAmount(pos2));
                         unitTree1.SetUnitAmount(unitTree1.GetUnits()[pos1], pos1, 0);
@@ -1793,7 +1834,7 @@ public class GameManager : MonoBehaviour
                 // Setting variables from previous turn:
                 if (activeHero.Path != null && activeHero.Path.Count > 0)
                 {
-                    movement.PrepareMovement(new Point(activeHero.Path[movement.activeHero.Path.Count - 1]), activeHero);
+                    movement.PrepareMovement(new Point(activeHero.Path[activeHero.Path.Count - 1]), activeHero);
                     DrawPath(movement.activeHero.Path, movement.totalTilesToBeWalked);
                     savedClickedPos = movement.activeHero.Path[movement.activeHero.Path.Count - 1];
                 }
@@ -1996,7 +2037,6 @@ public class GameManager : MonoBehaviour
         Point isometricPosition = new Point((int)pos.x, (int)pos.y);
         heroLayer[position.x, position.y] = placeSprite(position.x, position.y, isometricPosition.y, libs.GetHero(hero.GetSpriteID()), heroObject);
         
-
         // If there's a town, place the hero in it
         if (town != null)
         {
@@ -2005,8 +2045,7 @@ public class GameManager : MonoBehaviour
             {
                 // Place logically
                 town.VisitingHero = hero;
-                town.VisitingHero.Units.Merge(town.VisitingUnits);
-                town.VisitingUnits = town.VisitingHero.Units;
+                town.VisitingUnits = hero.Units;
                 // Place prereact
                 reactions[position.x, position.y].PreReaction = new HeroMeetReact(hero, position);
             }
@@ -2014,8 +2053,8 @@ public class GameManager : MonoBehaviour
             {
                 // Place logically
                 town.StationedHero = hero;
-                town.StationedHero.Units.Merge(town.StationedUnits);
-                town.StationedUnits = town.StationedHero.Units;
+                hero.Units.Merge(town.StationedUnits);
+                town.StationedUnits = hero.Units;
 
                 // Hide visually
                 heroLayer[position.x, position.y].SetActive(false);
@@ -2282,40 +2321,6 @@ public class GameManager : MonoBehaviour
         // TODO set abilityInfo
 
         unitPanel.SetActive(true);
-    }
-
-    /// <summary>
-    /// Selects hero if hero is not inside a town. Either activates on single click or opens hero panel on doubleclick
-    /// </summary>
-    /// <param name="hero">The hero to either activate or open panel</param>
-    public void SelectHero(Hero hero)
-    {
-        if (!hero.IsInTown)
-        {
-            if (prepareDoubleClick)
-            {
-                if (players[WhoseTurn].equals(hero.Player))
-                {
-                    cameraMovement.enabled = false;
-                    OpenHeroPanel(hero);
-                }
-            }
-            else
-            {
-                if (players[WhoseTurn].equals(hero.Player))
-                {
-                    // Activate clicked hero
-                    if (!hero.Equals(activeHero))
-                    {
-                        activeHero = hero;
-                        activeHeroObject = heroLayer[activeHero.Position.x, activeHero.Position.y];
-                    }
-                    // Center camera and prepare to open heroPanel
-                    prepareDoubleClick = true;
-                    cameraMovement.centerCamera(HandyMethods.getGraphicPosForIso(hero.Position.ToVector2()));
-                }
-            }
-        }
     }
 
     /// <summary>
