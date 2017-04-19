@@ -27,7 +27,8 @@ namespace Multiplayer
         public void DownloadEvents()
         {
             // Import only for dummy purposes. TODO: Remove
-            gameEvents.Add( new PlayerMoved(gm.Players[0].Heroes[0], new Point(44,16) ) );
+            gameEvents.Add( new PlayerMoved(gm.Players[0].Heroes[0], new Point(40,16) ) );
+            gameEvents.Add( new PlayerMoved(gm.Players[0].Heroes[0], new Point(40,12) ) );
         }
 
         public void CheckForUpdates()
