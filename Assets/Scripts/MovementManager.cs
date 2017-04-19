@@ -191,11 +191,10 @@ public class MovementManager
             }
             Debug.Log(reactions[x, y].PreReaction);
         }
-        // Only perform the main reaction if the hero didn't die in previous reaction
+        // Perform main reaction if there is not a preReaction
         else if (reactions[x, y].React(activeHero))
         {
             Debug.Log(reactions[x, y]);
-            //bool react = reactions[x, y].React(activeHero);
 
 
             if (reactions[x, y].GetType().Equals(typeof(ResourceReaction)))
