@@ -197,7 +197,6 @@ public class MovementManager
             Debug.Log(reactions[x, y]);
             //bool react = reactions[x, y].React(activeHero);
 
-
             if (reactions[x, y].GetType().Equals(typeof(ResourceReaction)))
             {
                 // TODO visually remove picked up resource
@@ -284,6 +283,7 @@ public class MovementManager
     {
         // TODO: IMPLEMENT LOGGING IF NOT EVENT.
         activeHero.Position = lastStep;
+
         // If there is a trigger at the stop position:
         if (canWalk[lastStep.x, lastStep.y] == MapMaker.TRIGGER)
         {
