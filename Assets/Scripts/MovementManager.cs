@@ -213,7 +213,6 @@ public class MovementManager
             Debug.Log(reactions[x, y] + " - react");
             //bool react = reactions[x, y].React(activeHero);
 
-
             if (reactions[x, y].GetType().Equals(typeof(ResourceReaction)))
             {
                 // TODO visually remove picked up resource
