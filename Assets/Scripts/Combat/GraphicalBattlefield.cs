@@ -59,9 +59,9 @@ public class GraphicalBattlefield : MonoBehaviour
                         finishedWalking = true;
                         isWalking = false;
                     }
-                    if (getUnitWhoseTurnItIs().LogicalPos.x % 2 == 0)
+                    else if ((int)path[step-1].y % 2 == 0)
                     {
-                        if (path[step].x < getUnitWhoseTurnItIs().LogicalPos.x)
+                        if ((int)path[step].x < (int)path[step - 1].x)
                         {
                             getUnitWhoseTurnItIs().GetComponent<SpriteRenderer>().flipX = true;
                         }
@@ -72,7 +72,7 @@ public class GraphicalBattlefield : MonoBehaviour
                     }
                     else
                     {
-                        if (path[step].x <= getUnitWhoseTurnItIs().LogicalPos.x)
+                        if ((int)path[step].x <= (int)path[step - 1].x)
                         {
                             getUnitWhoseTurnItIs().GetComponent<SpriteRenderer>().flipX = true;
                         }
@@ -97,6 +97,8 @@ public class GraphicalBattlefield : MonoBehaviour
                 field[getUnitWhoseTurnItIs().LogicalPos.x, getUnitWhoseTurnItIs().LogicalPos.y]
                     .GetComponent<GroundGameObject>().IsOccupied = true;
                 canwalk[getUnitWhoseTurnItIs().LogicalPos.x, getUnitWhoseTurnItIs().LogicalPos.y] = MapMaker.CANNOTWALK;
+
+                getUnitWhoseTurnItIs().GetComponent<SpriteRenderer>().flipX = !getUnitWhoseTurnItIs().AttackingSide;
 
                 if (attacking)
                 {
@@ -386,7 +388,6 @@ public class GraphicalBattlefield : MonoBehaviour
     /// <summary>
     /// Begins walking animation
     /// </summary>
-    /// <param name="path">Path</param>
     public void BeginWalking()
     {
         field[initative[whoseTurn].LogicalPos.x, initative[whoseTurn].LogicalPos.y].GetComponent<GroundGameObject>()
@@ -394,6 +395,29 @@ public class GraphicalBattlefield : MonoBehaviour
         canwalk[initative[whoseTurn].LogicalPos.x, initative[whoseTurn].LogicalPos.y] = MapMaker.CANWALK;
         isWalking = true;
         step = 0;
+
+        if (getUnitWhoseTurnItIs().LogicalPos.y % 2 == 0)
+        {
+            if ((int)path[step].x < getUnitWhoseTurnItIs().LogicalPos.x)
+            {
+                getUnitWhoseTurnItIs().GetComponent<SpriteRenderer>().flipX = true;
+            }
+            else
+            {
+                getUnitWhoseTurnItIs().GetComponent<SpriteRenderer>().flipX = false;
+            }
+        }
+        else
+        {
+            if ((int)path[step].x <= getUnitWhoseTurnItIs().LogicalPos.x)
+            {
+                getUnitWhoseTurnItIs().GetComponent<SpriteRenderer>().flipX = true;
+            }
+            else
+            {
+                getUnitWhoseTurnItIs().GetComponent<SpriteRenderer>().flipX = false;
+            }
+        }
     }
 
     /// <summary>
