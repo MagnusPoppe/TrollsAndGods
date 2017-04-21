@@ -22,6 +22,9 @@ public class Resources
 
     public enum type { GOLD, WOOD, ORE, CRYSTAL, GEM };
 
+    // Sets amount of resource types
+    public static int TYPES = 5;
+
     public string GetResourceName(int i)
     {
         string name = "";
@@ -40,7 +43,7 @@ public class Resources
 
     public Resources()
     {
-        resourceTab = new int[5];
+        resourceTab = new int[TYPES];
     }
 
     /// <summary>

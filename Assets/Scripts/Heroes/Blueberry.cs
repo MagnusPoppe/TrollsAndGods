@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Units;
 
 class Blueberry : Hero
 {
@@ -9,6 +10,7 @@ class Blueberry : Hero
     private const int PORTRAIT_ID = 0;
     private const string NAME = "Blueberry";
     private const string DESCRIPTION = "Cool dude, yo bro";
+    private static UnitTree unitTree;
 
     // Resources cost: 
     const int GOLD_COST = 1000;
@@ -22,10 +24,16 @@ class Blueberry : Hero
     public Blueberry(Player player, Point position) 
         : base(player, position, LOCAL_SPRITE_ID, PORTRAIT_ID, NAME, DESCRIPTION, new Cost(GOLD_COST, WOOD_COST, ORE_COST, CRYSTAL_COST, GEM_COST))
     {
+        unitTree = new UnitTree();
+        unitTree.addUnit(new StoneTroll(), UnityEngine.Random.Range(2, 4));
+        SetUnits(unitTree);
     }
 
     public Blueberry()
         : base(LOCAL_SPRITE_ID, PORTRAIT_ID, NAME, DESCRIPTION, new Cost(GOLD_COST, WOOD_COST, ORE_COST, CRYSTAL_COST, GEM_COST))
     {
+        unitTree = new UnitTree();
+        unitTree.addUnit(new StoneTroll(), UnityEngine.Random.Range(2, 4));
+        SetUnits(unitTree);
     }
 }

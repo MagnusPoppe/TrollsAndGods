@@ -432,12 +432,13 @@ namespace MapGenerator
         /// Uses the placement class to place buildings onto the map.
         /// This is done through a given region.
         /// </summary>
-        public Placement PlaceBuildings(Player[] players)
+        public Placement PlaceBuildings(Player[] players, Reaction[,] reactions)
         {
             Placement placements = new Placement(map, canWalk);
             return placements;
             // PLACEMENT OF ALL BUILDINGS:
             // TODO: GIVE THE MINES TO PLAYERS, NOT JUST players[0]
+            /*
             Player ownerOfMines = players[0];
             foreach (Region r in regions)
             {
@@ -457,6 +458,7 @@ namespace MapGenerator
                 placements.Place( r, mine);
                 ownerOfMines.ResourceBuildings.Add(mine);
             }
+            */
         }
 
         /// <summary>
