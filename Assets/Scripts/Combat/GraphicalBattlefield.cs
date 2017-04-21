@@ -302,6 +302,7 @@ public class GraphicalBattlefield : MonoBehaviour
                 GameObject go = Instantiate(unit, parent.transform);
                 go.name = "d" + i;
                 SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
+                sr.flipX = true;
                 sr.sprite = troll;
                 sr.sortingLayerName = "CombatUnits";
                 TextMesh tm = go.GetComponentInChildren<TextMesh>();
