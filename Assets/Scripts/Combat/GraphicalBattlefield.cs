@@ -13,7 +13,7 @@ public class GraphicalBattlefield : MonoBehaviour
     BattleField battleField;
     int[,] canwalk;
     int width, height;
-    bool inCombat;
+    bool inCombat, ai;
     GameObject[,] field;
     GameObject[,] unitsOnField;
     GameObject parent;
@@ -31,6 +31,7 @@ public class GraphicalBattlefield : MonoBehaviour
     private float towardNextStep;
     private Sprite attackSheet, moveSheet, troll;
     private RuntimeAnimatorController walkingAnimator, attackingAnimator;
+    private CombatAi combatAi;
 
     // Use this for initialization
     void Start () {
@@ -103,7 +104,7 @@ public class GraphicalBattlefield : MonoBehaviour
                 canwalk[getUnitWhoseTurnItIs().LogicalPos.x, getUnitWhoseTurnItIs().LogicalPos.y] = MapMaker.CANNOTWALK;
 
                 getUnitWhoseTurnItIs().GetComponent<SpriteRenderer>().flipX = !getUnitWhoseTurnItIs().AttackingSide;
-
+                finishedWalking = false;
                 if (attacking)
                 {
                     getUnitWhoseTurnItIs().GetComponent<SpriteRenderer>().sprite = attackSheet;
@@ -116,7 +117,6 @@ public class GraphicalBattlefield : MonoBehaviour
                     getUnitWhoseTurnItIs().GetComponent<SpriteRenderer>().sprite = troll;
                     nextTurn();
                 }
-                finishedWalking = false;
             }
             else if(attacking)
             {
@@ -172,7 +172,7 @@ public class GraphicalBattlefield : MonoBehaviour
     /// <param name="height">Height of battlefield</param>
     /// <param name="attacker">Attacking hero</param>
     /// <param name="defender">Defending units</param>
-    public void beginCombat(int width, int height, Hero attacker, UnitTree defender)
+    public void beginCombat(int width, int height, Hero attacker, UnitTree defender, bool ai)
     {
         Width = width;
         Height = height;
@@ -191,6 +191,11 @@ public class GraphicalBattlefield : MonoBehaviour
         populateInitative(attacker, defender);
         possibleMovement = new PossibleMovement(field, unitsOnField, canwalk, width, height);
         flipReachableAndAttackable();
+        this.ai = ai;
+        if (ai)
+        {
+            combatAi = new CombatAi(this,field,unitsOnField,width,height);
+        }
     }
 
     /// <summary>
@@ -297,6 +302,7 @@ public class GraphicalBattlefield : MonoBehaviour
                 GameObject go = Instantiate(unit, parent.transform);
                 go.name = "d" + i;
                 SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
+                sr.flipX = true;
                 sr.sprite = troll;
                 sr.sortingLayerName = "CombatUnits";
                 TextMesh tm = go.GetComponentInChildren<TextMesh>();
@@ -332,6 +338,17 @@ public class GraphicalBattlefield : MonoBehaviour
         battleField.endCombat();
         InCombat = false;
         gm.exitCombat(livingAttackers != 0);
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                Destroy(field[x,y]);
+                if (UnitsOnField[x, y] != null)
+                {
+                    Destroy(unitsOnField[x,y]);
+                }
+            }
+        }
     }
 
     /// <summary>
@@ -495,6 +512,10 @@ public class GraphicalBattlefield : MonoBehaviour
         initative[whoseTurn].ItsTurn = true;
         flipReachableAndAttackable();
         getUnitWhoseTurnItIs().UnitTree.GetUnits()[getUnitWhoseTurnItIs().PosInUnitTree].HaveNotRetaliated = true;
+        if (ai && !getUnitWhoseTurnItIs().AttackingSide)
+        {
+            combatAi.act(getUnitWhoseTurnItIs());
+        }
     }
 
     /// <summary>

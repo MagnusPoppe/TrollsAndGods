@@ -507,7 +507,7 @@ public class GameManager : MonoBehaviour
             }
             UnitTree defendingTest = new UnitTree();
             defendingTest.setUnit(new StoneTroll(), 5, 0);
-            enterCombat(15, 11, activeHero, defendingTest);
+            enterCombat(15, 11, activeHero, defendingTest, true);
         }
     }
 
@@ -1922,11 +1922,11 @@ public class GameManager : MonoBehaviour
         combatWindow.transform.localPosition = new Vector3(0, 0, 10);
     }
 
-    public void enterCombat(int width, int height, Hero attacker, UnitTree defender)
+    public void enterCombat(int width, int height, Hero attacker, UnitTree defender, bool ai)
     {
         overWorld = false;
         combatWindow.SetActive(true);
-        graphicalBattlefield.beginCombat(width, height, attacker, defender);
+        graphicalBattlefield.beginCombat(width, height, attacker, defender, ai);
         cameraMovement.enabled = false;
         combatWindow.transform.localPosition = new Vector3(0,0,10);
     }
