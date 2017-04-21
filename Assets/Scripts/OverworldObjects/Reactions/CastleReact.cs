@@ -70,7 +70,7 @@ public class CastleReact : Reaction {
                 }
                 else
                 {
-                    gm.enterCombat(15, 11, h, castle.Town.StationedUnits);
+                    gm.enterCombat(15, 11, h, castle.Town.StationedUnits, false);
                 }
                 return false;
             }
