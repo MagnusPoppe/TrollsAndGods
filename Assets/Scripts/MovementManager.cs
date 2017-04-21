@@ -185,6 +185,7 @@ public class MovementManager
         Point start = startPosition;
         
         bool heroNotDead = true;
+
         // If tile is threatened, perform the additional reaction before the main one
         if (reactions[x, y].HasPreReact())
         {
@@ -228,7 +229,7 @@ public class MovementManager
             {
                 // TODO change owner of defenseless castle visually
                 CastleReact cr = (CastleReact) reactions[x, y];
-                gameManager.changeCastleOwner(cr);
+                cr.Castle.changeCastleOwner(cr, gameManager.Players[gameManager.WhoseTurn], gameManager.activeHero);
             }
             else if (reactions[x, y].GetType().Equals(typeof(DwellingReact)))
             {
@@ -270,6 +271,7 @@ public class MovementManager
                     reactions[end.x, end.y].PreReaction = reactions[start.x, start.y].PreReaction;
                 else
                     reactions[end.x, end.y].PreReaction = reactions[start.x, start.y];
+                reactions[end.x, end.y].PreReaction.Pos = new Point(end.x, end.y);
             }
             // Else, set destination reaction to the heroreaction, and make the tile a triggertile
             else
@@ -279,6 +281,7 @@ public class MovementManager
                     reactions[end.x, end.y] = reactions[start.x, start.y].PreReaction;
                 else
                     reactions[end.x, end.y] = reactions[start.x, start.y];
+                reactions[end.x, end.y].Pos = new Point(end.x, end.y);
 
                 canWalk[end.x, end.y] = MapMaker.TRIGGER;
             }

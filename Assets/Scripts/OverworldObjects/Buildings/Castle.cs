@@ -95,5 +95,19 @@ namespace OverworldObjects
                 react.PreReaction = new HeroMeetReact(hero, new Point(x, y));
             }
         }
+
+
+	    /// <summary>
+	    /// Changes owner of castle to Player whose turn it is
+	    /// </summary>
+	    /// <param name="cr">CastleReact</param>
+	    public void changeCastleOwner(CastleReact cr, Player player, Hero hero)
+	    {
+	        cr.Castle.Player.Castle.Remove(cr.Castle);
+	        cr.Castle.Player = player;
+	        cr.Castle.Town.Owner = player;
+	        cr.Castle.Town.VisitingHero = hero;
+	        player.Castle.Add(cr.Castle);
+	    }
     }
 }
