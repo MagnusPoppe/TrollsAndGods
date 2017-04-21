@@ -98,6 +98,26 @@ namespace OverworldObjects
             return Reaction = new DwellingReact(this, Origo);
         }
 
+        public void flipReactions(Reaction[,] reactions)
+        {
+            int x = (int)Origo.x;
+            int y = (int)Origo.y;
 
+            int[,] shape = Shapes.GetShape(ShapeType);
+
+            for (int fy = 0; fy < shape.GetLength(0); fy++)
+            {
+                for (int fx = 0; fx < shape.GetLength(1); fx++)
+                {
+                    int dxx = x + Shapes.dx[fx];
+                    int dyy = y + Shapes.dy[fy];
+
+                    if (shape[fx, fy] == 1)
+                    {
+                        reactions[dxx, dyy] = new DwellingReact(this, new Point(dxx, dyy));
+                    }
+                }
+            }
+        }
     }
 }
