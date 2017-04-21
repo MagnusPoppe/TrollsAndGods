@@ -70,5 +70,10 @@
             Reaction = new ResourceBuildingReaction(this, Origo);
             return Reaction;
         }
+
+        public override string ToString()
+        {
+            return base.ToString() + "\n+ " + earnings.ToString() + "/day";
+        }
     }
 }

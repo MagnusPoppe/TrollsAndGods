@@ -80,7 +80,7 @@ namespace OverworldObjects
         /// <param name="region"> Region to place the building in</param>
         /// <param name="building"> Building to be placed</param>
         /// <returns> coordinate to place the building on, NULL if no available placement. </returns>
-        public bool Place(Region region, OverworldBuilding building)
+        public bool Place(Region region, OverworldBuilding building, Reaction[,] reactions)
         {
             List<Point> coord = region.GetCoordinates();
             int[,] shape = Shapes.GetShape(building.ShapeType);
@@ -131,7 +131,11 @@ namespace OverworldObjects
             if (bestPossible != null) // PLACING AT BEST POSSIBLE LOCATION:
             {
                 // Debug.Log("Best placement: " + bestPossible+",  score="+highest);
+                // Place spriteId in maptable
                 realMap[bestPossible.x, bestPossible.y] = building.GetSpriteID();
+                // Place reaction in reactiontable
+                reactions[bestPossible.x, bestPossible.y] = building.makeReaction();
+                canWalk[bestPossible.x, bestPossible.y] = MapMaker.TRIGGER;
                 markOccupied(bestPossible, shape);
                 return true;
             }

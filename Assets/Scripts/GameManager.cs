@@ -132,7 +132,7 @@ public class GameManager : MonoBehaviour
     public GameObject unitActionPanel;
     public GameObject unitPanel;
     public GameObject heroPanel, heroTradePanel; // , heroPanel2;
-    public GameObject heroReactPanel, castleReactPanel, dwellingReactPanel, resourceReactPanel, artifactReactPanel;
+    public GameObject heroReactPanel, castleReactPanel, dwellingReactPanel, resourceBuildingReactPanel, resourceReactPanel, artifactReactPanel;
 
     //currentReaction
     private Reaction curReaction;
@@ -224,6 +224,8 @@ public class GameManager : MonoBehaviour
         castleReactPanel.SetActive(false);
         dwellingReactPanel = GameObject.Find("DwellingReactPanel");
         dwellingReactPanel.SetActive(false);
+        resourceBuildingReactPanel = GameObject.Find("ResourceBuildingReactPanel");
+        resourceBuildingReactPanel.SetActive(false);
         resourceReactPanel = GameObject.Find("ResourceReactPanel");
         resourceReactPanel.SetActive(false);
         artifactReactPanel = GameObject.Find("ArtifactReactPanel");
@@ -528,6 +530,8 @@ public class GameManager : MonoBehaviour
             castleReactPanel.SetActive(false);
         if (dwellingReactPanel.activeSelf)
             dwellingReactPanel.SetActive(false);
+        if (resourceBuildingReactPanel.activeSelf)
+            resourceBuildingReactPanel.SetActive(false);
         if (resourceReactPanel.activeSelf)
             resourceReactPanel.SetActive(false);
         if (artifactReactPanel.activeSelf)
@@ -597,6 +601,12 @@ public class GameManager : MonoBehaviour
             {
                 DwellingReact dwellingReaction = (DwellingReact)reactions[x, y];
                 OpenDwellingReactPanel(dwellingReaction.DwellingBuilding);
+            }
+            // DwellingReaction found, open DwellingReact
+            else if (reactions[x, y].GetType().Equals(typeof(ResourceBuildingReaction)))
+            {
+                ResourceBuildingReaction resourceBuildingReaction = (ResourceBuildingReaction)reactions[x, y];
+                OpenResourceBuildingReactPanel(resourceBuildingReaction.ResourceBuilding);
             }
         }
     }
@@ -695,8 +705,18 @@ public class GameManager : MonoBehaviour
     /// <param name="dwellingBuilding">The DwellingBuilding</param>
     public void OpenDwellingReactPanel(DwellingBuilding dwellingBuilding)
     {
-        resourceReactPanel.transform.GetChild(0).gameObject.GetComponent<Text>().text = dwellingBuilding.ToString();
+        dwellingReactPanel.transform.GetChild(0).gameObject.GetComponent<Text>().text = dwellingBuilding.ToString();
         dwellingReactPanel.SetActive(true);
+    }
+
+    /// <summary>
+    /// Activates ResourceBuildingReactPanel
+    /// </summary>
+    /// <param name="resourceBuilding">The ResourceBuilding</param>
+    public void OpenResourceBuildingReactPanel(OverworldObjects.ResourceBuilding resourceBuilding)
+    {
+        resourceBuildingReactPanel.transform.GetChild(0).gameObject.GetComponent<Text>().text = resourceBuilding.ToString();
+        resourceBuildingReactPanel.SetActive(true);
     }
 
     /// <summary>
@@ -806,7 +826,7 @@ public class GameManager : MonoBehaviour
         mapmaker.initializePlayers(map, canWalk, players);
 
 	    // Placeing all buildings within the regions.
-	    placement = mapmaker.PlaceBuildings(players);
+	    placement = mapmaker.PlaceBuildings(players, reactions);
         PlaceBuildings();
         
         // Add reactions to buildings in regions
@@ -839,19 +859,19 @@ public class GameManager : MonoBehaviour
         foreach (Region r in regions)
         {
             OverworldObjects.ResourceBuilding mine = new OreMine(ownerOfMines);
-            placement.Place( r, mine );
+            placement.Place( r, mine, reactions);
             ownerOfMines.ResourceBuildings.Add(mine);
 
             mine = new GemMine(ownerOfMines);
-            placement.Place( r, mine);
+            placement.Place( r, mine, reactions);
             ownerOfMines.ResourceBuildings.Add(mine);
 
             mine = new CrystalMine(ownerOfMines);
-            placement.Place( r, mine);
+            placement.Place( r, mine, reactions);
             ownerOfMines.ResourceBuildings.Add(mine);
 
             mine = new GoldMine(ownerOfMines);
-            placement.Place( r, mine);
+            placement.Place( r, mine, reactions);
             ownerOfMines.ResourceBuildings.Add(mine);
         }
     }

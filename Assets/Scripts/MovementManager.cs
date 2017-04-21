@@ -120,6 +120,7 @@ public class MovementManager
         {
             if (StopForPreReact(new Point(activeHero.Path[0])))
             {
+                activeHero.CurMovementSpeed--;
                 WalkFinished(previousStep, new Point(activeHero.Path[0]));
                 return false;
             }
@@ -156,21 +157,24 @@ public class MovementManager
     /// <returns>True if there is a pre-react and the hero should stop,false otherwise.</returns>
     private bool StopForPreReact(Point nextStep)
     {
+        int x = nextStep.x;
+        int y = nextStep.y;
 
-            int x = nextStep.x;
-            int y = nextStep.y;
-
-            if (reactions[x, y] != null)
+        if (reactions[x, y] != null)
+        {
+            if (reactions[x, y].GetType().Equals(typeof(DwellingReact)) ||
+                reactions[x, y].GetType().Equals(typeof(CastleReact)) || reactions[x, y].GetType().Equals(typeof(ResourceBuildingReaction)))
             {
-                if (reactions[x, y].GetType().Equals(typeof(DwellingReact))
-                    ||  reactions[x, y].GetType().Equals(typeof(CastleReact)))
+                if (reactions[x, y].HasPreReact())
                 {
-                    if (reactions[x, y].HasPreReact())
-                        return true; // Stop for pre react
-                }
-                else
                     return true; // Stop for pre react
+                }
             }
+            else
+            {
+                return true; // Stop for pre react
+            }
+        }
         return false; // Do not stop for pre react
     }
 
@@ -181,7 +185,6 @@ public class MovementManager
         Point start = startPosition;
         
         bool heroNotDead = true;
-
         // If tile is threatened, perform the additional reaction before the main one
         if (reactions[x, y].HasPreReact())
         {

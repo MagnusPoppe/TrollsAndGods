@@ -98,6 +98,9 @@ namespace OverworldObjects
             return Reaction = new DwellingReact(this, Origo);
         }
 
-
+        public override string ToString()
+        {
+            return base.ToString() + "\nRecruit " + unitsPresent + "/" + unitsPerWeek + unit.Name;
+        }
     }
 }
