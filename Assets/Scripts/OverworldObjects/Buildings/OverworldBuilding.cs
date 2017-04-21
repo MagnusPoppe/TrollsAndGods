@@ -78,6 +78,11 @@ namespace OverworldObjects
             canWalk[Origo.x,Origo.y] = MapGenerator.MapMaker.TRIGGER;
         }
 
+	    public virtual void flipReactions(Reaction[,] reactions)
+	    {
+
+	    }
+
         public virtual Reaction makeReaction()
         {
             //implemented in subclasses

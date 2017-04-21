@@ -98,7 +98,7 @@ namespace OverworldObjects
             return Reaction = new DwellingReact(this, Origo);
         }
 
-        public void flipReactions(Reaction[,] reactions)
+        public override void flipReactions(Reaction[,] reactions)
         {
             int x = (int)Origo.x;
             int y = (int)Origo.y;

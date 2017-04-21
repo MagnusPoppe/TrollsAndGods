@@ -25,7 +25,7 @@ public class Resources
     // Sets amount of resource types
     public static int TYPES = 5;
 
-    public string GetResourceName(int i)
+    public static string GetResourceName(int i)
     {
         string name = "";
         if (i == 0)

@@ -19,7 +19,6 @@ public class IngameObjectLibrary
         towns = InitializeTowns();
         ui = InitializeUI();
         portraits = InitializePortraits();
-        resources = InitializeResources();
         units = InitializeUnits();
     }
 
@@ -64,9 +63,6 @@ public class IngameObjectLibrary
 
         else if (category == Category.Portraits)
             return PORTRAIT_START;
-
-        else if (category == Category.Resources)
-            return RESOURCES_START;
 
         else if (category == Category.Unit)
             return UNIT_START;
@@ -123,13 +119,9 @@ public class IngameObjectLibrary
         {
             return Category.UI;
         }
-        else if (spriteID < PORTRAIT_START)
+        else if (spriteID <= PORTRAIT_START + PORTRAIT_COUNT)
         {
             return Category.Portraits;
-        }
-        else if (spriteID <= RESOURCES_START + RESOURCES_COUNT)
-        {
-            return Category.Resources;
         }
 
         // TODO: Debugger
@@ -422,30 +414,6 @@ public class IngameObjectLibrary
     }
 
     // resources-variabler. resources[] holder alle sprites, resources_START er global startverdi for heroes sprites, resources_COUNT er antall resources sprites
-    Sprite[] resources;
-    public const int RESOURCES_START = UI_START + UI_COUNT;
-    public const int RESOURCES_COUNT = 5;
-
-    /// <summary>
-    /// Initialiserer et array for å holde på alle resources sprites
-    /// </summary>
-    /// <returns>Array med resources sprites</returns>
-    private Sprite[] InitializeResources()
-    {
-        Sprite[] sprites = new Sprite[PORTRAIT_COUNT];
-        String path = "Sprites/UI/";
-
-        // portrait sprites
-        sprites[0] = UnityEngine.Resources.Load<Sprite>(path + "gold");
-        sprites[1] = UnityEngine.Resources.Load<Sprite>(path + "wood");
-        sprites[2] = UnityEngine.Resources.Load<Sprite>(path + "ore");
-        sprites[3] = UnityEngine.Resources.Load<Sprite>(path + "crystal");
-        sprites[4] = UnityEngine.Resources.Load<Sprite>(path + "gem");
-
-        return sprites;
-    }
-
-    // resources-variabler. resources[] holder alle sprites, resources_START er global startverdi for heroes sprites, resources_COUNT er antall resources sprites
     Sprite[] units;
     public const int UNIT_START = UI_START + UI_COUNT;
     public const int UNIT_COUNT = 0;
@@ -534,11 +502,6 @@ public class IngameObjectLibrary
         return portraits[spriteID - PORTRAIT_START];
     }
 
-    public Sprite GetResources(int spriteID)
-    {
-        return resources[spriteID - RESOURCES_START];
-    }
-
     public Sprite GetUnit(int spriteID)
     {
         return units[spriteID - UNIT_START];
@@ -548,5 +511,23 @@ public class IngameObjectLibrary
 	{
 		return debug[spriteID];
 	}
+
+    public static Sprite[] ResourceIcons = UnityEngine.Resources.LoadAll<Sprite>("Sprites/UI/Resources");
+    public static Sprite[] Resource = UnityEngine.Resources.LoadAll<Sprite>("Sprites/Environment/Resources");
+
+    public static Sprite[] Pointers = UnityEngine.Resources.LoadAll<Sprite>("Sprites/Pointers");
+
+    private static string unitPath = "Sprites/Units";
+    public static Sprite[] unitSprite = UnityEngine.Resources.LoadAll<Sprite>(unitPath + "Sprite");
+    public static Sprite[] unitArt = UnityEngine.Resources.LoadAll<Sprite>(unitPath + "Art");
+    public static Sprite[] unitPortraits = UnityEngine.Resources.LoadAll<Sprite>(unitPath + "Portraits");
+    
+    private static string heroPath = "Sprites/Hero";
+    public static Sprite[] heroSprite = UnityEngine.Resources.LoadAll<Sprite>(unitPath + "Sprite");
+    public static Sprite[] heroPortraits = UnityEngine.Resources.LoadAll<Sprite>(unitPath + "Portraits");
+
+    private static string townPath = "Sprites/Town";
+    public static Sprite[] townOverworld = UnityEngine.Resources.LoadAll<Sprite>(townPath + "Sprite");
+    public static Sprite[] townScreen = UnityEngine.Resources.LoadAll<Sprite>(townPath + "Portraits");
 }
  

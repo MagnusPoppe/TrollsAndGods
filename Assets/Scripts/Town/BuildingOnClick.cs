@@ -236,18 +236,8 @@ namespace TownView
                     {
                         // Finding resourcepanel gameobject child with buttonimage and text
                         GameObject resourceObject = resourcePanel.transform.GetChild(j).gameObject;
-                        string spritePath = "Sprites/UI/gold"; // TODO add to IngameObjectLibrary
-                        if (j == 1)
-                            spritePath = "Sprites/UI/wood";
-                        else if (j == 2)
-                            spritePath = "Sprites/UI/ore";
-                        else if (j == 3)
-                            spritePath = "Sprites/UI/crystal";
-                        else if (j == 4)
-                            spritePath = "Sprites/UI/gem";
-
                         // Setting resource mage
-                        resourceObject.GetComponent<Image>().sprite = UnityEngine.Resources.Load<Sprite>(spritePath);
+                        resourceObject.GetComponent<Image>().sprite = IngameObjectLibrary.ResourceIcons[j];
                         // Setting resourcecost text
                         resourceObject.transform.GetChild(0).GetComponent<Text>().text = buildingArray[i].Cost.CostToString(j);
                     }
@@ -334,30 +324,8 @@ namespace TownView
                 Button buttonPay = resourceObjectPay.GetComponent<Button>();
                 buttonPay.onClick.AddListener(() => setTrade(true, selectedResource));
 
-                // Quick and dirty switch
-                switch (i)
-                {
-                    case 0:
-                        resourceObjectPay.GetComponent<Image>().sprite =
-                            UnityEngine.Resources.Load<Sprite>("Sprites/UI/gold");
-                        break;
-                    case 1:
-                        resourceObjectPay.GetComponent<Image>().sprite =
-                            UnityEngine.Resources.Load<Sprite>("Sprites/UI/wood");
-                        break;
-                    case 2:
-                        resourceObjectPay.GetComponent<Image>().sprite =
-                            UnityEngine.Resources.Load<Sprite>("Sprites/UI/ore");
-                        break;
-                    case 3:
-                        resourceObjectPay.GetComponent<Image>().sprite =
-                            UnityEngine.Resources.Load<Sprite>("Sprites/UI/crystal");
-                        break;
-                    case 4:
-                        resourceObjectPay.GetComponent<Image>().sprite =
-                            UnityEngine.Resources.Load<Sprite>("Sprites/UI/gem");
-                        break;
-                }
+                // Set sprite
+                resourceObjectPay.GetComponent<Image>().sprite = IngameObjectLibrary.ResourceIcons[i];
 
                 textResource[i] = resourceObjectPay.transform.GetChild(0).gameObject.GetComponent<Text>();
                 textResource[i].text = player.Wallet.GetResource(i) + "";

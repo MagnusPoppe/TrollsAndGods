@@ -132,10 +132,12 @@ namespace OverworldObjects
             {
                 // Debug.Log("Best placement: " + bestPossible+",  score="+highest);
                 // Place spriteId in maptable
+                building.Origo = new Point(bestPossible.x, bestPossible.y);
                 realMap[bestPossible.x, bestPossible.y] = building.GetSpriteID();
                 // Place reaction in reactiontable
-                reactions[bestPossible.x, bestPossible.y] = building.makeReaction();
-                canWalk[bestPossible.x, bestPossible.y] = MapMaker.TRIGGER;
+                building.flipReactions(reactions);
+                //canWalk[bestPossible.x, bestPossible.y] = MapMaker.TRIGGER;
+                building.FlipCanWalk(canWalk);
                 markOccupied(bestPossible, shape);
                 return true;
             }

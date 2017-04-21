@@ -148,11 +148,7 @@ public class GameManager : MonoBehaviour
 
     private Vector2 nextGraphicalStep;
     private Point nextLogicalStep;
-
-    public Sprite pathDestYes;
-    public Sprite pathDestNo;
-    public Sprite pathYes;
-    public Sprite pathNo;
+    
     public List<GameObject> pathObjects;
 
     public static bool ANIMATION_RUNNING;
@@ -273,13 +269,8 @@ public class GameManager : MonoBehaviour
 
         // Starting movementmanager:
         movement = new MovementManager(reactions, canWalk, aStar, this);
-        pathDestYes = UnityEngine.Resources.Load<Sprite>("Sprites/Pointers/pointerDestYes");
-        pathDestNo = UnityEngine.Resources.Load<Sprite>("Sprites/Pointers/pointerDestNo");
-        pathYes = UnityEngine.Resources.Load<Sprite>("Sprites/Pointers/pointerPathYes");
-        pathNo = UnityEngine.Resources.Load<Sprite>("Sprites/Pointers/pointerPathNo");
         pathObjects = new List<GameObject>();
-
-        ResourceIncomePanel incomePanel = new ResourceIncomePanel();
+        
         // Testing event logging system:
         Update();
         Log log = new Log(this);
@@ -685,7 +676,7 @@ public class GameManager : MonoBehaviour
     /// <param name="resourceIndex">The resourcetype</param>
     public void OpenResourceReactPanel(int resourceIndex)
     {
-        resourceReactPanel.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Gold"; // TODO 
+        resourceReactPanel.transform.GetChild(0).gameObject.GetComponent<Text>().text = Resources.GetResourceName(resourceIndex);
         resourceReactPanel.SetActive(true);
     }
     
@@ -738,14 +729,14 @@ public class GameManager : MonoBehaviour
             if (i + 1 == activeHero.Path.Count)
             {
                 if (i + 1 <= activeHero.CurMovementSpeed)
-                    sr.sprite = pathDestYes;
+                    sr.sprite = IngameObjectLibrary.Pointers[1];
                 else
-                    sr.sprite = pathDestNo;
+                    sr.sprite = IngameObjectLibrary.Pointers[0];
             }
             else if (tilesToBeWalked > 0)
-                sr.sprite = pathYes;
+                sr.sprite = IngameObjectLibrary.Pointers[3];
             else
-                sr.sprite = pathNo;
+                sr.sprite = IngameObjectLibrary.Pointers[2];
 
             tilesToBeWalked--;
 
@@ -895,7 +886,9 @@ public class GameManager : MonoBehaviour
         resourceText = new Text[overworldResourcePanel.transform.childCount];
         for (int i = 0; i < resourceText.Length; i++)
         {
-            resourceText[i] = overworldResourcePanel.transform.GetChild(i).GetChild(0).GetComponent<Text>();
+            GameObject resourceObject = overworldResourcePanel.transform.GetChild(i).gameObject;
+            resourceObject.GetComponent<Image>().sprite = IngameObjectLibrary.ResourceIcons[i];
+            resourceText[i] = resourceObject.transform.GetChild(0).GetComponent<Text>();
         }
         updateResourceText();
     }

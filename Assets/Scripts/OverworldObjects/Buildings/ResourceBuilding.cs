@@ -71,7 +71,7 @@
             return Reaction;
         }
 
-        public void flipReactions(Reaction[,] reactions)
+        public override void flipReactions(Reaction[,] reactions)
         {
             int x = (int)Origo.x;
             int y = (int)Origo.y;
