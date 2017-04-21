@@ -339,23 +339,23 @@ namespace TownView
                 {
                     case 0:
                         resourceObjectPay.GetComponent<Image>().sprite =
-                            UnityEngine.Resources.Load<Sprite>("Sprites/UI/gold");
+                            UnityEngine.Resources.Load<Sprite>("Sprites/UI/Resources/gold");
                         break;
                     case 1:
                         resourceObjectPay.GetComponent<Image>().sprite =
-                            UnityEngine.Resources.Load<Sprite>("Sprites/UI/wood");
+                            UnityEngine.Resources.Load<Sprite>("Sprites/UI/Resources/wood");
                         break;
                     case 2:
                         resourceObjectPay.GetComponent<Image>().sprite =
-                            UnityEngine.Resources.Load<Sprite>("Sprites/UI/ore");
+                            UnityEngine.Resources.Load<Sprite>("Sprites/UI/Resources/ore");
                         break;
                     case 3:
                         resourceObjectPay.GetComponent<Image>().sprite =
-                            UnityEngine.Resources.Load<Sprite>("Sprites/UI/crystal");
+                            UnityEngine.Resources.Load<Sprite>("Sprites/UI/Resources/crystal");
                         break;
                     case 4:
                         resourceObjectPay.GetComponent<Image>().sprite =
-                            UnityEngine.Resources.Load<Sprite>("Sprites/UI/gem");
+                            UnityEngine.Resources.Load<Sprite>("Sprites/UI/Resources/gem");
                         break;
                 }
 
