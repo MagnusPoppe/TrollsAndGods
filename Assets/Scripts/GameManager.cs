@@ -2424,4 +2424,9 @@ public class GameManager : MonoBehaviour
         // If a swap object was enabled, nullify it
         swapObject = null;
     }
+
+    public Player getPlayer(int id)
+    {
+        return players[id];
+    }
 }
