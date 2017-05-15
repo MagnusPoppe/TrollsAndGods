@@ -24,7 +24,6 @@ public class Wallet : Resources
             ResourceTab = new int[] { 5000, 10, 10, 0, 0, 0, 0 };
     }
 
-
     /// <summary>
     /// Method that checks if parameter values is lower or equal to the objects resource values
     /// </summary>
