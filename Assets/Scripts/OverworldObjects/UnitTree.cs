@@ -241,6 +241,11 @@ public class UnitTree
         return false;
     }
 
+    /// <summary>
+    /// Swaps two units with eachother
+    /// </summary>
+    /// <param name="from">First unit pos in tree</param>
+    /// <param name="to">Second unit pos in tree</param>
     public void swapUnits(int from, int to)
     {
         Unit tmpUnit = units[to];
