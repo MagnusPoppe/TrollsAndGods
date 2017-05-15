@@ -361,12 +361,22 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Animates the movement to a given position.
+    /// </summary>
+    /// <returns>The movement to.</returns>
+    /// <param name="from">From.</param>
+    /// <param name="target">Target.</param>
     private Vector2 AnimateMovementTo( Vector2 from, Vector2 target )
     {
         // Add animation, transform hero position
         return Vector2.MoveTowards( from, target, animationSpeed );
     }
 
+    /// <summary>
+    /// Listens to all inputs. 
+    /// TODO: Specifiy what this algorithm does.
+    /// </summary>
     public void ListenToInputs()
     {
         // if you have clicked once on a castle of possession, give a window of frames to click it again to open castle menu
@@ -761,6 +771,9 @@ public class GameManager : MonoBehaviour
         li = new List<GameObject>();
     }
 
+    /// <summary>
+    /// Listens to mouse hover.
+    /// </summary>
     public void ListenToMouseHover()
     {
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -845,6 +858,9 @@ public class GameManager : MonoBehaviour
         mapmaker = null;
 	}
 
+    /// <summary>
+    /// Places the buildings using the placement class.
+    /// </summary>
     private void PlaceBuildings()
     {
         Player ownerOfMines = players[0];
@@ -1299,6 +1315,9 @@ public class GameManager : MonoBehaviour
         buildingsInActiveTown[i].GetComponent<BuildingOnClick>().Player = players[WhoseTurn];
     }
 
+    /// <summary>
+    /// Destroys the buildings in town.
+    /// </summary>
     public void DestroyBuildingsInTown()
     {
 
@@ -1913,6 +1932,13 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Enters the combat.
+    /// </summary>
+    /// <param name="width">Width.</param>
+    /// <param name="height">Height.</param>
+    /// <param name="attacker">Attacker.</param>
+    /// <param name="defender">Defender.</param>
     public void enterCombat(int width, int height, Hero attacker, Hero defender)
     {
         overWorld = false;
@@ -1922,6 +1948,14 @@ public class GameManager : MonoBehaviour
         combatWindow.transform.localPosition = new Vector3(0, 0, 10);
     }
 
+    /// <summary>
+    /// Enters the combat.
+    /// </summary>
+    /// <param name="width">Width.</param>
+    /// <param name="height">Height.</param>
+    /// <param name="attacker">Attacker.</param>
+    /// <param name="defender">Defender.</param>
+    /// <param name="ai">If set to <c>true</c> ai.</param>
     public void enterCombat(int width, int height, Hero attacker, UnitTree defender, bool ai)
     {
         overWorld = false;
@@ -1931,6 +1965,10 @@ public class GameManager : MonoBehaviour
         combatWindow.transform.localPosition = new Vector3(0,0,10);
     }
 
+    /// <summary>
+    /// Exits the combat.
+    /// </summary>
+    /// <param name="winner">If set to <c>true</c> winner.</param>
     public void exitCombat(bool winner)
     {
         combatWindow.SetActive(false);
