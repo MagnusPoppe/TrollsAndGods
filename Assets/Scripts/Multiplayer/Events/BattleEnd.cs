@@ -3,7 +3,9 @@ using UnityEngine;
 
 namespace Multiplayer
 {
-
+    /// <summary>
+    /// Event for handling a battle ending
+    /// </summary>
     public class BattleEnd : GameEvent
     {
 
@@ -19,12 +21,19 @@ namespace Multiplayer
             this.winner = winner;
         }
 
+        /// <summary>
+        /// Executes the action, Ending the battle.
+        /// </summary>
         public override void execute()
         {
             //todo test
             Gm.exitCombat(winner);
         }
 
+        /// <summary>
+        /// Packs this into JSON
+        /// </summary>
+        /// <returns>JSON of this object</returns>
         public override void unpackJSON(string JSON)
         {
             BattleEnd obj = JsonUtility.FromJson<BattleEnd>(JSON);
@@ -34,6 +43,10 @@ namespace Multiplayer
             winner = obj.winner;
         }
 
+        /// <summary>
+        /// Packs this into JSON
+        /// </summary>
+        /// <returns>JSON of this object</returns>
         public override string packJSON()
         {
             return JsonUtility.ToJson(this);

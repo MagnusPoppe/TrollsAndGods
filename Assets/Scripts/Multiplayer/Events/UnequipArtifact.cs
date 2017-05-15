@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace Multiplayer
 {
+    /// <summary>
+    /// Event for a hero unequipping a item
+    /// </summary>
     public class UnequipArtifact : GameEvent
     {
         public Point pos;
@@ -15,6 +18,9 @@ namespace Multiplayer
             this.slot = slot;
         }
 
+        /// <summary>
+        /// Executes the action, unequipping the item in the slot from the hero at pos
+        /// </summary>
         public override void execute()
         {
             HeroMeetReact hmr;
@@ -31,6 +37,10 @@ namespace Multiplayer
             hmr.Hero.EquippedItems[slot] = null;
         }
 
+        /// <summary>
+        /// Unpacks Json into this object
+        /// </summary>
+        /// <param name="JSON">JSON to be unpacked</param>
         public override void unpackJSON(string JSON)
         {
             UnequipArtifact obj = JsonUtility.FromJson<UnequipArtifact>(JSON);
@@ -38,6 +48,10 @@ namespace Multiplayer
             slot = obj.slot;
         }
 
+        /// <summary>
+        /// Packs this into JSON
+        /// </summary>
+        /// <returns>JSON of this object</returns>
         public override string packJSON()
         {
             return JsonUtility.ToJson(this);

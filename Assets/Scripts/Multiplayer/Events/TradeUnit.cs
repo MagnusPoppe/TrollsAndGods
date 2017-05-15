@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace Multiplayer
 {
+    /// <summary>
+    /// Event for heroes trading a unit between eachother
+    /// </summary>
     public class TradeUnit : GameEvent
     {
         public Point fromHero, toHero;
@@ -17,6 +20,9 @@ namespace Multiplayer
             this.toSlot = toSlot;
         }
 
+        /// <summary>
+        /// Executes the action, swapping unit in fromSlot with unit in toSlot.
+        /// </summary>
         public override void execute()
         {
             HeroMeetReact hmr1;
@@ -47,6 +53,10 @@ namespace Multiplayer
             utFrom.setUnit(tmp,tmpAmount,fromSlot);
         }
 
+        /// <summary>
+        /// Unpacks Json into this object
+        /// </summary>
+        /// <param name="JSON">JSON to be unpacked</param>
         public override void unpackJSON(string JSON)
         {
             TradeUnit obj = JsonUtility.FromJson<TradeUnit>(JSON);
@@ -56,6 +66,10 @@ namespace Multiplayer
             toSlot = obj.toSlot;
         }
 
+        /// <summary>
+        /// Packs this into JSON
+        /// </summary>
+        /// <returns>JSON of this object</returns>
         public override string packJSON()
         {
             return JsonUtility.ToJson(this);

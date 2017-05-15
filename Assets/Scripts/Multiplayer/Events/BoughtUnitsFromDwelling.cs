@@ -5,6 +5,9 @@ using UnityEngine;
 
 namespace Multiplayer
 {
+    /// <summary>
+    /// Event for handling units bought from dwellings.
+    /// </summary>
     public class BoughtUnitsFromDwelling : GameEvent
     {
         public int amount, heroID;
@@ -18,12 +21,18 @@ namespace Multiplayer
             this.dwelling = dwelling;
         }
 
+        /// <summary>
+        /// Executes the action, Units are bought from dwelling.
+        /// </summary>
         public override void execute()
         {
             //todo buy units
             throw new System.NotImplementedException();
         }
-
+        /// <summary>
+        /// Packs this into JSON
+        /// </summary>
+        /// <returns>JSON of this object</returns>
         public override void unpackJSON(string JSON)
         {
             BoughtUnitsFromDwelling obj = JsonUtility.FromJson<BoughtUnitsFromDwelling>(JSON);
@@ -32,6 +41,10 @@ namespace Multiplayer
             dwelling = obj.dwelling;
         }
 
+        /// <summary>
+        /// Packs this into JSON
+        /// </summary>
+        /// <returns>JSON of this object</returns>
         public override string packJSON()
         {
             return JsonUtility.ToJson(this);
