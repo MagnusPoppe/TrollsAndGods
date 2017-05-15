@@ -120,6 +120,7 @@ public class MovementManager
         {
             if (StopForPreReact(new Point(activeHero.Path[0])))
             {
+                activeHero.CurMovementSpeed--;
                 WalkFinished(previousStep, new Point(activeHero.Path[0]));
                 return false;
             }
@@ -156,21 +157,24 @@ public class MovementManager
     /// <returns>True if there is a pre-react and the hero should stop,false otherwise.</returns>
     private bool StopForPreReact(Point nextStep)
     {
+        int x = nextStep.x;
+        int y = nextStep.y;
 
-            int x = nextStep.x;
-            int y = nextStep.y;
-
-            if (reactions[x, y] != null)
+        if (reactions[x, y] != null)
+        {
+            if (reactions[x, y].GetType().Equals(typeof(DwellingReact)) ||
+                reactions[x, y].GetType().Equals(typeof(CastleReact)) || reactions[x, y].GetType().Equals(typeof(ResourceBuildingReaction)))
             {
-                if (reactions[x, y].GetType().Equals(typeof(DwellingReact))
-                    ||  reactions[x, y].GetType().Equals(typeof(CastleReact)))
+                if (reactions[x, y].HasPreReact())
                 {
-                    if (reactions[x, y].HasPreReact())
-                        return true; // Stop for pre react
-                }
-                else
                     return true; // Stop for pre react
+                }
             }
+            else
+            {
+                return true; // Stop for pre react
+            }
+        }
         return false; // Do not stop for pre react
     }
 
@@ -229,7 +233,7 @@ public class MovementManager
             {
                 // TODO change owner of defenseless castle visually
                 CastleReact cr = (CastleReact) reactions[x, y];
-                gameManager.changeCastleOwner(cr);
+                cr.Castle.changeCastleOwner(cr, gameManager.Players[gameManager.WhoseTurn], gameManager.activeHero);
             }
             else if (reactions[x, y].GetType().Equals(typeof(DwellingReact)))
             {
@@ -271,6 +275,7 @@ public class MovementManager
                     reactions[end.x, end.y].PreReaction = reactions[start.x, start.y].PreReaction;
                 else
                     reactions[end.x, end.y].PreReaction = reactions[start.x, start.y];
+                reactions[end.x, end.y].PreReaction.Pos = new Point(end.x, end.y);
             }
             // Else, set destination reaction to the heroreaction, and make the tile a triggertile
             else
@@ -280,6 +285,7 @@ public class MovementManager
                     reactions[end.x, end.y] = reactions[start.x, start.y].PreReaction;
                 else
                     reactions[end.x, end.y] = reactions[start.x, start.y];
+                reactions[end.x, end.y].Pos = new Point(end.x, end.y);
 
                 canWalk[end.x, end.y] = MapMaker.TRIGGER;
             }

@@ -95,7 +95,6 @@ public class GameManager : MonoBehaviour
     bool prepareDoubleClick;
     int clickCount;
     public Vector2 savedClickedPos;
-    public Town townSelected;
 
     public Hero activeHero;
     public Hero[] heroes = new Hero[5];
@@ -120,6 +119,7 @@ public class GameManager : MonoBehaviour
     Button nextRoundBtn;
     Text dateText;
     Text[] resourceText;
+    private static GameObject canvas;
     GameObject overworldCanvas;
     GameObject overworldInteractablePanel;
     Vector2 overworldInteractablePanelPosition;
@@ -130,9 +130,9 @@ public class GameManager : MonoBehaviour
     public GameObject adjustResourcePanel;
     public GameObject purchaseButton;
     public GameObject unitActionPanel;
-    public GameObject unitPanel;
+    public static GameObject unitPanel;
     public GameObject heroPanel, heroTradePanel; // , heroPanel2;
-    public GameObject heroReactPanel, castleReactPanel, dwellingReactPanel, resourceReactPanel, artifactReactPanel;
+    public GameObject heroReactPanel, castleReactPanel, dwellingReactPanel, resourceBuildingReactPanel, resourceReactPanel, artifactReactPanel;
 
     //currentReaction
     private Reaction curReaction;
@@ -148,11 +148,7 @@ public class GameManager : MonoBehaviour
 
     private Vector2 nextGraphicalStep;
     private Point nextLogicalStep;
-
-    public Sprite pathDestYes;
-    public Sprite pathDestNo;
-    public Sprite pathYes;
-    public Sprite pathNo;
+    
     public List<GameObject> pathObjects;
 
     public static bool ANIMATION_RUNNING;
@@ -180,15 +176,15 @@ public class GameManager : MonoBehaviour
         heroes[2] = new JackMcBlackwell();
         heroes[3] = new JohnyMudbone();
         heroes[4] = new Mantooth();
-
         // Initialize overworld hero and town panels with clickable buttons
         overworldCanvas = GameObject.Find("OverworldCanvas");
         heroObjects = new GameObject[8];
         townObjects = new GameObject[10];
         heroButton = new Button[8];
         townButton = new Button[10];
-        
 
+        // Main canvas
+        canvas = GameObject.Find("Canvas");
         // Initialize resource purchasepanel with buybutton and deactivate it
         adjustResourcePanel = GameObject.Find("OverworldAdjustResourcePanel");
         adjustResourcePanel.SetActive(false);
@@ -225,6 +221,8 @@ public class GameManager : MonoBehaviour
         castleReactPanel.SetActive(false);
         dwellingReactPanel = GameObject.Find("DwellingReactPanel");
         dwellingReactPanel.SetActive(false);
+        resourceBuildingReactPanel = GameObject.Find("ResourceBuildingReactPanel");
+        resourceBuildingReactPanel.SetActive(false);
         resourceReactPanel = GameObject.Find("ResourceReactPanel");
         resourceReactPanel.SetActive(false);
         artifactReactPanel = GameObject.Find("ArtifactReactPanel");
@@ -272,12 +270,8 @@ public class GameManager : MonoBehaviour
 
         // Starting movementmanager:
         movement = new MovementManager(reactions, canWalk, aStar, this);
-        pathDestYes = UnityEngine.Resources.Load<Sprite>("Sprites/Pointers/pointerDestYes");
-        pathDestNo = UnityEngine.Resources.Load<Sprite>("Sprites/Pointers/pointerDestNo");
-        pathYes = UnityEngine.Resources.Load<Sprite>("Sprites/Pointers/pointerPathYes");
-        pathNo = UnityEngine.Resources.Load<Sprite>("Sprites/Pointers/pointerPathNo");
         pathObjects = new List<GameObject>();
-
+        
         // Testing event logging system:
         Update();
         Log log = new Log(this);
@@ -486,7 +480,7 @@ public class GameManager : MonoBehaviour
         {
             nextTurn();
         }
-        // Rightclick for combat for testing
+        // Rightclick to show reaction
         else if (Input.GetMouseButtonDown(1))
         {
             // Fetch the point just clicked and adjust the position in the square to the corresponding isometric position
@@ -499,20 +493,21 @@ public class GameManager : MonoBehaviour
             // Check if any panels are supposed to be opened
             OpenPanelIfReaction(x, y);
 
-            // TODO REMOVE
-            /*
+        }
+        // Right click up, close the opened panels
+        else if(Input.GetMouseButtonUp(1))
+        {
+            CloseReactPanels();
+        }
+        else if(Input.GetKeyDown(KeyCode.C))
+        {
             if (activeHero.Units.GetUnits()[0] == null)
             {
                 activeHero.Units.setUnit(new StoneTroll(), 5, 0);
             }
             UnitTree defendingTest = new UnitTree();
             defendingTest.setUnit(new StoneTroll(), 5, 0);
-            enterCombat(15, 11, activeHero, defendingTest);*/
-        }
-        // Right click up, close the opened panels
-        else if(Input.GetMouseButtonUp(1))
-        {
-            CloseReactPanels();
+            enterCombat(15, 11, activeHero, defendingTest, true);
         }
     }
 
@@ -527,6 +522,8 @@ public class GameManager : MonoBehaviour
             castleReactPanel.SetActive(false);
         if (dwellingReactPanel.activeSelf)
             dwellingReactPanel.SetActive(false);
+        if (resourceBuildingReactPanel.activeSelf)
+            resourceBuildingReactPanel.SetActive(false);
         if (resourceReactPanel.activeSelf)
             resourceReactPanel.SetActive(false);
         if (artifactReactPanel.activeSelf)
@@ -596,6 +593,12 @@ public class GameManager : MonoBehaviour
             {
                 DwellingReact dwellingReaction = (DwellingReact)reactions[x, y];
                 OpenDwellingReactPanel(dwellingReaction.DwellingBuilding);
+            }
+            // DwellingReaction found, open DwellingReact
+            else if (reactions[x, y].GetType().Equals(typeof(ResourceBuildingReaction)))
+            {
+                ResourceBuildingReaction resourceBuildingReaction = (ResourceBuildingReaction)reactions[x, y];
+                OpenResourceBuildingReactPanel(resourceBuildingReaction.ResourceBuilding);
             }
         }
     }
@@ -674,7 +677,7 @@ public class GameManager : MonoBehaviour
     /// <param name="resourceIndex">The resourcetype</param>
     public void OpenResourceReactPanel(int resourceIndex)
     {
-        resourceReactPanel.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Gold"; // TODO 
+        resourceReactPanel.transform.GetChild(0).gameObject.GetComponent<Text>().text = Resources.GetResourceName(resourceIndex);
         resourceReactPanel.SetActive(true);
     }
     
@@ -694,8 +697,18 @@ public class GameManager : MonoBehaviour
     /// <param name="dwellingBuilding">The DwellingBuilding</param>
     public void OpenDwellingReactPanel(DwellingBuilding dwellingBuilding)
     {
-        resourceReactPanel.transform.GetChild(0).gameObject.GetComponent<Text>().text = dwellingBuilding.ToString();
+        dwellingReactPanel.transform.GetChild(0).gameObject.GetComponent<Text>().text = dwellingBuilding.ToString();
         dwellingReactPanel.SetActive(true);
+    }
+
+    /// <summary>
+    /// Activates ResourceBuildingReactPanel
+    /// </summary>
+    /// <param name="resourceBuilding">The ResourceBuilding</param>
+    public void OpenResourceBuildingReactPanel(OverworldObjects.ResourceBuilding resourceBuilding)
+    {
+        resourceBuildingReactPanel.transform.GetChild(0).gameObject.GetComponent<Text>().text = resourceBuilding.ToString();
+        resourceBuildingReactPanel.SetActive(true);
     }
 
     /// <summary>
@@ -717,14 +730,14 @@ public class GameManager : MonoBehaviour
             if (i + 1 == activeHero.Path.Count)
             {
                 if (i + 1 <= activeHero.CurMovementSpeed)
-                    sr.sprite = pathDestYes;
+                    sr.sprite = IngameObjectLibrary.Pointers[1];
                 else
-                    sr.sprite = pathDestNo;
+                    sr.sprite = IngameObjectLibrary.Pointers[0];
             }
             else if (tilesToBeWalked > 0)
-                sr.sprite = pathYes;
+                sr.sprite = IngameObjectLibrary.Pointers[3];
             else
-                sr.sprite = pathNo;
+                sr.sprite = IngameObjectLibrary.Pointers[2];
 
             tilesToBeWalked--;
 
@@ -805,7 +818,7 @@ public class GameManager : MonoBehaviour
         mapmaker.initializePlayers(map, canWalk, players);
 
 	    // Placeing all buildings within the regions.
-	    placement = mapmaker.PlaceBuildings(players);
+	    placement = mapmaker.PlaceBuildings(players, reactions);
         PlaceBuildings();
         
         // Add reactions to buildings in regions
@@ -838,19 +851,19 @@ public class GameManager : MonoBehaviour
         foreach (Region r in regions)
         {
             OverworldObjects.ResourceBuilding mine = new OreMine(ownerOfMines);
-            placement.Place( r, mine );
+            placement.Place( r, mine, reactions);
             ownerOfMines.ResourceBuildings.Add(mine);
 
             mine = new GemMine(ownerOfMines);
-            placement.Place( r, mine);
+            placement.Place( r, mine, reactions);
             ownerOfMines.ResourceBuildings.Add(mine);
 
             mine = new CrystalMine(ownerOfMines);
-            placement.Place( r, mine);
+            placement.Place( r, mine, reactions);
             ownerOfMines.ResourceBuildings.Add(mine);
 
             mine = new GoldMine(ownerOfMines);
-            placement.Place( r, mine);
+            placement.Place( r, mine, reactions);
             ownerOfMines.ResourceBuildings.Add(mine);
         }
     }
@@ -874,7 +887,9 @@ public class GameManager : MonoBehaviour
         resourceText = new Text[overworldResourcePanel.transform.childCount];
         for (int i = 0; i < resourceText.Length; i++)
         {
-            resourceText[i] = overworldResourcePanel.transform.GetChild(i).GetChild(0).GetComponent<Text>();
+            GameObject resourceObject = overworldResourcePanel.transform.GetChild(i).gameObject;
+            resourceObject.GetComponent<Image>().sprite = IngameObjectLibrary.ResourceIcons[i];
+            resourceText[i] = resourceObject.transform.GetChild(0).GetComponent<Text>();
         }
         updateResourceText();
     }
@@ -1148,25 +1163,35 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Called by UI click on town, activates towngameobjects and deactivates overworld
     /// </summary>
-    public void EnterTown(Town town)
+    public void EnterTown(Town town, bool center)
     {
         if (prepareDoubleClick)
         {
             if (players[WhoseTurn].equals(town.Owner))
             {
-                townSelected = null;
-                townArmyPanel.SetActive(true);
-                DrawTown(town);
-                townWindow.SetActive(true);
-                overWorld = false;
-                cameraMovement.enabled = false;
+                EnterTheTown(town);
             }
         }
         else
         {
             prepareDoubleClick = true;
-            cameraMovement.centerCamera(HandyMethods.getGraphicPosForIso(town.Position.ToVector2()));
+            if(center)
+                cameraMovement.centerCamera(HandyMethods.getGraphicPosForIso(town.Position.ToVector2()));
+            //cameraMovement.centerCameraSlowly(HandyMethods.getGraphicPosForIso(town.Position.ToVector2()));
         }
+    }
+
+    /// <summary>
+    /// Called by EnterTown and reactions when walking into the town
+    /// </summary>
+    public void EnterTheTown(Town town)
+    {
+        cameraMovement.centerCamera(HandyMethods.getGraphicPosForIso(town.Position.ToVector2()));
+        townArmyPanel.SetActive(true);
+        DrawTown(town);
+        townWindow.SetActive(true);
+        overWorld = false;
+        cameraMovement.enabled = false;
     }
 
     /// <summary>
@@ -1323,8 +1348,6 @@ public class GameManager : MonoBehaviour
                 Sprite sprite = libs.GetPortrait(player.Heroes[i].GetPortraitID());
 
                 heroButton[i].GetComponent<Image>().sprite = sprite;
-                GameObject swapObject = heroObjects[i];
-                Vector2 position = HandyMethods.getGraphicPosForIso(player.Heroes[i].Position.ToVector2());
                 Hero hero = player.Heroes[i];
                 heroButton[i].onClick.RemoveAllListeners();
                 heroButton[i].onClick.AddListener(() => SelectHero(hero));
@@ -1343,7 +1366,7 @@ public class GameManager : MonoBehaviour
                 townButton[i].GetComponent<Image>().sprite = sprite;
                 Castle castle = player.Castle[i];
                 townButton[i].onClick.RemoveAllListeners();
-                townButton[i].onClick.AddListener(() => EnterTown(castle.Town));
+                townButton[i].onClick.AddListener(() => EnterTown(castle.Town, true));
                 townObjects[i].SetActive(true);
             }
             else
@@ -1369,7 +1392,6 @@ public class GameManager : MonoBehaviour
         armyInActiveTown[count] = townArmyPanel.transform.GetChild(count).gameObject;
         Button visitingHeroButton = armyInActiveTown[count].GetComponent<Button>();
         visitingHeroButton.GetComponent<Image>().sprite = defaultsprite;
-        GameObject swapVisitingHero = armyInActiveTown[count];
         visitingHeroButton.onClick.RemoveAllListeners();
         visitingHeroButton.onClick.AddListener(() => SwapHero(town, hero, 1));
         if (town.VisitingHero != null)
@@ -1382,7 +1404,6 @@ public class GameManager : MonoBehaviour
             armyInActiveTown[count] = townArmyPanel.transform.GetChild(count).gameObject;
             Button visitingUnitButton = armyInActiveTown[count].GetComponent<Button>();
             visitingUnitButton.GetComponent<Image>().sprite = defaultsprite;
-            GameObject swapVisitingUnit = armyInActiveTown[count];
             visitingUnitButton.onClick.RemoveAllListeners();
             int pos = i;
             visitingUnitButton.onClick.AddListener(() => SwapArmy(town, pos));
@@ -1401,7 +1422,6 @@ public class GameManager : MonoBehaviour
         armyInActiveTown[count] = townArmyPanel.transform.GetChild(count).gameObject;
         Button stationedHeroButton = armyInActiveTown[count].GetComponent<Button>();
         stationedHeroButton.GetComponent<Image>().sprite = defaultsprite;
-        GameObject swapStationedHero = armyInActiveTown[count];
         stationedHeroButton.onClick.RemoveAllListeners();
         stationedHeroButton.onClick.AddListener(() => SwapHero(town, hero, 2));
         if (town.StationedHero != null)
@@ -1414,7 +1434,6 @@ public class GameManager : MonoBehaviour
             armyInActiveTown[count] = townArmyPanel.transform.GetChild(count).gameObject;
             Button stationedUnitButton = armyInActiveTown[count].GetComponent<Button>();
             stationedUnitButton.GetComponent<Image>().sprite = defaultsprite;
-            GameObject swapStatonedUnit = armyInActiveTown[count];
             stationedUnitButton.onClick.RemoveAllListeners();
             int pos = i + UnitTree.TREESIZE;
             stationedUnitButton.onClick.AddListener(() => SwapArmy(town, pos));
@@ -1837,6 +1856,7 @@ public class GameManager : MonoBehaviour
                     movement.PrepareMovement(new Point(activeHero.Path[activeHero.Path.Count - 1]), activeHero);
                     DrawPath(movement.activeHero.Path, movement.totalTilesToBeWalked);
                     savedClickedPos = movement.activeHero.Path[movement.activeHero.Path.Count - 1];
+                    pathMarked = true;
                 }
                 else
                 {
@@ -1902,22 +1922,22 @@ public class GameManager : MonoBehaviour
         combatWindow.transform.localPosition = new Vector3(0, 0, 10);
     }
 
-    public void enterCombat(int width, int height, Hero attacker, UnitTree defender)
+    public void enterCombat(int width, int height, Hero attacker, UnitTree defender, bool ai)
     {
         overWorld = false;
         combatWindow.SetActive(true);
-        graphicalBattlefield.beginCombat(width, height, attacker, defender);
+        graphicalBattlefield.beginCombat(width, height, attacker, defender, ai);
         cameraMovement.enabled = false;
         combatWindow.transform.localPosition = new Vector3(0,0,10);
     }
 
     public void exitCombat(bool winner)
     {
+        combatWindow.SetActive(false);
+        overWorld = true;
+        cameraMovement.enabled = true;
         if (winner)
         {
-            combatWindow.SetActive(false);
-            overWorld = true;
-            cameraMovement.enabled = true;
             //attacker won
             if (curReaction.GetType() == typeof(CastleReact))
             {
@@ -1928,7 +1948,7 @@ public class GameManager : MonoBehaviour
                 }
                 else
                 {
-                    changeCastleOwner(cr);
+                    cr.Castle.changeCastleOwner(cr, players[WhoseTurn], activeHero);
                 }
             }
             else if (curReaction.GetType() == typeof(HeroMeetReact))
@@ -1947,18 +1967,6 @@ public class GameManager : MonoBehaviour
             //defender won
             removeHero(activeHero);
         }
-    }
-
-    /// <summary>
-    /// Changes owner of castle to Player whose turn it is
-    /// </summary>
-    /// <param name="cr">CastleReact</param>
-    public void changeCastleOwner(CastleReact cr)
-    {
-        cr.Castle.Player.Castle.Remove(cr.Castle);
-        cr.Castle.Player = players[WhoseTurn];
-        cr.Castle.Town.Owner = players[WhoseTurn];
-        players[WhoseTurn].Castle.Add(cr.Castle);
     }
 
 
@@ -2218,7 +2226,10 @@ public class GameManager : MonoBehaviour
         const int MAX_MOVES = 3;
         // Set unitpanel unittext and unitimage
 
-        unitPanel.transform.parent = parent.transform;
+        if (parent != null)
+            unitPanel.transform.parent = parent.transform;
+        else
+            unitPanel.transform.parent = canvas.transform;
         unitPanel.GetComponent<RectTransform>().sizeDelta = new Vector3(0,0,0);
         string topText = unit.Name;
         // Add amount text if theres a stack
