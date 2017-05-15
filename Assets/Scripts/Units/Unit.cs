@@ -1,7 +1,10 @@
 ﻿using Units;
 
-public class Unit : SpriteSystem	{
-
+/// <summary>
+/// Superclass for units
+/// </summary>
+public class Unit : SpriteSystem
+{
     string name;
     Element element;
     int tier;
@@ -32,106 +35,58 @@ public class Unit : SpriteSystem	{
 
     public Element Element
     {
-        get
-        {
-            return element;
-        }
+        get { return element; }
 
-        set
-        {
-            element = value;
-        }
+        set { element = value; }
     }
 
     public int Tier
     {
-        get
-        {
-            return tier;
-        }
+        get { return tier; }
 
-        set
-        {
-            tier = value;
-        }
+        set { tier = value; }
     }
 
     public int Faction
     {
-        get
-        {
-            return faction;
-        }
+        get { return faction; }
 
-        set
-        {
-            faction = value;
-        }
+        set { faction = value; }
     }
 
     public UnitStats Unitstats
     {
-        get
-        {
-            return unitstats;
-        }
+        get { return unitstats; }
 
-        set
-        {
-            unitstats = value;
-        }
+        set { unitstats = value; }
     }
 
     public bool HaveNotRetaliated
     {
-        get
-        {
-            return haveNotRetaliated;
-        }
+        get { return haveNotRetaliated; }
 
-        set
-        {
-            haveNotRetaliated = value;
-        }
+        set { haveNotRetaliated = value; }
     }
 
     public bool IsRanged
     {
-        get
-        {
-            return isRanged;
-        }
+        get { return isRanged; }
 
-        set
-        {
-            isRanged = value;
-        }
+        set { isRanged = value; }
     }
 
     public string Name
     {
-        get
-        {
-            return name;
-        }
+        get { return name; }
 
-        set
-        {
-            name = value;
-        }
+        set { name = value; }
     }
 
     public int CurrentHealth
     {
-        get
-        {
-            return currentHealth;
-        }
+        get { return currentHealth; }
 
-        set
-        {
-            currentHealth = value;
-        }
+        set { currentHealth = value; }
     }
 
     public Cost Price
@@ -140,7 +95,14 @@ public class Unit : SpriteSystem	{
         set { price = value; }
     }
 
-    public Unit(string name,int tier, int faction, int localID) : base(localID, CATEGORY)
+    /// <summary>
+    /// Default constructor
+    /// </summary>
+    /// <param name="name">Name of the unit</param>
+    /// <param name="tier">the tier of the unit</param>
+    /// <param name="faction">The faction this unit belongs to</param>
+    /// <param name="localID">The units sprite ID</param>
+    public Unit(string name, int tier, int faction, int localID) : base(localID, CATEGORY)
     {
         Name = name;
         Tier = tier;
@@ -150,7 +112,11 @@ public class Unit : SpriteSystem	{
         Price = price;
     }
 
-
+    /// <summary>
+    /// Compares to units
+    /// </summary>
+    /// <param name="u">The unit to compare</param>
+    /// <returns>True of the units are the same, false if not</returns>
     public bool equals(Unit u)
     {
         return name.Equals(u.Name);

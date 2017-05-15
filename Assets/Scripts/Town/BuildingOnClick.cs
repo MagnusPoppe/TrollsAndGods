@@ -5,6 +5,10 @@ using UnityEngine.UI;
 
 namespace TownView
 {
+    
+    /// <summary>
+    /// Class to handle interaction 
+    /// </summary>
     public class BuildingOnClick : MonoBehaviour
     {
         GameManager gm;
@@ -19,7 +23,6 @@ namespace TownView
 
         GameObject frame;
         SpriteRenderer frameImage;
-
         IngameObjectLibrary libs;
         GameObject[] buildingObjects;
 

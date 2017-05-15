@@ -1,18 +1,18 @@
 ﻿namespace TownView
 {
     /// <summary>
-    /// Placeholder town. Used as a template for a spesific town.
+    /// A viking town
     /// </summary>
     public class VikingTown : Town
     {
-        // Sprites to be displayed in the "TOWN VEIW".
         const int spriteID = 0;
         const IngameObjectLibrary.Category category = IngameObjectLibrary.Category.Town;
 
         /// <summary>
-        /// Default constructor:
+        /// Default constructor
         /// </summary>
         /// <param name="owner">Player that owns the building:</param>
+        /// <param name="position">The map position for this town</param>
         public VikingTown(Player owner, Point position) : base(owner, spriteID, position)
         {
             Buildings = InitializeTownBuildings();

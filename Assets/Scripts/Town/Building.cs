@@ -3,6 +3,9 @@ using UI;
 
 namespace TownView
 {
+    /// <summary>
+    /// Superclass for all types of town buildings
+    /// </summary>
     public class Building : SpriteSystem, Window
     {
         private string name;
@@ -54,6 +57,15 @@ namespace TownView
         }
 
 
+        /// <summary>
+        /// Constructor for buildings
+        /// </summary>
+        /// <param name="name">Name of the given building</param>
+        /// <param name="description">Description of the current building</param>
+        /// <param name="requirements">The building(s) that must be built before this one is available</param>
+        /// <param name="cost">The Resource cost to make the given building</param>
+        /// <param name="localID">The local spriteID of the given building</param>
+        /// <param name="LOCAL_SPRITEID_BLUEPRINT">The local spriteID for the blueprint of the building</param
         public Building(string name, string description, bool[] requirements, Cost cost, int localID,
             int LOCAL_SPRITEID_BLUEPRINT) : base(localID, CATEGORY)
         {
@@ -83,11 +95,20 @@ namespace TownView
             return WindowTypes.BUILDING_CARD;
         }
 
+        /// <summary>
+        /// Virtual method to return a buildings blueprint id
+        /// </summary>
+        /// <returns></returns>
         public virtual int GetSpriteBlueprintID()
         {
             return local_sprite_blueprint + IngameObjectLibrary.GetOffset(CATEGORY);
         }
 
+        /// <summary>
+        /// This function checks if a building has its requirements met
+        /// </summary>
+        /// <param name="town">The town the building belongs to</param>
+        /// <returns>True if the building has its requirements met, false if not</returns>
         public bool MeetsRequirements(Town town)
         {
             for (int i = 0; i < town.Buildings.Length; i++)

@@ -1,28 +1,30 @@
 ﻿namespace TownView
 {
     /// <summary>
-    /// Placeholder class for a spesific building.
-    /// Belongs to the "Unknown Town".
+    /// Town Hall tavern building belonging to Viking Town
     /// </summary>
     public class TownHall : ResourceBuilding
     {
-        // Required values for building:
         const string name = "Town Hall";
         const string description = "Build buildings here";
         static bool[] requirements = new bool[] { false, false, false, false, false, false, false, false, false, false, false, false };
         const int LOCAL_SPRITEID = 1;
         const int LOCAL_SPRITEID_BLUEPRINT = 13;
 
-        // Resources cost: 
+        /// <summary>
+        /// Resource cost for this building
+        /// </summary>
         const int GOLD_COST = 1500;
         const int WOOD_COST = 0;
         const int ORE_COST = 0;
         const int CRYSTAL_COST = 0;
         const int GEM_COST = 0;
 
-        //static Earn earnings = new Earn(1000,5,5,5,5);
         static Earn earnings = new Earn(0,0,0,0,0);
-        // This needs no indata since it knows its values.
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
         public TownHall() : base(name, description, requirements, new Cost(GOLD_COST, WOOD_COST, ORE_COST, CRYSTAL_COST, GEM_COST), LOCAL_SPRITEID, LOCAL_SPRITEID_BLUEPRINT, earnings)
         {
             
