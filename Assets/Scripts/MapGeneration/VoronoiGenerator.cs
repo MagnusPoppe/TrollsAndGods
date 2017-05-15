@@ -5,6 +5,11 @@ using csDelaunay;
 
 namespace MapGenerator
 {
+    /// <summary>
+    /// Voronoi generator hack class. Created by Ruben and Magnus to create an adapter 
+    /// that harnishes the power of the voronoi library. This was created so that we
+    /// did not have to study the voronoi algortihm.
+    /// </summary>
     public class VoronoiGenerator 
     {
         // The number of polygons/sites we want
@@ -51,6 +56,10 @@ namespace MapGenerator
 			relaxedPoints = voronoi.GetRelaxedPoints();
         }
 
+        /// <summary>
+        /// Gets the new sites after relaxation algorithms has been ran. 
+        /// </summary>
+        /// <returns>The new sites.</returns>
         public Point[] GetNewSites()
 		{
             Point[] v = new Point[relaxedPoints.Count];

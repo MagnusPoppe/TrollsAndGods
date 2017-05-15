@@ -3,6 +3,10 @@ using OverworldObjects;
 
 namespace MapGenerator
 {
+    /// <summary>
+    /// Flood fill algorithm to make regions out of the Voronoi results. 
+    /// The goal of the algorithm is to create a set out of the voronoi regions.
+    /// </summary>
     public class RegionFill
     {
         int width, height;

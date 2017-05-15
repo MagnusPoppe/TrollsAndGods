@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace MapGenerator
 {
+    /// <summary>
+    /// The Block class was used to place out buildings.
+    /// </summary>
 	public class Block
 	{
         Point position;
@@ -11,6 +14,12 @@ namespace MapGenerator
 		float rating;
 		float distanceFromCastle;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MapGenerator.Block"/> class.
+        /// </summary>
+        /// <param name="origin">Origin.</param>
+        /// <param name="position">Position.</param>
+        /// <param name="canWalk">Can walk.</param>
         public Block(Point origin, Point position, int[,] canWalk)
 		{
 			this.position = position;
@@ -27,26 +36,48 @@ namespace MapGenerator
 			//TODO Debug.Log("RATING: " + rating);
 		}
 
+        /// <summary>
+        /// Gets the distance from castle.
+        /// </summary>
+        /// <returns>The distance from castle.</returns>
 		public float GetDistanceFromCastle()
 		{
 			return distanceFromCastle;
 		}
 
+        /// <summary>
+        /// Gets the position.
+        /// </summary>
+        /// <returns>The position.</returns>
 		public Point GetPosition()
 		{
 			return position;
 		}
 
+        /// <summary>
+        /// Gets the rating of the block.
+        /// </summary>
+        /// <returns>The rating.</returns>
 		public float GetRating()
 		{
 			return rating;
 		}
 
+        /// <summary>
+        /// Determines whether this instance can place building of the specified buildingType.
+        /// </summary>
+        /// <returns><c>true</c> if this instance can place building the specified buildingType; otherwise, <c>false</c>.</returns>
+        /// <param name="buildingType">Building type.</param>
 		public bool CanPlaceBuilding(int buildingType)
 		{
 			return possibleBuildings[buildingType];
 		}
 
+        /// <summary>
+        /// Gets the occupied tiles.
+        /// </summary>
+        /// <returns>The occupied tiles.</returns>
+        /// <param name="buildingType">Building type.</param>
         public Point[] GetOccupiedTiles(int buildingType)
 		{
 			int x = position.x;

@@ -3,13 +3,27 @@ using UnityEngine;
 
 namespace MapGenerator
 {
+    /// <summary>
+    /// Quailty assurance. This class is supposed to check if its possible to 
+    /// walk and access all buildings and placed items inside the map. 
+    /// </summary>
 	public class QuailtyAssurance
 	{
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MapGenerator.QuailtyAssurance"/> class.
+        /// </summary>
 		public QuailtyAssurance()
 		{
 			
 		}
 
+        /// <summary>
+        /// Tests the paths between all buildings inside a given land-region.
+        /// </summary>
+        /// <returns><c>true</c>, if paths between buildings was accessable, <c>false</c> otherwise.</returns>
+        /// <param name="region">Region.</param>
+        /// <param name="canWalk">Can walk.</param>
 		public bool TestPathsBetweenBuildings(LandRegion region, int[,] canWalk)
 		{
 			AStarAlgo aStar = new AStarAlgo(canWalk, canWalk.GetLength(0), canWalk.GetLength(1), false);
@@ -27,6 +41,12 @@ namespace MapGenerator
 			return true;
 		}
 
+        /// <summary>
+        /// Tests the paths between regions.
+        /// </summary>
+        /// <returns><c>true</c>, if paths between regions was accessable, <c>false</c> otherwise.</returns>
+        /// <param name="allRegions">All regions.</param>
+        /// <param name="canWalk">Can walk.</param>
 		public bool TestPathsBetweenRegions(LandRegion[] allRegions, int[,] canWalk)
 		{
 			AStarAlgo aStar = new AStarAlgo(canWalk, canWalk.GetLength(0), canWalk.GetLength(1), false);

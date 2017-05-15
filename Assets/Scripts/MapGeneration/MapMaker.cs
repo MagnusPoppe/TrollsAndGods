@@ -5,6 +5,11 @@ using System.Collections.Generic;
 
 namespace MapGenerator
 {
+    /// <summary>
+    /// Map maker. This class generates the entire map using Voronois algorithm and
+    /// procedural map generation. See UML Activity Diagram of the project rapport
+    /// to make sense of this.
+    /// </summary>
     public class MapMaker
     {
         // Mathematical game objects
@@ -32,25 +37,20 @@ namespace MapGenerator
 
         // Base sprites
         public const int GRASS_SPRITEID = IngameObjectLibrary.GROUND_START + 13;
-
         public const int GRASS2_SPRITEID = IngameObjectLibrary.GROUND_START + 14;
         public const int GRASS3_SPRITEID = IngameObjectLibrary.GROUND_START + 15;
         public const int GRASS4_SPRITEID = IngameObjectLibrary.GROUND_START + 16;
-
         public const int WATER_SPRITEID = IngameObjectLibrary.GROUND_START + 0;
 
         // WATER->Grass Transition sprites:
         public const int GRASS_WATER_NORTH = IngameObjectLibrary.GROUND_START + 1;
-
         public const int GRASS_WATER_EAST = IngameObjectLibrary.GROUND_START + 2;
         public const int GRASS_WATER_SOUTH = IngameObjectLibrary.GROUND_START + 3;
         public const int GRASS_WATER_WEST = IngameObjectLibrary.GROUND_START + 4;
-
         public const int GRASS_WATER_NORTH_EAST_IN = IngameObjectLibrary.GROUND_START + 5;
         public const int GRASS_WATER_SOUTH_EAST_IN = IngameObjectLibrary.GROUND_START + 6;
         public const int GRASS_WATER_SOUTH_WEST_IN = IngameObjectLibrary.GROUND_START + 7;
         public const int GRASS_WATER_NORTH_WEST_IN = IngameObjectLibrary.GROUND_START + 8;
-
         public const int GRASS_WATER_NORTH_EAST_OUT = IngameObjectLibrary.GROUND_START + 9;
         public const int GRASS_WATER_SOUTH_EAST_OUT = IngameObjectLibrary.GROUND_START + 10;
         public const int GRASS_WATER_SOUTH_WEST_OUT = IngameObjectLibrary.GROUND_START + 11;
@@ -58,7 +58,6 @@ namespace MapGenerator
 
         // Environment sprites:
         public const int FOREST_SPRITEID = IngameObjectLibrary.ENVIRONMENT_START + 0;
-
         public const int MOUNTAIN1_SPRITEID = IngameObjectLibrary.ENVIRONMENT_START + 1;
         public const int MOUNTAIN2_SPRITEID = IngameObjectLibrary.ENVIRONMENT_START + 2;
         public const int MOUNTAIN3_SPRITEID = IngameObjectLibrary.ENVIRONMENT_START + 3;
@@ -66,9 +65,8 @@ namespace MapGenerator
         public const int MOUNTAIN5_SPRITEID = IngameObjectLibrary.ENVIRONMENT_START + 5;
 
 
-        // CANWALK 
+        // CANWALK constants
         public const int CANNOTWALK = 0;
-
         public const int CANWALK = 1;
         public const int TRIGGER = 2;
 
@@ -112,6 +110,11 @@ namespace MapGenerator
             QuailtyAssurance quality = new QuailtyAssurance();
 
         }
+
+
+
+        // ------------ Methods to create unwalkable areas such as mountains and forests ------------\\
+
 
 
         /// <summary>
@@ -213,18 +216,16 @@ namespace MapGenerator
             }
         }
 
-		private void InitBuildings(LandRegion r)
-		{
-			r.createEconomy(canWalk, new Economy(Economy.POOR));
 
-			foreach (OverworldBuilding building in r.GetBuildings())
-			{
-				int x = (int)building.Origo.x;
-				int y = (int)building.Origo.y;
-				map[x, y] = building.GetSpriteID();
-			}
-		}
 
+        // ------------ Methods to create transitions between environment and environment ------------\\
+
+
+
+        /// <summary>
+        /// Creates the transitions between water and grass.
+        /// TODO: Make this work.
+        /// </summary>
 		private void CreateTransitions()
 		{
             int[,] tempMap = HandyMethods.Copy2DArray(map);
@@ -247,6 +248,12 @@ namespace MapGenerator
             map = tempMap;
 		}
 
+        /// <summary>
+        /// Finds the direction of the transition between grass and water to be placed.
+        /// </summary>
+        /// <returns>The direction.</returns>
+        /// <param name="x">The x coordinate.</param>
+        /// <param name="y">The y coordinate.</param>
 		private int FindDirection(int x, int y)
 		{
             CompassF.Direction direction = CompassF.GetDirection(map, x, y, WATER_SPRITEID, GRASS_SPRITEID);
@@ -278,6 +285,97 @@ namespace MapGenerator
 			return -1; // AREA IS HOMOGENUS, NO CHANGES.
 		}
 
+
+
+        // ------------ Methods to initialize buildings, players and other details on to the map ------------\\
+
+
+
+        /// <summary>
+        /// Initializes the buildings. Creates all buildings for a given economy.
+        /// </summary>
+        /// <param name="r">The red component.</param>
+        private void InitBuildings(LandRegion r)
+        {
+            r.createEconomy(canWalk, new Economy(Economy.POOR));
+
+            foreach (OverworldBuilding building in r.GetBuildings())
+            {
+                int x = (int)building.Origo.x;
+                int y = (int)building.Origo.y;
+                map[x, y] = building.GetSpriteID();
+            }
+        }
+
+        /// <summary>
+        /// Initializes the players onto te map. 
+        /// </summary>
+        /// <param name="map">Map.</param>
+        /// <param name="canWalk">Can walk.</param>
+        /// <param name="players">Players.</param>
+        public void initializePlayers(int[,] map, int[,] canWalk, Player[] players)
+        {
+            int i = 0;
+            foreach(Region region in regions)
+            {
+                if (region.GetType().Equals(typeof(LandRegion)))
+                {
+                    LandRegion lr = (LandRegion)region;
+                    // Place a castle at every landregion
+                    lr.PlaceCastle(map, canWalk);
+                    if (i < players.Length)
+                    {
+                        // Create a player, set the castles owner as that player.
+                        // Also place a corresponding hero.
+                        players[i] = new Player(i, 0);
+                        lr.GetCastle().Player = players[i];
+                        lr.GetCastle().Town.Owner = players[i];
+                        players[i].Castle.Add(lr.GetCastle());
+                        i++;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Uses the placement class to place buildings onto the map.
+        /// This is done through a given region.
+        /// </summary>
+        public Placement PlaceBuildings(Player[] players, Reaction[,] reactions)
+        {
+            Placement placements = new Placement(map, canWalk);
+            return placements;
+            // PLACEMENT OF ALL BUILDINGS:
+            // TODO: GIVE THE MINES TO PLAYERS, NOT JUST players[0]
+            /*
+            Player ownerOfMines = players[0];
+            foreach (Region r in regions)
+            {
+                ResourceBuilding mine = new OreMine(ownerOfMines);
+                placements.Place( r, mine );
+                ownerOfMines.ResourceBuildings.Add(mine);
+
+                mine = new GemMine(ownerOfMines);
+                placements.Place( r, mine);
+                ownerOfMines.ResourceBuildings.Add(mine);
+
+                mine = new CrystalMine(ownerOfMines);
+                placements.Place( r, mine);
+                ownerOfMines.ResourceBuildings.Add(mine);
+
+                mine = new GoldMine(ownerOfMines);
+                placements.Place( r, mine);
+                ownerOfMines.ResourceBuildings.Add(mine);
+            }
+            */
+        }
+
+
+
+        // ------------ Getters and setters ------------\\
+
+
+
 		/// <summary>
 		/// Returns the generated map.
 		/// </summary>
@@ -304,6 +402,12 @@ namespace MapGenerator
 		{
 			return regions;
 		}
+
+
+
+        // ------------ The actual generating of the map. ------------\\
+
+
 
 		/// <summary>
 		/// Generates the map using a set of algorithms. This is the 
@@ -403,62 +507,6 @@ namespace MapGenerator
 			return generatedMap;
 		}
 
-        public void initializePlayers(int[,] map, int[,] canWalk, Player[] players)
-        {
-            int i = 0;
-            foreach(Region region in regions)
-            {
-                if (region.GetType().Equals(typeof(LandRegion)))
-                {
-                    LandRegion lr = (LandRegion)region;
-                    // Place a castle at every landregion
-                    lr.PlaceCastle(map, canWalk);
-                    if (i < players.Length)
-                    {
-                        // Create a player, set the castles owner as that player.
-                        // Also place a corresponding hero.
-                        players[i] = new Player(i, 0);
-                        lr.GetCastle().Player = players[i];
-                        lr.GetCastle().Town.Owner = players[i];
-                        players[i].Castle.Add(lr.GetCastle());
-                        i++;
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Uses the placement class to place buildings onto the map.
-        /// This is done through a given region.
-        /// </summary>
-        public Placement PlaceBuildings(Player[] players, Reaction[,] reactions)
-        {
-            Placement placements = new Placement(map, canWalk);
-            return placements;
-            // PLACEMENT OF ALL BUILDINGS:
-            // TODO: GIVE THE MINES TO PLAYERS, NOT JUST players[0]
-            /*
-            Player ownerOfMines = players[0];
-            foreach (Region r in regions)
-            {
-                ResourceBuilding mine = new OreMine(ownerOfMines);
-                placements.Place( r, mine );
-                ownerOfMines.ResourceBuildings.Add(mine);
-
-                mine = new GemMine(ownerOfMines);
-                placements.Place( r, mine);
-                ownerOfMines.ResourceBuildings.Add(mine);
-
-                mine = new CrystalMine(ownerOfMines);
-                placements.Place( r, mine);
-                ownerOfMines.ResourceBuildings.Add(mine);
-
-                mine = new GoldMine(ownerOfMines);
-                placements.Place( r, mine);
-                ownerOfMines.ResourceBuildings.Add(mine);
-            }
-            */
-        }
 
         /// <summary>
         /// Connects regionless tiles to the nearest region
@@ -497,28 +545,7 @@ namespace MapGenerator
                 }
             }
         }
-
-        /// <summary>
-        /// Sets up the voronoi map + the castles/towns
-        /// </summary>
-        /// <returns>Already ran voronoi map.</returns>
-        /// <param name="sites">Number of Sites/town.</param>
-        /// <param name="relaxItr">Number of Relax itrations.</param>
-        /// <param name="totalSprites">Total sprites.</param>
-        private VoronoiGenerator VoronoiSiteSetup(int sites, int relaxItr, int totalSprites)
-		{
-			// DEFINING CASTLE POSITIONS ON THE MAP:
-			Vector2[] sitelist = CreateRandomPoints(sites);
-
-			// APPLYING VORONOI TO THE MAP ARRAY
-			VoronoiGenerator voronoi = new VoronoiGenerator(width, height, sitelist, relaxItr);
-
-			// Getting new positions after relaxing:
-			regionCenterPoints = voronoi.GetNewSites();
-
-			return voronoi;
-		}
-
+            
 		/// <summary>
 		/// Creates the walkable area through analysis of the map.
 		/// </summary>
@@ -578,6 +605,27 @@ namespace MapGenerator
             }
 
             return combinedMap;
+        }
+
+        /// <summary>
+        /// Sets up the voronoi map + the castles/towns
+        /// </summary>
+        /// <returns>Already ran voronoi map.</returns>
+        /// <param name="sites">Number of Sites/town.</param>
+        /// <param name="relaxItr">Number of Relax itrations.</param>
+        /// <param name="totalSprites">Total sprites.</param>
+        private VoronoiGenerator VoronoiSiteSetup(int sites, int relaxItr, int totalSprites)
+        {
+            // DEFINING CASTLE POSITIONS ON THE MAP:
+            Vector2[] sitelist = CreateRandomPoints(sites);
+
+            // APPLYING VORONOI TO THE MAP ARRAY
+            VoronoiGenerator voronoi = new VoronoiGenerator(width, height, sitelist, relaxItr);
+
+            // Getting new positions after relaxing:
+            regionCenterPoints = voronoi.GetNewSites();
+
+            return voronoi;
         }
 
         /// <summary>
