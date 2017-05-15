@@ -43,9 +43,8 @@ public class Ranged : Unit
         }
     }
 
-    public Ranged(string name, Element element, int tier, int faction, UnitStats unitstats,
-        Move[] moves, Ability[] abilities,int ammo, bool meleePenalty
-        ) : base(name, element, tier, faction, unitstats,moves,abilities)
+    public Ranged(string name, int tier, int faction,int ammo, bool meleePenalty, int localID
+        ) : base(name, tier, faction, localID)
     {
         Ammo = maxAmmo = ammo;
         IsRanged = true;
@@ -53,8 +52,4 @@ public class Ranged : Unit
         threatened = false;
     }
 
-    public Ranged()
-    {
-        IsRanged = true;
-    }
 }

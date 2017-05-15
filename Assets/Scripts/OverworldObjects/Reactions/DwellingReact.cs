@@ -5,24 +5,24 @@
 /// </summary>
 public class DwellingReact : Reaction {
 
-    Dwelling dwelling;
+    DwellingBuilding dwellingBuilding;
 
-    public DwellingReact(Dwelling dwelling, Point pos)
+    public DwellingReact(DwellingBuilding dwellingBuilding, Point pos)
     {
-        Dwelling = dwelling;
+        DwellingBuilding = dwellingBuilding;
         Pos = pos;
     }
 
-    public Dwelling Dwelling
+    public DwellingBuilding DwellingBuilding
     {
         get
         {
-            return dwelling;
+            return dwellingBuilding;
         }
 
         set
         {
-            dwelling = value;
+            dwellingBuilding = value;
         }
     }
 
@@ -33,11 +33,11 @@ public class DwellingReact : Reaction {
     /// <returns>True if owner changed</returns>
     public override bool React(Hero h)
     {
-        if (!dwelling.Owner.equals(h.Player))
+        if (!dwellingBuilding.Owner.equals(h.Player))
         {
-            if (dwelling.Owner != null) dwelling.Owner.DwellingsOwned.Remove(dwelling);
-            dwelling.Owner = h.Player;
-            h.Player.DwellingsOwned.Add(dwelling);
+            if (dwellingBuilding.Owner != null) dwellingBuilding.Owner.DwellingsOwned.Remove(dwellingBuilding);
+            dwellingBuilding.Owner = h.Player;
+            h.Player.DwellingsOwned.Add(dwellingBuilding);
             //dwelling.Town.updateDwellingOwnerChange(dwelling);
             //todo inital hiring of units
             return true;

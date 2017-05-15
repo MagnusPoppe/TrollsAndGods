@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using OverworldObjects;
+using UnityEngine;
 
 namespace TownView
 {
@@ -13,11 +14,12 @@ namespace TownView
     {
         private bool hasBuiltThisRound;
         private Building[] buildings;
-        private List<Dwelling> relatedDwellings;
+        private List<DwellingBuilding> relatedDwellings;
         private Hero stationedHero;
         private Hero visitingHero;
         private UnitTree stationedUnits;
         private UnitTree visitingUnits;
+        private Point position;
         Player owner;
 
         const IngameObjectLibrary.Category category = IngameObjectLibrary.Category.Town;
@@ -25,13 +27,14 @@ namespace TownView
         /// Constructor that builds the buildingtree with corresponding town according to townId variable
         /// </summary>
         /// <param name="townId">which town shall be built</param>
-        public Town(Player owner, int localSpriteID) :base(localSpriteID, category )
+        public Town(Player owner, int localSpriteID, Point position) :base(localSpriteID, category )
         {
+            Position = position;
             StationedUnits = new UnitTree();
-            RelatedDwellings = new List<Dwelling>();
+            RelatedDwellings = new List<DwellingBuilding>();
             Owner = owner;
-
-
+            StationedUnits = new UnitTree();
+            VisitingUnits = new UnitTree();
         }
 
         // Builds all buildings in a given town
@@ -40,6 +43,38 @@ namespace TownView
             for(int i = 0; i < t.buildings.Length; i++)
             {
                 buildings[i].Build();
+            }
+        }
+
+        // When in town window, activated by clicking on first and then second hero
+        public void swapHeroes()
+        {
+            // Only swap if there is a hero in on eof the spots
+            if (visitingHero != null || stationedHero != null)
+            {
+                // TODO check merge, and merge - if there's not an hero in stationedarmy
+                if (stationedHero == null)
+                {
+                    if (VisitingHero.Units.CanMerge(stationedUnits))
+                    {
+                        VisitingHero.Units.Merge(stationedUnits);
+                    }
+                }
+
+                // Swap heroes
+                Hero tmpHero = visitingHero;
+                visitingHero = stationedHero;
+                stationedHero = tmpHero;
+
+                // Swap town's armies to the new heroes armies
+                if (visitingHero == null)
+                    visitingUnits = new UnitTree();
+                else
+                    visitingUnits = visitingHero.Units;
+                if (StationedHero == null)
+                    stationedUnits = new UnitTree();
+                else
+                    stationedUnits = stationedHero.Units;
             }
         }
 
@@ -56,7 +91,7 @@ namespace TownView
             }
         }
 
-        protected Hero StationedHero
+        public Hero StationedHero
         {
             get
             {
@@ -69,7 +104,7 @@ namespace TownView
             }
         }
 
-        protected Hero VisitingHero
+        public Hero VisitingHero
         {
             get
             {
@@ -95,7 +130,7 @@ namespace TownView
             }
         }
 
-        public List<Dwelling> RelatedDwellings
+        public List<DwellingBuilding> RelatedDwellings
         {
             get
             {
@@ -144,6 +179,19 @@ namespace TownView
             set
             {
                 buildings = value;
+            }
+        }
+
+        public Point Position
+        {
+            get
+            {
+                return position;
+            }
+
+            set
+            {
+                position = value;
             }
         }
     }

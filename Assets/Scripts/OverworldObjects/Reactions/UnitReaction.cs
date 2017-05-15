@@ -41,7 +41,7 @@ public class UnitReaction : Reaction {
     {
         // Todo flee, join or fight
         // Returns true if hero remains. False if unit fleed, joined, or was defeated
-        gm.enterCombat(15,11,h,units);
+        gm.enterCombat(15,11,h,units, true);
         return false;
     }
 }

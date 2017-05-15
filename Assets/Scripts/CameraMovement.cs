@@ -15,6 +15,10 @@ public class CameraMovement : MonoBehaviour
     float cameraHeight;
     float cameraWidth;
     Camera cam;
+    GameManager gm;
+
+    private Vector3 lerpTo;
+    private bool lerp;
 
     public float ScrollSpeed
     {
@@ -31,7 +35,7 @@ public class CameraMovement : MonoBehaviour
 
     void Start ()
     {
-        GameManager gm = GameObject.Find("GameManager").GetComponent<GameManager>();
+        gm = GameObject.Find("GameManager").GetComponent<GameManager>();
         width = gm.WIDTH;
         height = gm.HEIGHT/2/2;
 
@@ -55,18 +59,33 @@ public class CameraMovement : MonoBehaviour
         if (transform.position.y < height-cameraHeight-CUTY && ((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) || Input.mousePosition.y > Screen.height - FRAMEOFFSET))
         {
             transform.position = new Vector3(limitX(transform.position.x), limitY(transform.position.y + ScrollSpeed), transform.position.z);
+            lerp = false;
         }
         if(transform.position.x > cameraWidth && ((Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) || Input.mousePosition.x < FRAMEOFFSET))
         {
             transform.position = new Vector3(limitX(transform.position.x - ScrollSpeed), limitY(transform.position.y), transform.position.z);
+            lerp = false;
         }
         if (transform.position.y > cameraHeight && ((Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) || Input.mousePosition.y < FRAMEOFFSET))
         {
             transform.position = new Vector3(limitX(transform.position.x), limitY(transform.position.y - ScrollSpeed), transform.position.z);
+            lerp = false;
         }
         if (transform.position.x < width - cameraWidth - CUTX && ((Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) || Input.mousePosition.x > Screen.width - FRAMEOFFSET))
         {
             transform.position = new Vector3(limitX(transform.position.x + ScrollSpeed), limitY(transform.position.y), transform.position.z);
+            lerp = false;
+        }
+
+        // Move camera towards position
+        if (lerp)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, lerpTo, 0.1f);
+            // Stops movement when it reached position
+            if (transform.position == lerpTo)
+            {
+                lerp = false;
+            }
         }
     }
 
@@ -76,9 +95,27 @@ public class CameraMovement : MonoBehaviour
     /// <param name="position">paramter position</param>
     public void centerCamera(Vector2 position)
     {
-        float x = limitX(position.x);
-        float y = limitY(position.y);
-        transform.position = new Vector3(x, y, transform.position.z);
+        if(gm.overWorld)
+        {
+            float x = limitX(position.x);
+            float y = limitY(position.y);
+            lerp = false;
+            transform.position = new Vector3(x, y, transform.position.z);
+        }
+    }
+    /// <summary>
+    /// Moves camera slowly to parameter position
+    /// </summary>
+    /// <param name="position">paramter position</param>
+    public void centerCameraSlowly(Vector2 position)
+    {
+        if (gm.overWorld)
+        {
+            float x = limitX(position.x);
+            float y = limitY(position.y);
+            lerp = true;
+            lerpTo = new Vector3(x, y, transform.position.z);
+        }
     }
 
     private float limitX(float x)

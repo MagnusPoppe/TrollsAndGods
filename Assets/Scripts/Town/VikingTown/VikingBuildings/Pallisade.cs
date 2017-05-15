@@ -9,9 +9,9 @@
         // Required values for building:
         const string name = "Pallisade";
         const string description = "A fence, made from wooden stakes";
-        const bool[] requirements = null;
+        static bool[] requirements = new bool[] { false, false, false, false, false, false, false, false, false, false, false, false };
         const int LOCAL_SPRITEID = 2;
-        const int LOCAL_SPRITEID_BLUEPRINT = 8;
+        const int LOCAL_SPRITEID_BLUEPRINT = 14;
 
 
         // Resources cost: 

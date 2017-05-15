@@ -37,21 +37,41 @@ public class CastleReact : Reaction {
     /// <returns>returns false</returns>
     public override bool React(Hero h)
     {
-        if (castle.Player.Equals(h.Player))
+        if (castle.Player.Equals(h.Player)) //checks if player owns castle
         {
-            gm.EnterTown(castle.Town);
+            castle.Town.VisitingHero = h;
+            gm.EnterTheTown(castle.Town);
         }
-        else
+        else //enemy castle
         {
-            if (castle.Town.VisitingUnits != null)
+            if (castle.Town.VisitingUnits.CountUnits() > 0) //checks if there is an enemy hero visiting the castle
             {
-                //todo combine with stationed units and battle
+                if (castle.Town.StationedHero != null) //checks if there is a stationed hero
+                {
+                    gm.enterCombat(15,11,h,castle.Town.VisitingHero);
+                }
+                else //merges visiting heroes army with stationed army and starts combat
+                {
+                    castle.Town.StationedHero = castle.Town.VisitingHero;
+                    castle.Town.VisitingHero = null;
+                    if (castle.Town.StationedUnits.CanMerge(castle.Town.VisitingUnits))
+                    {
+                        castle.Town.StationedUnits.Merge(castle.Town.VisitingUnits);
+                    }
+                    gm.enterCombat(15,11,h,castle.Town.StationedHero);
+                }
                 return false;
             }
-            else if (castle.Town.StationedUnits != null)
+            else if (castle.Town.StationedUnits.CountUnits() > 0) //checks if there are any stationed units
             {
-                //battle
-                gm.enterCombat(15, 11, h, castle.Town.StationedUnits);
+                if (castle.Town.StationedHero != null)//checks if there is a stationed hero
+                {
+                    gm.enterCombat(15, 11, h, castle.Town.StationedHero);
+                }
+                else
+                {
+                    gm.enterCombat(15, 11, h, castle.Town.StationedUnits, false);
+                }
                 return false;
             }
             return true;
@@ -68,7 +88,7 @@ public class CastleReact : Reaction {
     {
         if (player.equals(castle.Player))
         {
-            gm.EnterTown(castle.Town);
+            gm.EnterTown(castle.Town, false);
         }
         return false;
     }

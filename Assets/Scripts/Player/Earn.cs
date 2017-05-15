@@ -30,4 +30,15 @@
         wallet.adjustResource(type.CRYSTAL, GetResource((int)type.CRYSTAL));
         return wallet;
     }
+
+    public override string ToString()
+    {
+        string text = "";
+        for (int i = 0; i < TYPES; i++)
+        {
+            if (GetResource(i) != 0)
+                text += GetResource(i) + " " + GetResourceName(i);
+        }
+        return text;
+    }
 }

@@ -13,7 +13,7 @@ public class GraphicalBattlefield : MonoBehaviour
     BattleField battleField;
     int[,] canwalk;
     int width, height;
-    bool inCombat;
+    bool inCombat, ai;
     GameObject[,] field;
     GameObject[,] unitsOnField;
     GameObject parent;
@@ -26,9 +26,12 @@ public class GraphicalBattlefield : MonoBehaviour
     private const int OFFSETX = -4, OFFSETY = -3;
     private const float ODDOFFSETX = 0.25f, ODDOFFSETY = -0.0f;
     private List<Vector2> path;
-    private int step;
+    private int step, frame;
     public float animationSpeed = 0.1f;
     private float towardNextStep;
+    private Sprite attackSheet, moveSheet, troll;
+    private RuntimeAnimatorController walkingAnimator, attackingAnimator;
+    private CombatAi combatAi;
 
     // Use this for initialization
     void Start () {
@@ -38,25 +41,55 @@ public class GraphicalBattlefield : MonoBehaviour
         parent = GameObject.Find("Combat");
         unit = UnityEngine.Resources.Load<GameObject>("Sprites/Combat/Unit");
         gm = GameObject.Find("GameManager").GetComponent<GameManager>();
+        //todo implement loading of animations dynamically based on unit
+        attackSheet = UnityEngine.Resources.Load<Sprite>("Sprites/Combat/Attack");
+        moveSheet = UnityEngine.Resources.Load<Sprite>("Sprites/Combat/TrollWalk");
+        troll = UnityEngine.Resources.Load<Sprite>("Sprites/Units/Troll/Frame 1");
+        walkingAnimator = UnityEngine.Resources.Load<RuntimeAnimatorController>("Sprites/Combat/TrollWalk_0");
+        attackingAnimator = UnityEngine.Resources.Load<RuntimeAnimatorController>("Sprites/Combat/Attack_0");
     }
 
 	// Update is called once per frame
 	void Update () {
+        // Only runs if in combat
 		if (InCombat)
         {
             if (IsWalking)
             {
-                if (towardNextStep >= 1)
+                if (towardNextStep >= 1) //Checks if unit has finished taking a step
                 {
                     towardNextStep = 0;
                     step++;
-                    if (step == path.Count)
+                    if (step == path.Count) //Checks if unit has reached destination
                     {
                         finishedWalking = true;
                         isWalking = false;
                     }
+                    //Turns unit in direction it is walking
+                    else if ((int)path[step-1].y % 2 == 0)
+                    {
+                        if ((int)path[step].x < (int)path[step - 1].x)
+                        {
+                            getUnitWhoseTurnItIs().GetComponent<SpriteRenderer>().flipX = true;
+                        }
+                        else
+                        {
+                            getUnitWhoseTurnItIs().GetComponent<SpriteRenderer>().flipX = false;
+                        }
+                    }
+                    else
+                    {
+                        if ((int)path[step].x <= (int)path[step - 1].x)
+                        {
+                            getUnitWhoseTurnItIs().GetComponent<SpriteRenderer>().flipX = true;
+                        }
+                        else
+                        {
+                            getUnitWhoseTurnItIs().GetComponent<SpriteRenderer>().flipX = false;
+                        }
+                    }
                 }
-                else
+                else //Moves unit closer to the end of it's current step
                 {
                     Vector3 destination = field[(int)path[step].x, (int)path[step].y].transform.localPosition;
                     getUnitWhoseTurnItIs().transform.localPosition = Vector2.MoveTowards(getUnitWhoseTurnItIs().transform.localPosition, destination, animationSpeed);
@@ -65,6 +98,7 @@ public class GraphicalBattlefield : MonoBehaviour
             }
             else if (finishedWalking)
             {
+                //Updates position of unit
                 unitsOnField[(int)path[step - 1].x, (int)path[step - 1].y] = unitsOnField[getUnitWhoseTurnItIs().LogicalPos.x, getUnitWhoseTurnItIs().LogicalPos.y];
                 unitsOnField[getUnitWhoseTurnItIs().LogicalPos.x, getUnitWhoseTurnItIs().LogicalPos.y] = null;
                 getUnitWhoseTurnItIs().LogicalPos = new Point(path[step-1]);
@@ -72,12 +106,32 @@ public class GraphicalBattlefield : MonoBehaviour
                     .GetComponent<GroundGameObject>().IsOccupied = true;
                 canwalk[getUnitWhoseTurnItIs().LogicalPos.x, getUnitWhoseTurnItIs().LogicalPos.y] = MapMaker.CANNOTWALK;
 
-                if (attacking)
-                {
-                    //todo attack animation
-                }
-                nextTurn();
+                getUnitWhoseTurnItIs().GetComponent<SpriteRenderer>().flipX = !getUnitWhoseTurnItIs().AttackingSide;
                 finishedWalking = false;
+                if (attacking) //Sets attack animation
+                {
+                    getUnitWhoseTurnItIs().GetComponent<SpriteRenderer>().sprite = attackSheet;
+                    getUnitWhoseTurnItIs().GetComponent<Animator>().runtimeAnimatorController = attackingAnimator;
+                    frame = 0;
+                }
+                else //Sets idle animation
+                {
+                    getUnitWhoseTurnItIs().GetComponent<Animator>().runtimeAnimatorController = null;
+                    getUnitWhoseTurnItIs().GetComponent<SpriteRenderer>().sprite = troll;
+                    nextTurn();
+                }
+            }
+            else if(attacking)
+            {
+                //Runs attack animation
+                frame++;
+                if (frame == 50)
+                {
+                    attacking = false;
+                    getUnitWhoseTurnItIs().GetComponent<Animator>().runtimeAnimatorController = null;
+                    getUnitWhoseTurnItIs().GetComponent<SpriteRenderer>().sprite = troll;
+                    nextTurn();
+                }
             }
             else if (livingAttackers == 0 || livingDefenders == 0)
             {
@@ -122,7 +176,7 @@ public class GraphicalBattlefield : MonoBehaviour
     /// <param name="height">Height of battlefield</param>
     /// <param name="attacker">Attacking hero</param>
     /// <param name="defender">Defending units</param>
-    public void beginCombat(int width, int height, Hero attacker, UnitTree defender)
+    public void beginCombat(int width, int height, Hero attacker, UnitTree defender, bool ai)
     {
         Width = width;
         Height = height;
@@ -141,10 +195,15 @@ public class GraphicalBattlefield : MonoBehaviour
         populateInitative(attacker, defender);
         possibleMovement = new PossibleMovement(field, unitsOnField, canwalk, width, height);
         flipReachableAndAttackable();
+        this.ai = ai;
+        if (ai)
+        {
+            combatAi = new CombatAi(this,field,unitsOnField,width,height);
+        }
     }
 
     /// <summary>
-    /// fills 2d array for groundtiles
+    /// Fills 2d array for groundtiles
     /// </summary>
     public void populateField()
     {
@@ -215,7 +274,7 @@ public class GraphicalBattlefield : MonoBehaviour
                 GameObject go = Instantiate(unit, parent.transform);
                 go.name = "a" + i;
                 SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
-                sr.sprite = UnityEngine.Resources.Load<Sprite>("Sprites/Units/Troll/Frame 1");
+                sr.sprite = troll;
                 sr.sortingLayerName = "CombatUnits";
                 TextMesh tm = go.GetComponentInChildren<TextMesh>();
                 tm.text = ""+units.getUnitAmount(i);
@@ -247,7 +306,8 @@ public class GraphicalBattlefield : MonoBehaviour
                 GameObject go = Instantiate(unit, parent.transform);
                 go.name = "d" + i;
                 SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
-                sr.sprite = UnityEngine.Resources.Load<Sprite>("Sprites/Units/Troll/Frame 1");
+                sr.flipX = true;
+                sr.sprite = troll;
                 sr.sortingLayerName = "CombatUnits";
                 TextMesh tm = go.GetComponentInChildren<TextMesh>();
                 tm.text = "" + units.getUnitAmount(i);
@@ -268,8 +328,6 @@ public class GraphicalBattlefield : MonoBehaviour
             }
             place += increment;
         }
-        // Sorts initative in descending order
-        // todo fix sort
         Array.Sort(initative);
         Array.Reverse(initative);
         WhoseTurn = 0;
@@ -284,6 +342,17 @@ public class GraphicalBattlefield : MonoBehaviour
         battleField.endCombat();
         InCombat = false;
         gm.exitCombat(livingAttackers != 0);
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                Destroy(field[x,y]);
+                if (UnitsOnField[x, y] != null)
+                {
+                    Destroy(unitsOnField[x,y]);
+                }
+            }
+        }
     }
 
     /// <summary>
@@ -293,7 +362,7 @@ public class GraphicalBattlefield : MonoBehaviour
     /// <param name="goal">Place on field attacking unit is going to</param>
     public void attackUnit(UnitGameObject defender, Point goal)
     {
-        if (!isWalking && !finishedWalking)
+        if (!isWalking && !finishedWalking && !attacking)
         {
             UnitGameObject activeUnit = initative[whoseTurn];
             Unit attackingUnit = activeUnit.UnitTree.GetUnits()[activeUnit.PosInUnitTree];
@@ -301,8 +370,7 @@ public class GraphicalBattlefield : MonoBehaviour
             if (activeUnit.LogicalPos.Equals(goal))
             {
                 battleField.attackWithoutMoving(activeUnit.LogicalPos, defender.LogicalPos, false);
-                //todo trigger animation
-                nextTurn();
+                beginAttacking(defender.LogicalPos.x);
             }
             else
             {
@@ -313,8 +381,7 @@ public class GraphicalBattlefield : MonoBehaviour
                     if (r.Ammo > 0 && !r.Threatened)
                     {
                         battleField.attackWithoutMoving(activeUnit.LogicalPos, defender.LogicalPos, true);
-                        //todo trigger animation
-                        nextTurn();
+                        beginAttacking(defender.LogicalPos.x);
                     }
                     else
                     {
@@ -353,7 +420,7 @@ public class GraphicalBattlefield : MonoBehaviour
     /// <param name="goal">Destination</param>
     public void moveUnit(Point goal)
     {
-        if (!finishedWalking && !isWalking)
+        if (!finishedWalking && !isWalking && !attacking)
         {
             UnitGameObject activeUnit = initative[whoseTurn];
             path = battleField.unitMove(activeUnit.LogicalPos, goal);
@@ -364,7 +431,6 @@ public class GraphicalBattlefield : MonoBehaviour
     /// <summary>
     /// Begins walking animation
     /// </summary>
-    /// <param name="path">Path</param>
     public void BeginWalking()
     {
         field[initative[whoseTurn].LogicalPos.x, initative[whoseTurn].LogicalPos.y].GetComponent<GroundGameObject>()
@@ -372,6 +438,64 @@ public class GraphicalBattlefield : MonoBehaviour
         canwalk[initative[whoseTurn].LogicalPos.x, initative[whoseTurn].LogicalPos.y] = MapMaker.CANWALK;
         isWalking = true;
         step = 0;
+        //Sets walking animation
+        getUnitWhoseTurnItIs().GetComponent<SpriteRenderer>().sprite = moveSheet;
+        getUnitWhoseTurnItIs().GetComponent<Animator>().runtimeAnimatorController = walkingAnimator;
+        //Turns unit the right way
+        if (getUnitWhoseTurnItIs().LogicalPos.y % 2 == 0)
+        {
+            if ((int)path[step].x < getUnitWhoseTurnItIs().LogicalPos.x)
+            {
+                getUnitWhoseTurnItIs().GetComponent<SpriteRenderer>().flipX = true;
+            }
+            else
+            {
+                getUnitWhoseTurnItIs().GetComponent<SpriteRenderer>().flipX = false;
+            }
+        }
+        else
+        {
+            if ((int)path[step].x <= getUnitWhoseTurnItIs().LogicalPos.x)
+            {
+                getUnitWhoseTurnItIs().GetComponent<SpriteRenderer>().flipX = true;
+            }
+            else
+            {
+                getUnitWhoseTurnItIs().GetComponent<SpriteRenderer>().flipX = false;
+            }
+        }
+    }
+
+    public void beginAttacking(int x)
+    {
+        attacking = true;
+        frame = 0;
+        //Sets attack animation
+        getUnitWhoseTurnItIs().GetComponent<SpriteRenderer>().sprite = attackSheet;
+        getUnitWhoseTurnItIs().GetComponent<Animator>().runtimeAnimatorController = attackingAnimator;
+        //Turns unit the right way
+        if (getUnitWhoseTurnItIs().LogicalPos.y % 2 == 0)
+        {
+            if (x < getUnitWhoseTurnItIs().LogicalPos.x)
+            {
+                getUnitWhoseTurnItIs().GetComponent<SpriteRenderer>().flipX = true;
+            }
+            else
+            {
+                getUnitWhoseTurnItIs().GetComponent<SpriteRenderer>().flipX = false;
+            }
+        }
+        else
+        {
+            if (x <= getUnitWhoseTurnItIs().LogicalPos.x)
+            {
+                getUnitWhoseTurnItIs().GetComponent<SpriteRenderer>().flipX = true;
+            }
+            else
+            {
+                getUnitWhoseTurnItIs().GetComponent<SpriteRenderer>().flipX = false;
+            }
+        }
     }
 
     /// <summary>
@@ -393,6 +517,11 @@ public class GraphicalBattlefield : MonoBehaviour
         if (whoseTurn == initative.Length || initative[whoseTurn] == null) whoseTurn = 0;
         initative[whoseTurn].ItsTurn = true;
         flipReachableAndAttackable();
+        getUnitWhoseTurnItIs().UnitTree.GetUnits()[getUnitWhoseTurnItIs().PosInUnitTree].HaveNotRetaliated = true;
+        if (ai && !getUnitWhoseTurnItIs().AttackingSide)
+        {
+            combatAi.act(getUnitWhoseTurnItIs());
+        }
     }
 
     /// <summary>

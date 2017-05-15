@@ -17,6 +17,11 @@ public class Cost : Resources {
             ResourceTab[(int)type.CRYSTAL] * amount, ResourceTab[(int)type.GEM] * amount);
     }
 
+    public Cost() : base(0, 0, 0, 0, 0)
+    {
+
+    }
+
     /// <summary>
     /// This return the max amount you can buy based on your wallet.
     /// </summary>
@@ -98,5 +103,17 @@ public class Cost : Resources {
     public string ToString(int i)
     {
         return CostToString(i) + ResourceToString(i);
+    }
+
+    public Cost GetCostScaled(int amount)
+    {
+        Cost cost = new Cost();
+        for(int i=0; i<GetResourceTab().Length; i++)
+        {
+            cost.GetResourceTab()[i] = GetResourceTab()[i];
+            if (cost.GetResourceTab()[i] != 0)
+                cost.GetResourceTab()[i] *= amount;
+        }
+        return cost;
     }
 }

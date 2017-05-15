@@ -9,9 +9,9 @@
         // Required values for building:
         const string name = "Town Hall";
         const string description = "Build buildings here";
-        const bool[] requirements = null;
+        static bool[] requirements = new bool[] { false, false, false, false, false, false, false, false, false, false, false, false };
         const int LOCAL_SPRITEID = 1;
-        const int LOCAL_SPRITEID_BLUEPRINT = 7;
+        const int LOCAL_SPRITEID_BLUEPRINT = 13;
 
         // Resources cost: 
         const int GOLD_COST = 1500;
@@ -34,7 +34,7 @@
         /// <returns>Integer for which window type to display in the game</returns>
         protected override int GetUIType()
         {
-            return UI.WindowTypes.TOWN_HALL_CARD;
+            return UI.WindowTypes.TAVERN_CARD;
         }
     }
 }

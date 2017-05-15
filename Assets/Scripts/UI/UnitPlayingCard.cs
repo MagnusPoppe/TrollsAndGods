@@ -15,6 +15,6 @@ namespace UI
         int GetHealthPoints();
         string GetUnitName(); // TODO: GetUnit();
         Move[] GetMoves(); 
-        string GetAbility(); // TODO: Ability
+        Ability GetAbility();
     }
 }

@@ -19,7 +19,7 @@ public class IngameObjectLibrary
         towns = InitializeTowns();
         ui = InitializeUI();
         portraits = InitializePortraits();
-        resources = InitializeResources();
+        units = InitializeUnits();
     }
 
     /// <summary>
@@ -27,7 +27,7 @@ public class IngameObjectLibrary
     /// </summary>
     public enum Category
     {
-        Debug, Ground, Environment, Dwellings, ResourceBuildings, Heroes, Castle, Town, UI, Portraits, Resources, NOT_FOUND
+        Debug, Ground, Environment, Dwellings, ResourceBuildings, Heroes, Castle, Town, UI, Portraits, Resources, Unit, NOT_FOUND
     }
 
     /// <summary>
@@ -64,8 +64,9 @@ public class IngameObjectLibrary
         else if (category == Category.Portraits)
             return PORTRAIT_START;
 
-        else if (category == Category.Resources)
-            return RESOURCES_START;
+        else if (category == Category.Unit)
+            return UNIT_START;
+
 
         else if (category == Category.Debug)
             return DEBUG_SPRITES_START;
@@ -118,13 +119,9 @@ public class IngameObjectLibrary
         {
             return Category.UI;
         }
-        else if (spriteID < PORTRAIT_START)
+        else if (spriteID <= PORTRAIT_START + PORTRAIT_COUNT)
         {
             return Category.Portraits;
-        }
-        else if (spriteID <= RESOURCES_START + RESOURCES_COUNT)
-        {
-            return Category.Resources;
         }
 
         // TODO: Debugger
@@ -294,7 +291,7 @@ public class IngameObjectLibrary
     // towns-variabler. towns[] holder alle sprites, TOWNS_START er global startverdi for towns sprites, TOWNS_COUNT er antall towns sprites
     Sprite[] towns;
     public const int TOWNS_START = CASTLES_START + CASTLES_COUNT;
-    public const int TOWNS_COUNT = 25;
+    public const int TOWNS_COUNT = 46;
 
     /// <summary>
     /// Initialiserer et array for å holde på alle towns sprites
@@ -314,28 +311,50 @@ public class IngameObjectLibrary
         sprites[4] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Dragon Tower");
         sprites[5] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Troll Cave");
         sprites[6] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Marketplace");
+        sprites[7] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Beast Riders Guild");
+        sprites[8] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Cernian Camp");
+        sprites[9] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Training Camp");
+        sprites[10] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Mage Tower");
+        sprites[11] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Warriors Camp");
+        sprites[12] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Workshop");
 
         // viking town can build blueprint sprites
-        sprites[7] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Town Hall");
-        sprites[8] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Pallisade");
-        sprites[9] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Temple");
-        sprites[10] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Dragon Tower");
-        sprites[11] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Troll Cave");
-        sprites[12] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Marketplace");
+        sprites[13] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Town Hall");
+        sprites[14] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Pallisade");
+        sprites[15] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Temple");
+        sprites[16] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Dragon Tower");
+        sprites[17] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Troll Cave");
+        sprites[18] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Marketplace");
+        sprites[19] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Beast Riders Guild");
+        sprites[20] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Cernian Camp");
+        sprites[21] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Training Camp");
+        sprites[22] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Mage Tower");
+        sprites[23] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Warriors Camp");
         // viking town has built sprites
-        sprites[13] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Town Hall HasBought");
-        sprites[14] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Pallisade HasBought");
-        sprites[15] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Temple HasBought");
-        sprites[16] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Dragon Tower HasBought");
-        sprites[17] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Troll Cave HasBought");
-        sprites[18] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Marketplace HasBought");
+        sprites[24] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Town Hall HasBought");
+        sprites[25] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Pallisade HasBought");
+        sprites[26] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Temple HasBought");
+        sprites[27] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Dragon Tower HasBought");
+        sprites[28] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Troll Cave HasBought");
+        sprites[29] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Marketplace HasBought");
+        sprites[30] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Beast Riders Guild HasBought");
+        sprites[31] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Cernian Camp HasBought");
+        sprites[32] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Training Camp HasBought");
+        sprites[33] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Mage Tower HasBought");
+        sprites[34] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Warriors Camp HasBought");
         // viking town can't build sprites
-        sprites[19] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Town Hall NoBuy");
-        sprites[20] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Pallisade NoBuy");
-        sprites[21] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Temple NoBuy");
-        sprites[22] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Dragon Tower NoBuy");
-        sprites[23] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Troll Cave NoBuy");
-        sprites[24] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Marketplace NoBuy");
+        sprites[35] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Town Hall NoBuy");
+        sprites[36] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Pallisade NoBuy");
+        sprites[37] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Temple NoBuy");
+        sprites[39] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Dragon Tower NoBuy");
+        sprites[39] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Troll Cave NoBuy");
+        sprites[40] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Marketplace NoBuy");
+        sprites[41] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Beast Riders Guild NoBuy");
+        sprites[42] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Cernian Camp NoBuy");
+        sprites[43] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Training Camp NoBuy");
+        sprites[44] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Mage Tower NoBuy");
+        sprites[45] = UnityEngine.Resources.Load<Sprite>(path + "Viking/Icons Warriors Camp NoBuy");
+
 
         return sprites;
     }
@@ -359,7 +378,7 @@ public class IngameObjectLibrary
         sprites[0] = UnityEngine.Resources.Load<Sprite>(path + "townhall_Card");
         sprites[1] = UnityEngine.Resources.Load<Sprite>(path + "tavern_card");
         sprites[2] = UnityEngine.Resources.Load<Sprite>(path + "tavern_card");
-        sprites[3] = UnityEngine.Resources.Load<Sprite>(path + "building_card");
+        sprites[3] = UnityEngine.Resources.Load<Sprite>(path + "tavern_card");
         sprites[4] = UnityEngine.Resources.Load<Sprite>(path + "unit_card");
         sprites[5] = UnityEngine.Resources.Load<Sprite>(path + "building_card");
         sprites[6] = UnityEngine.Resources.Load<Sprite>(path + "exit");
@@ -395,25 +414,20 @@ public class IngameObjectLibrary
     }
 
     // resources-variabler. resources[] holder alle sprites, resources_START er global startverdi for heroes sprites, resources_COUNT er antall resources sprites
-    Sprite[] resources;
-    public const int RESOURCES_START = UI_START + UI_COUNT;
-    public const int RESOURCES_COUNT = 5;
+    Sprite[] units;
+    public const int UNIT_START = UI_START + UI_COUNT;
+    public const int UNIT_COUNT = 0;
 
     /// <summary>
     /// Initialiserer et array for å holde på alle resources sprites
     /// </summary>
     /// <returns>Array med resources sprites</returns>
-    private Sprite[] InitializeResources()
+    private Sprite[] InitializeUnits()
     {
         Sprite[] sprites = new Sprite[PORTRAIT_COUNT];
-        String path = "Sprites/UI/";
+        String path = "Sprites/Units/";
 
-        // portrait sprites
-        sprites[0] = UnityEngine.Resources.Load<Sprite>(path + "gold");
-        sprites[1] = UnityEngine.Resources.Load<Sprite>(path + "wood");
-        sprites[2] = UnityEngine.Resources.Load<Sprite>(path + "ore");
-        sprites[3] = UnityEngine.Resources.Load<Sprite>(path + "crystal");
-        sprites[4] = UnityEngine.Resources.Load<Sprite>(path + "gem");
+        sprites[0] = UnityEngine.Resources.Load<Sprite>(path + "stone_troll_portrait");
 
         return sprites;
     }
@@ -488,14 +502,32 @@ public class IngameObjectLibrary
         return portraits[spriteID - PORTRAIT_START];
     }
 
-    public Sprite GetResources(int spriteID)
+    public Sprite GetUnit(int spriteID)
     {
-        return resources[spriteID - RESOURCES_START];
+        return units[spriteID - UNIT_START];
     }
 
     public Sprite GetDebugSprite(int spriteID)
 	{
 		return debug[spriteID];
 	}
+
+    public static Sprite[] ResourceIcons = UnityEngine.Resources.LoadAll<Sprite>("Sprites/UI/Resources");
+    public static Sprite[] Resource = UnityEngine.Resources.LoadAll<Sprite>("Sprites/Environment/Resources");
+
+    public static Sprite[] Pointers = UnityEngine.Resources.LoadAll<Sprite>("Sprites/Pointers");
+
+    private static string unitPath = "Sprites/Units";
+    public static Sprite[] unitSprite = UnityEngine.Resources.LoadAll<Sprite>(unitPath + "Sprite");
+    public static Sprite[] unitArt = UnityEngine.Resources.LoadAll<Sprite>(unitPath + "Art");
+    public static Sprite[] unitPortraits = UnityEngine.Resources.LoadAll<Sprite>(unitPath + "Portraits");
+    
+    private static string heroPath = "Sprites/Hero";
+    public static Sprite[] heroSprite = UnityEngine.Resources.LoadAll<Sprite>(unitPath + "Sprite");
+    public static Sprite[] heroPortraits = UnityEngine.Resources.LoadAll<Sprite>(unitPath + "Portraits");
+
+    private static string townPath = "Sprites/Town";
+    public static Sprite[] townOverworld = UnityEngine.Resources.LoadAll<Sprite>(townPath + "Sprite");
+    public static Sprite[] townScreen = UnityEngine.Resources.LoadAll<Sprite>(townPath + "Portraits");
 }
  
