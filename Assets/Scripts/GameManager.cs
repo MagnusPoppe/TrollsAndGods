@@ -552,6 +552,7 @@ public class GameManager : MonoBehaviour
                 {
                     if (unitTree.GetUnits()[i] != null)
                     {
+
                         unit = unitTree.GetUnits()[i];
                         OpenUnitPanel(overworldCanvas, unit, unitTree.getUnitAmount(i));
                     }
@@ -2422,5 +2423,11 @@ public class GameManager : MonoBehaviour
             cameraMovement.enabled = true;
         // If a swap object was enabled, nullify it
         swapObject = null;
+    }
+
+    public Reaction[,] Reactions
+    {
+        get { return reactions; }
+        set { reactions = value; }
     }
 }

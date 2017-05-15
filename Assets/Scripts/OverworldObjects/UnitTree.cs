@@ -46,7 +46,6 @@ public class UnitTree
         }
     }
 
-
     public void SetUnitAmount(Unit Unit, int pos, int amount)
     {
         unitAmount[pos] = amount;
