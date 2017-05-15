@@ -1,12 +1,10 @@
 ﻿namespace TownView
 {
     /// <summary>
-    /// Placeholder class for a spesific building.
-    /// Belongs to the "Unknown Town".
+    /// Temple building belonging to Viking Town
     /// </summary>
     public class Temple : Building
     {
-        // Required values for building:
         const string name = "Temple";
         const string description = "Eat, Pray, Program";
         static bool[] requirements = new bool[] { false, false, false, false, false, false, false, false, false, false, false, false };
@@ -14,7 +12,9 @@
         const int LOCAL_SPRITEID_BLUEPRINT = 15;
 
 
-        // Resources cost: 
+        /// <summary>
+        /// Resource cost for this building
+        /// </summary>
         const int GOLD_COST = 500;
         const int WOOD_COST = 5;
         const int ORE_COST = 5;
@@ -23,7 +23,9 @@
 
 
 
-        // This needs no indata since it knows its values.
+        /// <summary>
+        /// Default constructor
+        /// </summary>
         public Temple() : base(name, description, requirements, new Cost(GOLD_COST, WOOD_COST, ORE_COST, CRYSTAL_COST, GEM_COST), LOCAL_SPRITEID, LOCAL_SPRITEID_BLUEPRINT)
         {
         }

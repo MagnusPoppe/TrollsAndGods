@@ -1,5 +1,9 @@
 ﻿namespace Units
 {
+
+    /// <summary>
+    /// Tree swing move
+    /// </summary>
     class TreeSwing : Move
     {
         const string NAME = "Tree Swing";
@@ -8,6 +12,9 @@
         const int MAXDAMAGE = 8;
         static int DAMAGETYPE = Element.BLUDGEONING;
 
+        /// <summary>
+        /// Default constructor
+        /// </summary>
         public TreeSwing()
             : base(NAME, DESCRIPTION, MINDAMAGE, MAXDAMAGE, DAMAGETYPE)
         {

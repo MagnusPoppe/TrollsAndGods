@@ -6,14 +6,16 @@ using Debug = UnityEngine.Debug;
 
 namespace MapGenerator
 {
+    /// <summary>
+    /// Land region. This is a set of Points that makes a region on the map. 
+    /// The points are generated from the Voronoi algorithm.
+    /// </summary>
     public class LandRegion : Region
     {
 
         List<OverworldBuilding> buildings;
 
         Economy economy;
-
-        TileRating[] coordinateValue;
         Castle castle;
         Hero hero;
 

@@ -178,6 +178,10 @@ public class MovementManager
         return false; // Do not stop for pre react
     }
 
+    /// <summary>
+    /// Performs the actual reaction:
+    /// </summary>
+    /// <param name="end"></param>
     private void react(Point end)
     {
         int x = end.x;

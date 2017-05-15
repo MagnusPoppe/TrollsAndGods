@@ -33,7 +33,12 @@ namespace Filter
 			this.filterSum = GetFilterSum(filter);
 		}
 
-
+        /// <summary>
+        /// Gets the filter sum. The method uses addition to 
+        /// add together all the values of the filter.
+        /// </summary>
+        /// <returns>The filter sum.</returns>
+        /// <param name="filter">Filter.</param>
 		private int GetFilterSum(int[,] filter)
 		{
 			int sum = 0;
@@ -41,10 +46,7 @@ namespace Filter
 				for (int x = 0; x < filter.GetLength(1); x++)
 				{
 					sum += filter[x, y];
-					//Debug.Log("sum = "+filter[x, y]);
 				}
-
-			//Debug.Log("final sum = " + sum);
 			return sum;
 		}
 
@@ -86,8 +88,6 @@ namespace Filter
 
 				}
 			}
-			//Debug.Log("Sum = " + sum + "/" + filterSum + "="+(sum / filterSum) + "=" + ((int)(sum / filterSum)));
-
 			int result = (int)Math.Round(sum / filterSum);
 
 			return result;

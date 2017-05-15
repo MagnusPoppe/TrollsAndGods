@@ -2,9 +2,17 @@
 
 namespace MapGenerator
 {
+    /// <summary>
+    /// Water region is a specialized region that is filled with water.
+    /// </summary>
     public class WaterRegion : Region
     {
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MapGenerator.WaterRegion"/> class.
+        /// </summary>
+        /// <param name="coordinateList">Coordinate list.</param>
+        /// <param name="regionCenter">Region center.</param>
         public WaterRegion(List<Point> coordinateList, Point regionCenter) 
             :base(coordinateList, regionCenter)
         {
@@ -39,7 +47,6 @@ namespace MapGenerator
                 }
             }
         }
-
     }
 }
 

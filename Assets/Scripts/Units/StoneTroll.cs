@@ -3,8 +3,14 @@ using UnityEngine.Rendering;
 
 namespace Units
 {
+    /// <summary>
+    /// Stone troll unit
+    /// </summary>
     public class StoneTroll : Ranged
     {
+        /// <summary>
+        /// Unit stats and variables
+        /// </summary>
         private const string name = "Stone Troll";
         private const int tier = 7;
         private const int faction = 0;
@@ -25,7 +31,9 @@ namespace Units
 
         private const int localID = 0;
 
-
+        /// <summary>
+        /// Default constructor
+        /// </summary>
         public StoneTroll() : base(name, tier, faction, ammo, meleePenalty, localID)
         {
             Element = new Earth();

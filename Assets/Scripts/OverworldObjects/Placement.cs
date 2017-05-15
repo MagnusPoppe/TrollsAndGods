@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Filter;
 using MapGenerator;
-using UnityEditor;
 using UnityEngine;
 
 namespace OverworldObjects

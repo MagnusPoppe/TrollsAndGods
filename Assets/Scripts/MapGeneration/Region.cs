@@ -3,11 +3,19 @@ using System.Collections.Generic;
 
 namespace MapGenerator
 {
+    /// <summary>
+    /// Region. This is the parent class of all region types, and 
+    /// contains the common data for regions.
+    /// </summary>
 	public class Region : IComparable
 	{
         protected List<Point> coordinates;
         private Point regionCenter;
 
+        /// <summary>
+        /// Gets or sets the region center.
+        /// </summary>
+        /// <value>The region center.</value>
         public Point RegionCenter
         {
             get
@@ -21,6 +29,11 @@ namespace MapGenerator
             }
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MapGenerator.Region"/> class.
+        /// </summary>
+        /// <param name="coordinates">Coordinates.</param>
+        /// <param name="regionCenter">Region center.</param>
         public Region(List<Point> coordinates, Point regionCenter)
         {
             this.coordinates = coordinates;
@@ -110,12 +123,24 @@ namespace MapGenerator
             return map;
         }
 
+        /// <summary>
+        /// Default CompareTo after the IComparable Interface. Compares
+        /// regions based on size.
+        /// </summary>
+        /// <returns>The to.</returns>
+        /// <param name="obj">Object.</param>
         public int CompareTo(object obj)
         {
             Region other = (Region)obj;
             return GetArea() - other.GetArea();
         }
 
+        /// <summary>
+        /// Determines whether the specified <see cref="MapGenerator.Region"/> is equal to the current <see cref="MapGenerator.Region"/>.
+        /// </summary>
+        /// <param name="other">The <see cref="MapGenerator.Region"/> to compare with the current <see cref="MapGenerator.Region"/>.</param>
+        /// <returns><c>true</c> if the specified <see cref="MapGenerator.Region"/> is equal to the current
+        /// <see cref="MapGenerator.Region"/>; otherwise, <c>false</c>.</returns>
         public bool Equals(Region other)
         {
             return getX() == other.getX() && getY() == other.getY();

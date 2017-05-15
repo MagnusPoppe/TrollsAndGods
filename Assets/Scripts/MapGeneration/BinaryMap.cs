@@ -2,6 +2,10 @@
 
 namespace MapGenerator
 {
+    /// <summary>
+    /// A class to create the binary map used to deside where a player
+    /// can and cannot go. This is the general Procedural Map generator.
+    /// </summary>
 	public class BinaryMap
     {
         int width;
