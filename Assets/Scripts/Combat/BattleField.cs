@@ -98,6 +98,12 @@ public class BattleField {
         }
     }
 
+    /// <summary>
+    /// Method for moving a unit
+    /// </summary>
+    /// <param name="start">Start position</param>
+    /// <param name="goal">Goal position</param>
+    /// <returns>List with movement path, empty list if no path</returns>
     public List<Vector2> unitMove(Point start, Point goal)
     {
         List<Vector2> path = AStar.calculate(start, goal);
@@ -114,7 +120,7 @@ public class BattleField {
     /// <param name="start">Start position</param>
     /// <param name="goal">Goal position</param>
     /// <param name="attackedUnitPos">Position of unit to be attacked</param>
-    /// <returns>List with movement path, null if no path</returns>
+    /// <returns>List with movement path, empty list if no path</returns>
     public List<Vector2> UnitMoveAndAttack(Point start, Point goal, Point attackedUnitPos)
     {
         List<Vector2> path = aStar.calculate(start, goal);

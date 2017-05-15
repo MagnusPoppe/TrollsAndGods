@@ -23,10 +23,14 @@ namespace TownView
         Player owner;
 
         const IngameObjectLibrary.Category category = IngameObjectLibrary.Category.Town;
+
+
         /// <summary>
-        /// Constructor that builds the buildingtree with corresponding town according to townId variable
+        /// Consturctor for towns
         /// </summary>
-        /// <param name="townId">which town shall be built</param>
+        /// <param name="owner">The player that owns the town, NULL if not owned</param>
+        /// <param name="localSpriteID">The spriteID for the given town</param>
+        /// <param name="position">The map position for the town</param>
         public Town(Player owner, int localSpriteID, Point position) :base(localSpriteID, category )
         {
             Position = position;
@@ -37,7 +41,10 @@ namespace TownView
             VisitingUnits = new UnitTree();
         }
 
-        // Builds all buildings in a given town
+        /// <summary>
+        /// Debug method to build all buildings in a town
+        /// </summary>
+        /// <param name="t">The town which should have its buildings built</param>
         public void BuildAll(Town t)
         {
             for(int i = 0; i < t.buildings.Length; i++)
@@ -49,7 +56,7 @@ namespace TownView
         // When in town window, activated by clicking on first and then second hero
         public void swapHeroes()
         {
-            // Only swap if there is a hero in on eof the spots
+            // Only swap if there is a hero in one of the spots
             if (visitingHero != null || stationedHero != null)
             {
                 // TODO check merge, and merge - if there's not an hero in stationedarmy

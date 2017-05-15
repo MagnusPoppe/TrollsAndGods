@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Class governs what computer controlled units do in combat.
+/// </summary>
 public class CombatAi
 {
     private GraphicalBattlefield graphicalBattlefield;
@@ -19,12 +22,17 @@ public class CombatAi
         this.unitsOnField = unitsOnField;
     }
 
+    /// <summary>
+    /// Method finds wich enemy unit to attack and then calls the checkPos method
+    /// </summary>
+    /// <param name="activeUnit">The unit whose turn it is</param>
     public void act(UnitGameObject activeUnit)
     {
         x = activeUnit.LogicalPos.x;
         y = activeUnit.LogicalPos.y;
         UnitGameObject[] possibleTargets = new UnitGameObject[UnitTree.TREESIZE+1];
         int next = 0;
+        //Finds enemy units
         for (int i = 0; i < width; i++)
         {
             for (int j = 0; j < height; j++)
@@ -36,6 +44,7 @@ public class CombatAi
                 }
             }
         }
+        //Finds closest enemy unit
         UnitGameObject target = possibleTargets[0];
         int distance = HandyMethods.DistanceHex(activeUnit.LogicalPos,target.LogicalPos);
         for (int i = 1; i < possibleTargets.Length; i++)
@@ -55,10 +64,17 @@ public class CombatAi
         checkPos(target.LogicalPos.x,target.LogicalPos.y);
     }
 
+    /// <summary>
+    /// Method checks if attacking unit can attack it's target and finds where the attacking unit is to move to,
+    /// assuming movement is necessary. Then calls upon the graphicalBattlefield to do the required action.
+    /// </summary>
+    /// <param name="cx">X coordinate of unit to be attacked</param>
+    /// <param name="cy">Y coordinate of unit to be attacked</param>
     private void checkPos(int cx, int cy)
     {
-        if (unitsOnField[cx, cy].GetComponent<UnitGameObject>().Attackable)
+        if (unitsOnField[cx, cy].GetComponent<UnitGameObject>().Attackable)//Checks if unit can be attacked
         {
+            //Finds where it should move to attack incase of meele unit.
             GroundGameObject[] neighbours = findNeighboursHex(cx, cy);
             Point tmpGoal = neighbours[0].LogicalPos;
             if (!neighbours[0].Reachable)
@@ -80,6 +96,7 @@ public class CombatAi
         }
         else
         {
+            //Finds closest position to target that it can reach.
             while (!field[cx, cy].GetComponent<GroundGameObject>().Reachable)
             {
                 if (cx < x)
@@ -104,6 +121,12 @@ public class CombatAi
 
     }
 
+    /// <summary>
+    /// Finds all neighbour hexes and returns them in an array.
+    /// </summary>
+    /// <param name="posX">X coordinate for unit</param>
+    /// <param name="posY">Y coordinate for unit</param>
+    /// <returns>Array with neighbour hexes</returns>
     private GroundGameObject[] findNeighboursHex(int posX, int posY)
     {
         GroundGameObject[] neighbours = new GroundGameObject[6];

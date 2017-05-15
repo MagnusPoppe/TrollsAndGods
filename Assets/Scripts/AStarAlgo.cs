@@ -3,7 +3,7 @@ using UnityEngine;
 using System;
 
 /// <summary>
-/// The AstarAlgo class exists to calculate the shortest possible path from start to end
+/// The AstarAlgo class exists to calculate the shortest possible path from start position to goal position
 /// </summary>
 public class AStarAlgo {
 

@@ -174,6 +174,11 @@ namespace MapGenerator
             }
         }
 
+        /// <summary>
+        /// Creates reactions for everything in the region
+        /// </summary>
+        /// <param name="reaction">2d array for reactions</param>
+        /// <returns>reaction variable</returns>
         public Reaction[,] makeReactions(Reaction[,] reaction)
         {
             castle.flipReactions(reaction, hero);

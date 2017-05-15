@@ -43,7 +43,6 @@ public class HeroMeetReact : Reaction {
             return false;
         }
         gm.enterCombat(15,11,h,hero);
-        Debug.Log("Youve entered combat, this is not yet finished and your stuck now");
         return false;
     }
 }
