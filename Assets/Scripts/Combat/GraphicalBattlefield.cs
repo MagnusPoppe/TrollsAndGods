@@ -51,19 +51,21 @@ public class GraphicalBattlefield : MonoBehaviour
 
 	// Update is called once per frame
 	void Update () {
+        // Only runs if in combat
 		if (InCombat)
         {
             if (IsWalking)
             {
-                if (towardNextStep >= 1)
+                if (towardNextStep >= 1) //Checks if unit has finished taking a step
                 {
                     towardNextStep = 0;
                     step++;
-                    if (step == path.Count)
+                    if (step == path.Count) //Checks if unit has reached destination
                     {
                         finishedWalking = true;
                         isWalking = false;
                     }
+                    //Turns unit in direction it is walking
                     else if ((int)path[step-1].y % 2 == 0)
                     {
                         if ((int)path[step].x < (int)path[step - 1].x)
@@ -87,7 +89,7 @@ public class GraphicalBattlefield : MonoBehaviour
                         }
                     }
                 }
-                else
+                else //Moves unit closer to the end of it's current step
                 {
                     Vector3 destination = field[(int)path[step].x, (int)path[step].y].transform.localPosition;
                     getUnitWhoseTurnItIs().transform.localPosition = Vector2.MoveTowards(getUnitWhoseTurnItIs().transform.localPosition, destination, animationSpeed);
@@ -96,6 +98,7 @@ public class GraphicalBattlefield : MonoBehaviour
             }
             else if (finishedWalking)
             {
+                //Updates position of unit
                 unitsOnField[(int)path[step - 1].x, (int)path[step - 1].y] = unitsOnField[getUnitWhoseTurnItIs().LogicalPos.x, getUnitWhoseTurnItIs().LogicalPos.y];
                 unitsOnField[getUnitWhoseTurnItIs().LogicalPos.x, getUnitWhoseTurnItIs().LogicalPos.y] = null;
                 getUnitWhoseTurnItIs().LogicalPos = new Point(path[step-1]);
@@ -105,13 +108,13 @@ public class GraphicalBattlefield : MonoBehaviour
 
                 getUnitWhoseTurnItIs().GetComponent<SpriteRenderer>().flipX = !getUnitWhoseTurnItIs().AttackingSide;
                 finishedWalking = false;
-                if (attacking)
+                if (attacking) //Sets attack animation
                 {
                     getUnitWhoseTurnItIs().GetComponent<SpriteRenderer>().sprite = attackSheet;
                     getUnitWhoseTurnItIs().GetComponent<Animator>().runtimeAnimatorController = attackingAnimator;
                     frame = 0;
                 }
-                else
+                else //Sets idle animation
                 {
                     getUnitWhoseTurnItIs().GetComponent<Animator>().runtimeAnimatorController = null;
                     getUnitWhoseTurnItIs().GetComponent<SpriteRenderer>().sprite = troll;
@@ -120,6 +123,7 @@ public class GraphicalBattlefield : MonoBehaviour
             }
             else if(attacking)
             {
+                //Runs attack animation
                 frame++;
                 if (frame == 50)
                 {
@@ -199,7 +203,7 @@ public class GraphicalBattlefield : MonoBehaviour
     }
 
     /// <summary>
-    /// fills 2d array for groundtiles
+    /// Fills 2d array for groundtiles
     /// </summary>
     public void populateField()
     {
@@ -434,9 +438,10 @@ public class GraphicalBattlefield : MonoBehaviour
         canwalk[initative[whoseTurn].LogicalPos.x, initative[whoseTurn].LogicalPos.y] = MapMaker.CANWALK;
         isWalking = true;
         step = 0;
+        //Sets walking animation
         getUnitWhoseTurnItIs().GetComponent<SpriteRenderer>().sprite = moveSheet;
         getUnitWhoseTurnItIs().GetComponent<Animator>().runtimeAnimatorController = walkingAnimator;
-
+        //Turns unit the right way
         if (getUnitWhoseTurnItIs().LogicalPos.y % 2 == 0)
         {
             if ((int)path[step].x < getUnitWhoseTurnItIs().LogicalPos.x)
@@ -465,9 +470,10 @@ public class GraphicalBattlefield : MonoBehaviour
     {
         attacking = true;
         frame = 0;
+        //Sets attack animation
         getUnitWhoseTurnItIs().GetComponent<SpriteRenderer>().sprite = attackSheet;
         getUnitWhoseTurnItIs().GetComponent<Animator>().runtimeAnimatorController = attackingAnimator;
-
+        //Turns unit the right way
         if (getUnitWhoseTurnItIs().LogicalPos.y % 2 == 0)
         {
             if (x < getUnitWhoseTurnItIs().LogicalPos.x)

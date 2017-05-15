@@ -37,20 +37,20 @@ public class CastleReact : Reaction {
     /// <returns>returns false</returns>
     public override bool React(Hero h)
     {
-        if (castle.Player.Equals(h.Player))
+        if (castle.Player.Equals(h.Player)) //checks if player owns castle
         {
             castle.Town.VisitingHero = h;
             gm.EnterTheTown(castle.Town);
         }
-        else
+        else //enemy castle
         {
-            if (castle.Town.VisitingUnits.CountUnits() > 0)
+            if (castle.Town.VisitingUnits.CountUnits() > 0) //checks if there is an enemy hero visiting the castle
             {
-                if (castle.Town.StationedHero != null)
+                if (castle.Town.StationedHero != null) //checks if there is a stationed hero
                 {
                     gm.enterCombat(15,11,h,castle.Town.VisitingHero);
                 }
-                else
+                else //merges visiting heroes army with stationed army and starts combat
                 {
                     castle.Town.StationedHero = castle.Town.VisitingHero;
                     castle.Town.VisitingHero = null;
@@ -62,10 +62,9 @@ public class CastleReact : Reaction {
                 }
                 return false;
             }
-            else if (castle.Town.StationedUnits.CountUnits() > 0)
+            else if (castle.Town.StationedUnits.CountUnits() > 0) //checks if there are any stationed units
             {
-                //battle
-                if (castle.Town.StationedHero != null)
+                if (castle.Town.StationedHero != null)//checks if there is a stationed hero
                 {
                     gm.enterCombat(15, 11, h, castle.Town.StationedHero);
                 }
