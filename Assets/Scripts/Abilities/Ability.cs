@@ -1,4 +1,7 @@
-﻿public class Ability {
+﻿/// <summary>
+/// Super class for hero and unit abilities
+/// </summary>
+public class Ability {
 
     string name;
     string description;
@@ -29,6 +32,11 @@
         }
     }
 
+    /// <summary>
+    /// Default constructor
+    /// </summary>
+    /// <param name="name"></param>
+    /// <param name="description"></param>
     public Ability(string name, string description)
     {
         Name = name;
