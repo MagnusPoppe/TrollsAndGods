@@ -32,7 +32,7 @@ namespace Multiplayer
             else
             {
                 UnitReaction ur = (UnitReaction) reaction;
-                Gm.enterCombat(15, 11, Gm.getPlayer(playerID).Heroes[heroID], ur.Units);
+                Gm.enterCombat(15, 11, Gm.getPlayer(playerID).Heroes[heroID], ur.Units, true);
             }
         }
 
