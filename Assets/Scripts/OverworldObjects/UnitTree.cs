@@ -243,7 +243,12 @@ public class UnitTree
 
     public void swapUnits(int from, int to)
     {
-        
+        Unit tmpUnit = units[to];
+        int tmpAmount = getUnitAmount(to);
+        units[to] = units[from];
+        unitAmount[to] = unitAmount[from];
+        units[from] = tmpUnit;
+        unitAmount[from] = tmpAmount;
     }
 
     /*
