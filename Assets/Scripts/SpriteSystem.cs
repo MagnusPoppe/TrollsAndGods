@@ -1,4 +1,7 @@
-﻿public abstract class SpriteSystem
+﻿/// <summary>
+/// Abstract class SpriteSystem. Classes that use sprites extend this class to get the required functons to Get sprites
+/// </summary>
+public abstract class SpriteSystem
 {
     int LocalSpriteID;
 
