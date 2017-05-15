@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// this class registers all possible places you can move to, as well as registering what you can attack
+/// This class registers all possible places you can move to, as well as registering what you can attack
 /// </summary>
 public class PossibleMovement
 {
