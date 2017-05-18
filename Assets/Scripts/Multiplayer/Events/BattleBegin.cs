@@ -18,8 +18,22 @@ namespace Multiplayer
 
         public override void execute()
         {
-            //todo engage in combat(not show unless player is active in battle)
-            throw new System.NotImplementedException();
+            //todo not show battle if not involved
+            Reaction reaction = Gm.Reactions[pos.x, pos.y];
+            if (reaction.HasPreReact())
+            {
+                reaction = reaction.PreReaction;
+            }
+            if (reaction.GetType() == typeof(HeroMeetReact))
+            {
+                HeroMeetReact hmr = (HeroMeetReact) reaction;
+                Gm.enterCombat(15, 11, Gm.getPlayer(playerID).Heroes[heroID], hmr.Hero);
+            }
+            else
+            {
+                UnitReaction ur = (UnitReaction) reaction;
+                Gm.enterCombat(15, 11, Gm.getPlayer(playerID).Heroes[heroID], ur.Units);
+            }
         }
 
         public override void unpackJSON(string JSON)

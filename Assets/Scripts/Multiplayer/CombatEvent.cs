@@ -1,4 +1,6 @@
-﻿namespace Multiplayer
+﻿using UnityEngine;
+
+namespace Multiplayer
 {
     /// <summary>
     /// A Combat event is a specialized abstract event specified to 
@@ -6,7 +8,8 @@
     /// </summary>
     public abstract class CombatEvent : Event
     {
-        private int idFrom, idTo;
+        private GraphicalBattlefield gb;
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Multiplayer.CombatEvent"/> class.
@@ -17,8 +20,7 @@
         /// <param name="idTo">Identifier to.</param>
         protected CombatEvent(int id, string description, int idFrom, int idTo) : base(id, description)
         {
-            this.idFrom = idFrom;
-            this.idTo = idTo;
+            gb = GameObject.Find("Combat").GetComponent<GraphicalBattlefield>();
         }
 
         /// <summary>
@@ -28,17 +30,14 @@
         /// <returns> SQL INSERT SENTENCES. </returns>
         public new string toSQLInsert()
         {
-            string output = "";
-            if (idTo - idFrom > 0)
-            {
-                for (int i = idFrom; i < idTo; i++)
-                    output += "INSERT INTO GameEvent VALUES (" + i + "," + Description + ");";
-            }
-            else
-            {
-                output = "INSERT INTO GameEvent VALUES (" + Id + "," + Description + ");";
-            }
+            string output = "INSERT INTO GameEvent VALUES (" + Id + "," + Description + ");";
             return output;
+        }
+
+        public GraphicalBattlefield Gb
+        {
+            get { return gb; }
+            set { gb = value; }
         }
     }
 }
