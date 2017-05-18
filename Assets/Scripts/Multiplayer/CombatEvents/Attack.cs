@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace Multiplayer
 {
+    /// <summary>
+    /// Event for handling a unit attacking.
+    /// </summary>
     public class Attack : CombatEvent
     {
         public Point pos;

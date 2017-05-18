@@ -3,7 +3,9 @@ using UnityEngine;
 
 namespace Multiplayer
 {
-
+    /// <summary>
+    /// Event for handling a battle beginning
+    /// </summary>
     public class BattleBegin : GameEvent
     {
         public int playerID, heroID;
@@ -16,6 +18,9 @@ namespace Multiplayer
             this.pos = pos;
         }
 
+        /// <summary>
+        /// Executing the action, beginning the battle, only showing the battle if the player is a part of the battle.
+        /// </summary>
         public override void execute()
         {
             //todo not show battle if not involved
@@ -32,10 +37,14 @@ namespace Multiplayer
             else
             {
                 UnitReaction ur = (UnitReaction) reaction;
-                Gm.enterCombat(15, 11, Gm.getPlayer(playerID).Heroes[heroID], ur.Units);
+                Gm.enterCombat(15, 11, Gm.getPlayer(playerID).Heroes[heroID], ur.Units, true);
             }
         }
 
+        /// <summary>
+        /// Packs this into JSON
+        /// </summary>
+        /// <returns>JSON of this object</returns>
         public override void unpackJSON(string JSON)
         {
             BattleBegin obj = JsonUtility.FromJson<BattleBegin>(JSON);
@@ -44,6 +53,10 @@ namespace Multiplayer
             pos = obj.pos;
         }
 
+        /// <summary>
+        /// Packs this into JSON
+        /// </summary>
+        /// <returns>JSON of this object</returns>
         public override string packJSON()
         {
             return JsonUtility.ToJson(this);

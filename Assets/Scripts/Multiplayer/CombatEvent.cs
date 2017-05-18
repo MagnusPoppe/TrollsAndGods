@@ -16,9 +16,7 @@ namespace Multiplayer
         /// </summary>
         /// <param name="id">Identifier.</param>
         /// <param name="description">Description.</param>
-        /// <param name="idFrom">Identifier from.</param>
-        /// <param name="idTo">Identifier to.</param>
-        protected CombatEvent(int id, string description, int idFrom, int idTo) : base(id, description)
+        protected CombatEvent(int id, string description) : base(id, description)
         {
             gb = GameObject.Find("Combat").GetComponent<GraphicalBattlefield>();
         }

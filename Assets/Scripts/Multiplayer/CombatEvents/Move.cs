@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace Multiplayer
 {
+    /// <summary>
+    /// Event for handling a unit moving in battle
+    /// </summary>
     public class Move : CombatEvent
     {
         public Move(int id, string description) : base(id, description)

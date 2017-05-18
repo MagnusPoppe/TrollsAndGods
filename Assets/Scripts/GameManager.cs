@@ -2287,7 +2287,7 @@ public class GameManager : MonoBehaviour
             GameObject movePanel = parentMovePanel.transform.GetChild(i).gameObject;
             if (i < unit.Moves.Length && unit.Moves[i] != null)
             {
-                Move move = unit.Moves[i];
+                Units.Move move = unit.Moves[i];
                 movePanel.transform.GetChild(0).GetComponent<Text>().text = move.Name + "";
                 movePanel.transform.GetChild(1).GetComponent<Text>().text = move.MinDamage + " - " + move.MaxDamage; // TODO base minmax?
                 //movePanel.transform.GetChild(2).GetComponent<Image>().sprite = libs.getsprite corresponding move?;
@@ -2463,9 +2463,8 @@ public class GameManager : MonoBehaviour
         swapObject = null;
     }
 
-    public Reaction[,] Reactions
+    public Player getPlayer(int id)
     {
-        get { return reactions; }
-        set { reactions = value; }
+        return players[id];
     }
 }

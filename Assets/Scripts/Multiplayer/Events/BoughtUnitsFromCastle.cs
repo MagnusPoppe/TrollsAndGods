@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace Multiplayer
 {
+    /// <summary>
+    /// Event for handling units bought from a castle
+    /// </summary>
     public class BoughtUnitsFromCastle : GameEvent
     {
         public int heroID, tier, amount;
@@ -13,12 +16,19 @@ namespace Multiplayer
         {
         }
 
+        /// <summary>
+        /// Executes the event, buying the units from the castle.
+        /// </summary>
         public override void execute()
         {
             //todo buy units
             throw new System.NotImplementedException();
         }
 
+        /// <summary>
+        /// Packs this into JSON
+        /// </summary>
+        /// <returns>JSON of this object</returns>
         public override void unpackJSON(string JSON)
         {
             BoughtUnitsFromCastle obj = JsonUtility.FromJson<BoughtUnitsFromCastle>(JSON);
@@ -28,6 +38,10 @@ namespace Multiplayer
             pos = obj.pos;
         }
 
+        /// <summary>
+        /// Packs this into JSON
+        /// </summary>
+        /// <returns>JSON of this object</returns>
         public override string packJSON()
         {
             return JsonUtility.ToJson(this);
