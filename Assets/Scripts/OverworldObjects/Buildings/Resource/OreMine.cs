@@ -1,6 +1,9 @@
 ﻿namespace OverworldObjects
 {
-	public class OreMine : ResourceBuilding
+    /// <summary>
+    /// Ore mine resource building. Gives a set amount of ore per day.
+    /// </summary>
+    public class OreMine : ResourceBuilding
 	{
         // BUILDING CONSTANTS FOR MAP:
 		const int SHAPE = Shapes.CUBE;

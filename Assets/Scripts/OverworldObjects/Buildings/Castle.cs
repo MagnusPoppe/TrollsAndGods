@@ -2,10 +2,17 @@
 
 namespace OverworldObjects
 {
+    /// <summary>
+    /// Generic clastle class.
+    /// </summary>
 	public class Castle : OverworldBuilding
 	{
 		Environment environment;
 
+        /// <summary>
+        /// Gets the environment that surrounds the castle.
+        /// </summary>
+        /// <value>The environment.</value>
 	    public Environment Environment
 	    {
 	        get { return environment; }
@@ -14,6 +21,16 @@ namespace OverworldObjects
 	    string name;
         Town town;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OverworldObjects.Castle"/> class.
+        /// </summary>
+        /// <param name="origo">Origo.</param>
+        /// <param name="shape">Shape.</param>
+        /// <param name="owner">Owner.</param>
+        /// <param name="spriteID">Sprite I.</param>
+        /// <param name="name">Name.</param>
+        /// <param name="spriteCategory">Sprite category.</param>
+        /// <param name="environment">Environment.</param>
         public Castle(Point origo, int shape, Player owner, int spriteID, string name, IngameObjectLibrary.Category spriteCategory, Environment environment)
             : base(origo, shape, owner, spriteID, spriteCategory)
         {
@@ -21,6 +38,14 @@ namespace OverworldObjects
             this.environment = environment;
             Town = town;
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OverworldObjects.Castle"/> class.
+        /// </summary>
+        /// <param name="shape">Shape.</param>
+        /// <param name="owner">Owner.</param>
+        /// <param name="spriteID">Sprite I.</param>
+        /// <param name="spriteCategory">Sprite category.</param>
         public Castle( int shape, Player owner, int spriteID, IngameObjectLibrary.Category spriteCategory)
                 : base( shape, owner, spriteID, spriteCategory)
         {
@@ -28,6 +53,10 @@ namespace OverworldObjects
             Town = town;
         }
 
+        /// <summary>
+        /// Gets or sets the name.
+        /// </summary>
+        /// <value>The name.</value>
         public string Name
         {
             get
@@ -41,6 +70,10 @@ namespace OverworldObjects
             }
         }
 
+        /// <summary>
+        /// Gets or sets the town.
+        /// </summary>
+        /// <value>The town.</value>
         public Town Town
         {
             get
@@ -54,21 +87,38 @@ namespace OverworldObjects
             }
         }
 
+        /// <summary>
+        /// Gets the position.
+        /// </summary>
+        /// <returns>The position.</returns>
         public Point GetPosition()
 		{
 			return Origo;
         }
 
+        /// <summary>
+        /// Returns a <see cref="System.String"/> that represents the current <see cref="OverworldObjects.Castle"/>.
+        /// </summary>
+        /// <returns>A <see cref="System.String"/> that represents the current <see cref="OverworldObjects.Castle"/>.</returns>
         public override string ToString()
 		{
 			return "Castle " + Name+ " at " +Origo.ToString();
 		}
 
+        /// <summary>
+        /// Makes the reaction.
+        /// </summary>
+        /// <returns>The reaction.</returns>
         public override Reaction makeReaction()
         {
             return Reaction = new CastleReact(this, Origo);
         }
 
+        /// <summary>
+        /// Flips the reactions to correspond with the castle shape.
+        /// </summary>
+        /// <param name="reactions">Reactions.</param>
+        /// <param name="hero">Hero.</param>
         public void flipReactions(Reaction[,] reactions, Hero hero)
         {
             int x = (int)Origo.x;

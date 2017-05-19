@@ -5,6 +5,10 @@ using System.Text;
 
 namespace OverworldObjects
 {
+    /// <summary>
+    /// Interface to define all dwellings. A dwelling is a building of which
+    /// units are made. Here you can purchase a set number of units per week.
+    /// </summary>
     interface Dwelling
     {
         Unit Unit { get; set; }
