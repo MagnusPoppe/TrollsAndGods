@@ -1,5 +1,8 @@
 ﻿namespace OverworldObjects
 {
+    /// <summary>
+    /// Gold pickup. TODO: Implement pickups.
+    /// </summary>
     public class Gold : ResourcePickup
     {
         static Earn VALUE = new Earn(1000, 0, 0, 0, 0);

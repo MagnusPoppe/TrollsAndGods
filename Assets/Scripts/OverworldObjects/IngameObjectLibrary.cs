@@ -1,6 +1,14 @@
 ﻿using System;
 using UnityEngine;
 
+/// <summary>
+/// Ingame object library is a library containing all sprites used within the game. 
+/// Some UI elements are left out of the library. This is a common system created to 
+/// map sprite images to integers so that we can represent the whole map as a 2D matrix
+/// of ints. 
+/// 
+/// The system is created for use with the map generator system.
+/// </summary>
 public class IngameObjectLibrary
 {
 			

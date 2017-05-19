@@ -5,7 +5,7 @@ namespace OverworldObjects
 {
 
     /// <summary>
-    /// This class can be used as a template for a given castle.
+    /// The viking castle is the castle placed on top of a vikingship grave.
     /// </summary>
     class VikingCastle : Castle
     {

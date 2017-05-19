@@ -7,6 +7,12 @@ using UnityEngine;
 
 namespace OverworldObjects
 {
+    /// <summary>
+    /// Placement is a system created to dynamically place out buildings to the
+    /// overworld in a not too random order. Systemized but random.
+    /// 
+    /// TODO: IMPLEMENT RANDOM BY SEED
+    /// </summary>
     public class Placement
     {
         private const int NOT_AVAILABLE = 0;
@@ -45,7 +51,7 @@ namespace OverworldObjects
                     int tile = map[x, y];
 
                     if ((IngameObjectLibrary.GetCategory(tile) == IngameObjectLibrary.Category.Ground)
-                    && (tile != MapGenerator.MapMaker.WATER_SPRITEID))
+                    && (tile != MapMaker.WATER_SPRITEID))
                     {
                         if (testForMine(new Point(x,y),  map))
                         {

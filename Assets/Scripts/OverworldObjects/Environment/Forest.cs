@@ -1,5 +1,8 @@
 ﻿namespace OverworldObjects
 {
+    /// <summary>
+    /// Environment type Forest. Can only be placed within the "cannotWalk" areas.
+    /// </summary>
     public class Forest : Environment
     {
         // An array of the available sprite IDs.

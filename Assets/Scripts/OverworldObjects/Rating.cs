@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace OverworldObjects
 {
+    /// <summary>
+    /// The Rating system finds and rates all tiles for placing a building.
+    /// </summary>
     public class Rating
     {
         private const bool PREFER_LESS_SPACE = true;
