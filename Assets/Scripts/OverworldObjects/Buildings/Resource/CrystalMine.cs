@@ -1,5 +1,8 @@
 ﻿namespace OverworldObjects
 {
+    /// <summary>
+    /// Crystal mine resource building. Gives a set amount of crystal per day.
+    /// </summary>
     public class CrystalMine : ResourceBuilding
     {
         // BUILDING CONSTANTS FOR MAP:

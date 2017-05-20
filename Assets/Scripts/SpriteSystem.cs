@@ -1,4 +1,9 @@
-﻿public abstract class SpriteSystem
+﻿/// <summary>
+/// Sprite system is a common parent for all classes that uses the ingame object library.
+/// The class is made for ease of use, and for a common interface to connect with the 
+/// library.
+/// </summary>
+public abstract class SpriteSystem
 {
     int LocalSpriteID;
 

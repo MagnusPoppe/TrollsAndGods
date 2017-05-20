@@ -169,6 +169,11 @@ namespace OverworldObjects
                 }
             }
         }
+
+        /// <summary>
+        /// Returns a <see cref="System.String"/> that represents the current <see cref="OverworldObjects.DwellingBuilding"/>.
+        /// </summary>
+        /// <returns>A <see cref="System.String"/> that represents the current <see cref="OverworldObjects.DwellingBuilding"/>.</returns>
         public override string ToString()
         {
             return base.ToString() + "\nRecruit " + unitsPresent + "/" + unitsPerWeek + unit.Name;
