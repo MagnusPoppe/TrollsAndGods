@@ -1,5 +1,9 @@
 ﻿namespace OverworldObjects
 {
+    /// <summary>
+    /// A Overworld interactable is any "thing" placed within the overworld map that
+    /// can be interacted with, like buildings or pickups.
+    /// </summary>
 	public class OverworldInteractable : SpriteSystem
 	{
         private Point origo;

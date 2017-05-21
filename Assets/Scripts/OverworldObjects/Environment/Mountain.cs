@@ -1,5 +1,9 @@
 ﻿namespace OverworldObjects
 {
+    /// <summary>
+    /// Environment type Mountain. Contains the shape of the mountain so that
+    /// it can be placed within a confined space.
+    /// </summary>
     public class Mountain : Environment
     {
         // An array of the available sprite IDs.
@@ -21,6 +25,10 @@
 
         private int below = 6;
 
+        /// <summary>
+        /// Gets the ground type below.
+        /// </summary>
+        /// <value>The below.</value>
         public int Below
         {
             get { return IngameObjectLibrary.GetOffset(category) + below; }

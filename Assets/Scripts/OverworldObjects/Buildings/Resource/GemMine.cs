@@ -1,5 +1,8 @@
 ﻿namespace OverworldObjects
 {
+    /// <summary>
+    /// Gem mine resource building. Gives a set amount of gold per day.
+    /// </summary>
     public class GemMine : ResourceBuilding
     {
         // BUILDING CONSTANTS FOR MAP:

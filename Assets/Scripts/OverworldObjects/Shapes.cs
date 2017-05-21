@@ -2,6 +2,11 @@
 
 namespace OverworldObjects
 {
+    /// <summary>
+    /// Everything placed on the overworld map has a shape. The shape system is defined so that 
+    /// lots of shapes can be supported with this general code. Special cases are buildings that needs to 
+    /// be placed within a defined area
+    /// </summary>
     public class Shapes
     {
         public const int NOTHING = -1;

@@ -1,5 +1,9 @@
 ﻿namespace OverworldObjects
 {
+
+    /// <summary>
+    /// Environment type Grass.
+    /// </summary>
     public class Grass : Environment
     {
         // An array of the available sprite IDs.

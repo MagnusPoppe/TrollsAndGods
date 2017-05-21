@@ -1,5 +1,9 @@
 ﻿namespace MapGenerator
 {
+    /// <summary>
+    /// Region Economy. This class desides how rich a region is by giving
+    /// out a set of resource generating buildings the player can capture.
+    /// </summary>
 	public class Economy
 	{
 		public const int SLUMS 		= 0;

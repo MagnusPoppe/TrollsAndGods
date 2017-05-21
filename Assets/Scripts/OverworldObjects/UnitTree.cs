@@ -46,7 +46,6 @@ public class UnitTree
         }
     }
 
-
     public void SetUnitAmount(Unit Unit, int pos, int amount)
     {
         unitAmount[pos] = amount;
@@ -240,6 +239,21 @@ public class UnitTree
             }
         }
         return false;
+    }
+
+    /// <summary>
+    /// Swaps two units with eachother
+    /// </summary>
+    /// <param name="from">First unit pos in tree</param>
+    /// <param name="to">Second unit pos in tree</param>
+    public void swapUnits(int from, int to)
+    {
+        Unit tmpUnit = units[to];
+        int tmpAmount = getUnitAmount(to);
+        units[to] = units[from];
+        unitAmount[to] = unitAmount[from];
+        units[from] = tmpUnit;
+        unitAmount[from] = tmpAmount;
     }
 
     /*

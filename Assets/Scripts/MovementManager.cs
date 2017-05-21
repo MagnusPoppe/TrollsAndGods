@@ -1,9 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Security.AccessControl;
 using MapGenerator;
 using UnityEngine;
 
+/// <summary>
+/// Movement manager controls movement of a hero. This happens on the overworld map.
+/// This class is the result of separating the movement from the gamemanager 
+/// Update method.
+/// 
+/// </summary>
 public class MovementManager
 {
     public enum states
@@ -178,6 +182,10 @@ public class MovementManager
         return false; // Do not stop for pre react
     }
 
+    /// <summary>
+    /// Performs the actual reaction:
+    /// </summary>
+    /// <param name="end"></param>
     private void react(Point end)
     {
         int x = end.x;
@@ -324,6 +332,11 @@ public class MovementManager
         UpdateReact(currentStep);
     }
 
+    /// <summary>
+    /// Determines whether this is the last step of the walk.
+    /// </summary>
+    /// <returns><c>true</c> if the hero is out of steps or the destination is reached. <c>false</c> otherwise.</returns>
+    /// <param name="stepNumber">Step number.</param>
     public bool IsLastStep(int stepNumber)
     {
         return  activeHero.CurMovementSpeed == 0 || stepNumber == totalTilesToBeWalked;

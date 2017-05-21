@@ -14,17 +14,31 @@ namespace Filter
 		int[,] medianFilter;
 		int filterSum;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Filter.MedianFilter"/> class.
+        /// Uses a default filter
+        /// </summary>
 		public MedianFilter() : this(DEFAULT_FILTER)
 		{
 		}
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Filter.MedianFilter"/> class.
+        /// </summary>
+        /// <param name="filter">Filter.</param>
 		public MedianFilter(int[,] filter)
 		{
 			medianFilter = filter;
 			filterSum = GetFilterSum(filter);
 		}
 
-		private int GetFilterSum(int[,] filter)
+        /// <summary>
+        /// Gets the filter sum. The method uses addition to 
+        /// add together all the values of the filter.
+        /// </summary>
+        /// <returns>The filter sum.</returns>
+        /// <param name="filter">Filter.</param>		
+        private int GetFilterSum(int[,] filter)
 		{
 			int sum = 0;
 			for (int y = 0; y < filter.GetLength(0); y++)
@@ -34,6 +48,12 @@ namespace Filter
 			return sum;
 		}
 
+        /// <summary>
+        /// Filters a matrix with the median filter.
+        /// </summary>
+        /// <param name="initialX">Initial x position.</param>
+        /// <param name="initialY">Initial y position.</param>
+        /// <param name="matrix">Matrix to be filtered over</param>
 		public int Apply(int initialX, int initialY, int[,] matrix)
 		{
 			int[] values = new int[filterSum];

@@ -1,13 +1,28 @@
 ﻿using UnityEngine;
 
 namespace OverworldObjects
-{
+{   
+    /// <summary>
+    /// Environment are the types of ground in the game. 
+    /// The child classes that inherit from this class is spesific types of environment.
+    /// 
+    /// Current types of environment are:
+    ///     Grass
+    ///     Water
+    ///     Mountain
+    ///     Forest
+    /// </summary>
     public class Environment : SpriteSystem
     {
         private int[] localIDs;
         private IngameObjectLibrary.Category category;
         private Environment below; // -1 means nothing to add.
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OverworldObjects.Environment"/> class.
+        /// </summary>
+        /// <param name="localIDs">list of Local IDs used with sprites.</param>
+        /// <param name="category">Category.</param>
         public Environment( int[] localIDs, IngameObjectLibrary.Category category) : base(localIDs[0], category)
         {
             this.localIDs = localIDs;
