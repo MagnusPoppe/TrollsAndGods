@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿
 namespace UI
 {
+    /// <summary>
+    /// ExitButton class to hold sprite
+    /// </summary>
     class ExitButton : UIElements
     {
 

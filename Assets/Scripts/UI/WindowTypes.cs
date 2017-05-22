@@ -1,5 +1,8 @@
 ﻿namespace UI
 {
+    /// <summary>
+    /// A static class to hold static variables for building types
+    /// </summary>
     public static class WindowTypes
     {
         public const int TOWN_HALL_CARD = 0;

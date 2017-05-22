@@ -1,9 +1,18 @@
-﻿public class Date {
+﻿/// <summary>
+/// Simple class for managing the in-game date.
+/// </summary>
+public class Date {
 
     int day;
     int week;
     int month;
 
+    /// <summary>
+    /// Constructor for specific date
+    /// </summary>
+    /// <param name="day">The day number</param>
+    /// <param name="week">The week number</param>
+    /// <param name="month">The month number</param>
     public Date(int day, int week, int month)
     {
         Day = day;
@@ -11,6 +20,9 @@
         Month = month;
     }
 
+    /// <summary>
+    /// Default constructor
+    /// </summary>
     public Date()
     {
         Day = 1;
@@ -18,11 +30,19 @@
         Month = 1;
     }
 
+    /// <summary>
+    /// Checks for a new week if the given day is the first of the week
+    /// </summary>
+    /// <returns>True if the first of the week, false if not</returns>
     public bool isNewWeek()
     {
         return day == 1;
     }
 
+    /// <summary>
+    /// Function to increment teh date
+    /// </summary>
+    /// <returns>Returns a string of the new date</returns>
     public string incrementDay()
     {
         Day++;
