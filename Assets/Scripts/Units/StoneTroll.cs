@@ -1,5 +1,4 @@
-﻿using Assets.Scripts.Abilities;
-using UnityEngine.Rendering;
+﻿using Abilities;
 
 namespace Units
 {

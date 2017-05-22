@@ -2,7 +2,6 @@
 using OverworldObjects;
 using Units;
 using UI;
-using Units;
 
 namespace TownView
 {

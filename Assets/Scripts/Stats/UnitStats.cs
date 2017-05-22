@@ -50,7 +50,7 @@ public class UnitStats : BaseStats {
     /// <param name="baseLuck">The units base luck stat</param>
     /// <param name="bonusLuck">The units extra luck given by other sources</param>
     /// <param name="minDamage">Minimum auto attack damage</param>
-    /// <param name="maxDamage">Maximum auto attack daamge</param
+    /// <param name="maxDamage">Maximum auto attack daamge</param>
     /// <param name="bonusHealth">The units extra health given by other sources</param>
     /// <param name="baseHealth">The units base health stat</param>
     /// <param name="bonusInitative">The units extra initiative given by other sources</param>

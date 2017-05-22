@@ -65,7 +65,7 @@ namespace TownView
         /// <param name="requirements">The building(s) that must be built before this one is available</param>
         /// <param name="cost">The Resource cost to make the given building</param>
         /// <param name="localID">The local spriteID of the given building</param>
-        /// <param name="LOCAL_SPRITEID_BLUEPRINT">The local spriteID for the blueprint of the building</param
+        /// <param name="LOCAL_SPRITEID_BLUEPRINT">The local spriteID for the blueprint of the building</param>
         public Building(string name, string description, bool[] requirements, Cost cost, int localID,
             int LOCAL_SPRITEID_BLUEPRINT) : base(localID, CATEGORY)
         {
