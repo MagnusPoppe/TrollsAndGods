@@ -1,4 +1,7 @@
-﻿public class Earn : Resources
+﻿/// <summary>
+/// Handles the weekly and daily earnings of a player
+/// </summary>
+public class Earn : Resources
 {
 
     /// <summary>

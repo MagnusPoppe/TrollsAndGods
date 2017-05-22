@@ -1,6 +1,6 @@
-﻿using System.Runtime.Serialization.Formatters;
-using UnityEngine;
-
+﻿/// <summary>
+/// Handles a player's wallet, how much money they can spend
+/// </summary>
 public class Wallet : Resources
 {
 
