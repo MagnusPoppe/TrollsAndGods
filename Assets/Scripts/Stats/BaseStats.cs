@@ -1,4 +1,7 @@
-﻿public class BaseStats {
+﻿/// <summary>
+/// Class to hold the base stats for every unit and hero in the game
+/// </summary>
+public class BaseStats {
 
     int attack;
     private int bonusAttack;
@@ -141,6 +144,19 @@
         }
     }
 
+    /// <summary>
+    /// Constructor with base stats and bonus stats
+    /// </summary>
+    /// <param name="baseAttack">The units base attack stat</param>
+    /// <param name="bonusAttack">The extra attack given by other sources</param>
+    /// <param name="baseDefence">The units base defence stat</param>
+    /// <param name="bonusDefence">The extra units defence given by other sources</param>
+    /// <param name="baseSpeed">The units base speed stat</param>
+    /// <param name="bonusSpeed">The units extra speed given by other sources</param>
+    /// <param name="baseMoral">The units base moral stat</param>
+    /// <param name="bonusMoral">The units extra moral given by other sources</param>
+    /// <param name="baseLuck">The units base luck stat</param>
+    /// <param name="bonusLuck">The units extra luck given by other sources</param>
     public BaseStats(int bonusAttack, int baseAttack, int bonusDefence, int baseDefence, int bonusSpeed, int baseSpeed, int bonusMoral, int baseMoral, int bonusLuck, int baseLuck)
     {
         this.bonusAttack = bonusAttack;
@@ -156,6 +172,14 @@
         updateStats();
     }
 
+    /// <summary>
+    /// Consturctor with base stats
+    /// </summary>
+    /// <param name="baseAttack">The units base attack stat</param>
+    /// <param name="baseDefence">The units base defence stat</param>
+    /// <param name="baseSpeed">The units base speed stat</param>
+    /// <param name="baseMoral">The units base moral stat</param>
+    /// <param name="baseLuck">The units base luck stat</param>
     public BaseStats(int baseAttack, int baseDefence, int baseSpeed, int baseMoral, int baseLuck)
     {
         this.baseAttack = baseAttack;
@@ -167,6 +191,9 @@
         updateStats();
     }
 
+    /// <summary>
+    /// Updates a given unit or hero's stats
+    /// </summary>
     public void updateStats()
     {
         attack = baseAttack+bonusAttack;
