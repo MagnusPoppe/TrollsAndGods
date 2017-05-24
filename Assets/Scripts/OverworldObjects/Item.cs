@@ -1,4 +1,7 @@
-﻿public abstract class Item
+﻿/// <summary>
+/// Abstract class for overworld Items
+/// </summary>
+public abstract class Item
 {
     int slotType;
     string description;

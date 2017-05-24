@@ -1,37 +1,36 @@
-﻿public class Ability {
-
-    string name;
-    string description;
-
-    public string Name
+﻿namespace Abilities
+{
+    /// <summary>
+    /// Super class for hero and unit abilities
+    /// </summary>
+    public class Ability
     {
-        get
+        string name;
+        string description;
+
+        public string Name
         {
-            return name;
+            get { return name; }
+
+            set { name = value; }
         }
 
-        set
+        public string Description
         {
-            name = value;
-        }
-    }
+            get { return description; }
 
-    public string Description
-    {
-        get
-        {
-            return description;
+            set { description = value; }
         }
 
-        set
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="description"></param>
+        public Ability(string name, string description)
         {
-            description = value;
+            Name = name;
+            Description = description;
         }
-    }
-
-    public Ability(string name, string description)
-    {
-        Name = name;
-        Description = description;
     }
 }

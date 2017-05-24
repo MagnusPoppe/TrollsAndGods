@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using Units;
 
+/// <summary>
+/// JackMcBlackwell hero class
+/// </summary>
 class JackMcBlackwell : Hero
 {
     private const int LOCAL_SPRITE_ID = 0;
@@ -12,7 +15,9 @@ class JackMcBlackwell : Hero
     private const string DESCRPITION = "Hi boiz";
     private static UnitTree unitTree;
 
-    // Resources cost: 
+    /// <summary>
+    /// Resource cost for this hero
+    /// </summary>
     const int GOLD_COST = 1000;
     const int WOOD_COST = 0;
     const int ORE_COST = 0;
@@ -20,7 +25,11 @@ class JackMcBlackwell : Hero
     const int GEM_COST = 0;
 
 
-
+    /// <summary>
+    /// Constructor when Hero belongs to a player
+    /// </summary>
+    /// <param name="player">The player this hero belongs to</param>
+    /// <param name="position">Position to spawn the player in</param>
     public JackMcBlackwell(Player player, Point position) 
         : base(player, position, LOCAL_SPRITE_ID, PORTRAIT_ID, NAME, DESCRPITION, new Cost(GOLD_COST, WOOD_COST, ORE_COST, CRYSTAL_COST, GEM_COST))
     {
@@ -29,6 +38,9 @@ class JackMcBlackwell : Hero
         SetUnits(unitTree);
     }
 
+    /// <summary>
+    /// Default constructor used when the game launches and the Hero doesn't belong to a player
+    /// </summary>
     public JackMcBlackwell()
         : base(LOCAL_SPRITE_ID, PORTRAIT_ID, NAME, DESCRPITION, new Cost(GOLD_COST, WOOD_COST, ORE_COST, CRYSTAL_COST, GEM_COST))
     {
